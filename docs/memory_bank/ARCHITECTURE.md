@@ -5,9 +5,10 @@
 ### Structure générale
 
 - **Backend** : Laravel (MVC pattern)
-- **Frontend** : Livewire components
-- **Database** : MySQL
+- **Frontend** : Livewire 3 components
+- **Database** : MySQL 8.0
 - **Architecture** : Monolithique (application unique Laravel)
+- **Approche** : API-first - Toute la logique métier via endpoints REST API, Livewire consomme ces APIs en interne
 
 ### Organisation des dossiers
 
@@ -99,20 +100,22 @@ Planets
 - `POST /api/auth/logout` - Déconnexion
 - `GET /api/auth/user` - Informations du joueur connecté
 
-### Endpoints utilisateurs
+### Endpoints utilisateurs (MVP)
 
-- `GET /api/users` - Liste des utilisateurs (si nécessaire)
-- `GET /api/users/{id}` - Détails d'un utilisateur
-- `GET /api/users/{id}/home-planet` - Planète d'origine du joueur
-- `PUT /api/users/{id}` - Mise à jour du profil utilisateur
-- [À compléter selon les besoins]
+- `GET /api/users/{id}` - Détails d'un utilisateur (authentification requise)
+- `PUT /api/users/{id}` - Mise à jour du profil utilisateur (authentification requise, uniquement son propre profil)
+- `GET /api/users/{id}/home-planet` - Planète d'origine du joueur (authentification requise)
 
-### Endpoints planètes
+**Endpoints futurs** :
+- `GET /api/users` - Liste des utilisateurs (avec pagination) - À implémenter selon les besoins
 
-- `GET /api/planets` - Liste des planètes (avec pagination)
-- `GET /api/planets/{id}` - Détails d'une planète
-- `POST /api/planets/{id}/explore` - Explorer une planète (action du joueur)
-- [À compléter selon les besoins]
+### Endpoints planètes (MVP)
+
+- `GET /api/planets/{id}` - Détails d'une planète (authentification requise)
+
+**Endpoints futurs** :
+- `GET /api/planets` - Liste des planètes (avec pagination) - À implémenter selon les besoins
+- `POST /api/planets/{id}/explore` - Explorer une planète (action du joueur) - À implémenter selon les besoins
 
 ### Format de réponse
 
@@ -188,9 +191,13 @@ Toutes les réponses API suivent un format JSON standardisé :
 - Tous les joueurs ont les mêmes droits d'accès
 
 **Routes protégées** :
-- Toutes les routes `/api/users/*` nécessitent l'authentification
-- Toutes les routes `/api/planets/*` nécessitent l'authentification (sauf si liste publique)
-- Route `/api/auth/user` pour récupérer le joueur connecté
+- Toutes les routes `/api/users/*` nécessitent l'authentification (`auth:sanctum`)
+- Toutes les routes `/api/planets/*` nécessitent l'authentification (`auth:sanctum`)
+- Routes `/api/auth/logout` et `/api/auth/user` nécessitent l'authentification (`auth:sanctum`)
+- Routes `/api/auth/register` et `/api/auth/login` sont publiques (pas d'authentification requise)
+
+**Autorisation** :
+- Un utilisateur ne peut modifier que son propre profil (`PUT /api/users/{id}` vérifie que `auth()->id() === $user->id`)
 
 **Évolutions futures** :
 - Système de rôles (admin, modérateur, joueur)
@@ -205,19 +212,91 @@ Toutes les réponses API suivent un format JSON standardisé :
 
 **Composants** :
 - **Service de génération** : `PlanetGeneratorService` dans `app/Services/`
-- **Configuration des types** : Pool de types de planètes avec poids de probabilité
+- **Configuration des types** : Pool de types de planètes avec poids de probabilité dans `config/planets.php`
 - **Randomisation** : Sélection aléatoire pondérée du type, puis génération des caractéristiques selon les poids du type
+- **Gestion d'unicité** : Mécanisme de vérification d'unicité du nom avec gestion des collisions (max 10 tentatives, puis ajout d'un identifiant unique)
 
 **Flux technique** :
-1. Listener `GenerateHomePlanet` appelle `PlanetGeneratorService`
-2. Service sélectionne un type selon les poids définis
+1. Listener `GenerateHomePlanet` appelle `PlanetGeneratorService::generate()`
+2. Service sélectionne un type selon les poids définis dans `config/planets.php`
 3. Service génère les caractéristiques selon les distributions du type
-4. Service crée l'entité `Planet` en base de données
-5. Planète assignée au joueur (`home_planet_id`)
+4. Service génère un nom unique (avec gestion des collisions si nécessaire)
+5. Service génère une description textuelle à partir des caractéristiques combinées
+6. Service crée l'entité `Planet` en base de données
+7. Planète assignée au joueur (`home_planet_id`)
 
-**Stockage** : Configuration des types et poids dans un fichier de config ou une classe dédiée
+**Gestion d'erreurs** :
+- Le listener `GenerateHomePlanet` utilise un try-catch pour gérer les erreurs
+- En cas d'erreur de génération, l'erreur est loggée mais l'inscription n'est pas bloquée
+- `home_planet_id` reste null en cas d'erreur (peut être géré plus tard)
+
+**Stockage** : Configuration des types et poids dans `config/planets.php` (fichier de configuration Laravel standard)
 
 *Note : Les détails métier (types de planètes, caractéristiques) sont documentés dans PROJECT_BRIEF.md*
+
+## Frontend - Livewire Components
+
+### Architecture Frontend
+
+**Approche API-first** : Les composants Livewire consomment les endpoints API REST en interne. Toute la logique métier est dans l'API, Livewire sert uniquement d'interface utilisateur.
+
+### Authentification Hybride
+
+**Double authentification** :
+- **API** : Authentification par tokens Sanctum (`Authorization: Bearer {token}`)
+- **Routes Web** : Authentification par session Laravel (pour les routes Livewire)
+
+**Fonctionnement** :
+1. Lors de l'inscription/connexion via API (`POST /api/auth/register` ou `POST /api/auth/login`), le token Sanctum est créé
+2. Le token est stocké en session (`Session::put('sanctum_token', $token)`)
+3. L'utilisateur est également authentifié en session (`Auth::login($user)`) pour les routes web
+4. Les composants Livewire utilisent le token de session pour faire des requêtes API authentifiées
+5. Les routes web Livewire utilisent l'authentification de session (`middleware('auth')`)
+
+### Trait MakesApiRequests
+
+**Localisation** : `app/Livewire/Concerns/MakesApiRequests.php`
+
+**Fonctionnalités** :
+- Méthodes helper pour faire des requêtes API authentifiées depuis Livewire
+- Récupération automatique du token depuis la session
+- Gestion des erreurs (validation, erreurs API)
+- Méthodes disponibles :
+  - `apiGet(string $endpoint)` : Requête GET authentifiée
+  - `apiPost(string $endpoint, array $data)` : Requête POST authentifiée
+  - `apiPut(string $endpoint, array $data)` : Requête PUT authentifiée
+  - `apiPostPublic(string $endpoint, array $data)` : Requête POST publique (pour register/login)
+
+**Utilisation** :
+```php
+use App\Livewire\Concerns\MakesApiRequests;
+
+class Dashboard extends Component
+{
+    use MakesApiRequests;
+    
+    public function mount()
+    {
+        $response = $this->apiGet('/auth/user');
+        // ...
+    }
+}
+```
+
+### Composants Livewire (MVP)
+
+- **Register** : Formulaire d'inscription (`/register`)
+- **Login** : Formulaire de connexion (`/login`)
+- **Dashboard** : Affichage de la planète d'origine (`/dashboard`)
+- **Profile** : Gestion du profil utilisateur (`/profile`)
+
+**Routes Web** :
+- `/` : Page d'accueil (publique)
+- `/register` : Inscription (guest)
+- `/login` : Connexion (guest)
+- `/dashboard` : Tableau de bord (auth)
+- `/profile` : Profil utilisateur (auth)
+- `POST /logout` : Déconnexion (auth)
 
 ## Aspects techniques standards
 

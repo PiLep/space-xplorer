@@ -3,8 +3,8 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\MakesApiRequests;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Profile extends Component
@@ -12,11 +12,17 @@ class Profile extends Component
     use MakesApiRequests;
 
     public $user = null;
+
     public $name = '';
+
     public $email = '';
+
     public $loading = true;
+
     public $saving = false;
+
     public $error = null;
+
     public $success = null;
 
     protected $rules = [
@@ -74,6 +80,7 @@ class Profile extends Component
             if (empty($data)) {
                 $this->success = 'No changes to save.';
                 $this->saving = false;
+
                 return;
             }
 
@@ -84,7 +91,7 @@ class Profile extends Component
             $this->success = 'Profile updated successfully!';
         } catch (\Exception $e) {
             $errorData = json_decode($e->getMessage(), true);
-            
+
             if (is_array($errorData)) {
                 // Validation errors from API
                 foreach ($errorData as $field => $messages) {

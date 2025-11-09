@@ -12,7 +12,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -51,8 +51,6 @@ class User extends Authenticatable
 
     /**
      * Get the user's home planet.
-     *
-     * @return BelongsTo
      */
     public function homePlanet(): BelongsTo
     {

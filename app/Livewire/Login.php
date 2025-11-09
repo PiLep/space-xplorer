@@ -4,8 +4,8 @@ namespace App\Livewire;
 
 use App\Livewire\Concerns\MakesApiRequests;
 use Illuminate\Support\Facades\Session;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Login extends Component
@@ -13,6 +13,7 @@ class Login extends Component
     use MakesApiRequests;
 
     public $email = '';
+
     public $password = '';
 
     protected $rules = [
@@ -46,7 +47,7 @@ class Login extends Component
         } catch (\Exception $e) {
             // Handle API errors
             $errorData = json_decode($e->getMessage(), true);
-            
+
             if (is_array($errorData)) {
                 // Validation errors from API
                 foreach ($errorData as $field => $messages) {

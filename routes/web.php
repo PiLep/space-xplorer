@@ -21,12 +21,12 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
-    
+
     // Logout route (web)
     Route::post('/logout', function () {
         // Call API logout endpoint
         $token = session('sanctum_token');
-        
+
         if ($token) {
             try {
                 \Illuminate\Support\Facades\Http::withToken($token)
@@ -36,13 +36,13 @@ Route::middleware('auth')->group(function () {
                 \Illuminate\Support\Facades\Log::error('Logout API call failed: '.$e->getMessage());
             }
         }
-        
+
         // Clear session
         session()->forget('sanctum_token');
         auth()->logout();
         session()->invalidate();
         session()->regenerateToken();
-        
+
         return redirect()->route('home');
     })->name('logout');
 });

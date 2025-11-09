@@ -4,8 +4,8 @@ namespace App\Livewire;
 
 use App\Livewire\Concerns\MakesApiRequests;
 use Illuminate\Support\Facades\Session;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Register extends Component
@@ -13,14 +13,16 @@ class Register extends Component
     use MakesApiRequests;
 
     public $name = '';
+
     public $email = '';
+
     public $password = '';
+
     public $password_confirmation = '';
-    public $errors = [];
 
     protected $rules = [
         'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users|max:255',
+        'email' => 'required|email|max:255',
         'password' => 'required|string|min:8|confirmed',
     ];
 
@@ -55,17 +57,27 @@ class Register extends Component
             return $this->redirect(route('dashboard'), navigate: true);
         } catch (\Exception $e) {
             // Handle API errors
-            $errorData = json_decode($e->getMessage(), true);
-            
-            if (is_array($errorData)) {
+            $errorMessage = $e->getMessage();
+            $errorData = json_decode($errorMessage, true);
+
+            if (is_array($errorData) && ! empty($errorData)) {
                 // Validation errors from API
-                $this->errors = $errorData;
                 foreach ($errorData as $field => $messages) {
-                    $this->addError($field, is_array($messages) ? $messages[0] : $messages);
+                    if (is_array($messages)) {
+                        foreach ($messages as $message) {
+                            $this->addError($field, $message);
+                        }
+                    } else {
+                        $this->addError($field, $messages);
+                    }
                 }
             } else {
-                // Other errors
-                $this->addError('email', $e->getMessage());
+                // Other errors - show on email field or as general error
+                if (str_contains($errorMessage, 'email') || str_contains($errorMessage, 'Email')) {
+                    $this->addError('email', $errorMessage);
+                } else {
+                    $this->addError('email', $errorMessage ?: 'An error occurred during registration. Please try again.');
+                }
             }
         }
     }

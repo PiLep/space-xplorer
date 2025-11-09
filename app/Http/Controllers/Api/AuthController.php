@@ -110,8 +110,10 @@ class AuthController extends Controller
         // Clear token from session for Livewire components
         Session::forget('sanctum_token');
 
-        // Logout user from session
-        Auth::logout();
+        // Logout user from session (only if session auth is being used)
+        if (Auth::check()) {
+            Auth::guard('web')->logout();
+        }
 
         return response()->json([
             'message' => 'Logged out successfully',

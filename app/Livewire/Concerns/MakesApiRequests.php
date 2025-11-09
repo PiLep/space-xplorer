@@ -11,10 +11,6 @@ trait MakesApiRequests
     /**
      * Make an authenticated API request.
      *
-     * @param  string  $method
-     * @param  string  $endpoint
-     * @param  array  $data
-     * @return array
      *
      * @throws \Exception
      */
@@ -53,7 +49,14 @@ trait MakesApiRequests
      */
     protected function getApiBaseUrl(): string
     {
-        return config('app.url').'/api';
+        // Use the same host as the current request to avoid connection issues
+        $url = config('app.url');
+        if (empty($url) || $url === 'http://localhost' || $url === 'http://127.0.0.1') {
+            // In Docker, use the service name or localhost
+            $url = request()->getSchemeAndHttpHost() ?: 'http://localhost';
+        }
+
+        return $url.'/api';
     }
 
     /**
@@ -91,17 +94,18 @@ trait MakesApiRequests
     /**
      * Make a public API request (without authentication token).
      *
-     * @param  string  $method
-     * @param  string  $endpoint
-     * @param  array  $data
-     * @return array
      *
      * @throws \Exception
      */
     protected function makePublicApiRequest(string $method, string $endpoint, array $data = []): array
     {
         try {
-            $response = Http::{strtolower($method)}($this->getApiBaseUrl().$endpoint, $data);
+            $url = $this->getApiBaseUrl().$endpoint;
+
+            $response = Http::timeout(10)
+                ->acceptJson()
+                ->contentType('application/json')
+                ->{strtolower($method)}($url, $data);
 
             if ($response->successful()) {
                 return $response->json();
@@ -115,9 +119,16 @@ trait MakesApiRequests
 
             // Handle other errors
             $message = $response->json('message', 'An error occurred');
-            throw new \Exception($message);
+            $errorDetails = $response->json('errors', []);
+            if (! empty($errorDetails)) {
+                throw new \Exception(json_encode($errorDetails));
+            }
+            throw new \Exception($message ?: 'HTTP '.$response->status());
         } catch (RequestException $e) {
             throw new \Exception('API request failed: '.$e->getMessage());
+        } catch (\Exception $e) {
+            // Re-throw to preserve error message
+            throw $e;
         }
     }
 
@@ -129,4 +140,3 @@ trait MakesApiRequests
         return $this->makePublicApiRequest('POST', $this->getApiBaseUrl().$endpoint, $data);
     }
 }
-

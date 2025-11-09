@@ -3,9 +3,8 @@
 namespace App\Livewire;
 
 use App\Livewire\Concerns\MakesApiRequests;
-use Illuminate\Support\Facades\Auth;
-use Livewire\Component;
 use Livewire\Attributes\Layout;
+use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Dashboard extends Component
@@ -13,8 +12,11 @@ class Dashboard extends Component
     use MakesApiRequests;
 
     public $planet = null;
+
     public $user = null;
+
     public $loading = true;
+
     public $error = null;
 
     public function mount()
@@ -35,6 +37,7 @@ class Dashboard extends Component
             if (! $this->user || ! $this->user['home_planet_id']) {
                 $this->error = 'No home planet found. Please contact support.';
                 $this->loading = false;
+
                 return;
             }
 
