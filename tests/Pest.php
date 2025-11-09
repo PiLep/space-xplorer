@@ -4,5 +4,5 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class)->in('Feature');
-uses(TestCase::class)->in('Unit');
+uses(TestCase::class, RefreshDatabase::class)->in('Unit');
 uses(TestCase::class, RefreshDatabase::class)->in('Browser');
