@@ -2,24 +2,106 @@
 
 namespace Database\Seeders;
 
+use App\Events\UserRegistered;
+use App\Models\Planet;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
     /**
      * Seed the application's database.
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->command->info('🌌 Seeding Space Xplorer database...');
+        $this->command->newLine();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        // Password par défaut pour tous les utilisateurs de test
+        $defaultPassword = 'password';
+
+        // Créer des utilisateurs de test avec leurs planètes
+        $users = [
+            [
+                'name' => 'Alex Explorer',
+                'email' => 'alex@space-xplorer.test',
+            ],
+            [
+                'name' => 'Sam Navigator',
+                'email' => 'sam@space-xplorer.test',
+            ],
+            [
+                'name' => 'Morgan Pilot',
+                'email' => 'morgan@space-xplorer.test',
+            ],
+            [
+                'name' => 'Jordan Commander',
+                'email' => 'jordan@space-xplorer.test',
+            ],
+            [
+                'name' => 'Riley Explorer',
+                'email' => 'riley@space-xplorer.test',
+            ],
+        ];
+
+        $createdUsers = [];
+
+        foreach ($users as $userData) {
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make($defaultPassword),
+                'email_verified_at' => now(),
+            ]);
+
+            // Générer la planète d'origine via l'événement
+            event(new UserRegistered($user));
+
+            // Rafraîchir pour obtenir la planète assignée
+            $user->refresh();
+
+            $createdUsers[] = [
+                'user' => $user,
+                'planet' => $user->homePlanet,
+            ];
+        }
+
+        // Créer quelques planètes supplémentaires (non assignées)
+        $extraPlanets = Planet::factory()->count(5)->create();
+
+        // Afficher les informations de connexion
+        $this->command->info('✅ Users created successfully!');
+        $this->command->newLine();
+        $this->command->info('📋 Login Credentials:');
+        $this->command->newLine();
+
+        foreach ($createdUsers as $data) {
+            $user = $data['user'];
+            $planet = $data['planet'];
+
+            $this->command->line("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            $this->command->line("👤 <fg=cyan>{$user->name}</>");
+            $this->command->line("   📧 Email: <fg=yellow>{$user->email}</>");
+            $this->command->line("   🔑 Password: <fg=yellow>{$defaultPassword}</>");
+            $this->command->line("   🆔 User ID: <fg=gray>{$user->id}</>");
+
+            if ($planet) {
+                $this->command->line("   🪐 Home Planet: <fg=green>{$planet->name}</>");
+                $this->command->line("      Type: {$planet->type} | Size: {$planet->size} | Temp: {$planet->temperature}");
+                $this->command->line("      🆔 Planet ID: <fg=gray>{$planet->id}</>");
+            } else {
+                $this->command->line("   ⚠️  <fg=red>No home planet assigned</>");
+            }
+            $this->command->newLine();
+        }
+
+        $this->command->line("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+        $this->command->info("📊 Summary:");
+        $this->command->line("   • Users created: <fg=cyan>".count($createdUsers)."</>");
+        $this->command->line("   • Planets created: <fg=cyan>".(count($createdUsers) + $extraPlanets->count())."</>");
+        $this->command->line("   • Default password for all users: <fg=yellow>{$defaultPassword}</>");
+        $this->command->newLine();
+        $this->command->info('✨ Database seeded successfully!');
     }
 }

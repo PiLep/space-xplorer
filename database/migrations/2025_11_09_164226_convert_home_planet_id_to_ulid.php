@@ -14,7 +14,7 @@ return new class extends Migration
     {
         // Drop foreign key if it exists (it was already dropped in convert_planets_id_to_ulid, but check anyway)
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
-        
+
         Schema::table('users', function (Blueprint $table) {
             // Drop the old column (foreign key was already dropped in previous migration)
             $table->dropColumn('home_planet_id');
@@ -25,7 +25,7 @@ return new class extends Migration
             $table->ulid('home_planet_id')->nullable()->after('email_verified_at');
             $table->foreign('home_planet_id')->references('id')->on('planets')->onDelete('set null');
         });
-        
+
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 

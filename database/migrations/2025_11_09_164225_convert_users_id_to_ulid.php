@@ -12,11 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Disable foreign key checks temporarily
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
         // Drop foreign key constraints that reference users.id (if they exist)
+        // Note: sessions table doesn't have an explicit foreign key in the original migration
         try {
-            Schema::table('sessions', function (Blueprint $table) {
-                $table->dropForeign(['user_id']);
-            });
+            DB::statement('ALTER TABLE sessions DROP FOREIGN KEY IF EXISTS sessions_user_id_foreign');
         } catch (\Exception $e) {
             // Foreign key might not exist, continue
         }
@@ -35,7 +37,7 @@ return new class extends Migration
         Schema::table('sessions', function (Blueprint $table) {
             $table->dropColumn('user_id');
             $table->ulid('user_id')->nullable()->index()->after('id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // Note: No foreign key constraint as sessions table didn't have one originally
         });
 
         // Update personal_access_tokens table to use string for tokenable_id (to support ULIDs)
@@ -44,6 +46,9 @@ return new class extends Migration
             $table->dropColumn('tokenable_id');
             $table->string('tokenable_id')->index()->after('id');
         });
+
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     /**
@@ -51,10 +56,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop foreign key constraints
-        Schema::table('sessions', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
-        });
+        // Disable foreign key checks temporarily
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
         // Use raw SQL to modify the column
         DB::statement('ALTER TABLE users DROP PRIMARY KEY');
@@ -76,5 +79,8 @@ return new class extends Migration
             $table->dropColumn('tokenable_id');
             $table->unsignedBigInteger('tokenable_id')->index()->after('id');
         });
+
+        // Re-enable foreign key checks
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 };
