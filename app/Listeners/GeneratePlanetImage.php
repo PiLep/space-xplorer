@@ -103,33 +103,33 @@ class GeneratePlanetImage implements ShouldQueue
         ];
 
         $temperatureDescriptions = [
-            'froide' => 'icy, frozen surface with crystalline formations',
-            'tempérée' => 'temperate climate with varied landscapes',
-            'chaude' => 'scorching surface with volcanic activity and heat distortion',
+            'froide' => 'icy, frozen surface covered in ice and snow, crystalline formations, polar ice caps visible',
+            'tempérée' => 'temperate climate with varied landscapes, green and blue tones, visible continents and oceans',
+            'chaude' => 'scorching hot surface, reddish-orange tones, volcanic activity, heat distortion visible in atmosphere',
         ];
 
         $atmosphereDescriptions = [
-            'respirable' => 'clear, breathable atmosphere with visible cloud formations',
-            'toxique' => 'toxic, swirling atmosphere with ominous colored clouds',
-            'inexistante' => 'airless void, stark and desolate',
+            'respirable' => 'clear, breathable atmosphere with white cloud formations, blue atmospheric glow at the edges',
+            'toxique' => 'toxic, swirling atmosphere with yellow, green, or purple colored clouds, chemical haze visible',
+            'inexistante' => 'airless void, no atmospheric glow, stark shadows, cratered surface clearly visible',
         ];
 
         $terrainDescriptions = [
-            'rocheux' => 'rugged, rocky terrain with sharp formations',
-            'océanique' => 'vast oceans with turbulent waves',
-            'désertique' => 'endless desert dunes under harsh light',
-            'forestier' => 'alien forests with strange, twisted vegetation',
-            'urbain' => 'abandoned industrial structures and ruins',
-            'mixte' => 'diverse, mixed terrain with multiple biomes',
-            'glacé' => 'frozen wasteland with ice formations',
+            'rocheux' => 'rugged, rocky terrain with sharp mountain ranges, deep canyons, gray and brown rocky surface',
+            'océanique' => 'vast blue oceans covering most of the surface, minimal landmasses, white ocean foam visible',
+            'désertique' => 'endless sand dunes creating flowing patterns, orange and beige tones, dry cracked surface, no vegetation',
+            'forestier' => 'dense alien forests covering the surface, dark green patches, strange vegetation patterns',
+            'urbain' => 'abandoned industrial structures and ruins, geometric patterns, metallic gray surfaces, urban sprawl',
+            'mixte' => 'diverse, mixed terrain with multiple biomes creating a patchwork surface of different colors',
+            'glacé' => 'frozen wasteland covered in ice and snow, white and blue tones, glaciers and ice sheets visible',
         ];
 
         $typeDescriptions = [
-            'tellurique' => 'rocky terrestrial planet',
-            'gazeuse' => 'gas giant with swirling atmospheric bands',
-            'glacée' => 'ice planet covered in frozen layers',
-            'désertique' => 'barren desert planet',
-            'océanique' => 'ocean world with minimal landmass',
+            'tellurique' => 'rocky terrestrial planet with solid surface',
+            'gazeuse' => 'gas giant with swirling atmospheric bands in various colors',
+            'glacée' => 'ice planet completely covered in frozen layers',
+            'désertique' => 'barren desert planet with sand and rock',
+            'océanique' => 'ocean world with water covering most of the surface',
         ];
 
         // Build the visual description based on planet characteristics
@@ -139,25 +139,32 @@ class GeneratePlanetImage implements ShouldQueue
         $terrainDesc = $terrainDescriptions[$planet->terrain] ?? '';
         $typeDesc = $typeDescriptions[$planet->type] ?? 'alien planet';
 
+        // Build color palette based on planet characteristics
+        $colorPalette = 'deep blues, dark grays';
+        if ($planet->terrain === 'désertique' || $planet->type === 'désertique') {
+            $colorPalette = 'sandy beige, orange, reddish-brown, tan';
+        } elseif ($planet->temperature === 'chaude') {
+            $colorPalette = 'reddish-orange, deep reds, dark browns';
+        } elseif ($planet->temperature === 'froide' || $planet->terrain === 'glacé' || $planet->type === 'glacée') {
+            $colorPalette = 'icy whites, pale blues, silver';
+        } elseif ($planet->terrain === 'océanique' || $planet->type === 'océanique') {
+            $colorPalette = 'deep blues, turquoise, white';
+        } elseif ($planet->atmosphere === 'toxique') {
+            $colorPalette = 'yellow-green, purple, toxic colors';
+        }
+
         // Create a prompt that generates a cinematic planet image
         // in the style of Alien (1979) - dark, atmospheric, realistic sci-fi
-        return "Cinematic space view of {$planet->name}, a {$sizeDesc} and {$typeDesc}, "
-            .'in the style of Alien (1979) movie aesthetic. '
-            .'Wide-angle shot from space, showing the planet in full view against the void of space. '
-            ."Planet surface details: {$tempDesc}, {$terrainDesc}. "
-            ."Atmospheric conditions: {$atmoDesc}. "
-            .'Dark, moody lighting with dramatic shadows and highlights. '
-            .'Industrial sci-fi color palette: deep blues, dark grays, muted oranges, '
-            .'and subtle greens creating an ominous, atmospheric feel. '
-            .'Realistic space environment with stars visible in the background, '
-            .'subtle nebula clouds, and cosmic dust particles catching light. '
-            .'The planet should feel mysterious, potentially dangerous, and awe-inspiring. '
-            .'Cinematic composition with the planet dominating the frame, '
-            .'surrounded by the vast emptiness of space. '
-            .'High detail on surface features, atmospheric layers, and lighting effects. '
-            .'Photorealistic style with sharp focus on the planet, '
-            .'moody and atmospheric, cinematic quality, high resolution, '
-            .'detailed surface texture, realistic shadows and highlights, '
+        return "Cinematic space view of {$planet->name}, a {$sizeDesc} {$typeDesc}, "
+            ."viewed from space. The planet's surface shows {$terrainDesc}. "
+            ."Temperature characteristics: {$tempDesc}. "
+            ."Atmosphere: {$atmoDesc}. "
+            .'Wide-angle shot from space, showing the planet in full view against the dark void of space. '
+            ."Color palette: {$colorPalette}, with dark, moody lighting in the style of Alien (1979). "
+            .'Realistic sci-fi space environment with stars visible in the background. '
+            .'Industrial, atmospheric aesthetic with cinematic quality. '
+            .'The planet should clearly show its surface characteristics and atmospheric conditions. '
+            .'Photorealistic style, high resolution, detailed surface texture, '
             .'16:9 aspect ratio, professional space photography aesthetic.';
     }
 }

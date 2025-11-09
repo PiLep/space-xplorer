@@ -7,6 +7,7 @@ use App\Events\UserRegistered;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
 use App\Listeners\GeneratePlanetImage;
+use App\Listeners\GeneratePlanetVideo;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -24,6 +25,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         PlanetCreated::class => [
             GeneratePlanetImage::class,
+            GeneratePlanetVideo::class,
         ],
     ];
 
