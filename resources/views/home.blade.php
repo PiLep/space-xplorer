@@ -32,7 +32,6 @@
     <!-- Features Section -->
     <div class="grid md:grid-cols-3 gap-8 mb-16">
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <div class="text-4xl mb-4">🌌</div>
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 Explore the Universe
             </h3>
@@ -42,7 +41,6 @@
         </div>
 
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <div class="text-4xl mb-4">🪐</div>
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 Your Home Planet
             </h3>
@@ -52,7 +50,6 @@
         </div>
 
         <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <div class="text-4xl mb-4">🚀</div>
             <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">
                 Build Your Empire
             </h3>

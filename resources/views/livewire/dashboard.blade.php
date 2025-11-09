@@ -38,8 +38,7 @@
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <!-- Size -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">📏</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Size</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->size }}</p>
@@ -47,8 +46,7 @@
 
                     <!-- Temperature -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🌡️</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Temperature</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->temperature }}</p>
@@ -56,8 +54,7 @@
 
                     <!-- Atmosphere -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">💨</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Atmosphere</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->atmosphere }}</p>
@@ -65,8 +62,7 @@
 
                     <!-- Terrain -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🏔️</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Terrain</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->terrain }}</p>
@@ -74,8 +70,7 @@
 
                     <!-- Resources -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">💎</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Resources</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->resources }}</p>
@@ -83,8 +78,7 @@
 
                     <!-- Type -->
                     <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🪐</span>
+                        <div class="mb-2">
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Type</h4>
                         </div>
                         <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->type }}</p>
