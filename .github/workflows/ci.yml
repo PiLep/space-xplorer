@@ -45,8 +45,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.4'
-          extensions: mbstring, dom, curl, libxml, mysql, pdo, pdo_mysql, redis, zip, gd, intl, bcmath, soap
-          coverage: none
+          extensions: mbstring, dom, curl, libxml, mysql, pdo, pdo_mysql, redis, zip, gd, intl, bcmath, soap, xdebug
+          coverage: xdebug
       
       - name: Copy .env
         run: php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -86,7 +86,7 @@ jobs:
       - name: Build Assets
         run: npm run build
       
-      - name: Run Tests
+      - name: Run Tests with Coverage
         env:
           DB_CONNECTION: mysql
           DB_HOST: 127.0.0.1
@@ -98,7 +98,30 @@ jobs:
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
           QUEUE_CONNECTION: sync
-        run: composer test
+        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-html=coverage
+      
+      - name: Upload Coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+      
+      - name: Generate Coverage Summary
+        run: |
+          echo "## Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Coverage report generated successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "View detailed coverage report in the artifacts or check Codecov dashboard." >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload Coverage HTML
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 30
   
   code-style:
     name: Code Style (Laravel Pint)
