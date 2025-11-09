@@ -686,11 +686,260 @@ database/
 - [STACK.md](../memory_bank/STACK.md) - Stack technique détaillée
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Vision métier, fonctionnalités MVP, personas, flux utilisateurs, système de planètes
 
+## Review Architecturale
+
+### Statut
+
+⚠️ Approuvé avec recommandations
+
+### Vue d'Ensemble
+
+Le plan technique est globalement bien structuré et respecte l'architecture définie dans ARCHITECTURE.md. L'approche API-first est correctement suivie, l'utilisation de l'architecture événementielle pour découpler la génération de planète est excellente, et la structure des fichiers est cohérente avec l'organisation du projet. Le plan est prêt pour l'implémentation avec quelques recommandations pour améliorer la robustesse et la maintenabilité.
+
+### Cohérence Architecturale
+
+#### ✅ Points Positifs
+
+- **Approche API-first respectée** : Toute la logique métier est correctement exposée via des endpoints REST API, et Livewire consomme ces APIs en interne, conformément à l'architecture définie.
+- **Architecture événementielle bien utilisée** : L'utilisation de l'événement `UserRegistered` et du listener `GenerateHomePlanet` découple parfaitement la génération de planète de la création d'utilisateur, suivant le pattern Events & Listeners défini.
+- **Structure des fichiers cohérente** : L'organisation des fichiers respecte la structure MVC Laravel avec séparation claire des responsabilités (Events, Listeners, Services, Controllers, Models).
+- **Services bien utilisés** : Le `PlanetGeneratorService` encapsule correctement la logique métier complexe de génération procédurale.
+- **FormRequests pour validation** : Toutes les entrées API utilisent des FormRequest, respectant les bonnes pratiques Laravel.
+
+#### ⚠️ Points d'Attention
+
+- **Configuration des types de planètes** : Le plan mentionne deux options (`config/planets.php` ou `app/Data/PlanetTypes.php`) sans justifier le choix. Pour la cohérence avec Laravel, `config/planets.php` est recommandé.
+- **Gestion d'erreurs lors de la génération** : Le plan mentionne "gérer les erreurs élégamment" mais ne détaille pas suffisamment la stratégie de gestion d'erreurs (rollback, retry, logging).
+- **Unicité des noms de planètes** : Le plan mentionne "nom unique ou gérer les collisions" sans préciser le mécanisme exact (vérification d'unicité, UUID dans le nom, etc.).
+
+### Qualité Technique
+
+#### Choix Techniques
+
+- **Événements & Listeners** : ✅ Validé
+  - Excellente utilisation de l'architecture événementielle pour découpler la logique métier. Le flux `UserRegistered` → `GenerateHomePlanet` est clair et maintenable.
+
+- **Service PlanetGeneratorService** : ✅ Validé
+  - Bon choix pour encapsuler la logique de génération procédurale. La séparation des responsabilités (sélection du type, génération des caractéristiques, génération du nom, génération de la description) est bien pensée.
+
+- **FormRequest pour validation** : ✅ Validé
+  - Respect des bonnes pratiques Laravel. Les règles de validation sont appropriées et complètes.
+
+- **Laravel Sanctum** : ✅ Validé
+  - Choix approprié pour l'authentification par tokens. L'utilisation de `HasApiTokens` dans le modèle User est correcte.
+
+- **Migrations Laravel** : ✅ Validé
+  - Utilisation correcte des migrations Laravel pour la gestion du schéma de base de données. Les relations sont bien définies avec les foreign keys.
+
+#### Structure & Organisation
+
+- **Structure** : ✅ Cohérente
+  - Les 8 phases sont logiques et bien ordonnées. L'ordre d'exécution respecte les dépendances (Base de données → Services → Événements → API → Frontend → Tests → Finalisation).
+
+- **Dépendances** : ✅ Bien gérées
+  - Les dépendances entre les tâches sont clairement identifiées. L'ordre d'exécution est cohérent.
+
+#### Points d'Amélioration
+
+- **Configuration Sanctum pour Livewire** : La tâche 6.1 mentionne la configuration de Sanctum pour Livewire mais ne détaille pas suffisamment. Dans un contexte API-first, Livewire doit pouvoir consommer les APIs internes avec les tokens Sanctum. Cette configuration peut nécessiter des ajustements dans le middleware ou la configuration Sanctum.
+
+### Performance & Scalabilité
+
+#### Points Positifs
+
+- **Génération synchrone acceptable pour MVP** : La génération synchrone de planète est appropriée pour le MVP. Le plan mentionne que cela peut être async plus tard avec queues, ce qui montre une vision évolutive.
+
+- **Structure évolutive** : L'architecture événementielle permet d'ajouter facilement de nouveaux listeners ou événements sans modifier le code existant.
+
+- **Eager loading prévu** : Le plan mentionne l'optimisation des requêtes avec eager loading pour les relations, ce qui est une bonne pratique.
+
+#### Recommandations
+
+- **Recommandation Performance** : Considérer l'utilisation de queues pour la génération de planète si le processus devient plus complexe à l'avenir.
+  - **Justification** : Pour le MVP, synchrone est acceptable (< 1 seconde), mais prévoir l'évolution vers l'asynchrone si nécessaire.
+  - **Priorité** : Low (pour le MVP)
+
+- **Recommandation Cache** : Le plan mentionne Redis pour le cache mais ne détaille pas quelles données seront mises en cache. Considérer le cache des planètes fréquemment accédées.
+  - **Justification** : Les planètes sont des données relativement statiques qui peuvent bénéficier du cache.
+  - **Priorité** : Low (optimisation future)
+
+### Sécurité
+
+#### Validations
+
+- ✅ **Validations prévues et complètes**
+  - FormRequest avec règles appropriées pour chaque endpoint
+  - Validation d'email unique lors de l'inscription
+  - Validation de mot de passe avec confirmation et longueur minimale (8 caractères)
+  - Validation "sometimes" pour la mise à jour du profil (permet les mises à jour partielles)
+
+#### Authentification & Autorisation
+
+- ✅ **Gestion correcte**
+  - Utilisation de Sanctum pour les tokens d'authentification
+  - Middleware `auth:sanctum` protège toutes les routes API appropriées
+  - Pas de système de rôles nécessaire pour le MVP (conforme à l'architecture)
+  - Protection CSRF mentionnée pour les routes web
+
+#### Points d'Attention
+
+- **Autorisation sur les endpoints utilisateurs** : Le plan ne mentionne pas explicitement la vérification que l'utilisateur ne peut modifier que son propre profil. Cette vérification doit être implémentée dans `UserController::update()`.
+  - **Recommandation** : Ajouter une vérification dans le contrôleur ou utiliser une Policy pour s'assurer qu'un utilisateur ne peut modifier que son propre profil.
+  - **Priorité** : High
+
+### Tests
+
+#### Couverture
+
+- ✅ **Tests complets prévus**
+  - Tests unitaires pour le `PlanetGeneratorService` (génération, poids, unicité)
+  - Tests unitaires pour le listener `GenerateHomePlanet`
+  - Tests d'intégration pour tous les endpoints API (AuthController, UserController, PlanetController)
+  - Tests fonctionnels pour les composants Livewire (Register, Login, Dashboard, Profile)
+  - Tests des modèles et relations
+
+#### Recommandations
+
+- **Test additionnel recommandé** : Tester le cas où la génération de planète échoue lors de l'inscription.
+  - **Priorité** : High
+  - **Raison** : Assurer la robustesse du système et vérifier que l'inscription n'est pas bloquée si la génération échoue.
+
+- **Test additionnel recommandé** : Tester l'autorisation (un utilisateur ne peut pas modifier le profil d'un autre utilisateur).
+  - **Priorité** : High
+  - **Raison** : Sécurité critique pour éviter les accès non autorisés.
+
+- **Test additionnel recommandé** : Tester les collisions de noms de planètes et le mécanisme de gestion.
+  - **Priorité** : Medium
+  - **Raison** : Vérifier que le système gère correctement les collisions potentielles.
+
+### Documentation
+
+#### Mise à Jour
+
+- ✅ **Documentation prévue**
+  - Mise à jour de ARCHITECTURE.md prévue dans la tâche 8.2
+  - Documentation PHPDoc prévue pour `PlanetGeneratorService`
+  - Commentaires prévus pour les parties complexes
+
+#### Recommandations
+
+- **Documentation API** : Le plan mentionne "Documenter les routes API (peut être fait via Laravel API documentation ou commentaires)" mais ne précise pas la méthode choisie. Considérer l'utilisation d'un outil comme Laravel API Documentation ou des commentaires PHPDoc structurés.
+  - **Priorité** : Low
+
+### Recommandations Spécifiques
+
+#### Recommandation 1 : Gestion d'erreurs robuste pour la génération de planète
+
+**Problème** : Le plan mentionne "gérer les erreurs élégamment" mais ne détaille pas suffisamment la stratégie de gestion d'erreurs si la génération de planète échoue.
+
+**Impact** : Risque de laisser un utilisateur sans planète d'origine, ou de bloquer l'inscription si la génération échoue.
+
+**Suggestion** : 
+- Ajouter une gestion d'erreurs explicite dans le listener `GenerateHomePlanet`
+- Logger l'erreur pour le debugging
+- Ne pas bloquer l'inscription si la génération échoue (home_planet_id reste null)
+- Prévoir un mécanisme de retry ou de génération manuelle pour les utilisateurs sans planète
+
+**Priorité** : High
+
+**Section concernée** : Tâche 3.2 (GenerateHomePlanet), Tâche 7.2 (Tests)
+
+#### Recommandation 2 : Unicité du nom de planète
+
+**Problème** : Le plan mentionne "nom unique ou gérer les collisions" mais ne détaille pas le mécanisme exact.
+
+**Impact** : Risque de collision de noms de planètes, ce qui pourrait créer de la confusion.
+
+**Suggestion** : 
+- Prévoir un mécanisme de vérification d'unicité du nom avant la création
+- En cas de collision, ajouter un suffixe unique (ex: "Kepler-452b-1") ou utiliser un UUID dans le nom
+- Documenter le mécanisme choisi dans le code
+
+**Priorité** : Medium
+
+**Section concernée** : Tâche 2.2 (PlanetGeneratorService), Tâche 7.1 (Tests)
+
+#### Recommandation 3 : Configuration des types de planètes
+
+**Problème** : Le choix entre `config/planets.php` et `app/Data/PlanetTypes.php` n'est pas justifié.
+
+**Impact** : Cohérence du projet et facilité de maintenance.
+
+**Suggestion** : 
+- Utiliser `config/planets.php` pour la configuration, plus standard dans Laravel
+- Les fichiers de configuration Laravel sont plus adaptés pour ce type de données
+- Facilite l'accès via `config('planets.types')`
+
+**Priorité** : Low
+
+**Section concernée** : Tâche 2.1 (Configuration des types)
+
+#### Recommandation 4 : Autorisation sur les endpoints utilisateurs
+
+**Problème** : Le plan ne mentionne pas explicitement la vérification qu'un utilisateur ne peut modifier que son propre profil.
+
+**Impact** : Risque de sécurité si un utilisateur peut modifier le profil d'un autre utilisateur.
+
+**Suggestion** : 
+- Ajouter une vérification dans `UserController::update()` pour s'assurer que `auth()->id() === $user->id`
+- Ou créer une Policy `UserPolicy` avec la méthode `update()` qui vérifie l'autorisation
+- Documenter cette vérification dans la tâche 5.2
+
+**Priorité** : High
+
+**Section concernée** : Tâche 5.2 (UserController), Tâche 7.4 (Tests)
+
+#### Recommandation 5 : Configuration Sanctum pour Livewire
+
+**Problème** : La tâche 6.1 mentionne la configuration de Sanctum pour Livewire mais ne détaille pas suffisamment.
+
+**Impact** : Risque de problèmes lors de l'implémentation si la configuration n'est pas claire.
+
+**Suggestion** : 
+- Détailer dans la tâche 6.1 comment Livewire consommera les APIs internes avec Sanctum
+- Considérer l'utilisation de `Sanctum::actingAs()` dans les tests Livewire
+- Vérifier que les requêtes internes Livewire peuvent utiliser les tokens Sanctum correctement
+
+**Priorité** : Medium
+
+**Section concernée** : Tâche 6.1 (Configuration Sanctum)
+
+### Modifications Demandées
+
+Aucune modification majeure demandée. Le plan peut être approuvé avec les recommandations ci-dessus. Les recommandations sont principalement des améliorations et des clarifications, pas des blocages.
+
+### Questions & Clarifications
+
+- **Question 1** : Le service `PlanetGeneratorService` sera-t-il réutilisé pour d'autres générations de planètes à l'avenir (planètes explorées, planètes générées dynamiquement) ?
+  - **Impact** : Si oui, prévoir une interface ou une abstraction pour faciliter l'évolution.
+
+- **Question 2** : Y a-t-il une limite au nombre de tentatives de génération de planète en cas d'erreur ?
+  - **Impact** : Éviter les boucles infinies et définir un comportement clair.
+
+- **Question 3** : Les planètes générées seront-elles stockées indéfiniment ou y a-t-il un mécanisme de nettoyage prévu pour les planètes non utilisées ?
+  - **Impact** : Gestion de la base de données à long terme.
+
+### Conclusion
+
+Le plan technique est **approuvé avec recommandations**. Il respecte l'architecture définie, suit les bonnes pratiques Laravel, et est bien structuré pour l'implémentation. Les recommandations portent principalement sur :
+
+1. **Sécurité** : Ajouter la vérification d'autorisation pour les endpoints utilisateurs (High)
+2. **Robustesse** : Détailer la gestion d'erreurs lors de la génération de planète (High)
+3. **Clarifications** : Préciser certains mécanismes (unicité des noms, configuration Sanctum) (Medium)
+
+Le plan peut être implémenté tel quel, en tenant compte des recommandations prioritaires pour assurer la qualité et la sécurité du code.
+
+**Prochaines étapes** :
+1. Implémenter le plan en suivant les recommandations prioritaires
+2. Ajouter la gestion d'erreurs robuste et les vérifications d'autorisation
+3. Clarifier les mécanismes d'unicité et de configuration
+4. Effectuer les tests additionnels recommandés
+
 ## Suivi et Historique
 
 ### Statut
 
-À faire
+⚠️ Approuvé avec recommandations
 
 ### Historique
 
@@ -698,4 +947,9 @@ database/
 **Statut** : À faire
 **Détails** : Plan technique créé pour décomposer l'issue ISSUE-001 en tâches techniques exécutables. Le plan couvre 8 phases : Base de données et modèles, Service de génération, Architecture événementielle, API Authentification, API Utilisateurs/Planètes, Frontend Livewire, Tests, et Finalisation. Chaque phase est décomposée en tâches détaillées avec estimations, dépendances et tests.
 **Notes** : Ce plan est prêt pour être implémenté par Jordan (Fullstack Developer). L'ordre d'exécution est défini et les dépendances sont clairement identifiées. Les tests sont prévus à chaque étape pour assurer la qualité du code.
+
+#### 2025-01-27 - Morgan (Architect) - Review architecturale
+**Statut** : ⚠️ Approuvé avec recommandations
+**Détails** : Review architecturale complète du plan TASK-001. Le plan respecte l'architecture définie, suit les bonnes pratiques Laravel, et est bien structuré pour l'implémentation. L'approche API-first est correctement suivie, l'utilisation de l'architecture événementielle est excellente, et la structure des fichiers est cohérente. Les tests sont complets et bien planifiés.
+**Notes** : Recommandations prioritaires : (1) Ajouter la vérification d'autorisation pour les endpoints utilisateurs (High), (2) Détailer la gestion d'erreurs lors de la génération de planète (High), (3) Clarifier les mécanismes d'unicité des noms et de configuration Sanctum (Medium). Le plan peut être implémenté en tenant compte de ces recommandations pour assurer la qualité et la sécurité du code.
 
