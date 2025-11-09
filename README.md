@@ -1,112 +1,59 @@
-# Space-Xplorer
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-A game of universe exploration.
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-## Description
+## About Laravel
 
-Space Xplorer is a web-based game where players can explore and discover different star systems, planets, and celestial objects in a virtual universe.
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-**MVP (Current Version)** : Each player starts with a randomly generated home planet and can explore its characteristics. Exploration features will be added progressively.
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-## Features
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-### Current Features (MVP)
+## Learning Laravel
 
-- **User Registration/Login** : Account creation and authentication
-- **Home Planet Generation** : Automatic random generation of a home planet upon registration
-- **Planet Visualization** : Display of home planet characteristics
-- **User Profile** : User profile management
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-### Planned Features
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-- Exploration of other planets
-- Discovery of star systems
-- Progression and achievements system
-- Player interactions
-- And more...
+## Laravel Sponsors
 
-## Technology Stack
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-### Backend
-- **Laravel 12** - PHP framework with event-driven architecture
-- **Laravel Sanctum** - API token authentication
-- **Laravel Telescope** - Debugging and monitoring
-- **Laravel Horizon** - Queue monitoring
-- **Laravel Pint** - Code formatting
+### Premium Partners
 
-### Frontend
-- **Livewire 3** - Interactive server-side components
-- **Tailwind CSS** - Utility-first CSS framework (with custom design system)
-- **Alpine.js** - Lightweight JavaScript framework
-- **Vite** - Build tool for assets
-
-### Database & Infrastructure
-- **MySQL 8.0** - Relational database
-- **Redis** - Cache and queue backend
-- **Laravel Sail** - Docker development environment
-- **Laravel Forge** - Deployment platform
-
-## Documentation
-
-For detailed project documentation, see [AGENTS.md](./AGENTS.md).
-
-The documentation includes:
-- **[PROJECT_BRIEF.md](./docs/memory_bank/PROJECT_BRIEF.md)** - Business vision, features, personas, user flows
-- **[ARCHITECTURE.md](./docs/memory_bank/ARCHITECTURE.md)** - Technical architecture, data model, API endpoints
-- **[STACK.md](./docs/memory_bank/STACK.md)** - Complete technology stack details
-
-## Getting Started
-
-- **[GET_STARTED.md](./GET_STARTED.md)** : Guide pour démarrer l'application Laravel en local
-- **[GET_STARTED_WORKFLOW.md](./GET_STARTED_WORKFLOW.md)** : Guide pour utiliser l'usine logicielle avec les agents IA
-
-### Quick Start
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/space-xplorer.git
-   cd space-xplorer
-   ```
-
-2. **Install dependencies and start containers**
-   ```bash
-   composer install
-   cp .env.example .env
-   ./vendor/bin/sail up -d
-   ./vendor/bin/sail artisan key:generate
-   ./vendor/bin/sail npm install
-   ./vendor/bin/sail artisan migrate
-   ./vendor/bin/sail npm run dev
-   ```
-
-3. **Access the application**
-   - Web: http://localhost
-   - Telescope: http://localhost/telescope (if enabled)
-
-### Development
-
-- Run tests: `./vendor/bin/sail artisan test`
-- Format code: `./vendor/bin/sail pint`
-- Access container: `./vendor/bin/sail shell`
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+## Code of Conduct
 
-### Code Style
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-- Follow Laravel coding standards
-- Use Laravel Pint for code formatting
-- Write tests for new features
-- Update documentation as needed
+## Security Vulnerabilities
+
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
-[License information to be added]
-
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

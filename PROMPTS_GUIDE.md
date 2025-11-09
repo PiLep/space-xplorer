@@ -262,3 +262,4 @@ Action demandée :
 - `@folder docs/prompts/` - Guides d'actions
 - `@folder docs/memory_bank/` - Connaissance du projet
 
+

@@ -8,6 +8,8 @@ alwaysApply: true
 
 ## Quick Reference
 
+- **Laravel Sail**: Always use `./vendor/bin/sail` for all commands (artisan, composer, npm, etc.) to ensure consistency with the Docker development environment
+- **Chrome DevTools MCP**: Use Chrome DevTools MCP to visually verify the application after launching or implementing new features (take snapshot, check console errors, verify network requests)
 - **Laravel Pint**: Use `./vendor/bin/sail pint` for formatting
 - **Tests**: Write tests for new features
 - **Form Requests**: Use FormRequest for API validation

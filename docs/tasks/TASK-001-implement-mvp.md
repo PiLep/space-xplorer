@@ -73,39 +73,29 @@ database/
 ### Phase 1 : Base de Données et Modèles
 
 #### Tâche 1.1 : Créer la migration pour la table users
-- **Description** : Créer la migration de base pour la table users avec les champs standards Laravel (id, name, email, password, email_verified_at, remember_token, timestamps)
-- **Fichiers concernés** : `database/migrations/YYYY_MM_DD_create_users_table.php`
-- **Estimation** : 30 min
-- **Dépendances** : Aucune
-- **Tests** : Vérifier la structure de la table après migration
+- [x] ✅ **Terminée** - Migration users existante (Laravel par défaut)
+- **Fichiers concernés** : `database/migrations/0001_01_01_000000_create_users_table.php`
+- **Notes** : Migration Laravel par défaut contient tous les champs nécessaires
 
 #### Tâche 1.2 : Créer la migration pour la table planets
-- **Description** : Créer la migration avec tous les champs nécessaires : name (string), type (enum ou string), size (enum), temperature (enum), atmosphere (enum), terrain (enum), resources (enum), description (text), timestamps
-- **Fichiers concernés** : `database/migrations/YYYY_MM_DD_create_planets_table.php`
-- **Estimation** : 45 min
-- **Dépendances** : Aucune
-- **Tests** : Vérifier la structure de la table après migration
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `database/migrations/2025_11_09_092648_create_planets_table.php`
+- **Détails** : Migration créée avec tous les champs (name, type, size, temperature, atmosphere, terrain, resources, description)
 
 #### Tâche 1.3 : Ajouter la colonne home_planet_id à la table users
-- **Description** : Migration pour ajouter la foreign key home_planet_id (nullable, unsigned big integer) avec contrainte de clé étrangère vers planets.id
-- **Fichiers concernés** : `database/migrations/YYYY_MM_DD_add_home_planet_id_to_users_table.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 1.2
-- **Tests** : Vérifier la relation et la contrainte de clé étrangère
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `database/migrations/2025_11_09_092654_add_home_planet_id_to_users_table.php`
+- **Détails** : Colonne nullable avec foreign key vers planets.id, onDelete('set null')
 
 #### Tâche 1.4 : Créer le modèle User
-- **Description** : Créer le modèle Eloquent User avec la relation `homePlanet()` vers Planet, et utiliser HasApiTokens de Sanctum
-- **Fichiers concernés** : `app/Models/User.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 1.1, Tâche 1.3
-- **Tests** : Tests unitaires du modèle et de la relation
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `app/Models/User.php`
+- **Détails** : Ajout de HasApiTokens (Sanctum), relation homePlanet(), home_planet_id dans fillable
 
 #### Tâche 1.5 : Créer le modèle Planet
-- **Description** : Créer le modèle Eloquent Planet avec les casts appropriés pour les enums, et la relation inverse `users()` vers User
-- **Fichiers concernés** : `app/Models/Planet.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 1.2
-- **Tests** : Tests unitaires du modèle et de la relation
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Models/Planet.php`
+- **Détails** : Modèle créé avec fillable, relation users() vers User
 
 ### Phase 2 : Service de Génération de Planètes
 
@@ -939,7 +929,7 @@ Le plan peut être implémenté tel quel, en tenant compte des recommandations p
 
 ### Statut
 
-✅ Approuvé - Prêt pour implémentation
+🔄 En cours
 
 ### Historique
 
@@ -999,4 +989,25 @@ Le plan peut être implémenté tel quel, en tenant compte des recommandations p
 - Détailer la configuration Sanctum pour Livewire lors de l'implémentation de la Tâche 6.1
 
 **Conclusion** : Le plan est complet, cohérent, et prêt pour l'implémentation. Toutes les recommandations de Morgan sont documentées et doivent être prises en compte. Le plan peut être transmis à Jordan pour l'implémentation avec confiance.
+
+#### 2025-01-27 - Jordan (Fullstack Developer) - Début de l'implémentation
+**Statut** : 🔄 En cours
+**Détails** : Début de l'implémentation du plan TASK-001. Mise à jour du statut à "En cours" et démarrage de la Phase 1 (Base de Données et Modèles).
+**Notes** : Implémentation en cours selon l'ordre défini dans le plan. Prise en compte des recommandations prioritaires de Morgan (gestion d'erreurs, autorisation, unicité des noms).
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 1 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 1 (Base de Données et Modèles) terminée. Toutes les migrations et modèles créés :
+- Migration users (existante Laravel)
+- Migration planets créée avec tous les champs
+- Migration add_home_planet_id_to_users_table créée
+- Modèle Planet créé avec relation users()
+- Modèle User modifié avec relation homePlanet() et HasApiTokens
+- Laravel Sanctum installé et configuré
+**Fichiers créés/modifiés** :
+- `database/migrations/2025_11_09_092648_create_planets_table.php`
+- `database/migrations/2025_11_09_092654_add_home_planet_id_to_users_table.php`
+- `app/Models/Planet.php`
+- `app/Models/User.php` (modifié)
+**Notes** : Les migrations n'ont pas encore été exécutées (Docker non démarré). Prêt pour Phase 2.
 
