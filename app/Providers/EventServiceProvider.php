@@ -27,7 +27,11 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        parent::boot();
+
+        // Disable automatic event discovery to prevent duplicate listener registration
+        // Laravel was registering both the class and the @handle method
+        $this->disableEventDiscovery();
     }
 
     /**

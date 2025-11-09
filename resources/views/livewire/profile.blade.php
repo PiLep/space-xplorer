@@ -15,17 +15,20 @@
                     <div class="mb-4 flex items-center gap-6">
                         <!-- Avatar -->
                         @if ($user['avatar_url'])
-                            <div class="flex-shrink-0">
+                            <div class="flex-shrink-0 relative">
                                 <img
                                     src="{{ $user['avatar_url'] }}"
                                     alt="{{ $user['name'] }}'s avatar"
-                                    class="border-space-primary dark:border-space-primary terminal-border-simple h-24 w-24 rounded-lg border-2 object-cover shadow-lg"
+                                    class="border-space-primary dark:border-space-primary terminal-border-simple h-24 w-24 rounded-lg border-2 object-cover shadow-lg avatar-image"
+                                    onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
                                 />
-                            </div>
-                        @else
-                            <div
-                                class="dark:border-border-dark terminal-border-simple flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-200 dark:bg-gray-700">
-                                <span class="font-mono text-2xl text-gray-400 dark:text-gray-500">?</span>
+                                @php
+                                    $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
+                                @endphp
+                                <div
+                                    class="dark:border-border-dark terminal-border-simple hidden flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
+                                    <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                </div>
                             </div>
                         @endif
                         <!-- User Info -->

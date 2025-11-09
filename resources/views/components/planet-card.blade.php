@@ -39,8 +39,7 @@
 
                 <!-- Planet Characteristics -->
                 <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
-                    <x-terminal-prompt command="query_planet_data" />
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 dark:text-glow-subtle font-mono">SYSTEM_DATA</h3>
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 dark:text-glow-subtle font-mono">PLANET_DATA</h3>
                     <div class="space-y-3 font-mono">
                         <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
                             <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">SIZE</span>

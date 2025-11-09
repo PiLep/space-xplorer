@@ -50,7 +50,21 @@
     <div class="fixed bottom-0 left-0 right-0 bg-surface-dark dark:bg-surface-dark border-t border-border-dark dark:border-border-dark font-mono z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
             <div class="flex items-center gap-2">
-                <span class="text-gray-500 dark:text-gray-500 text-sm">SYSTEM@SPACE-XPLORER:~$</span>
+                @php
+                    if (auth()->check()) {
+                        $user = auth()->user();
+                        if (!$user->relationLoaded('homePlanet')) {
+                            $user->load('homePlanet');
+                        }
+                        $planetName = $user->homePlanet?->name ?? 'SPACE-XPLORER';
+                        $userName = str_replace(' ', '_', strtoupper($user->name));
+                        $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
+                        $prompt = $userName . '@' . $planetNameUpper . ':~$';
+                    } else {
+                        $prompt = 'SYSTEM@SPACE-XPLORER:~$';
+                    }
+                @endphp
+                <span class="text-gray-500 dark:text-gray-500 text-sm">{{ $prompt }}</span>
                 <div class="flex-1 flex items-center gap-4 text-sm">
                     @foreach($items as $item)
                         @if(isset($item['type']) && $item['type'] === 'form')

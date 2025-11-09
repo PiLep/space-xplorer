@@ -44,17 +44,17 @@
                     </span>
                     <div class="flex items-center gap-4 text-sm">
                         @auth
-                            <a href="{{ route('dashboard') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors">
+                            <a href="{{ route('dashboard') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                 > DASHBOARD
                             </a>
-                            <a href="{{ route('profile') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors">
+                            <a href="{{ route('profile') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                 > PROFILE
                             </a>
                         @else
-                            <a href="{{ route('login') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors">
+                            <a href="{{ route('login') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                 > LOGIN
                             </a>
-                            <a href="{{ route('register') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors">
+                            <a href="{{ route('register') }}" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                 > REGISTER
                             </a>
                         @endauth
@@ -65,9 +65,9 @@
                         {{ $bottomBarActions }}
                     @else
                         @auth
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
+                            <form method="POST" action="{{ route('logout') }}" class="inline relative z-50">
                                 @csrf
-                                <button type="submit" class="text-error dark:text-error hover:text-error-light dark:hover:text-error-light transition-colors">
+                                <button type="submit" class="text-error dark:text-error hover:text-error-light dark:hover:text-error-light transition-colors cursor-pointer relative z-50 px-2 py-1">
                                     > LOGOUT
                                 </button>
                             </form>

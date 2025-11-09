@@ -17,6 +17,8 @@ class Register extends Component
 
     public $password_confirmation = '';
 
+    public $isSubmitting = false;
+
     protected $rules = [
         'name' => 'required|string|max:255',
         'email' => 'required|email|max:255|unique:users',
@@ -35,7 +37,14 @@ class Register extends Component
 
     public function register(AuthService $authService)
     {
+        // Prevent double submission
+        if ($this->isSubmitting) {
+            return;
+        }
+
         $this->validate();
+
+        $this->isSubmitting = true;
 
         try {
             $authService->registerFromArray([
@@ -56,6 +65,8 @@ class Register extends Component
         } catch (\Exception $e) {
             // Handle other errors
             $this->addError('email', $e->getMessage() ?: 'An error occurred during registration. Please try again.');
+        } finally {
+            $this->isSubmitting = false;
         }
     }
 

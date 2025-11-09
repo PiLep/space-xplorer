@@ -15,18 +15,23 @@ it('generates avatars for users without avatars', function () {
     $user2 = User::factory()->create(['avatar_url' => null]);
     $userWithAvatar = User::factory()->create(['avatar_url' => 'https://example.com/avatar.png']);
 
+    $avatarPath = 'images/generated/avatar.png';
+
     // Mock the image generator
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->twice()
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => $avatarPath,
             'disk' => 's3',
             'provider' => 'openai',
         ]);
 
     $this->app->instance(ImageGenerationService::class, $mockGenerator);
+
+    // Create the file in fake storage to simulate actual file creation
+    Storage::disk('s3')->put($avatarPath, 'fake image content');
 
     // Run command with --force to skip confirmation
     Artisan::call('users:generate-avatars', ['--force' => true]);
@@ -58,17 +63,22 @@ it('skips users who already have avatars', function () {
 it('respects limit option', function () {
     User::factory()->count(5)->create(['avatar_url' => null]);
 
+    $avatarPath = 'images/generated/avatar.png';
+
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->times(2) // Only 2 times because of limit
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => $avatarPath,
             'disk' => 's3',
             'provider' => 'openai',
         ]);
 
     $this->app->instance(ImageGenerationService::class, $mockGenerator);
+
+    // Create the file in fake storage to simulate actual file creation
+    Storage::disk('s3')->put($avatarPath, 'fake image content');
 
     Artisan::call('users:generate-avatars', [
         '--force' => true,
@@ -83,6 +93,8 @@ it('handles errors gracefully and continues processing', function () {
     $user1 = User::factory()->create(['avatar_url' => null]);
     $user2 = User::factory()->create(['avatar_url' => null]);
 
+    $avatarPath = 'images/generated/avatar.png';
+
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->once()
@@ -91,12 +103,15 @@ it('handles errors gracefully and continues processing', function () {
         ->once()
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => $avatarPath,
             'disk' => 's3',
             'provider' => 'openai',
         ]);
 
     $this->app->instance(ImageGenerationService::class, $mockGenerator);
+
+    // Create the file in fake storage to simulate actual file creation
+    Storage::disk('s3')->put($avatarPath, 'fake image content');
 
     $exitCode = Artisan::call('users:generate-avatars', ['--force' => true]);
 

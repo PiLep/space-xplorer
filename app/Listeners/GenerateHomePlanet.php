@@ -25,19 +25,27 @@ class GenerateHomePlanet
      */
     public function handle(UserRegistered $event): void
     {
+        // Refresh user to get latest data
+        $user = $event->user->fresh();
+
+        // Prevent duplicate planet generation - if user already has a home planet, skip
+        if ($user->home_planet_id) {
+            return;
+        }
+
         try {
             $planet = $this->planetGenerator->generate();
-            $event->user->update(['home_planet_id' => $planet->id]);
+            $user->update(['home_planet_id' => $planet->id]);
 
             Log::info('Home planet generated successfully', [
-                'user_id' => $event->user->id,
+                'user_id' => $user->id,
                 'planet_id' => $planet->id,
                 'planet_name' => $planet->name,
             ]);
         } catch (\Exception $e) {
             // Log the error but don't block user registration
             Log::error('Failed to generate home planet for user', [
-                'user_id' => $event->user->id,
+                'user_id' => $user->id,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);

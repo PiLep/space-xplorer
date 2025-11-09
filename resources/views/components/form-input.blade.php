@@ -40,7 +40,21 @@
     @if($variant === 'terminal' && $label)
         <!-- Terminal prompt style -->
         <div class="text-sm text-gray-500 dark:text-gray-500 mb-2">
-            <span class="text-space-primary dark:text-space-primary">SYSTEM@SPACE-XPLORER:~$</span> 
+            @php
+                if (auth()->check()) {
+                    $user = auth()->user();
+                    if (!$user->relationLoaded('homePlanet')) {
+                        $user->load('homePlanet');
+                    }
+                    $planetName = $user->homePlanet?->name ?? 'SPACE-XPLORER';
+                    $userName = str_replace(' ', '_', strtoupper($user->name));
+                    $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
+                    $prompt = $userName . '@' . $planetNameUpper . ':~$';
+                } else {
+                    $prompt = 'SYSTEM@SPACE-XPLORER:~$';
+                }
+            @endphp
+            <span class="text-space-primary dark:text-space-primary">{{ $prompt }}</span> 
             <span class="text-space-secondary dark:text-space-secondary">{{ strtolower(str_replace(' ', '_', $label)) }}</span>
         </div>
     @elseif($label)

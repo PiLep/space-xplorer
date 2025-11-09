@@ -67,6 +67,8 @@ class User extends Authenticatable
      * This accessor handles both:
      * - Old format: Full URL stored (for backward compatibility)
      * - New format: Path stored (reconstructed dynamically)
+     *
+     * Returns null if the file doesn't exist in storage.
      */
     protected function avatarUrl(): Attribute
     {
@@ -77,12 +79,18 @@ class User extends Authenticatable
                 }
 
                 // If it's already a full URL (old format), return as is
+                // Note: We can't easily verify existence of external URLs without HTTP requests
                 if (filter_var($value, FILTER_VALIDATE_URL)) {
                     return $value;
                 }
 
-                // Otherwise, it's a path - reconstruct the URL using Laravel Storage
+                // Otherwise, it's a path - verify file exists before returning URL
                 $disk = config('image-generation.storage.disk', 's3');
+
+                // Check if file exists in storage
+                if (! Storage::disk($disk)->exists($value)) {
+                    return null;
+                }
 
                 return Storage::disk($disk)->url($value);
             }

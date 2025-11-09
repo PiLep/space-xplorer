@@ -48,6 +48,12 @@ class GenerateAvatar implements ShouldQueue
             // Reload user to ensure we have the latest data
             $user = $event->user->fresh();
 
+            // Prevent duplicate avatar generation - if user already has an avatar, skip
+            $existingAvatar = $user->getAttributes()['avatar_url'] ?? null;
+            if ($existingAvatar) {
+                return;
+            }
+
             // Generate avatar prompt in Alien style (technician/ship captain)
             $prompt = $this->generateAvatarPrompt($user->name);
 
@@ -97,17 +103,25 @@ class GenerateAvatar implements ShouldQueue
 
         // Create a prompt that generates a professional space technician/captain avatar
         // in the style of Alien (1979) - industrial, realistic, sci-fi aesthetic
-        return "Professional portrait of a single {$character}, {$userName}, "
-            .'a space technician and ship captain, '
+        return "Close-up professional portrait headshot of a single {$character}, {$userName}, "
+            .'a seasoned space technician and ship captain, '
             .'in the style of Alien (1979) movie aesthetic. '
-            .'Industrial sci-fi setting, realistic lighting, cinematic composition. '
-            .'Single person only, wearing a worn technical jumpsuit with patches and insignia, '
-            .'holding a data pad or technical tool. '
-            .'Atmospheric lighting with blue and orange tones, '
-            .'industrial background with spaceship interior details. '
-            .'Professional headshot portrait of one person only, no other people in frame, square format, '
-            .'highly detailed, photorealistic style, '
-            .'moody and atmospheric, cinematic quality.';
+            .'Tight framing, head and shoulders only, zoomed in for maximum detail. '
+            .'Industrial sci-fi setting with realistic lighting and cinematic composition. '
+            .'Single person only, wearing a weathered technical jumpsuit with visible patches, '
+            .'insignia, and worn fabric details. '
+            .'Holding a data pad or technical tool in hand, visible in foreground. '
+            .'Facial features: determined expression, weathered skin with subtle scars or marks, '
+            .'professional haircut, focused eyes with slight bags from long shifts. '
+            .'Atmospheric lighting with blue and orange tones creating depth and dimension. '
+            .'Simple, subtle background: dark, muted tones with minimal detail, '
+            .'slightly blurred to emphasize the person. No distracting elements, '
+            .'just a clean, professional backdrop that makes the character stand out. '
+            .'Professional headshot portrait, one person only, no other people in frame, '
+            .'square format (1:1 aspect ratio), highly detailed facial features, '
+            .'photorealistic style with sharp focus on the face, '
+            .'moody and atmospheric, cinematic quality, high resolution, '
+            .'detailed skin texture, realistic shadows and highlights.';
     }
 
     /**

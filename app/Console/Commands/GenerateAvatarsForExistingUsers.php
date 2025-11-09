@@ -168,8 +168,10 @@ class GenerateAvatarsForExistingUsers extends Command
             .'Industrial sci-fi setting, realistic lighting, cinematic composition. '
             .'Single person only, wearing a worn technical jumpsuit with patches and insignia, '
             .'holding a data pad or technical tool. '
-            .'Atmospheric lighting with blue and orange tones, '
-            .'industrial background with spaceship interior details. '
+            .'Atmospheric lighting with blue and orange tones. '
+            .'Simple, subtle background: dark, muted tones with minimal detail, '
+            .'slightly blurred to emphasize the person. No distracting elements, '
+            .'just a clean, professional backdrop that makes the character stand out. '
             .'Professional headshot portrait of one person only, no other people in frame, square format, '
             .'highly detailed, photorealistic style, '
             .'moody and atmospheric, cinematic quality.';

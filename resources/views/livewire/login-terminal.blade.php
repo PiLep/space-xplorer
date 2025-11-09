@@ -48,7 +48,6 @@
                 <div class="mt-8">
                     <x-terminal-prompt
                         command="authenticate"
-                        prompt="SYSTEM@SPACE-XPLORER:~$"
                     />
                     <x-button
                         type="submit"

@@ -45,6 +45,9 @@ it('generates avatar successfully when job is processed', function () {
             'provider' => 'openai',
         ]);
 
+    // Create the file in fake storage to simulate actual file creation
+    Storage::disk('s3')->put($avatarPath, 'fake image content');
+
     $event = new UserRegistered($this->user);
     $this->listener->handle($event);
 
@@ -53,7 +56,7 @@ it('generates avatar successfully when job is processed', function () {
     // The path should be stored in the database
     expect($this->user->getRawOriginal('avatar_url'))->toBe($avatarPath);
 
-    // The accessor should reconstruct the URL
+    // The accessor should reconstruct the URL (and verify file exists)
     expect($this->user->avatar_url)->toBeString()->toContain($avatarPath);
 });
 
