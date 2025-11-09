@@ -27,6 +27,7 @@ Agents disponibles pour guider l'IA dans différents rôles :
 - **[LEAD-DEV.md](./docs/agents/LEAD-DEV.md)** : **Sam** - Agent Lead Developer - Architecture technique, transformation d'issues en plans de développement
 - **[ARCHITECT.md](./docs/agents/ARCHITECT.md)** : **Morgan** - Agent Architecte - Review architecturale, cohérence technique, qualité du code
 - **[FULLSTACK-DEV.md](./docs/agents/FULLSTACK-DEV.md)** : **Jordan** - Agent Fullstack Developer - Implémentation des plans de développement en code fonctionnel
+- **[DESIGNER.md](./docs/agents/DESIGNER.md)** : **Riley** - Agent Designer - Identité visuelle, expérience utilisateur, cohérence du design
 - **[MANAGER.md](./docs/agents/MANAGER.md)** : **Taylor** - Agent Workflow Manager - Surveillance du workflow, analyse des processus, rapports d'amélioration
 
 ## Prompts
@@ -39,6 +40,7 @@ Actions disponibles pour les agents :
 - **[implement-task.md](./docs/prompts/implement-task.md)** : Guide pour implémenter les plans de développement
 - **[review-implementation.md](./docs/prompts/review-implementation.md)** : Guide pour reviewer le code implémenté
 - **[review-functional.md](./docs/prompts/review-functional.md)** : Guide pour reviewer fonctionnellement une implémentation
+- **[review-visual.md](./docs/prompts/review-visual.md)** : Guide pour reviewer visuellement une implémentation (Riley)
 - **[create-pr.md](./docs/prompts/create-pr.md)** : Guide pour créer une Pull Request vers develop
 - **[update-tracking.md](./docs/prompts/update-tracking.md)** : Guide pour mettre à jour et suivre les issues et tasks
 - **[monitor-workflow.md](./docs/prompts/monitor-workflow.md)** : Guide pour surveiller le workflow et créer des rapports d'amélioration
