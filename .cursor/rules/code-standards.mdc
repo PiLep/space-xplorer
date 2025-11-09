@@ -1,0 +1,24 @@
+---
+description: Code standards and technical rules for Space Xplorer
+globs: ["**/*.php", "**/*.js", "**/*.ts", "**/*.vue", "**/*.blade.php"]
+alwaysApply: true
+---
+
+# Space Xplorer - Code Standards
+
+## Quick Reference
+
+- **Laravel Pint**: Use `./vendor/bin/sail pint` for formatting
+- **Tests**: Write tests for new features
+- **Form Requests**: Use FormRequest for API validation
+- **Migrations**: Use Laravel migrations (not raw SQL)
+- **API-first**: All business logic via REST API endpoints
+- **Event-driven**: Use Laravel events for business logic
+
+## Complete Documentation
+
+- **[TECHNICAL_RULES.md](../../docs/rules/TECHNICAL_RULES.md)** - Validated technical rules
+- **[HUMAN_VALIDATION.md](../../docs/rules/HUMAN_VALIDATION.md)** - Points requiring human validation
+- **[ARCHITECTURE.md](../../docs/memory_bank/ARCHITECTURE.md)** - Complete architecture details
+
+**For complete code standards and rules, read the documentation files referenced above.**

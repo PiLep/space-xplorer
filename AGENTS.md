@@ -1,5 +1,7 @@
 # AGENTS.md - Documentation pour l'IA
 
+> **Note**: Ce projet utilise également le système de règles Cursor moderne dans `.cursor/rules/` (format MDC). Ce fichier `AGENTS.md` reste disponible comme alternative simple et pour compatibilité.
+
 ## Workflow
 
 Pour comprendre l'ordre d'intervention des agents et le processus complet :

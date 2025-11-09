@@ -1,0 +1,31 @@
+---
+description: Available prompts and actions for agents
+globs: ["docs/prompts/**/*", "docs/issues/**/*", "docs/tasks/**/*"]
+alwaysApply: false
+agentRequested: true
+---
+
+# Space Xplorer - Available Prompts and Actions
+
+**All prompt guides are in `docs/prompts/` - read them before executing actions.**
+
+## Quick Reference
+
+### By Agent
+- **Alex**: `create-issue.md`, `review-functional.md`
+- **Sam**: `create-plan.md`, `review-implementation.md`, `create-pr.md`
+- **Morgan**: `review-task.md`
+- **Jordan**: `implement-task.md`
+- **Taylor**: `monitor-workflow.md`
+
+### Shared
+- `update-tracking.md`, `propose-technical-rule.md`, `update-memory-bank.md`
+
+## How to Use
+
+1. Read the agent's documentation: `docs/agents/{AGENT}.md`
+2. Read the relevant prompt guide: `docs/prompts/{action}.md`
+3. Follow the workflow steps exactly
+4. Update tracking sections as you progress
+
+**For complete details, read the prompt guides in `docs/prompts/`.**

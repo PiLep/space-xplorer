@@ -1,0 +1,34 @@
+---
+description: Workflow and agent system for Space Xplorer project
+globs: ["**/*"]
+alwaysApply: true
+---
+
+# Space Xplorer - Workflow and Agent System
+
+This project uses a structured workflow with specialized AI agents. **Always refer to the documentation before taking actions.**
+
+## Core Documentation (READ THESE FIRST)
+
+**CRITICAL**: Before any action, read the relevant documentation:
+
+- **[AGENTS.md](../../AGENTS.md)** - Complete list of agents, their roles, and available prompts
+- **[WORKFLOW.md](../../WORKFLOW.md)** - Complete workflow from issue creation to PR merge
+- **[GET_STARTED_WORKFLOW.md](../../GET_STARTED_WORKFLOW.md)** - Quick start guide for using the workflow
+
+## Quick Reference
+
+### Agents
+- **Alex** (Product) - `docs/agents/PRODUCT.md`
+- **Sam** (Lead Dev) - `docs/agents/LEAD-DEV.md`
+- **Morgan** (Architect) - `docs/agents/ARCHITECT.md`
+- **Jordan** (Fullstack) - `docs/agents/FULLSTACK-DEV.md`
+- **Taylor** (Manager) - `docs/agents/MANAGER.md`
+
+### Key Principles
+- Always read documentation before acting
+- Update tracking sections immediately after actions
+- Loop until perfection at review stages (max 3 iterations)
+- Perform final verification after each approval
+
+**For complete details, see the documentation files referenced above.**

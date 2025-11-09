@@ -1,0 +1,22 @@
+---
+description: Documentation standards and rules
+globs: ["docs/**/*.md", "**/*.md"]
+alwaysApply: false
+agentRequested: true
+---
+
+# Space Xplorer - Documentation Standards
+
+## Documentation Rules (READ THESE)
+
+- **[MARKDOWN_RULES.md](../../docs/rules/MARKDOWN_RULES.md)** - Markdown writing principles
+- **[TECHNICAL_RULES.md](../../docs/rules/TECHNICAL_RULES.md)** - Validated technical rules
+- **[HUMAN_VALIDATION.md](../../docs/rules/HUMAN_VALIDATION.md)** - Points requiring human validation
+
+## Quick Reference
+
+- **Language**: Documentation in English, code comments in English
+- **Structure**: See `docs/` directory organization
+- **When creating docs**: Follow `docs/rules/MARKDOWN_RULES.md`
+
+**For complete documentation standards, read the rules files referenced above.**
