@@ -57,12 +57,9 @@ The documentation includes:
 
 ## Getting Started
 
-### Prerequisites
+Pour un guide complet et détaillé, consultez **[GET_STARTED.md](./GET_STARTED.md)**.
 
-- Docker & Docker Compose
-- Git
-
-### Installation
+### Quick Start
 
 1. **Clone the repository**
    ```bash
@@ -70,38 +67,18 @@ The documentation includes:
    cd space-xplorer
    ```
 
-2. **Install dependencies using Laravel Sail**
+2. **Install dependencies and start containers**
    ```bash
-   ./vendor/bin/sail up -d
-   ```
-
-3. **Install PHP dependencies**
-   ```bash
-   ./vendor/bin/sail composer install
-   ```
-
-4. **Install Node dependencies**
-   ```bash
-   ./vendor/bin/sail npm install
-   ```
-
-5. **Set up environment file**
-   ```bash
+   composer install
    cp .env.example .env
+   ./vendor/bin/sail up -d
    ./vendor/bin/sail artisan key:generate
-   ```
-
-6. **Run migrations**
-   ```bash
+   ./vendor/bin/sail npm install
    ./vendor/bin/sail artisan migrate
-   ```
-
-7. **Build assets**
-   ```bash
    ./vendor/bin/sail npm run dev
    ```
 
-8. **Access the application**
+3. **Access the application**
    - Web: http://localhost
    - Telescope: http://localhost/telescope (if enabled)
 
