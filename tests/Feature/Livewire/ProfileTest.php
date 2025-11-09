@@ -46,7 +46,6 @@ class ProfileTest extends TestCase
             ->assertSet('loading', false);
     }
 
-
     /**
      * Test that profile can reload user data.
      */
