@@ -1,7 +1,7 @@
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="mb-8">
         <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome back, {{ $user['name'] ?? 'Explorer' }}!
+            Welcome back, {{ $user->name ?? 'Explorer' }}!
         </h1>
         <p class="text-lg text-gray-600 dark:text-gray-400">
             Discover your home planet and begin your journey through the cosmos.
@@ -21,14 +21,14 @@
         <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-8">
             <!-- Planet Header -->
             <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-                <h2 class="text-3xl font-bold text-white mb-2">{{ $planet['name'] }}</h2>
-                <p class="text-blue-100 text-lg capitalize">{{ $planet['type'] }}</p>
+                <h2 class="text-3xl font-bold text-white mb-2">{{ $planet->name }}</h2>
+                <p class="text-blue-100 text-lg capitalize">{{ $planet->type }}</p>
             </div>
 
             <!-- Planet Description -->
             <div class="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
                 <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-                    {{ $planet['description'] }}
+                    {{ $planet->description }}
                 </p>
             </div>
 
@@ -42,7 +42,7 @@
                             <span class="text-2xl mr-2">📏</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Size</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['size'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->size }}</p>
                     </div>
 
                     <!-- Temperature -->
@@ -51,7 +51,7 @@
                             <span class="text-2xl mr-2">🌡️</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Temperature</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['temperature'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->temperature }}</p>
                     </div>
 
                     <!-- Atmosphere -->
@@ -60,7 +60,7 @@
                             <span class="text-2xl mr-2">💨</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Atmosphere</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['atmosphere'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->atmosphere }}</p>
                     </div>
 
                     <!-- Terrain -->
@@ -69,7 +69,7 @@
                             <span class="text-2xl mr-2">🏔️</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Terrain</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['terrain'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->terrain }}</p>
                     </div>
 
                     <!-- Resources -->
@@ -78,7 +78,7 @@
                             <span class="text-2xl mr-2">💎</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Resources</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['resources'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->resources }}</p>
                     </div>
 
                     <!-- Type -->
@@ -87,7 +87,7 @@
                             <span class="text-2xl mr-2">🪐</span>
                             <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Type</h4>
                         </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['type'] }}</p>
+                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet->type }}</p>
                     </div>
                 </div>
             </div>

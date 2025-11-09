@@ -2,15 +2,13 @@
 
 namespace App\Livewire;
 
-use App\Livewire\Concerns\MakesApiRequests;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Dashboard extends Component
 {
-    use MakesApiRequests;
-
     public $planet = null;
 
     public $user = null;
@@ -30,11 +28,20 @@ class Dashboard extends Component
             $this->loading = true;
             $this->error = null;
 
-            // Get current user
-            $userResponse = $this->apiGet('/auth/user');
-            $this->user = $userResponse['data']['user'] ?? null;
+            // Get current user from session
+            $this->user = Auth::user();
 
-            if (! $this->user || ! $this->user['home_planet_id']) {
+            if (! $this->user) {
+                $this->error = 'You must be logged in to view your dashboard.';
+                $this->loading = false;
+
+                return;
+            }
+
+            // Load user with home planet relationship
+            $this->user->load('homePlanet');
+
+            if (! $this->user->home_planet_id) {
                 $this->error = 'No home planet found. Please contact support.';
                 $this->loading = false;
 
@@ -42,8 +49,7 @@ class Dashboard extends Component
             }
 
             // Get home planet
-            $planetResponse = $this->apiGet('/users/'.$this->user['id'].'/home-planet');
-            $this->planet = $planetResponse['data']['planet'] ?? null;
+            $this->planet = $this->user->homePlanet;
 
             if (! $this->planet) {
                 $this->error = 'Planet data could not be loaded.';

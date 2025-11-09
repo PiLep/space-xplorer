@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Concerns;
 
+use App\Models\User;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
@@ -139,5 +141,27 @@ trait MakesApiRequests
     {
         // Ne pas préfixer avec getApiBaseUrl() car makePublicApiRequest le fait déjà
         return $this->makePublicApiRequest('POST', $endpoint, $data);
+    }
+
+    /**
+     * Authenticate user in browser session after API authentication response.
+     *
+     * This is needed because API calls create a separate session context,
+     * so we need to authenticate the user in the browser session for web routes.
+     */
+    protected function authenticateUserFromApiResponse(array $response): void
+    {
+        // Store token in session
+        if (isset($response['data']['token'])) {
+            Session::put('sanctum_token', $response['data']['token']);
+        }
+
+        // Authenticate user in browser session for web routes
+        if (isset($response['data']['user']['id'])) {
+            $user = User::find($response['data']['user']['id']);
+            if ($user) {
+                Auth::login($user);
+            }
+        }
     }
 }
