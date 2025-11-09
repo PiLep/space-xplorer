@@ -16,7 +16,9 @@ Chaque composant est documenté individuellement dans `docs/design-system/compon
 
 ## Composants de Base
 
-### Boutons
+Les composants de base sont les éléments fondamentaux réutilisables dans toute l'application.
+
+### Button
 
 Voir **[COMPONENT-button.md](./components/COMPONENT-button.md)** pour la documentation complète.
 
@@ -33,7 +35,7 @@ Voir **[COMPONENT-button.md](./components/COMPONENT-button.md)** pour la documen
 </button>
 ```
 
-### Formulaires
+### Form
 
 Voir **[COMPONENT-form.md](./components/COMPONENT-form.md)** pour la documentation complète.
 
@@ -43,25 +45,90 @@ Voir **[COMPONENT-form.md](./components/COMPONENT-form.md)** pour la documentati
 - Validation : Messages d'erreur visuels
 - États : Focus, disabled, error
 
+### Form Input
+
+Voir **[COMPONENT-form-input.md](./components/COMPONENT-form-input.md)** pour la documentation complète.
+
+**Usage** : Composant réutilisable pour les champs de formulaire avec label, input, validation et messages d'erreur
+
+**Variantes** :
+- Classic : Style standard avec label au-dessus
+- Terminal : Style terminal avec prompt système
+
 **Exemple** :
-```html
-<div class="mb-4">
-  <label for="email" class="block text-gray-300 text-sm font-bold mb-2">
-    Email
-  </label>
-  <input
+```blade
+<x-form-input
     type="email"
-    id="email"
-    class="w-full py-2 px-3 bg-surface-dark border border-border-dark rounded text-white focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-space-black"
-  >
-</div>
+    name="email"
+    label="Email"
+    wireModel="email"
+    placeholder="Enter your email"
+/>
 ```
 
-### Cards
+### Form Card
+
+Voir **[COMPONENT-form-card.md](./components/COMPONENT-form-card.md)** pour la documentation complète.
+
+**Usage** : Conteneur standardisé pour les formulaires avec fond, ombre, bordures et effet scan
+
+**Variantes** :
+- Standard : Titre intégré au-dessus du formulaire
+- Header Séparé : Titre dans un header distinct avec bordure
+
+**Exemple** :
+```blade
+<x-form-card title="Sign In">
+    <form>
+        <!-- Form fields -->
+    </form>
+</x-form-card>
+```
+
+### Form Link
+
+Voir **[COMPONENT-form-link.md](./components/COMPONENT-form-link.md)** pour la documentation complète.
+
+**Usage** : Lien de navigation entre formulaires avec texte descriptif et lien stylisé
+
+**Caractéristiques** :
+- Texte descriptif en gris avec lien en couleur secondary
+- Centrage automatique du texte
+- Espacement configurable
+
+**Exemple** :
+```blade
+<x-form-link
+    text="Don't have an account?"
+    linkText="Register"
+    :href="route('register')"
+/>
+```
+
+### Page Header
+
+Voir **[COMPONENT-page-header.md](./components/COMPONENT-page-header.md)** pour la documentation complète.
+
+**Usage** : En-tête de page standardisé avec titre et description optionnelle
+
+**Caractéristiques** :
+- Titre H1 avec taille et style standardisés
+- Description optionnelle
+- Espacement configurable
+
+**Exemple** :
+```blade
+<x-page-header
+    title="Profile Settings"
+    description="Manage your account information and preferences."
+/>
+```
+
+### Card
 
 Voir **[COMPONENT-card.md](./components/COMPONENT-card.md)** pour la documentation complète.
 
-**Usage** : Conteneurs pour afficher des informations
+**Usage** : Conteneurs génériques pour afficher des informations
 
 **Exemple** :
 ```html
@@ -71,112 +138,204 @@ Voir **[COMPONENT-card.md](./components/COMPONENT-card.md)** pour la documentati
 </div>
 ```
 
-### Navigation
-
-Voir **[COMPONENT-navigation.md](./components/COMPONENT-navigation.md)** pour la documentation complète.
-
-**Usage** : Barre de navigation principale
-
-**Exemple** :
-```html
-<nav class="bg-surface-dark border-b border-border-dark">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16">
-      <div class="flex items-center">
-        <a href="/" class="text-xl font-bold text-white">Space Xplorer</a>
-      </div>
-      <div class="flex items-center gap-4">
-        <a href="/dashboard" class="text-gray-400 hover:text-white transition-colors">Dashboard</a>
-      </div>
-    </div>
-  </div>
-</nav>
-```
-
-### Modals
-
-Voir **[COMPONENT-modal.md](./components/COMPONENT-modal.md)** pour la documentation complète.
-
-**Usage** : Dialogs pour les interactions importantes
-
-**Exemple** :
-```html
-<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-surface-dark border border-border-dark rounded-lg p-6 max-w-md w-full">
-    <h2 class="text-2xl font-bold text-white mb-4">Titre</h2>
-    <p class="text-gray-300 mb-6">Contenu</p>
-    <button class="bg-space-primary hover:bg-space-primary-dark text-space-black font-bold py-2 px-4 rounded">Fermer</button>
-  </div>
-</div>
-```
-
-### Badges
-
-Voir **[COMPONENT-badge.md](./components/COMPONENT-badge.md)** pour la documentation complète.
-
-**Usage** : Indicateurs de statut, labels
-
-**Exemple** :
-```html
-<span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-space-primary text-space-black">
-  Actif
-</span>
-```
-
-### Alerts
+### Alert
 
 Voir **[COMPONENT-alert.md](./components/COMPONENT-alert.md)** pour la documentation complète.
 
 **Usage** : Messages d'alerte et notifications
 
 **Variantes** :
-- Success
-- Error
-- Warning
-- Info
+- Success : Confirmations et succès
+- Error : Erreurs critiques
+- Warning : Avertissements
+- Info : Informations
 
 **Exemple** :
-```html
-<div class="bg-success-dark border border-success text-success-light px-4 py-3 rounded mb-4">
-  Opération réussie
-</div>
+```blade
+<x-alert type="error" message="Failed to load planet data" />
+```
+
+## Composants Terminal
+
+Les composants terminal offrent une interface de type console pour créer une expérience immersive dans le thème spatial.
+
+### Terminal Prompt
+
+Voir **[COMPONENT-terminal-prompt.md](./components/COMPONENT-terminal-prompt.md)** pour la documentation complète.
+
+**Usage** : Ligne de commande terminal avec prompt système
+
+**Caractéristiques** :
+- Style monospace avec prompt système
+- Format `SYSTEM@SPACE-XPLORER:~$ command`
+- Support des couleurs du design system
+
+**Exemple** :
+```blade
+<x-terminal-prompt command="load_user_session" />
+```
+
+### Terminal Boot
+
+Voir **[COMPONENT-terminal-boot.md](./components/COMPONENT-terminal-boot.md)** pour la documentation complète.
+
+**Usage** : Séquence de messages de démarrage système avec animations
+
+**Spécifications** :
+- Messages avec couleurs selon le type ([OK], [ERROR], etc.)
+- Animation de fade-out pour les anciens messages
+- Support du polling Livewire
+- Curseur clignotant pendant le chargement
+
+**Exemple** :
+```blade
+<x-terminal-boot 
+    :bootMessages="$bootMessages" 
+    :terminalBooted="$terminalBooted"
+    :pollMethod="'nextBootStep'"
+/>
+```
+
+### Terminal Message
+
+Voir **[COMPONENT-terminal-message.md](./components/COMPONENT-terminal-message.md)** pour la documentation complète.
+
+**Usage** : Messages système avec style terminal et détection automatique du type
+
+**Caractéristiques** :
+- Détection automatique du type basée sur le préfixe ([OK], [ERROR], [INFO], etc.)
+- Couleurs adaptées selon le type (vert pour success, rouge pour error, etc.)
+- Espacement configurable
+
+**Exemple** :
+```blade
+<x-terminal-message message="[OK] System initialized" />
+```
+
+### Terminal Link
+
+Voir **[COMPONENT-terminal-link.md](./components/COMPONENT-terminal-link.md)** pour la documentation complète.
+
+**Usage** : Lien avec style terminal pour les interfaces terminal
+
+**Caractéristiques** :
+- Style monospace avec format de commande terminal
+- Couleur secondary avec effet hover
+- Bordure supérieure optionnelle
+
+**Exemple** :
+```blade
+<x-terminal-link
+    href="{{ route('register') }}"
+    text="> REGISTER_NEW_USER"
+/>
 ```
 
 ## Composants Spécialisés
 
+Les composants spécialisés sont conçus pour des cas d'usage spécifiques du projet.
+
 ### Planet Card
+
+Voir **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** pour la documentation complète.
 
 **Usage** : Affichage des caractéristiques d'une planète
 
 **Spécifications** :
-- Header avec gradient selon le type de planète
+- Layout horizontal avec image (optionnelle)
+- Header avec nom et type
 - Description de la planète
-- Grille des caractéristiques
-- Couleurs adaptées au type de planète
+- Liste de caractéristiques avec format terminal
 
-Voir **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** pour la documentation complète.
+**Exemple** :
+```blade
+<x-planet-card :planet="$planet" />
+```
 
 ### Loading Spinner
 
-**Usage** : Indicateur de chargement
+Voir **[COMPONENT-loading-spinner.md](./components/COMPONENT-loading-spinner.md)** pour la documentation complète.
+
+**Usage** : Indicateur de chargement avec style terminal
+
+**Variantes** :
+- **Terminal** (défaut) : Avec message terminal et style monospace
+- **Simple** : Spinner uniquement, sans message, style minimaliste
+
+**Tailles** :
+- Small (`sm`) : 32px × 32px
+- Medium (`md`) : 48px × 48px (défaut)
+- Large (`lg`) : 56px × 56px (avec bordure plus épaisse)
 
 **Exemple** :
-```html
-<div class="flex justify-center items-center py-12">
-  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-space-primary"></div>
-</div>
+```blade
+<x-loading-spinner message="[LOADING] Accessing planetary database..." />
+<x-loading-spinner variant="simple" size="md" :showMessage="false" />
 ```
 
-### Empty State
+## Composants Utilitaires
 
-**Usage** : État vide (pas de données)
+Les composants utilitaires facilitent l'organisation et la mise en page des autres composants.
+
+### Button Group
+
+Voir **[COMPONENT-button-group.md](./components/COMPONENT-button-group.md)** pour la documentation complète.
+
+**Usage** : Grouper plusieurs boutons d'action ensemble avec un layout cohérent
+
+**Variantes** :
+- Alignement : `center` (défaut), `left`, `right`
+- Espacement : `sm`, `md` (défaut), `lg`
+- Largeur : `full-width` pour prendre toute la largeur
 
 **Exemple** :
-```html
-<div class="text-center py-12">
-  <p class="text-gray-400 text-lg">Aucune donnée disponible</p>
-</div>
+```blade
+<x-button-group align="center" spacing="md">
+    <button>Action 1</button>
+    <button>Action 2</button>
+</x-button-group>
 ```
+
+### Navigation
+
+Voir **[COMPONENT-navigation.md](./components/COMPONENT-navigation.md)** pour la documentation complète.
+
+**Usage** : Navigation principale de l'application avec style rétro-futuriste
+
+**Variantes** :
+- Sidebar : Navigation latérale fixe ou sticky
+- Top : Menu de navigation horizontal en haut de la page
+- Terminal : Barre de navigation fixe en bas de l'écran avec style terminal
+
+**Exemple** :
+```blade
+<x-navigation variant="sidebar" :items="$navItems" />
+```
+
+### Modal
+
+Voir **[COMPONENT-modal.md](./components/COMPONENT-modal.md)** pour la documentation complète.
+
+**Usage** : Dialogs pour les interactions importantes, confirmations, ou contenus nécessitant l'attention
+
+**Variantes** :
+- Standard : Modal standard pour la plupart des dialogues
+- Confirmation : Modal de confirmation pour actions destructives
+- Form : Modal contenant un formulaire
+
+**Exemple** :
+```blade
+<x-modal show="true" title="Confirmation" variant="confirmation">
+    <p>Êtes-vous sûr de vouloir continuer ?</p>
+</x-modal>
+```
+
+## Composants à Venir
+
+Les composants suivants sont prévus pour de futures versions :
+
+- **Badge** : Indicateurs de statut et labels
+- **Empty State** : États vides (pas de données)
 
 ## Principes de Composition
 
@@ -209,14 +368,23 @@ Voir **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** pour 
 
 ```
 docs/design-system/components/
-├── COMPONENT-button.md
-├── COMPONENT-form.md
-├── COMPONENT-card.md
-├── COMPONENT-navigation.md
-├── COMPONENT-modal.md
-├── COMPONENT-badge.md
-├── COMPONENT-alert.md
-├── COMPONENT-planet-card.md
+├── COMPONENT-button.md          (Base)
+├── COMPONENT-form.md             (Base)
+├── COMPONENT-form-input.md       (Base)
+├── COMPONENT-form-card.md        (Base)
+├── COMPONENT-form-link.md        (Base)
+├── COMPONENT-page-header.md      (Base)
+├── COMPONENT-card.md             (Base)
+├── COMPONENT-alert.md            (Base)
+├── COMPONENT-terminal-prompt.md  (Terminal)
+├── COMPONENT-terminal-boot.md    (Terminal)
+├── COMPONENT-terminal-message.md (Terminal)
+├── COMPONENT-terminal-link.md    (Terminal)
+├── COMPONENT-planet-card.md      (Spécialisé)
+├── COMPONENT-loading-spinner.md  (Spécialisé)
+├── COMPONENT-button-group.md     (Utilitaires)
+├── COMPONENT-navigation.md       (Utilitaires)
+├── COMPONENT-modal.md            (Utilitaires)
 └── ...
 ```
 

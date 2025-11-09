@@ -10,6 +10,8 @@ Le composant Form définit les styles et comportements pour tous les éléments 
 - Formulaires de recherche
 - Tous les champs de saisie utilisateur
 
+> **Note** : Pour les champs de formulaire individuels, utilisez le composant **[Form Input](./COMPONENT-form-input.md)** (`<x-form-input>`) qui encapsule label, input, validation et messages d'erreur dans un composant réutilisable.
+
 ## Design
 
 ### Apparence

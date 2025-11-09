@@ -1,19 +1,4 @@
-@extends('layouts.app')
-
-@section('title', 'Design System - Space Xplorer')
-
-@section('content')
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-    <!-- Hero Section -->
-    <div class="mb-16 text-center">
-        <h1 class="text-5xl font-bold text-white mb-4">
-            Design System
-        </h1>
-        <p class="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-            Documentation complète du design system de Space Xplorer. 
-            Esthétique rétro-futuriste inspirée des films Alien.
-        </p>
-    </div>
+@include('design-system.overview')
 
     <!-- Colors Section -->
     <section class="mb-16">
@@ -327,6 +312,79 @@
                     <button class="bg-[#00ff88] hover:bg-[#00cc6a] text-[#0a0a0a] font-bold py-2 px-4 rounded-lg transition-colors duration-150 w-full glow-primary hover:glow-primary">
                         Submit
                     </button>
+                </div>
+            </div>
+
+            <!-- Terminal Components -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">Composants Terminal</h3>
+                <div class="space-y-6">
+                    <!-- Terminal Prompt -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Terminal Prompt</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Ligne de commande terminal avec prompt système pour créer l'ambiance spatiale.
+                        </p>
+                        <div class="bg-[#0a0a0a] rounded-lg p-4 font-mono">
+                            <x-terminal-prompt command="load_user_session" />
+                            <x-terminal-prompt command="display_home_planet" />
+                            <x-terminal-prompt command="query_planet_data" />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-terminal-prompt command="command_name" /&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Alert -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Alert</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Messages d'alerte avec style terminal. Supporte 4 variantes : error, warning, success, info.
+                        </p>
+                        <div class="space-y-4">
+                            <x-alert type="error" message="Failed to load planet data" />
+                            <x-alert type="warning" message="Low fuel reserves detected" />
+                            <x-alert type="success" message="Planet data loaded successfully" />
+                            <x-alert type="info" message="System maintenance scheduled for tonight" />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-alert type="error" message="Your message" /&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Loading Spinner -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Loading Spinner</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Indicateur de chargement avec message terminal. Disponible en 3 tailles : sm, md, lg.
+                        </p>
+                        <div class="space-y-6">
+                            <div>
+                                <p class="text-sm text-gray-400 mb-2">Taille Medium (défaut) :</p>
+                                <x-loading-spinner message="[LOADING] Accessing planetary database..." />
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 mb-2">Taille Small :</p>
+                                <x-loading-spinner message="[LOADING] Processing..." size="sm" />
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 mb-2">Taille Large :</p>
+                                <x-loading-spinner message="[LOADING] Initializing system..." size="lg" />
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-loading-spinner message="[LOADING] ..." size="md" /&gt;
+                            </code>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

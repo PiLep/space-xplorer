@@ -133,6 +133,22 @@ Voir **[DESIGN-SYSTEM-ANIMATIONS.md](./DESIGN-SYSTEM-ANIMATIONS.md)** pour la do
 
 ## Accessibilité
 
+Le design system respecte les standards WCAG 2.1 niveau AA pour assurer l'accessibilité à tous les utilisateurs.
+
+### Documentation
+
+- **[ACCESSIBILITY-AUDIT.md](./ACCESSIBILITY-AUDIT.md)** - Audit complet d'accessibilité des composants
+- **[ACCESSIBILITY-IMPROVEMENTS.md](./ACCESSIBILITY-IMPROVEMENTS.md)** - Détails des améliorations apportées
+- **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** - Détails d'accessibilité de chaque composant
+
+### Standards Respectés
+
+- **WCAG 2.1 niveau AA** : Tous les critères principaux respectés
+- **ARIA** : Attributs appropriés sur tous les composants interactifs
+- **Contraste** : Ratios minimaux respectés (4.5:1 pour texte normal, 3:1 pour texte large)
+- **Navigation clavier** : Tous les composants accessibles au clavier
+- **Lecteurs d'écran** : Structure sémantique et ARIA appropriés
+
 ### Contraste
 
 - Ratio minimum : 4.5:1 pour le texte normal
@@ -146,9 +162,10 @@ Voir **[DESIGN-SYSTEM-ANIMATIONS.md](./DESIGN-SYSTEM-ANIMATIONS.md)** pour la do
 
 ### ARIA
 
-- Utiliser les attributs ARIA appropriés
-- Labels pour les éléments interactifs
-- États pour les composants dynamiques
+- Utiliser les attributs ARIA appropriés (`aria-label`, `aria-describedby`, `aria-invalid`, `aria-busy`, etc.)
+- Labels pour tous les éléments interactifs
+- États pour les composants dynamiques (`aria-busy`, `aria-live`)
+- Structure sémantique HTML appropriée (`<section>`, `role="region"`, etc.)
 
 ## Règles de Design
 
@@ -192,18 +209,42 @@ Le design system est implémenté via Tailwind CSS avec des classes personnalis�
 
 ```
 docs/design-system/
-├── DESIGN-SYSTEM.md (ce fichier)
-├── DESIGN-SYSTEM-COLORS.md
-├── DESIGN-SYSTEM-TYPOGRAPHY.md
-├── DESIGN-SYSTEM-COMPONENTS.md
-├── DESIGN-SYSTEM-SPACING.md
-├── DESIGN-SYSTEM-ANIMATIONS.md
+├── README.md                      (Point d'entrée principal)
+├── DESIGN-SYSTEM.md               (Vue d'ensemble complète)
+├── DESIGN-SYSTEM-COLORS.md        (Palette de couleurs)
+├── DESIGN-SYSTEM-TYPOGRAPHY.md    (Typographie)
+├── DESIGN-SYSTEM-SPACING.md       (Espacements et grilles)
+├── DESIGN-SYSTEM-ANIMATIONS.md    (Animations et transitions)
+├── DESIGN-SYSTEM-COMPONENTS.md     (Vue d'ensemble des composants)
+├── ACCESSIBILITY-AUDIT.md         (Audit d'accessibilité WCAG 2.1)
+├── ACCESSIBILITY-IMPROVEMENTS.md   (Améliorations d'accessibilité)
 └── components/
-    ├── COMPONENT-button.md
-    ├── COMPONENT-form.md
-    ├── COMPONENT-card.md
-    └── ...
+    ├── COMPONENT-button.md          (Base)
+    ├── COMPONENT-form.md             (Base)
+    ├── COMPONENT-form-input.md       (Base)
+    ├── COMPONENT-form-card.md        (Base)
+    ├── COMPONENT-form-link.md        (Base)
+    ├── COMPONENT-page-header.md      (Base)
+    ├── COMPONENT-card.md             (Base)
+    ├── COMPONENT-alert.md            (Base)
+    ├── COMPONENT-terminal-prompt.md  (Terminal)
+    ├── COMPONENT-terminal-boot.md    (Terminal)
+    ├── COMPONENT-terminal-message.md (Terminal)
+    ├── COMPONENT-terminal-link.md    (Terminal)
+    ├── COMPONENT-planet-card.md      (Spécialisé)
+    └── COMPONENT-loading-spinner.md  (Spécialisé)
 ```
+
+### Organisation des Composants
+
+Les composants sont organisés en quatre catégories :
+
+1. **Composants de Base** : Éléments fondamentaux réutilisables (Button, Form Input, Form Card, Form Link, Page Header, Card, Alert)
+2. **Composants Terminal** : Interfaces de type console (Terminal Prompt, Terminal Boot, Terminal Message, Terminal Link)
+3. **Composants Spécialisés** : Composants spécifiques au projet (Planet Card, Loading Spinner)
+4. **Composants Utilitaires** : Composants d'organisation (Button Group, Navigation, Modal)
+
+Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la documentation complète de tous les composants.
 
 ## Version
 

@@ -1,6 +1,6 @@
-# Rapports de Monitoring - Space Xplorer
+# Rapports - Space Xplorer
 
-Ce dossier contient les rapports générés par **Taylor** (Workflow Manager) pour surveiller et améliorer le workflow de développement.
+Ce dossier contient les rapports générés par **Taylor** (Workflow Manager) pour surveiller et améliorer le workflow de développement, ainsi que les rapports de session pour documenter les travaux effectués.
 
 ## Format des Rapports
 
@@ -15,6 +15,12 @@ Exemple : `REPORT-2024-01-15-ISSUE-001-implement-user-registration.md`
 Format : `REPORT-{YYYY-MM-DD}-PERIODIC-{periode}.md`
 
 Exemple : `REPORT-2024-01-31-PERIODIC-monthly.md`
+
+### Rapport de Session
+
+Format : `SESSION-{titre}.md`
+
+Exemple : `SESSION-DESIGN-SYSTEM-STANDARDIZATION.md`
 
 ## Contenu des Rapports
 
@@ -33,6 +39,14 @@ Les rapports sont utilisés pour :
 - Optimiser les processus des agents
 - Mesurer l'efficacité du workflow
 - Prioriser les améliorations à apporter
+- Documenter les sessions de développement
+- Suivre l'évolution du projet
+
+## Rapports Disponibles
+
+### Rapports de Session
+
+- **[SESSION-DESIGN-SYSTEM-STANDARDIZATION.md](./SESSION-DESIGN-SYSTEM-STANDARDIZATION.md)** - Standardisation du design system et améliorations d'accessibilité
 
 ## Références
 

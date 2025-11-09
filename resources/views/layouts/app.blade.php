@@ -18,45 +18,8 @@
 </head>
 <body class="bg-gray-50 dark:bg-space-black antialiased scanlines grain">
     <div class="min-h-screen flex flex-col">
-        <!-- Navigation -->
-        <nav class="bg-white dark:bg-surface-dark shadow-sm border-b border-gray-200 dark:border-border-dark dark:glow-border-primary">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex justify-between h-16">
-                    <div class="flex items-center">
-                        <a href="{{ route('home') }}" class="text-xl font-bold text-gray-900 dark:text-white dark:text-glow-subtle">
-                            Space Xplorer
-                        </a>
-                    </div>
-
-                    <div class="flex items-center space-x-4">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                                Dashboard
-                            </a>
-                            <a href="{{ route('profile') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                                Profile
-                            </a>
-                            <form method="POST" action="{{ route('logout') }}" class="inline">
-                                @csrf
-                                <button type="submit" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                                    Logout
-                                </button>
-                            </form>
-                        @else
-                            <a href="{{ route('login') }}" class="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                                Login
-                            </a>
-                            <a href="{{ route('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium">
-                                Register
-                            </a>
-                        @endauth
-                    </div>
-                </div>
-            </div>
-        </nav>
-
         <!-- Main Content -->
-        <main class="flex-1 pb-16">
+        <main class="flex-1 pb-16 px-4 sm:px-6 lg:px-8">
             @isset($slot)
                 {{ $slot }}
             @else

@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Planet Card est spécialement conçu pour afficher les caractéristiques et informations d'une planète dans Space Xplorer. Il utilise un header avec gradient coloré selon le type de planète et une grille de caractéristiques pour une présentation claire et immersive.
+Le composant Planet Card est spécialement conçu pour afficher les caractéristiques et informations d'une planète dans Space Xplorer. Il utilise un layout horizontal avec image, header avec nom et type, description, et liste de caractéristiques pour une présentation claire et immersive.
 
 **Quand l'utiliser** :
 - Affichage de la planète d'origine d'un joueur
@@ -14,33 +14,42 @@ Le composant Planet Card est spécialement conçu pour afficher les caractérist
 
 ### Apparence
 
-Le Planet Card combine un header avec gradient coloré selon le type de planète, une description, et une grille de caractéristiques organisées de manière claire et lisible.
+Le Planet Card combine :
+- Image de la planète (optionnelle)
+- Header avec nom en majuscules et type
+- Description de la planète
+- Liste de caractéristiques avec format terminal (SIZE, TEMP, ATMOS, TERRAIN, RESOURCES, TYPE)
 
 ### Structure
 
-#### Header avec Gradient
+#### Layout Horizontal
 
-Le header utilise un gradient qui varie selon le type de planète :
+Le composant utilise un layout horizontal avec :
+- **Image** (gauche) : Image de la planète (1/3 de la largeur sur desktop)
+- **Contenu** (droite) : Header, description et caractéristiques
 
-- **Tellurique** : Gradient bleu-vert (`from-blue-600 to-purple-600`)
-- **Gazeuse** : Gradient violet (`from-purple-600 to-pink-600`)
-- **Glacée** : Gradient cyan (`from-cyan-500 to-blue-500`)
-- **Désertique** : Gradient orange (`from-orange-500 to-red-500`)
-- **Océanique** : Gradient vert-cyan (`from-green-600 to-cyan-500`)
+#### Header
+
+- Nom de la planète en majuscules avec glow subtil
+- Type de planète en majuscules avec tracking large
 
 #### Description
 
-Section de description avec texte lisible et espacement généreux.
+Section de description avec :
+- Message terminal `[INFO] Planetary description retrieved`
+- Texte de description lisible
 
-#### Grille de Caractéristiques
+#### Liste de Caractéristiques
 
-Grille responsive affichant les caractéristiques de la planète :
-- Size (Taille)
-- Temperature (Température)
-- Atmosphere (Atmosphère)
-- Terrain
-- Resources (Ressources)
-- Type
+Liste verticale avec format terminal affichant :
+- SIZE (Taille)
+- TEMP (Température)
+- ATMOS (Atmosphère)
+- TERRAIN
+- RESOURCES (Ressources)
+- TYPE
+
+Chaque caractéristique affiche le label en gris et la valeur en couleur primaire.
 
 ### Variantes
 
@@ -49,9 +58,10 @@ Grille responsive affichant les caractéristiques de la planète :
 **Usage** : Affichage principal sur le dashboard
 
 **Spécifications** :
-- Header avec gradient selon le type
+- Layout horizontal avec image
+- Header avec nom et type
 - Description complète
-- Grille de 6 caractéristiques (3 colonnes sur desktop)
+- Liste de 6 caractéristiques avec format terminal
 
 **Exemple** :
 ```html
@@ -181,90 +191,61 @@ Grille responsive affichant les caractéristiques de la planète :
 
 ## Code d'Implémentation
 
-### Blade Template (Dashboard)
+### Composant Blade
+
+**Fichier** : `resources/views/components/planet-card.blade.php`
 
 ```blade
-@if ($planet)
-  <div class="bg-surface-dark border border-border-dark rounded-lg overflow-hidden mb-8">
-    @php
-      $gradients = [
-        'tellurique' => ['from' => 'from-blue-600', 'to' => 'to-purple-600', 'text' => 'text-blue-100'],
-        'gazeuse' => ['from' => 'from-purple-600', 'to' => 'to-pink-600', 'text' => 'text-purple-100'],
-        'glacée' => ['from' => 'from-cyan-500', 'to' => 'to-blue-500', 'text' => 'text-cyan-100'],
-        'désertique' => ['from' => 'from-orange-500', 'to' => 'to-red-500', 'text' => 'text-orange-100'],
-        'océanique' => ['from' => 'from-green-600', 'to' => 'to-cyan-500', 'text' => 'text-green-100'],
-      ];
-      
-      $planetGradient = $gradients[strtolower($planet->type)] ?? ['from' => 'from-gray-600', 'to' => 'to-gray-700', 'text' => 'text-gray-100'];
-    @endphp
+@props([
+    'planet',
+    'showImage' => true,
+    'imageUrl' => null,
+])
 
-    <!-- Header -->
-    <div class="bg-gradient-to-r {{ $planetGradient['from'] }} {{ $planetGradient['to'] }} px-8 py-6">
-      <h2 class="text-3xl font-bold text-white mb-2">{{ $planet->name }}</h2>
-      <p class="{{ $planetGradient['text'] }} text-lg capitalize">{{ $planet->type }}</p>
+@if($planet)
+    <div class="bg-white dark:bg-surface-dark shadow-lg rounded-lg overflow-hidden mb-8 terminal-border-simple scan-effect hologram">
+        <div class="flex flex-col md:flex-row">
+            @if($showImage)
+                <!-- Planet Image -->
+                <div class="md:w-1/3 lg:w-2/5 flex-shrink-0">
+                    <img 
+                        src="{{ $imageUrl ?? 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop&q=80' }}" 
+                        alt="{{ $planet->name }}"
+                        class="w-full h-64 md:h-full object-cover"
+                        onerror="this.src='https://via.placeholder.com/800x600/1a1a1a/00ff88?text={{ urlencode($planet->name) }}'"
+                    >
+                </div>
+            @endif
+
+            <!-- Planet Content -->
+            <div class="flex-1 flex flex-col">
+                <!-- Planet Header -->
+                <div class="px-8 py-6 border-b border-gray-200 dark:border-border-dark">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2 dark:text-glow-subtle font-mono">{{ strtoupper($planet->name) }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg uppercase tracking-wider font-mono">{{ $planet->type }}</p>
+                </div>
+
+                <!-- Planet Description -->
+                <div class="px-8 py-6 border-b border-gray-200 dark:border-border-dark flex-1 font-mono">
+                    <div class="text-sm text-gray-500 dark:text-gray-500 mb-3">
+                        [INFO] Planetary description retrieved
+                    </div>
+                    <p class="text-gray-700 dark:text-white text-base leading-relaxed">
+                        {{ $planet->description }}
+                    </p>
+                </div>
+
+                <!-- Planet Characteristics -->
+                <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
+                    <x-terminal-prompt command="query_planet_data" />
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 dark:text-glow-subtle font-mono">SYSTEM_DATA</h3>
+                    <div class="space-y-3 font-mono">
+                        <!-- Liste des caractéristiques -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-
-    <!-- Description -->
-    <div class="px-8 py-6 border-b border-border-dark">
-      <p class="text-gray-300 text-lg leading-relaxed">
-        {{ $planet->description }}
-      </p>
-    </div>
-
-    <!-- Characteristics -->
-    <div class="px-8 py-6">
-      <h3 class="text-xl font-semibold text-white mb-4">Planet Characteristics</h3>
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Size -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Size</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->size }}</p>
-        </div>
-
-        <!-- Temperature -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Temperature</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->temperature }}</p>
-        </div>
-
-        <!-- Atmosphere -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Atmosphere</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->atmosphere }}</p>
-        </div>
-
-        <!-- Terrain -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Terrain</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->terrain }}</p>
-        </div>
-
-        <!-- Resources -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Resources</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->resources }}</p>
-        </div>
-
-        <!-- Type -->
-        <div class="bg-surface-medium rounded-lg p-4">
-          <div class="mb-2">
-            <h4 class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Type</h4>
-          </div>
-          <p class="text-lg font-semibold text-white capitalize">{{ $planet->type }}</p>
-        </div>
-      </div>
-    </div>
-  </div>
 @endif
 ```
 

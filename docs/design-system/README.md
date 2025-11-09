@@ -16,14 +16,37 @@ Bienvenue dans le design system de Space Xplorer ! Ce système définit l'identi
 - **[DESIGN-SYSTEM-ANIMATIONS.md](./DESIGN-SYSTEM-ANIMATIONS.md)** - Animations et transitions
 - **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** - Vue d'ensemble des composants
 
+### Accessibilité
+
+- **[ACCESSIBILITY-AUDIT.md](./ACCESSIBILITY-AUDIT.md)** - Audit d'accessibilité des composants (WCAG 2.1)
+- **[ACCESSIBILITY-IMPROVEMENTS.md](./ACCESSIBILITY-IMPROVEMENTS.md)** - Détails des améliorations d'accessibilité apportées
+
 ### Composants
 
-Tous les composants sont documentés dans le dossier `components/` :
+Tous les composants sont documentés dans le dossier `components/` et organisés par catégories :
 
-- **[COMPONENT-button.md](./components/COMPONENT-button.md)** - Boutons avec variantes
-- **[COMPONENT-form.md](./components/COMPONENT-form.md)** - Formulaires et champs de saisie
-- **[COMPONENT-card.md](./components/COMPONENT-card.md)** - Cards et conteneurs
-- **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** - Card spécialisée pour les planètes
+#### Composants de Base
+- **[COMPONENT-button.md](./components/COMPONENT-button.md)** - Boutons avec variantes (Primary, Secondary, Danger, Ghost)
+- **[COMPONENT-form.md](./components/COMPONENT-form.md)** - Formulaires et champs de saisie avec validation
+- **[COMPONENT-form-input.md](./components/COMPONENT-form-input.md)** - Composant réutilisable pour les champs de formulaire (Classic, Terminal)
+- **[COMPONENT-form-card.md](./components/COMPONENT-form-card.md)** - Conteneur standardisé pour les formulaires (Standard, Header Séparé)
+- **[COMPONENT-card.md](./components/COMPONENT-card.md)** - Cards et conteneurs génériques
+- **[COMPONENT-alert.md](./components/COMPONENT-alert.md)** - Messages d'alerte et notifications
+
+#### Composants Terminal
+- **[COMPONENT-terminal-prompt.md](./components/COMPONENT-terminal-prompt.md)** - Ligne de commande terminal avec prompt système
+- **[COMPONENT-terminal-boot.md](./components/COMPONENT-terminal-boot.md)** - Séquence de messages de démarrage système avec animations
+
+#### Composants Spécialisés
+- **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** - Card spécialisée pour l'affichage des planètes
+- **[COMPONENT-loading-spinner.md](./components/COMPONENT-loading-spinner.md)** - Indicateur de chargement avec style terminal
+
+#### Composants Utilitaires
+- **[COMPONENT-button-group.md](./components/COMPONENT-button-group.md)** - Groupe de boutons avec layout flexible
+- **[COMPONENT-navigation.md](./components/COMPONENT-navigation.md)** - Navigation principale avec variantes (Sidebar, Top, Terminal)
+- **[COMPONENT-modal.md](./components/COMPONENT-modal.md)** - Dialogs pour interactions importantes (Standard, Confirmation, Form)
+
+Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la documentation complète de tous les composants.
 
 ## Identité Visuelle
 
@@ -53,17 +76,31 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 ### Composants de Base
 
 - **Button** : Actions principales, secondaires, danger, ghost
-- **Form** : Champs de saisie avec validation
+- **Form** : Formulaires et styles de base
+- **Form Input** : Composant réutilisable pour les champs de formulaire (Classic, Terminal)
+- **Form Card** : Conteneur standardisé pour les formulaires (Standard, Header Séparé)
 - **Card** : Conteneurs pour afficher des informations
-- **Planet Card** : Card spécialisée pour les planètes
+- **Alert** : Messages d'alerte et notifications (Success, Error, Warning, Info)
+
+### Composants Terminal
+
+- **Terminal Prompt** : Ligne de commande terminal avec prompt système
+- **Terminal Boot** : Séquence de messages de démarrage système avec animations
+
+### Composants Spécialisés
+
+- **Planet Card** : Card spécialisée pour l'affichage des planètes
+- **Loading Spinner** : Indicateur de chargement avec style terminal (Small, Medium, Large)
+
+### Composants Utilitaires
+
+- **Button Group** : Groupe de boutons avec layout flexible (alignement, espacement, largeur complète)
+- **Navigation** : Navigation principale avec variantes (Sidebar, Top Menu, Terminal Command Bar)
+- **Modal** : Dialogs pour interactions importantes (Standard, Confirmation, Form)
 
 ### Composants à Venir
 
-- Navigation
-- Modal
 - Badge
-- Alert
-- Loading Spinner
 - Empty State
 
 ## Utilisation Rapide
