@@ -11,6 +11,11 @@ Route::get('/', function () {
     return view('home');
 })->name('home');
 
+// Design System page
+Route::get('/design-system', function () {
+    return view('design-system');
+})->name('design-system');
+
 // Public routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
