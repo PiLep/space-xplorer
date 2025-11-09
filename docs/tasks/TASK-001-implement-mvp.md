@@ -100,138 +100,133 @@ database/
 ### Phase 2 : Service de Génération de Planètes
 
 #### Tâche 2.1 : Créer la configuration des types de planètes
-- **Description** : Créer un fichier de configuration ou une classe pour définir les types de planètes avec leurs poids de probabilité et leurs distributions de caractéristiques. Types : Tellurique (40%), Gazeuse (25%), Glacée (15%), Désertique (10%), Océanique (10%)
-- **Fichiers concernés** : `config/planets.php` ou `app/Data/PlanetTypes.php`
-- **Estimation** : 1h30
-- **Dépendances** : Aucune
-- **Tests** : Tests de la configuration et des poids de probabilité
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `config/planets.php`
+- **Détails** : Configuration créée avec tous les types de planètes (Tellurique 40%, Gazeuse 25%, Glacée 15%, Désertique 10%, Océanique 10%) et leurs distributions de caractéristiques. Inclut également la configuration pour la génération de noms (prefixes et suffixes).
 
 #### Tâche 2.2 : Créer PlanetGeneratorService
-- **Description** : Service pour générer des planètes avec le système de poids. Méthodes principales : `generate()` (génère une planète complète), `selectPlanetType()` (sélection pondérée), `generateCharacteristics()` (génère les caractéristiques selon le type), `generateName()` (génère un nom aléatoire), `generateDescription()` (génère une description à partir des caractéristiques)
-- **Fichiers concernés** : `app/Services/PlanetGeneratorService.php`
-- **Estimation** : 3h
-- **Dépendances** : Tâche 2.1, Tâche 1.5
-- **Tests** : Tests unitaires complets du service (génération, poids, unicité)
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Services/PlanetGeneratorService.php`
+- **Détails** : Service créé avec toutes les méthodes requises :
+  - `generate()` : Génère une planète complète
+  - `selectPlanetType()` : Sélection pondérée du type selon les poids
+  - `generateCharacteristics()` : Génère les caractéristiques selon le type
+  - `generateName()` : Génère un nom unique avec gestion des collisions (max 10 tentatives, puis ajout d'un identifiant unique)
+  - `generateDescription()` : Génère une description textuelle à partir des caractéristiques
+- **Gestion d'unicité** : Mécanisme de vérification d'unicité du nom avec gestion des collisions (suffixe unique si nécessaire)
 
 ### Phase 3 : Architecture Événementielle
 
 #### Tâche 3.1 : Créer l'événement UserRegistered
-- **Description** : Événement dispatché lors de l'inscription d'un nouveau joueur. Contient l'instance User créée
-- **Fichiers concernés** : `app/Events/UserRegistered.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 1.4
-- **Tests** : Tests de l'événement et de ses propriétés
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Events/UserRegistered.php`
+- **Détails** : Événement créé avec propriété publique `User $user`. Utilise `Dispatchable` et `SerializesModels`.
 
 #### Tâche 3.2 : Créer le listener GenerateHomePlanet
-- **Description** : Listener qui écoute UserRegistered, appelle PlanetGeneratorService pour générer une planète, crée la planète en base, et assigne home_planet_id au joueur
-- **Fichiers concernés** : `app/Listeners/GenerateHomePlanet.php`
-- **Estimation** : 1h30
-- **Dépendances** : Tâche 2.2, Tâche 3.1
-- **Tests** : Tests du listener (génération, assignation, gestion d'erreurs)
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Listeners/GenerateHomePlanet.php`
+- **Détails** : Listener créé avec injection de `PlanetGeneratorService`. Implémente la gestion d'erreurs robuste recommandée par Morgan :
+  - Try-catch pour capturer les erreurs
+  - Logging des erreurs sans bloquer l'inscription
+  - `home_planet_id` reste null en cas d'erreur (peut être géré plus tard)
+  - Logging des succès pour le debugging
 
 #### Tâche 3.3 : Enregistrer l'événement et le listener
-- **Description** : Enregistrer l'événement et le listener dans `app/Providers/EventServiceProvider.php`
-- **Fichiers concernés** : `app/Providers/EventServiceProvider.php`
-- **Estimation** : 15 min
-- **Dépendances** : Tâche 3.1, Tâche 3.2
-- **Tests** : Vérifier que l'événement est bien dispatché et écouté
+- [x] ✅ **Terminée**
+- **Fichiers créés/modifiés** : `app/Providers/EventServiceProvider.php`, `bootstrap/providers.php`
+- **Détails** : EventServiceProvider créé avec mapping `UserRegistered` → `GenerateHomePlanet`. Enregistré dans `bootstrap/providers.php`. Vérifié avec `artisan event:list`.
 
 ### Phase 4 : API Endpoints - Authentification
 
 #### Tâche 4.1 : Créer RegisterRequest
-- **Description** : FormRequest pour valider les données d'inscription : name (required|string|max:255), email (required|email|unique:users|max:255), password (required|string|min:8|confirmed)
-- **Fichiers concernés** : `app/Http/Requests/RegisterRequest.php`
-- **Estimation** : 30 min
-- **Dépendances** : Aucune
-- **Tests** : Tests de validation (succès, erreurs)
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Requests/RegisterRequest.php`
+- **Détails** : FormRequest créé avec validation : name (required|string|max:255), email (required|email|unique:users|max:255), password (required|string|min:8|confirmed)
 
 #### Tâche 4.2 : Créer LoginRequest
-- **Description** : FormRequest pour valider les données de connexion : email (required|email), password (required|string)
-- **Fichiers concernés** : `app/Http/Requests/LoginRequest.php`
-- **Estimation** : 20 min
-- **Dépendances** : Aucune
-- **Tests** : Tests de validation
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Requests/LoginRequest.php`
+- **Détails** : FormRequest créé avec validation : email (required|email), password (required|string)
 
 #### Tâche 4.3 : Créer AuthController avec endpoint register
-- **Description** : Créer le contrôleur API AuthController avec la méthode register() qui crée l'utilisateur, dispatch l'événement UserRegistered, crée un token Sanctum, et retourne la réponse JSON standardisée
-- **Fichiers concernés** : `app/Http/Controllers/Api/AuthController.php`
-- **Estimation** : 1h30
-- **Dépendances** : Tâche 4.1, Tâche 3.1
-- **Tests** : Tests d'intégration de l'endpoint (succès, validation, génération planète)
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Controllers/Api/AuthController.php`
+- **Détails** : Méthode register() créée qui crée l'utilisateur, dispatch UserRegistered, crée token Sanctum, et retourne réponse JSON standardisée. Refresh user pour obtenir home_planet_id si généré.
 
 #### Tâche 4.4 : Ajouter endpoint login dans AuthController
-- **Description** : Méthode login() qui authentifie l'utilisateur, crée un token Sanctum, et retourne la réponse JSON standardisée
-- **Fichiers concernés** : `app/Http/Controllers/Api/AuthController.php`
-- **Estimation** : 1h
-- **Dépendances** : Tâche 4.2, Tâche 4.3
-- **Tests** : Tests d'intégration (succès, identifiants incorrects)
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `app/Http/Controllers/Api/AuthController.php`
+- **Détails** : Méthode login() créée avec authentification, création token Sanctum, gestion erreurs avec ValidationException
 
 #### Tâche 4.5 : Ajouter endpoint logout dans AuthController
-- **Description** : Méthode logout() qui révoque le token Sanctum de l'utilisateur connecté
-- **Fichiers concernés** : `app/Http/Controllers/Api/AuthController.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 4.4
-- **Tests** : Tests d'intégration (succès, non authentifié)
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `app/Http/Controllers/Api/AuthController.php`
+- **Détails** : Méthode logout() créée qui révoque le token Sanctum actuel
 
 #### Tâche 4.6 : Ajouter endpoint user dans AuthController
-- **Description** : Méthode user() qui retourne les informations de l'utilisateur connecté avec sa planète d'origine
-- **Fichiers concernés** : `app/Http/Controllers/Api/AuthController.php`
-- **Estimation** : 45 min
-- **Dépendances** : Tâche 4.5
-- **Tests** : Tests d'intégration (succès, non authentifié)
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `app/Http/Controllers/Api/AuthController.php`
+- **Détails** : Méthode user() créée qui retourne les informations de l'utilisateur connecté avec home_planet_id
 
 #### Tâche 4.7 : Ajouter les routes API d'authentification
-- **Description** : Ajouter les routes dans routes/api.php : POST /api/auth/register, POST /api/auth/login, POST /api/auth/logout (auth:sanctum), GET /api/auth/user (auth:sanctum)
-- **Fichiers concernés** : `routes/api.php`
-- **Estimation** : 20 min
-- **Dépendances** : Tâche 4.6
-- **Tests** : Vérifier que les routes sont accessibles
+- [x] ✅ **Terminée**
+- **Fichiers créés/modifiés** : `routes/api.php`, `bootstrap/app.php`
+- **Détails** : Routes API créées et enregistrées dans bootstrap/app.php. Routes vérifiées avec `artisan route:list` :
+  - POST /api/auth/register
+  - POST /api/auth/login
+  - POST /api/auth/logout (auth:sanctum)
+  - GET /api/auth/user (auth:sanctum)
 
 ### Phase 5 : API Endpoints - Utilisateurs et Planètes
 
 #### Tâche 5.1 : Créer UpdateProfileRequest
-- **Description** : FormRequest pour valider la mise à jour du profil : name (sometimes|string|max:255), email (sometimes|email|unique:users,email,{id}|max:255)
-- **Fichiers concernés** : `app/Http/Requests/UpdateProfileRequest.php`
-- **Estimation** : 30 min
-- **Dépendances** : Aucune
-- **Tests** : Tests de validation
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Requests/UpdateProfileRequest.php`
+- **Détails** : FormRequest créé avec validation : name (sometimes|string|max:255), email (sometimes|email|unique:users,email,{id}|max:255). Gestion de l'ID utilisateur pour l'unicité de l'email.
 
 #### Tâche 5.2 : Créer UserController
-- **Description** : Créer le contrôleur API UserController avec les méthodes : show() (GET /api/users/{id}), update() (PUT /api/users/{id}), getHomePlanet() (GET /api/users/{id}/home-planet). Toutes protégées par auth:sanctum
-- **Fichiers concernés** : `app/Http/Controllers/Api/UserController.php`
-- **Estimation** : 2h
-- **Dépendances** : Tâche 5.1
-- **Tests** : Tests d'intégration de tous les endpoints
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Controllers/Api/UserController.php`
+- **Détails** : UserController créé avec toutes les méthodes :
+  - `show()` : Retourne les détails d'un utilisateur
+  - `update()` : Met à jour le profil avec vérification d'autorisation (un utilisateur ne peut modifier que son propre profil) - Recommandation High priority de Morgan implémentée
+  - `getHomePlanet()` : Retourne la planète d'origine avec eager loading
+- **Autorisation** : Vérification `auth()->id() === $user->id` dans update() pour empêcher la modification du profil d'un autre utilisateur
 
 #### Tâche 5.3 : Créer PlanetController
-- **Description** : Créer le contrôleur API PlanetController avec la méthode show() (GET /api/planets/{id}) protégée par auth:sanctum
-- **Fichiers concernés** : `app/Http/Controllers/Api/PlanetController.php`
-- **Estimation** : 1h
-- **Dépendances** : Tâche 1.5
-- **Tests** : Tests d'intégration de l'endpoint
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Http/Controllers/Api/PlanetController.php`
+- **Détails** : PlanetController créé avec méthode `show()` qui retourne tous les détails d'une planète
 
 #### Tâche 5.4 : Ajouter les routes API utilisateurs et planètes
-- **Description** : Ajouter les routes dans routes/api.php : GET /api/users/{id}, PUT /api/users/{id}, GET /api/users/{id}/home-planet, GET /api/planets/{id}. Toutes protégées par auth:sanctum
-- **Fichiers concernés** : `routes/api.php`
-- **Estimation** : 20 min
-- **Dépendances** : Tâche 5.2, Tâche 5.3
-- **Tests** : Vérifier que les routes sont accessibles
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `routes/api.php`
+- **Détails** : Routes API ajoutées et vérifiées avec `artisan route:list` :
+  - GET /api/users/{id} (auth:sanctum)
+  - PUT /api/users/{id} (auth:sanctum)
+  - GET /api/users/{id}/home-planet (auth:sanctum)
+  - GET /api/planets/{id} (auth:sanctum)
 
 ### Phase 6 : Frontend - Composants Livewire
 
 #### Tâche 6.1 : Configurer Sanctum pour Livewire
-- **Description** : Configurer Sanctum pour que Livewire puisse consommer les APIs en interne. S'assurer que les requêtes internes Livewire utilisent les tokens Sanctum correctement
-- **Fichiers concernés** : `config/sanctum.php`, `app/Http/Middleware/` (si nécessaire)
-- **Estimation** : 1h
-- **Dépendances** : Phase 4
-- **Tests** : Vérifier que Livewire peut appeler les APIs
+- [x] ✅ **Terminée**
+- **Fichiers créés/modifiés** : `app/Livewire/Concerns/MakesApiRequests.php`, `app/Http/Controllers/Api/AuthController.php`
+- **Détails** : 
+  - Trait `MakesApiRequests` créé pour faciliter les requêtes API authentifiées depuis Livewire
+  - AuthController mis à jour pour stocker le token Sanctum en session après login/register
+  - Authentification session activée pour les routes web (Livewire pages)
+  - Token supprimé de la session lors du logout
+- **Approche** : Hybrid - Token Sanctum pour API, session auth pour routes web Livewire
 
 #### Tâche 6.2 : Créer le layout principal
-- **Description** : Créer le layout Blade principal avec navigation, structure HTML de base, intégration Tailwind CSS et Alpine.js
-- **Fichiers concernés** : `resources/views/layouts/app.blade.php`
-- **Estimation** : 1h30
-- **Dépendances** : Aucune
-- **Tests** : Vérifier le rendu du layout
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `resources/views/layouts/app.blade.php`, `resources/views/components/livewire-layout.blade.php`
+- **Détails** : 
+  - Layout principal créé avec navigation, footer, intégration Tailwind CSS
+  - Navigation avec liens Dashboard, Profile, Login, Register, Logout
+  - Livewire layout component créé pour les composants Livewire
+  - Intégration Livewire scripts et styles avec directives `@livewireScripts` et `@livewireStyles`
 
 #### Tâche 6.3 : Créer la page d'accueil
 - **Description** : Créer la page d'accueil avec présentation du jeu et liens vers inscription/connexion
@@ -1010,4 +1005,62 @@ Le plan peut être implémenté tel quel, en tenant compte des recommandations p
 - `app/Models/Planet.php`
 - `app/Models/User.php` (modifié)
 **Notes** : Les migrations n'ont pas encore été exécutées (Docker non démarré). Prêt pour Phase 2.
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 2 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 2 (Service de Génération de Planètes) terminée. Configuration et service créés :
+- Configuration `config/planets.php` avec tous les types et leurs distributions
+- Service `PlanetGeneratorService` avec toutes les méthodes requises
+- Gestion de l'unicité des noms avec mécanisme de collision
+- Code formaté avec Laravel Pint
+**Fichiers créés** :
+- `config/planets.php`
+- `app/Services/PlanetGeneratorService.php`
+**Notes** : Prêt pour Phase 3 (Architecture Événementielle).
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 3 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 3 (Architecture Événementielle) terminée. Événements et listeners créés :
+- Événement `UserRegistered` créé avec propriété User
+- Listener `GenerateHomePlanet` créé avec gestion d'erreurs robuste (try-catch, logging, non-blocage)
+- EventServiceProvider créé et enregistré dans bootstrap/providers.php
+- Vérifié avec `artisan event:list` - événement et listener correctement enregistrés
+**Fichiers créés/modifiés** :
+- `app/Events/UserRegistered.php`
+- `app/Listeners/GenerateHomePlanet.php`
+- `app/Providers/EventServiceProvider.php`
+- `bootstrap/providers.php` (modifié)
+**Notes** : Gestion d'erreurs implémentée selon les recommandations de Morgan (High priority). Prêt pour Phase 4 (API Endpoints - Authentification).
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 4 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 4 (API Endpoints - Authentification) terminée. Tous les endpoints d'authentification créés :
+- RegisterRequest et LoginRequest créés avec validation complète
+- AuthController créé avec toutes les méthodes (register, login, logout, user)
+- Routes API créées et enregistrées dans bootstrap/app.php
+- Format de réponse JSON standardisé respecté
+- Événement UserRegistered dispatché lors de l'inscription
+- Tokens Sanctum créés et révoqués correctement
+**Fichiers créés/modifiés** :
+- `app/Http/Requests/RegisterRequest.php`
+- `app/Http/Requests/LoginRequest.php`
+- `app/Http/Controllers/Api/AuthController.php`
+- `routes/api.php`
+- `bootstrap/app.php` (modifié)
+**Notes** : Routes vérifiées avec `artisan route:list`. Prêt pour Phase 5 (API Endpoints - Utilisateurs et Planètes).
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 5 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 5 (API Endpoints - Utilisateurs et Planètes) terminée. Tous les endpoints créés :
+- UpdateProfileRequest créé avec validation appropriée
+- UserController créé avec show(), update(), getHomePlanet()
+- PlanetController créé avec show()
+- Vérification d'autorisation implémentée dans UserController::update() (recommandation High priority de Morgan)
+- Routes API ajoutées et vérifiées
+**Fichiers créés/modifiés** :
+- `app/Http/Requests/UpdateProfileRequest.php`
+- `app/Http/Controllers/Api/UserController.php`
+- `app/Http/Controllers/Api/PlanetController.php`
+- `routes/api.php` (modifié)
+**Notes** : Autorisation implémentée selon les recommandations de Morgan (High priority). Prêt pour Phase 6 (Frontend - Composants Livewire).
 
