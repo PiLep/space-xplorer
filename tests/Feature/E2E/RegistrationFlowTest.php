@@ -1,151 +1,117 @@
 <?php
 
-namespace Tests\Feature\E2E;
-
 use App\Models\Planet;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+use Livewire\Livewire;
 
-class RegistrationFlowTest extends TestCase
-{
-    use RefreshDatabase;
+it('completes registration flow end-to-end', function () {
+    $userData = [
+        'name' => 'E2E Test User',
+        'email' => 'e2etest@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ];
 
-    /**
-     * Test complete registration flow end-to-end.
-     * This test verifies that the entire registration process works:
-     * 1. User visits registration page
-     * 2. Fills and submits registration form
-     * 3. User is created in database
-     * 4. Home planet is generated
-     * 5. User is redirected to dashboard
-     */
-    public function test_complete_registration_flow_works_end_to_end(): void
-    {
-        $userData = [
-            'name' => 'E2E Test User',
-            'email' => 'e2etest@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ];
+    // Visit registration page
+    $response = $this->get('/register');
+    $response->assertStatus(200);
+    $response->assertSee('Create Your Account');
 
-        // Visit registration page
-        $response = $this->get('/register');
-        $response->assertStatus(200);
-        $response->assertSee('Create Your Account');
+    // Submit registration form via Livewire
+    $livewire = Livewire::test(\App\Livewire\Register::class)
+        ->set('name', $userData['name'])
+        ->set('email', $userData['email'])
+        ->set('password', $userData['password'])
+        ->set('password_confirmation', $userData['password_confirmation'])
+        ->call('register');
 
-        // Submit registration form via Livewire
-        $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
-            ->set('name', $userData['name'])
-            ->set('email', $userData['email'])
-            ->set('password', $userData['password'])
-            ->set('password_confirmation', $userData['password_confirmation'])
-            ->call('register');
+    // Verify redirect happened (indicates success)
+    $livewire->assertRedirect(route('dashboard'));
 
-        // Verify redirect happened (indicates success)
-        $livewire->assertRedirect(route('dashboard'));
+    // Verify user was created
+    $this->assertDatabaseHas('users', [
+        'email' => $userData['email'],
+        'name' => $userData['name'],
+    ]);
 
-        // Verify user was created
-        $this->assertDatabaseHas('users', [
-            'email' => $userData['email'],
-            'name' => $userData['name'],
-        ]);
+    $user = User::where('email', $userData['email'])->first();
+    expect($user)->not->toBeNull();
 
-        $user = User::where('email', $userData['email'])->first();
-        $this->assertNotNull($user);
+    // Verify home planet was assigned
+    expect($user->home_planet_id)->not->toBeNull();
 
-        // Verify home planet was assigned
-        $this->assertNotNull($user->home_planet_id, 'User should have a home planet assigned');
+    // Verify planet exists
+    $planet = Planet::find($user->home_planet_id);
+    expect($planet)->not->toBeNull()
+        ->and($planet->name)->not->toBeNull()
+        ->and($planet->type)->not->toBeNull();
+});
 
-        // Verify planet exists
-        $planet = Planet::find($user->home_planet_id);
-        $this->assertNotNull($planet, 'Planet should exist in database');
-        $this->assertNotNull($planet->name);
-        $this->assertNotNull($planet->type);
-    }
+it('shows validation errors for invalid registration data', function () {
+    $livewire = Livewire::test(\App\Livewire\Register::class)
+        ->set('name', '')
+        ->set('email', 'invalid-email')
+        ->set('password', 'short')
+        ->set('password_confirmation', 'different')
+        ->call('register');
 
-    /**
-     * Test registration with invalid data shows validation errors.
-     */
-    public function test_registration_shows_validation_errors_for_invalid_data(): void
-    {
-        // Use real validation - no HTTP calls needed for client-side validation
+    // Should have validation errors
+    $livewire->assertHasErrors(['name', 'email', 'password']);
 
-        $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
-            ->set('name', '')
-            ->set('email', 'invalid-email')
-            ->set('password', 'short')
-            ->set('password_confirmation', 'different')
-            ->call('register');
+    // User should not be created
+    $this->assertDatabaseMissing('users', [
+        'email' => 'invalid-email',
+    ]);
+});
 
-        // Should have validation errors
-        $livewire->assertHasErrors(['name', 'email', 'password']);
+it('shows error for duplicate email during registration', function () {
+    // Create existing user
+    User::factory()->create(['email' => 'existing@example.com']);
 
-        // User should not be created
-        $this->assertDatabaseMissing('users', [
-            'email' => 'invalid-email',
-        ]);
-    }
+    $livewire = Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'Test User')
+        ->set('email', 'existing@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register');
 
-    /**
-     * Test registration with duplicate email shows error.
-     */
-    public function test_registration_shows_error_for_duplicate_email(): void
-    {
-        // Use real API calls
+    // Should have email error
+    $livewire->assertHasErrors(['email']);
 
-        // Create existing user
-        User::factory()->create(['email' => 'existing@example.com']);
+    // Should not create duplicate user
+    expect(User::where('email', 'existing@example.com')->count())->toBe(1);
+});
 
-        $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'Test User')
-            ->set('email', 'existing@example.com')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'password123')
-            ->call('register');
+it('creates user and planet correctly during registration', function () {
+    $userData = [
+        'name' => 'API Test User',
+        'email' => 'apitest@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ];
 
-        // Should have email error
-        $livewire->assertHasErrors(['email']);
+    // Count users before
+    $usersBefore = User::count();
+    $planetsBefore = Planet::count();
 
-        // Should not create duplicate user
-        $this->assertEquals(1, User::where('email', 'existing@example.com')->count());
-    }
+    // Submit registration
+    $livewire = Livewire::test(\App\Livewire\Register::class)
+        ->set('name', $userData['name'])
+        ->set('email', $userData['email'])
+        ->set('password', $userData['password'])
+        ->set('password_confirmation', $userData['password_confirmation'])
+        ->call('register');
 
-    /**
-     * Test that registration creates user and planet correctly.
-     */
-    public function test_registration_creates_user_and_planet(): void
-    {
-        $userData = [
-            'name' => 'API Test User',
-            'email' => 'apitest@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
-        ];
+    // Verify redirect happened (indicates success)
+    $livewire->assertRedirect(route('dashboard'));
 
-        // Count users before
-        $usersBefore = User::count();
-        $planetsBefore = Planet::count();
+    // Verify user was created
+    expect(User::count())->toBe($usersBefore + 1);
 
-        // Submit registration
-        $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
-            ->set('name', $userData['name'])
-            ->set('email', $userData['email'])
-            ->set('password', $userData['password'])
-            ->set('password_confirmation', $userData['password_confirmation'])
-            ->call('register');
+    // Verify planet was created
+    expect(Planet::count())->toBeGreaterThan($planetsBefore);
 
-        // Verify redirect happened (indicates success)
-        $livewire->assertRedirect(route('dashboard'));
-
-        // Verify user was created
-        $this->assertEquals($usersBefore + 1, User::count(), 'User should be created');
-
-        // Verify planet was created
-        $this->assertGreaterThan($planetsBefore, Planet::count(), 'Planet should be created');
-
-        $user = User::where('email', $userData['email'])->first();
-        $this->assertNotNull($user, 'User should exist');
-        $this->assertNotNull($user->home_planet_id, 'User should have home planet');
-    }
-}
+    $user = User::where('email', $userData['email'])->first();
+    expect($user)->not->toBeNull()
+        ->and($user->home_planet_id)->not->toBeNull();
+});

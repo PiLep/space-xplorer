@@ -80,7 +80,7 @@ class DatabaseSeeder extends Seeder
             $user = $data['user'];
             $planet = $data['planet'];
 
-            $this->command->line("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+            $this->command->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
             $this->command->line("👤 <fg=cyan>{$user->name}</>");
             $this->command->line("   📧 Email: <fg=yellow>{$user->email}</>");
             $this->command->line("   🔑 Password: <fg=yellow>{$defaultPassword}</>");
@@ -91,15 +91,15 @@ class DatabaseSeeder extends Seeder
                 $this->command->line("      Type: {$planet->type} | Size: {$planet->size} | Temp: {$planet->temperature}");
                 $this->command->line("      🆔 Planet ID: <fg=gray>{$planet->id}</>");
             } else {
-                $this->command->line("   ⚠️  <fg=red>No home planet assigned</>");
+                $this->command->line('   ⚠️  <fg=red>No home planet assigned</>');
             }
             $this->command->newLine();
         }
 
-        $this->command->line("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-        $this->command->info("📊 Summary:");
-        $this->command->line("   • Users created: <fg=cyan>".count($createdUsers)."</>");
-        $this->command->line("   • Planets created: <fg=cyan>".(count($createdUsers) + $extraPlanets->count())."</>");
+        $this->command->line('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        $this->command->info('📊 Summary:');
+        $this->command->line('   • Users created: <fg=cyan>'.count($createdUsers).'</>');
+        $this->command->line('   • Planets created: <fg=cyan>'.(count($createdUsers) + $extraPlanets->count()).'</>');
         $this->command->line("   • Default password for all users: <fg=yellow>{$defaultPassword}</>");
         $this->command->newLine();
         $this->command->info('✨ Database seeded successfully!');

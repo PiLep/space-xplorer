@@ -24,7 +24,6 @@ services:
         depends_on:
             - mysql
             - redis
-            - selenium
             - mailpit
     mysql:
         image: 'mysql/mysql-server:8.0'
@@ -66,14 +65,6 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-    selenium:
-        image: selenium/standalone-chromium
-        extra_hosts:
-            - 'host.docker.internal:host-gateway'
-        volumes:
-            - '/dev/shm:/dev/shm'
-        networks:
-            - sail
     mailpit:
         image: 'axllent/mailpit:latest'
         ports:

@@ -98,7 +98,7 @@ jobs:
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
           QUEUE_CONNECTION: sync
-        run: ./vendor/bin/phpunit --coverage-clover=coverage.xml --coverage-html=coverage
+        run: ./vendor/bin/pest --coverage-clover=coverage.xml --coverage-html=coverage --log-junit=junit.xml
       
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v4
