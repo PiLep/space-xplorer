@@ -1,0 +1,35 @@
+codecov:
+  token: # Optionnel : ajouter un token Codecov si nécessaire
+  notify:
+    wait_for_ci: true
+  comment:
+    layout: "reach,diff,flags,tree,reach"
+    behavior: default
+    require_changes: false
+
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+  
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 1%
+        base: auto
+    patch:
+      default:
+        target: 80%
+
+ignore:
+  - "tests/"
+  - "database/"
+  - "bootstrap/"
+  - "config/"
+  - "public/"
+  - "resources/"
+  - "routes/"
+  - "storage/"
+  - "vendor/"
+
