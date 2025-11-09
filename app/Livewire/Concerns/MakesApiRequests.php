@@ -137,6 +137,7 @@ trait MakesApiRequests
      */
     protected function apiPostPublic(string $endpoint, array $data = []): array
     {
-        return $this->makePublicApiRequest('POST', $this->getApiBaseUrl().$endpoint, $data);
+        // Ne pas préfixer avec getApiBaseUrl() car makePublicApiRequest le fait déjà
+        return $this->makePublicApiRequest('POST', $endpoint, $data);
     }
 }

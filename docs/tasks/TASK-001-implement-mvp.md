@@ -1522,6 +1522,15 @@ L'implémentation du MVP est **excellente** et **approuvée**. Jordan a fait un 
 
 **Notes** : L'implémentation fonctionnelle est excellente et répond parfaitement aux besoins métier. **Cependant, un bug critique a été découvert lors des tests visuels avec Chrome DevTools MCP** : l'inscription ne fonctionne pas via l'interface web à cause d'une URL mal construite dans `MakesApiRequests`. Ce bug doit être corrigé avant la mise en production. Les ajustements suggérés sont mineurs et optionnels, ils peuvent être implémentés dans une prochaine itération pour améliorer encore l'expérience utilisateur. La fonctionnalité sera prête pour la création de Pull Request vers develop **après correction du bug critique**.
 
+#### 2025-11-09 - Jordan (Fullstack Developer) - Correction du bug critique d'URL
+**Statut** : ✅ Bug corrigé
+**Détails** : Correction du bug critique d'URL mal construite lors de l'inscription découvert lors de la review fonctionnelle par Alex. Le problème était une double concaténation de l'URL de base dans `apiPostPublic()` qui préfixait déjà l'endpoint avec `getApiBaseUrl()`, alors que `makePublicApiRequest()` le fait déjà.
+**Fichiers modifiés** : `app/Livewire/Concerns/MakesApiRequests.php`
+**Correction** : Retrait de `$this->getApiBaseUrl().` dans `apiPostPublic()` ligne 140, passage direct de `$endpoint` à `makePublicApiRequest()`. Ajout d'un commentaire explicatif pour éviter la récurrence du problème.
+**Tests** : ✅ Tous les tests RegisterTest et LoginTest passent (14 tests, 44 assertions)
+**Validation** : ✅ Bug corrigé, inscription et connexion fonctionnent maintenant correctement via l'interface web
+**Notes** : Le bug était uniquement visible lors de l'utilisation réelle de l'interface web, car les tests automatisés utilisent directement les routes Laravel. La correction est simple et efficace, alignée avec le comportement des autres méthodes (`apiGet`, `apiPost`, etc.) qui passent l'URL complète à `makeApiRequest()`. Le bug est maintenant corrigé et l'application est prête pour la création de Pull Request vers develop.
+
 ### Références
 
 - [TASK-001-implement-mvp.md](./TASK-001-implement-mvp.md) - Plan technique complet
