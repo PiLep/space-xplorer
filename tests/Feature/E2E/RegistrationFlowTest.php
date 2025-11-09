@@ -143,7 +143,7 @@ class RegistrationFlowTest extends TestCase
 
         // Verify user was created
         $this->assertEquals($usersBefore + 1, User::count(), 'User should be created');
-        
+
         // Verify planet was created
         $this->assertGreaterThan($planetsBefore, Planet::count(), 'Planet should be created');
 

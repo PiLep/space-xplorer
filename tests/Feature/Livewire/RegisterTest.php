@@ -93,7 +93,7 @@ class RegisterTest extends TestCase
         // Verify token was stored in session
         $this->assertNotNull(Session::get('sanctum_token'));
         $this->assertTrue(Auth::check());
-        
+
         // Verify user was created
         $user = Auth::user();
         $this->assertNotNull($user);
