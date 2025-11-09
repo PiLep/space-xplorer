@@ -4,7 +4,7 @@ namespace Tests\Feature\Livewire;
 
 use App\Models\Planet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 use Tests\TestCase;
@@ -82,25 +82,6 @@ class RegisterTest extends TestCase
      */
     public function test_successful_registration(): void
     {
-        $planet = Planet::factory()->create();
-
-        // Mock the API response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'data' => [
-                    'user' => [
-                        'id' => 1,
-                        'name' => 'John Doe',
-                        'email' => 'john@example.com',
-                        'home_planet_id' => $planet->id,
-                    ],
-                    'token' => 'test-token',
-                ],
-                'message' => 'User registered successfully',
-                'status' => 'success',
-            ], 201),
-        ]);
-
         Livewire::test(\App\Livewire\Register::class)
             ->set('name', 'John Doe')
             ->set('email', 'john@example.com')
@@ -110,23 +91,23 @@ class RegisterTest extends TestCase
             ->assertRedirect(route('dashboard'));
 
         // Verify token was stored in session
-        $this->assertEquals('test-token', Session::get('sanctum_token'));
+        $this->assertNotNull(Session::get('sanctum_token'));
+        $this->assertTrue(Auth::check());
+        
+        // Verify user was created
+        $user = Auth::user();
+        $this->assertNotNull($user);
+        $this->assertEquals('John Doe', $user->name);
+        $this->assertEquals('john@example.com', $user->email);
     }
 
     /**
-     * Test that registration handles API validation errors.
+     * Test that registration handles duplicate email.
      */
-    public function test_registration_handles_api_validation_errors(): void
+    public function test_registration_handles_duplicate_email(): void
     {
-        // Mock API validation error response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'email' => ['The email has already been taken.'],
-                ],
-            ], 422),
-        ]);
+        // Create existing user
+        \App\Models\User::factory()->create(['email' => 'existing@example.com']);
 
         Livewire::test(\App\Livewire\Register::class)
             ->set('name', 'John Doe')
@@ -138,23 +119,22 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * Test that registration handles API errors gracefully.
+     * Test that registration creates user with home planet.
      */
-    public function test_registration_handles_api_errors(): void
+    public function test_registration_creates_user_with_home_planet(): void
     {
-        // Mock API error response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'message' => 'Server error',
-            ], 500),
-        ]);
-
         Livewire::test(\App\Livewire\Register::class)
             ->set('name', 'John Doe')
             ->set('email', 'john@example.com')
             ->set('password', 'password123')
             ->set('password_confirmation', 'password123')
             ->call('register')
-            ->assertHasErrors(['email']);
+            ->assertRedirect(route('dashboard'));
+
+        // Verify user was created with home planet
+        $user = Auth::user();
+        $this->assertNotNull($user);
+        $this->assertNotNull($user->home_planet_id);
+        $this->assertNotNull($user->homePlanet);
     }
 }
