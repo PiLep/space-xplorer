@@ -1,59 +1,180 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Space Xplorer 🚀
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Un jeu d'exploration de l'univers où les joueurs peuvent découvrir et explorer différents systèmes stellaires, planètes et objets célestes dans un univers virtuel.
 
-## About Laravel
+[![CI](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml/badge.svg)](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## 🎮 À propos
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et Livewire. Chaque joueur commence avec une planète d'origine générée aléatoirement et peut explorer l'univers progressivement.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Fonctionnalités MVP
 
-## Learning Laravel
+- ✅ **Inscription/Connexion** : Création de compte et authentification
+- ✅ **Génération de planète d'origine** : À l'inscription, chaque joueur reçoit automatiquement une planète d'origine générée aléatoirement
+- ✅ **Visualisation de la planète** : Affichage des caractéristiques de la planète d'origine du joueur
+- ✅ **Profil utilisateur** : Gestion du profil du joueur
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Fonctionnalités futures
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Exploration d'autres planètes
+- Découverte de systèmes stellaires
+- Système de progression et d'achievements
+- Interactions entre joueurs
 
-## Laravel Sponsors
+## 🛠️ Stack Technique
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- **Backend** : Laravel 12 avec architecture événementielle (Events & Listeners)
+- **Frontend** : Livewire 3 + Tailwind CSS + Alpine.js
+- **Base de données** : MySQL 8.0
+- **Cache & Queues** : Redis
+- **Build** : Vite
+- **Développement** : Laravel Sail (Docker)
+- **CI/CD** : GitHub Actions
 
-### Premium Partners
+## 📋 Prérequis
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+- Docker et Docker Compose
+- Git
 
-## Contributing
+## 🚀 Installation
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Avec Laravel Sail (Recommandé)
 
-## Code of Conduct
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/PiLep/space-xplorer.git
+   cd space-xplorer
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Installer les dépendances et démarrer les conteneurs**
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
 
-## Security Vulnerabilities
+3. **Installer les dépendances Composer et NPM**
+   ```bash
+   ./vendor/bin/sail composer install
+   ./vendor/bin/sail npm install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Configurer l'environnement**
+   ```bash
+   cp .env.example .env
+   ./vendor/bin/sail artisan key:generate
+   ```
 
-## License
+5. **Exécuter les migrations**
+   ```bash
+   ./vendor/bin/sail artisan migrate
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Builder les assets frontend**
+   ```bash
+   ./vendor/bin/sail npm run build
+   ```
+
+7. **Accéder à l'application**
+   - Application : http://localhost
+   - Mailpit (emails) : http://localhost:8025
+
+### Commandes utiles
+
+```bash
+# Démarrer les conteneurs
+./vendor/bin/sail up -d
+
+# Arrêter les conteneurs
+./vendor/bin/sail down
+
+# Accéder au shell du conteneur
+./vendor/bin/sail shell
+
+# Exécuter les tests
+./vendor/bin/sail test
+
+# Formater le code avec Pint
+./vendor/bin/sail pint
+
+# Builder les assets en mode développement
+./vendor/bin/sail npm run dev
+```
+
+## 🧪 Tests
+
+```bash
+# Exécuter tous les tests
+./vendor/bin/sail test
+
+# Exécuter les tests avec coverage
+./vendor/bin/sail test --coverage
+```
+
+## 📚 Documentation
+
+Ce projet utilise un système de workflow structuré avec des agents IA spécialisés :
+
+### 🚀 Démarrage Rapide
+
+- **[PROMPTS_GUIDE.md](./PROMPTS_GUIDE.md)** - Guide complet avec tous les prompts pour chaque étape du workflow
+- **[GET_STARTED_WORKFLOW.md](./GET_STARTED_WORKFLOW.md)** - Guide de démarrage rapide du workflow
+
+### 📖 Documentation Complète
+
+- **[WORKFLOW.md](./WORKFLOW.md)** - Schéma et description complète du workflow de développement
+- **[AGENTS.md](./AGENTS.md)** - Liste complète des agents et leurs rôles
+
+### 🧠 Memory Bank
+
+Documentation du projet Space Xplorer :
+
+- **[PROJECT_BRIEF.md](./docs/memory_bank/PROJECT_BRIEF.md)** - Vision métier, fonctionnalités, personas, flux utilisateurs
+- **[ARCHITECTURE.md](./docs/memory_bank/ARCHITECTURE.md)** - Architecture technique, modèle de données, API endpoints, flux métier
+- **[STACK.md](./docs/memory_bank/STACK.md)** - Stack technique détaillée
+
+### 👥 Agents
+
+- **[PRODUCT.md](./docs/agents/PRODUCT.md)** - **Alex** - Product Manager
+- **[LEAD-DEV.md](./docs/agents/LEAD-DEV.md)** - **Sam** - Lead Developer
+- **[ARCHITECT.md](./docs/agents/ARCHITECT.md)** - **Morgan** - Architecte
+- **[FULLSTACK-DEV.md](./docs/agents/FULLSTACK-DEV.md)** - **Jordan** - Fullstack Developer
+- **[MANAGER.md](./docs/agents/MANAGER.md)** - **Taylor** - Workflow Manager
+
+## 🔄 Workflow de Développement
+
+Ce projet suit un workflow structuré en 9 étapes :
+
+1. **Création d'Issue** (Alex) → Issue produit documentée
+2. **Création de Branche** (Sam) → Branche Git créée
+3. **Création du Plan** (Sam) → Plan technique détaillé
+4. **Review Architecturale** (Morgan) → Plan approuvé
+5. **Implémentation** (Jordan) → Code implémenté
+6. **Review du Code** (Sam) → Code approuvé
+7. **Review Fonctionnelle** (Alex) → Fonctionnalité approuvée
+8. **Création de PR** (Sam) → Pull Request créée
+9. **Merge** (Sam) → Code mergé dans `develop`
+
+Voir **[WORKFLOW.md](./WORKFLOW.md)** pour plus de détails.
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues ! Veuillez suivre le workflow décrit dans **[WORKFLOW.md](./WORKFLOW.md)**.
+
+1. Créer une issue pour discuter des changements proposés
+2. Créer une branche depuis `develop`
+3. Suivre le workflow de développement avec les agents IA
+4. Créer une Pull Request vers `develop`
+
+## 📝 License
+
+Ce projet est open-source et disponible sous la [MIT License](https://opensource.org/licenses/MIT).
+
+## 🔗 Liens
+
+- **Repository** : https://github.com/PiLep/space-xplorer
+- **Documentation** : Voir le dossier `docs/`
+- **Issues** : https://github.com/PiLep/space-xplorer/issues
+
+---
+
+**Space Xplorer** - Explore the universe 🌌
