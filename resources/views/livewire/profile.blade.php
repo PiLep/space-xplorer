@@ -1,9 +1,4 @@
 <div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
-    <x-page-header
-        title="Profile Settings"
-        description="Manage your account information and preferences."
-    />
-
     @if ($loading)
         <x-loading-spinner
             variant="simple"
@@ -11,80 +6,63 @@
             :showMessage="false"
         />
     @elseif ($user)
-        <x-form-card
-            title="Account Information"
-            headerSeparated
-            shadow="shadow-lg"
-            padding="px-8 py-6"
-        >
-            <!-- Error Message -->
-            @if ($error)
-                <x-alert
-                    type="error"
-                    :message="$error"
-                    :showPrompt="false"
-                />
-            @endif
+        <!-- Profile Card -->
+        <div class="bg-white dark:bg-surface-dark shadow-lg rounded-lg overflow-hidden mb-8 terminal-border-simple scan-effect hologram">
+            <div class="flex flex-col">
+                <!-- Profile Header -->
+                <div class="px-8 py-6 border-b border-gray-200 dark:border-border-dark">
+                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2 dark:text-glow-subtle font-mono">{{ strtoupper($user['name']) }}</h2>
+                    <p class="text-gray-600 dark:text-gray-400 text-lg uppercase tracking-wider font-mono">USER_PROFILE</p>
+                </div>
 
-            <!-- Name (read-only) -->
-            <x-form-input
-                type="text"
-                name="name"
-                id="name"
-                label="Name"
-                value="{{ $user['name'] }}"
-                disabled
-                marginBottom="mb-6"
-            />
+                <!-- Error Message -->
+                @if ($error)
+                    <div class="px-8 py-4 border-b border-gray-200 dark:border-border-dark">
+                        <x-alert
+                            type="error"
+                            :message="$error"
+                            :showPrompt="false"
+                        />
+                    </div>
+                @endif
 
-            <!-- Email (read-only) -->
-            <x-form-input
-                type="email"
-                name="email"
-                id="email"
-                label="Email"
-                value="{{ $user['email'] }}"
-                disabled
-                marginBottom="mb-6"
-            />
+                <!-- User Information -->
+                <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 dark:text-glow-subtle font-mono">SYSTEM_DATA</h3>
+                    <div class="space-y-3 font-mono">
+                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">NAME</span>
+                            <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['name'] }}</span>
+                        </div>
+                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">EMAIL</span>
+                            <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['email'] }}</span>
+                        </div>
+                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
+                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">USER_ID</span>
+                            <span class="text-space-primary dark:text-space-primary flex-1 font-mono text-sm">{{ $user['id'] }}</span>
+                        </div>
+                        @if ($user['home_planet_id'])
+                            <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
+                                <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">HOME_PLANET</span>
+                                <span class="text-space-secondary dark:text-space-secondary flex-1 font-mono">{{ $user['home_planet_name'] ?? $user['home_planet_id'] }}</span>
+                            </div>
+                        @endif
+                    </div>
+                </div>
 
-            <!-- User ID (read-only) -->
-            <x-form-input
-                type="text"
-                name="user_id"
-                id="user_id"
-                label="User ID"
-                value="{{ $user['id'] }}"
-                disabled
-                helpText="This is your unique user identifier."
-                marginBottom="mb-6"
-            />
-
-            <!-- Home Planet ID (read-only) -->
-            @if ($user['home_planet_id'])
-                <x-form-input
-                    type="text"
-                    name="home_planet_id"
-                    id="home_planet_id"
-                    label="Home Planet ID"
-                    value="{{ $user['home_planet_id'] }}"
-                    disabled
-                    helpText="Your home planet identifier."
-                    marginBottom="mb-6"
-                />
-            @endif
-
-            <!-- Back Button -->
-            <div class="flex items-center justify-end">
-                <x-button
-                    href="{{ route('dashboard') }}"
-                    variant="primary"
-                    size="md"
-                >
-                    Back to Dashboard
-                </x-button>
+                <!-- Back Button -->
+                <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
+                    <x-button
+                        href="{{ route('dashboard') }}"
+                        variant="primary"
+                        size="md"
+                    >
+                        Back to Dashboard
+                    </x-button>
+                </div>
             </div>
-        </x-form-card>
+        </div>
     @else
         <!-- Error state: user data not loaded -->
         <x-form-card

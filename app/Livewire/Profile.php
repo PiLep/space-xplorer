@@ -35,12 +35,16 @@ class Profile extends Component
                 return;
             }
 
+            // Load user with home planet relationship
+            $authUser->load('homePlanet');
+
             // Load user data directly from session
             $this->user = [
                 'id' => $authUser->id,
                 'name' => $authUser->name,
                 'email' => $authUser->email,
                 'home_planet_id' => $authUser->home_planet_id,
+                'home_planet_name' => $authUser->homePlanet?->name ?? null,
             ];
         } catch (\Exception $e) {
             $this->error = 'Failed to load user data: '.$e->getMessage();
