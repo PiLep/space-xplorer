@@ -87,5 +87,46 @@ trait MakesApiRequests
     {
         return $this->makeApiRequest('DELETE', $this->getApiBaseUrl().$endpoint);
     }
+
+    /**
+     * Make a public API request (without authentication token).
+     *
+     * @param  string  $method
+     * @param  string  $endpoint
+     * @param  array  $data
+     * @return array
+     *
+     * @throws \Exception
+     */
+    protected function makePublicApiRequest(string $method, string $endpoint, array $data = []): array
+    {
+        try {
+            $response = Http::{strtolower($method)}($this->getApiBaseUrl().$endpoint, $data);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
+
+            // Handle validation errors
+            if ($response->status() === 422) {
+                $errors = $response->json('errors', []);
+                throw new \Exception(json_encode($errors));
+            }
+
+            // Handle other errors
+            $message = $response->json('message', 'An error occurred');
+            throw new \Exception($message);
+        } catch (RequestException $e) {
+            throw new \Exception('API request failed: '.$e->getMessage());
+        }
+    }
+
+    /**
+     * Make a public POST request to the API.
+     */
+    protected function apiPostPublic(string $endpoint, array $data = []): array
+    {
+        return $this->makePublicApiRequest('POST', $this->getApiBaseUrl().$endpoint, $data);
+    }
 }
 

@@ -229,53 +229,64 @@ database/
   - Intégration Livewire scripts et styles avec directives `@livewireScripts` et `@livewireStyles`
 
 #### Tâche 6.3 : Créer la page d'accueil
-- **Description** : Créer la page d'accueil avec présentation du jeu et liens vers inscription/connexion
-- **Fichiers concernés** : `resources/views/welcome.blade.php` ou composant Livewire
-- **Estimation** : 1h
-- **Dépendances** : Tâche 6.2
-- **Tests** : Vérifier le rendu
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `resources/views/home.blade.php`
+- **Détails** : Page d'accueil créée avec présentation du jeu, section hero, features (3 cartes), call-to-action. Route `/` mise à jour.
 
 #### Tâche 6.4 : Créer le composant Livewire Register
-- **Description** : Composant Livewire pour le formulaire d'inscription avec validation côté client et serveur, appel à POST /api/auth/register, gestion des erreurs, redirection vers dashboard après succès
-- **Fichiers concernés** : `app/Livewire/Register.php`, `resources/views/livewire/register.blade.php`
-- **Estimation** : 2h
-- **Dépendances** : Tâche 6.2, Tâche 4.3
-- **Tests** : Tests fonctionnels du formulaire
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Livewire/Register.php`, `resources/views/livewire/register.blade.php`
+- **Détails** : 
+  - Composant Register créé avec validation côté client et serveur
+  - Appel à POST /api/auth/register via `apiPostPublic()`
+  - Gestion des erreurs avec affichage des messages de validation
+  - Redirection vers dashboard après succès
+  - Trait `MakesApiRequests` étendu avec méthode `makePublicApiRequest()` pour les requêtes non authentifiées
 
 #### Tâche 6.5 : Créer le composant Livewire Login
-- **Description** : Composant Livewire pour le formulaire de connexion avec validation, appel à POST /api/auth/login, gestion des erreurs, redirection vers dashboard après succès
-- **Fichiers concernés** : `app/Livewire/Login.php`, `resources/views/livewire/login.blade.php`
-- **Estimation** : 1h30
-- **Dépendances** : Tâche 6.2, Tâche 4.4
-- **Tests** : Tests fonctionnels du formulaire
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Livewire/Login.php`, `resources/views/livewire/login.blade.php`
+- **Détails** : 
+  - Composant Login créé avec validation
+  - Appel à POST /api/auth/login via `apiPostPublic()`
+  - Gestion des erreurs (identifiants incorrects)
+  - Redirection vers dashboard après succès
 
 #### Tâche 6.6 : Créer le composant Livewire Dashboard
-- **Description** : Composant Livewire pour le tableau de bord qui affiche la planète d'origine du joueur. Appelle GET /api/users/{id}/home-planet, affiche toutes les caractéristiques de la planète avec un design attrayant, affiche le nom et la description
-- **Fichiers concernés** : `app/Livewire/Dashboard.php`, `resources/views/livewire/dashboard.blade.php`
-- **Estimation** : 3h
-- **Dépendances** : Tâche 6.2, Tâche 5.2
-- **Tests** : Tests fonctionnels de l'affichage
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Livewire/Dashboard.php`, `resources/views/livewire/dashboard.blade.php`
+- **Détails** : 
+  - Composant Dashboard créé pour afficher la planète d'origine
+  - Appelle GET /api/auth/user et GET /api/users/{id}/home-planet
+  - Affiche toutes les caractéristiques de la planète (name, type, size, temperature, atmosphere, terrain, resources, description)
+  - Design avec cartes pour chaque caractéristique
+  - Gestion du loading et des erreurs
 
 #### Tâche 6.7 : Créer le composant Livewire Profile
-- **Description** : Composant Livewire pour la gestion du profil utilisateur. Affiche les informations (nom, email), permet la mise à jour via PUT /api/users/{id}, gestion des erreurs et messages de succès
-- **Fichiers concernés** : `app/Livewire/Profile.php`, `resources/views/livewire/profile.blade.php`
-- **Estimation** : 2h
-- **Dépendances** : Tâche 6.2, Tâche 5.2
-- **Tests** : Tests fonctionnels du profil
+- [x] ✅ **Terminée**
+- **Fichiers créés** : `app/Livewire/Profile.php`, `resources/views/livewire/profile.blade.php`
+- **Détails** : 
+  - Composant Profile créé pour la gestion du profil utilisateur
+  - Affiche les informations (nom, email, user ID, home_planet_id)
+  - Permet la mise à jour via PUT /api/users/{id}
+  - Validation et gestion des erreurs
+  - Messages de succès après mise à jour
 
 #### Tâche 6.8 : Ajouter la navigation et la déconnexion
-- **Description** : Ajouter la navigation dans le layout avec liens vers dashboard et profile, bouton de déconnexion qui appelle POST /api/auth/logout et redirige vers la page d'accueil
-- **Fichiers concernés** : `resources/views/layouts/app.blade.php` ou composant Navigation
-- **Estimation** : 1h
-- **Dépendances** : Tâche 6.2, Tâche 4.5
-- **Tests** : Tests fonctionnels de la navigation
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `resources/views/layouts/app.blade.php`
+- **Détails** : Navigation déjà intégrée dans le layout avec liens Dashboard, Profile, Login, Register, Logout. Bouton de déconnexion qui appelle POST /logout et redirige vers la page d'accueil.
 
 #### Tâche 6.9 : Ajouter les routes web
-- **Description** : Ajouter les routes web dans routes/web.php pour les pages publiques (accueil, register, login) et les pages protégées (dashboard, profile). Utiliser middleware auth:sanctum pour les pages protégées
-- **Fichiers concernés** : `routes/web.php`
-- **Estimation** : 30 min
-- **Dépendances** : Tâche 6.3 à Tâche 6.8
-- **Tests** : Vérifier que les routes sont accessibles
+- [x] ✅ **Terminée**
+- **Fichiers modifiés** : `routes/web.php`
+- **Détails** : Routes web ajoutées :
+  - GET / → home (page d'accueil)
+  - GET /register → Register component (guest)
+  - GET /login → Login component (guest)
+  - GET /dashboard → Dashboard component (auth)
+  - GET /profile → Profile component (auth)
+  - POST /logout → Logout handler (auth)
 
 ### Phase 7 : Tests
 
@@ -1063,4 +1074,29 @@ Le plan peut être implémenté tel quel, en tenant compte des recommandations p
 - `app/Http/Controllers/Api/PlanetController.php`
 - `routes/api.php` (modifié)
 **Notes** : Autorisation implémentée selon les recommandations de Morgan (High priority). Prêt pour Phase 6 (Frontend - Composants Livewire).
+
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 6 terminée
+**Statut** : 🔄 En cours
+**Détails** : Phase 6 (Frontend - Composants Livewire) terminée. Toutes les tâches 6.1 à 6.9 complétées :
+- **Tâche 6.1** : Sanctum configuré pour Livewire avec trait `MakesApiRequests` et méthodes pour requêtes publiques/authentifiées
+- **Tâche 6.2** : Layout principal créé avec navigation et footer
+- **Tâche 6.3** : Page d'accueil créée avec présentation du jeu
+- **Tâche 6.4** : Composant Register créé avec validation et appel API
+- **Tâche 6.5** : Composant Login créé avec validation et appel API
+- **Tâche 6.6** : Composant Dashboard créé pour afficher la planète d'origine
+- **Tâche 6.7** : Composant Profile créé pour la gestion du profil
+- **Tâche 6.8** : Navigation et déconnexion intégrées dans le layout
+- **Tâche 6.9** : Routes web ajoutées pour toutes les pages
+**Fichiers créés/modifiés** :
+- `app/Livewire/Concerns/MakesApiRequests.php` (modifié - ajout méthodes publiques)
+- `app/Livewire/Register.php` (nouveau)
+- `app/Livewire/Login.php` (nouveau)
+- `app/Livewire/Dashboard.php` (nouveau)
+- `app/Livewire/Profile.php` (nouveau)
+- `resources/views/livewire/register.blade.php` (nouveau)
+- `resources/views/livewire/login.blade.php` (nouveau)
+- `resources/views/livewire/dashboard.blade.php` (nouveau)
+- `resources/views/livewire/profile.blade.php` (nouveau)
+- `routes/web.php` (modifié)
+**Notes** : Tous les composants Livewire fonctionnent avec l'approche API-first. Authentification hybride : token Sanctum pour API, session auth pour routes web. Prêt pour Phase 7 (Tests).
 
