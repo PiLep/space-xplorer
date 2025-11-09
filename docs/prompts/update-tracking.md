@@ -167,7 +167,94 @@ Chaque agent doit mettre à jour les documents lors de ses actions :
 - **Morgan** : Met à jour la task après la review architecturale
 - **Jordan** : Met à jour la task pendant l'implémentation (marquer les tâches comme terminées)
 
+## Mise à Jour de l'Issue GitHub
+
+### Principe
+
+Après chaque commit significatif (completion d'une phase ou d'un ensemble de tâches), mettre à jour l'issue GitHub correspondante avec un commentaire détaillé.
+
+### Quand Mettre à Jour GitHub
+
+| Agent | Quand | Action |
+|-------|-------|--------|
+| **Jordan** | Après chaque commit de phase complète | Ajouter un commentaire à l'issue GitHub avec le résumé des tâches complétées |
+| **Sam** | Après création de PR | Ajouter un commentaire avec le lien vers la PR |
+| **Alex** | Après merge de la PR | Ajouter un commentaire de clôture |
+
+### Format du Commentaire GitHub
+
+Le commentaire doit suivre ce format :
+
+```markdown
+## [Titre de la phase/tâche] ✅
+
+**[Agent] ([Rôle])** - [Description]
+
+### Tâches complétées
+
+#### Tâche X.X : [Titre] ✅
+- [Détail 1]
+- [Détail 2]
+- [Détail 3]
+
+### Fichiers créés/modifiés
+- `chemin/fichier.php` (nouveau/modifié)
+- `chemin/fichier.blade.php` (nouveau/modifié)
+
+### Prochaines étapes
+- [Prochaine tâche/phase]
+
+**Commit** : `[sha]` - [message du commit]
+```
+
+### Exemple de Commentaire GitHub
+
+```markdown
+## Phase 6 complète terminée ✅
+
+**Jordan (Fullstack Developer)** - Phase 6 (Frontend - Composants Livewire) complète
+
+### Tâches complétées (6.4 à 6.9)
+
+#### Tâche 6.4 : Composant Register ✅
+- Composant Register créé avec validation côté client et serveur
+- Appel à POST /api/auth/register via `apiPostPublic()`
+- Gestion des erreurs avec affichage des messages de validation
+
+### Fichiers créés/modifiés
+- `app/Livewire/Register.php` (nouveau)
+- `resources/views/livewire/register.blade.php` (nouveau)
+- `routes/web.php` (modifié)
+
+### Prochaines étapes
+- Phase 7 : Tests (tâches 7.1 à 7.5)
+
+**Commit** : `d3d76da` - feat: Phase 6 complète - Composants Livewire
+```
+
+### Processus Complet
+
+1. **Faire le commit** avec un message descriptif
+2. **Mettre à jour le fichier local** de l'issue (`docs/issues/ISSUE-XXX.md`) avec les progrès
+3. **Faire un commit** de la mise à jour de l'issue locale
+4. **Ajouter un commentaire** à l'issue GitHub avec le résumé des changements
+5. **Inclure le SHA du commit** dans le commentaire GitHub pour référence
+
+### Outils Disponibles
+
+- **GitHub MCP** : Utiliser `mcp_github_add_issue_comment` pour ajouter un commentaire
+- **Git** : Utiliser `git commit` pour commiter les changements
+- **Format** : Suivre le format standardisé ci-dessus
+
+### Bonnes Pratiques
+
+1. **Mettre à jour après chaque phase complète** : Ne pas attendre la fin de toutes les phases
+2. **Être concis mais complet** : Résumer les points importants sans être trop verbeux
+3. **Référencer les commits** : Inclure le SHA du commit pour traçabilité
+4. **Maintenir la synchronisation** : L'issue locale reste la source de vérité, GitHub est la synchronisation
+5. **Utiliser des emojis** : ✅ pour les tâches complétées, 🔄 pour en cours, etc.
+
 ---
 
-**Rappel** : Le suivi et l'historique sont essentiels pour comprendre l'évolution du projet et faciliter la collaboration entre les agents.
+**Rappel** : Le suivi et l'historique sont essentiels pour comprendre l'évolution du projet et faciliter la collaboration entre les agents. La synchronisation avec GitHub permet un suivi visuel et une meilleure communication.
 
