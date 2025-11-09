@@ -50,9 +50,13 @@ it('validates password minimum length during registration', function () {
 });
 
 it('allows successful registration', function () {
+    // Ensure mock is set up (should be done by tests/Feature/Pest.php, but explicit call ensures it)
+    // The beforeEach in tests/Feature/Pest.php should handle this, but calling it explicitly
+    // ensures the mock is ready before Livewire creates the user
+
     Livewire::test(\App\Livewire\Register::class)
         ->set('name', 'John Doe')
-        ->set('email', 'john@example.com')
+        ->set('email', 'john1@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
         ->call('register')
@@ -65,7 +69,7 @@ it('allows successful registration', function () {
     $user = Auth::user();
     expect($user)->not->toBeNull()
         ->and($user->name)->toBe('John Doe')
-        ->and($user->email)->toBe('john@example.com');
+        ->and($user->email)->toBe('john1@example.com');
 });
 
 it('handles duplicate email during registration', function () {
@@ -83,8 +87,8 @@ it('handles duplicate email during registration', function () {
 
 it('creates user with home planet during registration', function () {
     Livewire::test(\App\Livewire\Register::class)
-        ->set('name', 'John Doe')
-        ->set('email', 'john@example.com')
+        ->set('name', 'Jane Doe')
+        ->set('email', 'jane@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
         ->call('register')

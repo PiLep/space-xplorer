@@ -86,4 +86,3 @@ return [
         'visibility' => env('IMAGE_GENERATION_STORAGE_VISIBILITY', 'public'), // public, private
     ],
 ];
-

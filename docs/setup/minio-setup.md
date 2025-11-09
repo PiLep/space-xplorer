@@ -41,12 +41,17 @@ AWS_DEFAULT_REGION=us-east-1
 AWS_BUCKET=space-xplorer
 AWS_ENDPOINT=http://minio:9000
 AWS_USE_PATH_STYLE_ENDPOINT=true
+AWS_URL=http://localhost:9000/space-xplorer
 
 # Image Generation Storage
 IMAGE_GENERATION_STORAGE_DISK=s3
 IMAGE_GENERATION_STORAGE_PATH=images/generated
 IMAGE_GENERATION_STORAGE_VISIBILITY=public
 ```
+
+**Important** : `AWS_URL` doit être configuré pour que Laravel génère les bonnes URLs. 
+- Pour MinIO local : `http://localhost:9000/{bucket-name}`
+- Pour S3 production : Laisser vide (Laravel construit automatiquement l'URL S3)
 
 **Note** : L'endpoint `http://minio:9000` utilise le nom du service Docker. Pour accéder depuis votre machine locale, utilisez `http://localhost:9000`.
 

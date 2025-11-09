@@ -31,12 +31,12 @@ class TestImageGeneration extends Command
         $prompt = $this->argument('prompt');
         $provider = $this->option('provider');
 
-        $this->info("🎨 Testing image generation...");
+        $this->info('🎨 Testing image generation...');
         $this->line("Prompt: {$prompt}");
         if ($provider) {
             $this->line("Provider: {$provider}");
         } else {
-            $this->line("Provider: ".config('image-generation.default_provider').' (default)');
+            $this->line('Provider: '.config('image-generation.default_provider').' (default)');
         }
         $this->newLine();
 
@@ -44,13 +44,13 @@ class TestImageGeneration extends Command
         $providerToUse = $provider ?? config('image-generation.default_provider');
         if (! $service->isProviderConfigured($providerToUse)) {
             $this->error("❌ Provider '{$providerToUse}' is not configured or missing API key.");
-            $this->line("Available providers: ".implode(', ', $service->getAvailableProviders()));
+            $this->line('Available providers: '.implode(', ', $service->getAvailableProviders()));
 
             return Command::FAILURE;
         }
 
         try {
-            $this->info("⏳ Generating image...");
+            $this->info('⏳ Generating image...');
             $startTime = microtime(true);
 
             $result = $service->generate($prompt, $provider);
@@ -58,24 +58,24 @@ class TestImageGeneration extends Command
             $duration = round(microtime(true) - $startTime, 2);
 
             $this->newLine();
-            $this->info("✅ Image generated and saved successfully!");
+            $this->info('✅ Image generated and saved successfully!');
             $this->line("Duration: {$duration}s");
             $this->line("Provider: {$result['provider']}");
             $this->newLine();
 
             // Display storage information
-            $this->info("💾 Storage Information:");
+            $this->info('💾 Storage Information:');
             $this->line("Disk: {$result['disk']}");
             $this->line("Path: {$result['path']}");
             $this->newLine();
 
             // Display S3 URL
-            $this->info("📷 Image URL (S3):");
+            $this->info('📷 Image URL (S3):');
             $this->line($result['url']);
             $this->newLine();
 
             if (isset($result['revised_prompt'])) {
-                $this->comment("Revised prompt by DALL-E:");
+                $this->comment('Revised prompt by DALL-E:');
                 $this->line($result['revised_prompt']);
                 $this->newLine();
             }
@@ -85,12 +85,12 @@ class TestImageGeneration extends Command
             return Command::SUCCESS;
         } catch (\Exception $e) {
             $this->newLine();
-            $this->error("❌ Failed to generate image:");
+            $this->error('❌ Failed to generate image:');
             $this->line($e->getMessage());
             $this->newLine();
 
             if ($this->getOutput()->isVerbose()) {
-                $this->error("Stack trace:");
+                $this->error('Stack trace:');
                 $this->line($e->getTraceAsString());
             }
 
@@ -98,4 +98,3 @@ class TestImageGeneration extends Command
         }
     }
 }
-

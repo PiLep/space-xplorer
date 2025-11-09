@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Aws\S3\S3Client;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Storage;
 
 class SetupMinIO extends Command
 {
@@ -95,29 +94,28 @@ class SetupMinIO extends Command
                         'Bucket' => $bucket,
                         'Policy' => $policy,
                     ]);
-                    $this->info("✅ Bucket policy set to public.");
+                    $this->info('✅ Bucket policy set to public.');
                 } catch (\Exception $e) {
                     $this->warn("⚠️  Could not set bucket policy: {$e->getMessage()}");
-                    $this->comment("You can set it manually in MinIO console (http://localhost:9001)");
+                    $this->comment('You can set it manually in MinIO console (http://localhost:9001)');
                 }
             }
 
             $this->newLine();
-            $this->info("✅ MinIO setup complete!");
+            $this->info('✅ MinIO setup complete!');
             $this->line("Bucket: {$bucket}");
             $this->line("Endpoint: {$endpoint}");
-            $this->line("Console: http://localhost:9001");
+            $this->line('Console: http://localhost:9001');
 
             return Command::SUCCESS;
         } catch (\Exception $e) {
-            $this->error("❌ Failed to setup MinIO:");
+            $this->error('❌ Failed to setup MinIO:');
             $this->line($e->getMessage());
             $this->newLine();
-            $this->comment("Make sure MinIO is running: ./vendor/bin/sail up -d");
-            $this->comment("Check your .env configuration for AWS_* variables");
+            $this->comment('Make sure MinIO is running: ./vendor/bin/sail up -d');
+            $this->comment('Check your .env configuration for AWS_* variables');
 
             return Command::FAILURE;
         }
     }
 }
-

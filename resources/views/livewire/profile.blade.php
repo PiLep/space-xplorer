@@ -7,17 +7,41 @@
         />
     @elseif ($user)
         <!-- Profile Card -->
-        <div class="bg-white dark:bg-surface-dark shadow-lg rounded-lg overflow-hidden mb-8 terminal-border-simple scan-effect hologram">
+        <div
+            class="dark:bg-surface-dark terminal-border-simple scan-effect hologram mb-8 overflow-hidden rounded-lg bg-white shadow-lg">
             <div class="flex flex-col">
                 <!-- Profile Header -->
-                <div class="px-8 py-6 border-b border-gray-200 dark:border-border-dark">
-                    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2 dark:text-glow-subtle font-mono">{{ strtoupper($user['name']) }}</h2>
-                    <p class="text-gray-600 dark:text-gray-400 text-lg uppercase tracking-wider font-mono">USER_PROFILE</p>
+                <div class="dark:border-border-dark border-b border-gray-200 px-8 py-6">
+                    <div class="mb-4 flex items-center gap-6">
+                        <!-- Avatar -->
+                        @if ($user['avatar_url'])
+                            <div class="flex-shrink-0">
+                                <img
+                                    src="{{ $user['avatar_url'] }}"
+                                    alt="{{ $user['name'] }}'s avatar"
+                                    class="border-space-primary dark:border-space-primary terminal-border-simple h-24 w-24 rounded-lg border-2 object-cover shadow-lg"
+                                />
+                            </div>
+                        @else
+                            <div
+                                class="dark:border-border-dark terminal-border-simple flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 bg-gray-200 dark:bg-gray-700">
+                                <span class="font-mono text-2xl text-gray-400 dark:text-gray-500">?</span>
+                            </div>
+                        @endif
+                        <!-- User Info -->
+                        <div class="flex-1">
+                            <h2
+                                class="dark:text-glow-subtle mb-2 font-mono text-3xl font-bold text-gray-900 dark:text-white">
+                                {{ strtoupper($user['name']) }}</h2>
+                            <p class="font-mono text-lg uppercase tracking-wider text-gray-600 dark:text-gray-400">
+                                USER_PROFILE</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Error Message -->
                 @if ($error)
-                    <div class="px-8 py-4 border-b border-gray-200 dark:border-border-dark">
+                    <div class="dark:border-border-dark border-b border-gray-200 px-8 py-4">
                         <x-alert
                             type="error"
                             :message="$error"
@@ -27,32 +51,44 @@
                 @endif
 
                 <!-- User Information -->
-                <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-6 dark:text-glow-subtle font-mono">SYSTEM_DATA</h3>
+                <div class="dark:border-border-dark border-t border-gray-200 px-8 py-6">
+                    <h3
+                        class="dark:text-glow-subtle mb-6 font-mono text-xl font-semibold text-gray-900 dark:text-white">
+                        SYSTEM_DATA</h3>
                     <div class="space-y-3 font-mono">
-                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
-                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">NAME</span>
+                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                            <span
+                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                            >NAME</span>
                             <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['name'] }}</span>
                         </div>
-                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
-                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">EMAIL</span>
+                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                            <span
+                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                            >EMAIL</span>
                             <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['email'] }}</span>
                         </div>
-                        <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
-                            <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">USER_ID</span>
-                            <span class="text-space-primary dark:text-space-primary flex-1 font-mono text-sm">{{ $user['id'] }}</span>
+                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                            <span
+                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                            >USER_ID</span>
+                            <span
+                                class="text-space-primary dark:text-space-primary flex-1 font-mono text-sm">{{ $user['id'] }}</span>
                         </div>
                         @if ($user['home_planet_id'])
-                            <div class="flex items-baseline border-b border-gray-300 dark:border-border-dark pb-2">
-                                <span class="text-sm text-gray-500 dark:text-gray-500 uppercase tracking-wider w-32 flex-shrink-0">HOME_PLANET</span>
-                                <span class="text-space-secondary dark:text-space-secondary flex-1 font-mono">{{ $user['home_planet_name'] ?? $user['home_planet_id'] }}</span>
+                            <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                <span
+                                    class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                >HOME_PLANET</span>
+                                <span
+                                    class="text-space-secondary dark:text-space-secondary flex-1 font-mono">{{ $user['home_planet_name'] ?? $user['home_planet_id'] }}</span>
                             </div>
                         @endif
                     </div>
                 </div>
 
                 <!-- Back Button -->
-                <div class="px-8 py-6 border-t border-gray-200 dark:border-border-dark">
+                <div class="dark:border-border-dark border-t border-gray-200 px-8 py-6">
                     <x-button
                         href="{{ route('dashboard') }}"
                         variant="primary"

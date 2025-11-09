@@ -228,8 +228,8 @@ class ImageGenerationService
         $visibility = $storageConfig['visibility'];
 
         // Generate unique filename
-        $filename = Str::uuid() . '.png';
-        $storagePath = rtrim($path, '/') . '/' . ltrim($filename, '/');
+        $filename = Str::uuid().'.png';
+        $storagePath = rtrim($path, '/').'/'.ltrim($filename, '/');
 
         try {
             // Handle different provider response formats
@@ -249,15 +249,9 @@ class ImageGenerationService
             // Save to storage
             Storage::disk($disk)->put($storagePath, $imageContent, $visibility);
 
-            // Get public URL
+            // Get public URL using Laravel Storage's native method
+            // This handles S3, MinIO, and other storage drivers correctly
             $url = Storage::disk($disk)->url($storagePath);
-
-            // For S3, if AWS_URL is not set, construct URL manually
-            if ($disk === 's3' && ! config('filesystems.disks.s3.url')) {
-                $region = config('filesystems.disks.s3.region');
-                $bucket = config('filesystems.disks.s3.bucket');
-                $url = "https://{$bucket}.s3.{$region}.amazonaws.com/{$storagePath}";
-            }
 
             Log::info('Image saved to storage', [
                 'provider' => $provider,
@@ -267,7 +261,7 @@ class ImageGenerationService
 
             return [
                 'url' => $url,
-                'path' => $storagePath,
+                'path' => $storagePath, // Store path for future URL reconstruction
                 'disk' => $disk,
                 'provider' => $provider,
                 'revised_prompt' => $result['revised_prompt'] ?? null,

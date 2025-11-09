@@ -3,11 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
@@ -25,6 +27,7 @@ class User extends Authenticatable
         'email',
         'password',
         'home_planet_id',
+        'avatar_url',
     ];
 
     /**
@@ -56,5 +59,33 @@ class User extends Authenticatable
     public function homePlanet(): BelongsTo
     {
         return $this->belongsTo(Planet::class, 'home_planet_id');
+    }
+
+    /**
+     * Get the avatar URL, reconstructing it from the stored path if needed.
+     *
+     * This accessor handles both:
+     * - Old format: Full URL stored (for backward compatibility)
+     * - New format: Path stored (reconstructed dynamically)
+     */
+    protected function avatarUrl(): Attribute
+    {
+        return Attribute::make(
+            get: function ($value) {
+                if (! $value) {
+                    return null;
+                }
+
+                // If it's already a full URL (old format), return as is
+                if (filter_var($value, FILTER_VALIDATE_URL)) {
+                    return $value;
+                }
+
+                // Otherwise, it's a path - reconstruct the URL using Laravel Storage
+                $disk = config('image-generation.storage.disk', 's3');
+
+                return Storage::disk($disk)->url($value);
+            }
+        );
     }
 }
