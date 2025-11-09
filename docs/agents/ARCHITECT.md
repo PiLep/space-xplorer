@@ -95,6 +95,44 @@ app/
 
 **Gestion d'erreurs** : Format JSON standardisé avec codes HTTP appropriés
 
+### CI/CD (Continuous Integration / Continuous Deployment)
+
+**Plateforme** : GitHub Actions
+
+**Workflow** : `.github/workflows/ci.yml`
+
+**Jobs de CI** :
+
+1. **Tests** : Exécution des tests PHPUnit sur PHP 8.4 (version de développement)
+   - Configuration MySQL 8.0 et Redis pour les tests
+   - Build des assets frontend avant les tests
+   - Exécution des migrations de test
+   - Lancement de la suite de tests complète
+
+2. **Code Style** : Vérification du formatage avec Laravel Pint
+   - Validation que le code respecte les standards de formatage
+   - Blocage des PR si le formatage n'est pas conforme
+
+3. **Build Assets** : Compilation des assets frontend avec Vite
+   - Installation des dépendances NPM
+   - Build de production des assets
+   - Vérification que le build fonctionne correctement
+
+**Déclenchement** :
+- Sur push vers `main` et `develop`
+- Sur pull request vers `main` et `develop`
+
+**Principes** :
+- ✅ Tous les tests doivent passer avant merge
+- ✅ Le code doit respecter les standards de formatage
+- ✅ Les assets doivent compiler sans erreur
+- ✅ Tests exécutés sur PHP 8.4 (version de développement)
+
+**Intégration dans le workflow** :
+- La CI/CD s'exécute automatiquement lors de la création de PR
+- Les checks doivent être verts avant validation de la PR par Sam
+- Les échecs de CI bloquent le merge dans `develop` ou `main`
+
 ## Review des Plans de Développement
 
 En tant qu'agent Architecte, tu es responsable de reviewer les plans de développement créés par le Lead Developer.
