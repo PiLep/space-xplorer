@@ -1,12 +1,12 @@
 <div class="max-w-md mx-auto mt-8">
-    <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg px-8 pt-6 pb-8 mb-4">
+    <div class="bg-white dark:bg-surface-dark shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 border border-gray-200 dark:border-border-dark">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">
             Create Your Account
         </h2>
 
         <!-- General Error Message -->
         @if ($errors->any())
-            <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+            <div class="mb-4 bg-red-100 dark:bg-error-dark border border-red-400 dark:border-error text-red-700 dark:text-error-light px-4 py-3 rounded">
                 <ul class="list-disc list-inside">
                     @foreach ($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -25,11 +25,11 @@
                     type="text"
                     id="name"
                     wire:model="name"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline @error('name') border-red-500 @enderror"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-surface-medium dark:border-border-dark leading-tight focus:outline-none focus:ring-2 focus:ring-space-primary focus:border-space-primary @error('name') border-error dark:border-error @enderror"
                     placeholder="Enter your name"
                 >
                 @error('name')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    <p class="text-error text-xs italic mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -42,11 +42,11 @@
                     type="email"
                     id="email"
                     wire:model="email"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline @error('email') border-red-500 @enderror"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-surface-medium dark:border-border-dark leading-tight focus:outline-none focus:ring-2 focus:ring-space-primary focus:border-space-primary @error('email') border-error dark:border-error @enderror"
                     placeholder="Enter your email"
                 >
                 @error('email')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    <p class="text-error text-xs italic mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -59,11 +59,11 @@
                     type="password"
                     id="password"
                     wire:model="password"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline @error('password') border-red-500 @enderror"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-surface-medium dark:border-border-dark leading-tight focus:outline-none focus:ring-2 focus:ring-space-primary focus:border-space-primary @error('password') border-error dark:border-error @enderror"
                     placeholder="Enter your password"
                 >
                 @error('password')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    <p class="text-error text-xs italic mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -76,11 +76,11 @@
                     type="password"
                     id="password_confirmation"
                     wire:model="password_confirmation"
-                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-gray-300 dark:bg-gray-700 dark:border-gray-600 leading-tight focus:outline-none focus:shadow-outline @error('password_confirmation') border-red-500 @enderror"
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 dark:text-white dark:bg-surface-medium dark:border-border-dark leading-tight focus:outline-none focus:ring-2 focus:ring-space-primary focus:border-space-primary @error('password_confirmation') border-error dark:border-error @enderror"
                     placeholder="Confirm your password"
                 >
                 @error('password_confirmation')
-                    <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                    <p class="text-error text-xs italic mt-1">{{ $message }}</p>
                 @enderror
             </div>
 
@@ -89,7 +89,7 @@
                 <button
                     type="submit"
                     wire:loading.attr="disabled"
-                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline disabled:opacity-50 w-full"
+                    class="bg-space-primary hover:bg-space-primary-dark text-space-black font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 disabled:opacity-50 w-full transition-colors"
                 >
                     <span wire:loading.remove wire:target="register">Register</span>
                     <span wire:loading wire:target="register">Registering...</span>
@@ -100,7 +100,7 @@
             <div class="mt-4 text-center">
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                     Already have an account?
-                    <a href="{{ route('login') }}" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-bold">
+                    <a href="{{ route('login') }}" class="text-space-secondary hover:text-space-secondary-light dark:text-space-secondary dark:hover:text-space-secondary-light font-bold">
                         Sign in
                     </a>
                 </p>
