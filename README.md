@@ -57,7 +57,8 @@ The documentation includes:
 
 ## Getting Started
 
-Pour un guide complet et détaillé, consultez **[GET_STARTED.md](./GET_STARTED.md)**.
+- **[GET_STARTED.md](./GET_STARTED.md)** : Guide pour démarrer l'application Laravel en local
+- **[GET_STARTED_WORKFLOW.md](./GET_STARTED_WORKFLOW.md)** : Guide pour utiliser l'usine logicielle avec les agents IA
 
 ### Quick Start
 
