@@ -164,3 +164,18 @@ En cours
 **Lien GitHub** : [Issue #1](https://github.com/PiLep/space-xplorer/issues/1)
 **Notes** : L'issue GitHub est synchronisée avec le fichier local. Les mises à jour de statut peuvent être faites dans les deux endroits pour maintenir la cohérence.
 
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 6.1-6.3 terminée
+**Statut** : En cours
+**Détails** : Phase 6 (Frontend - Composants Livewire) en cours. Tâches 6.1, 6.2 et 6.3 terminées :
+- **Tâche 6.1** : Configuration Sanctum pour Livewire - Trait `MakesApiRequests` créé, token stocké en session, authentification hybride (token pour API, session pour web)
+- **Tâche 6.2** : Layout principal créé avec navigation, footer, intégration Tailwind CSS et Livewire
+- **Tâche 6.3** : Page d'accueil créée avec présentation du jeu, section hero, features et call-to-action
+**Fichiers créés/modifiés** :
+- `app/Livewire/Concerns/MakesApiRequests.php` (nouveau)
+- `app/Http/Controllers/Api/AuthController.php` (modifié)
+- `resources/views/layouts/app.blade.php` (nouveau)
+- `resources/views/components/livewire-layout.blade.php` (nouveau)
+- `resources/views/home.blade.php` (nouveau)
+- `routes/web.php` (modifié)
+**Notes** : Livewire 3 installé et configuré. Approche hybride pour l'authentification : token Sanctum pour les API, session auth pour les routes web Livewire. Prêt pour continuer avec les composants Livewire (Register, Login, Dashboard, Profile).
+
