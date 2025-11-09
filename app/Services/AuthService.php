@@ -8,7 +8,6 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
@@ -61,11 +60,8 @@ class AuthService
         $user->refresh();
 
         // Authenticate user in session
+        // Sanctum will use session cookies for API authentication (stateful)
         Auth::login($user);
-
-        // Create Sanctum token for API clients and store in session
-        $token = $user->createToken('auth-token')->plainTextToken;
-        Session::put('sanctum_token', $token);
 
         return $user;
     }
@@ -103,11 +99,8 @@ class AuthService
         }
 
         // Authenticate user in session
+        // Sanctum will use session cookies for API authentication (stateful)
         Auth::login($user);
-
-        // Create Sanctum token for API clients and store in session
-        $token = $user->createToken('auth-token')->plainTextToken;
-        Session::put('sanctum_token', $token);
 
         return $user;
     }

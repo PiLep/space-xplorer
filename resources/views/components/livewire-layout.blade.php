@@ -48,9 +48,6 @@
                             > REGISTER
                         </a>
                     @endauth
-                    <a href="{{ route('home') }}" class="text-gray-500 dark:text-gray-500 hover:text-gray-400 dark:hover:text-gray-400 transition-colors">
-                        > HOME
-                    </a>
                 </div>
             </div>
         </div>

@@ -4,11 +4,16 @@ use App\Livewire\Dashboard;
 use App\Livewire\LoginTerminal;
 use App\Livewire\Profile;
 use App\Livewire\Register;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Home page
+// Home page - redirect based on authentication
 Route::get('/', function () {
-    return view('home');
+    if (Auth::check()) {
+        return redirect()->route('dashboard');
+    }
+
+    return redirect()->route('login');
 })->name('home');
 
 // Design System pages
@@ -97,6 +102,6 @@ Route::middleware('auth')->group(function () {
         session()->invalidate();
         session()->regenerateToken();
 
-        return redirect()->route('home');
+        return redirect()->route('login');
     })->name('logout');
 });

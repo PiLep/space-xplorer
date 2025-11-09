@@ -12,20 +12,36 @@ trait MakesApiRequests
 {
     /**
      * Make an authenticated API request.
-     *
+     * Uses session cookies for authentication (Sanctum stateful authentication).
      *
      * @throws \Exception
      */
     protected function makeApiRequest(string $method, string $endpoint, array $data = []): array
     {
-        $token = Session::get('sanctum_token');
-
-        if (! $token) {
-            throw new \Exception('No authentication token found. Please log in.');
+        // Check if user is authenticated via session
+        if (! Auth::check()) {
+            throw new \Exception('No authentication found. Please log in.');
         }
 
         try {
-            $response = Http::withToken($token)
+            // Use session cookies for authentication (Sanctum stateful)
+            // Pass cookies from current request to maintain session
+            $cookies = [];
+            foreach (request()->cookies->all() as $name => $value) {
+                $cookies[] = new \GuzzleHttp\Cookie\SetCookie([
+                    'Name' => $name,
+                    'Value' => $value,
+                    'Domain' => request()->getHost(),
+                    'Path' => '/',
+                ]);
+            }
+
+            $response = Http::withCookies($cookies, request()->getHost())
+                ->withHeaders([
+                    'Accept' => 'application/json',
+                    'X-XSRF-TOKEN' => csrf_token(),
+                    'Referer' => request()->url(),
+                ])
                 ->{strtolower($method)}($endpoint, $data);
 
             if ($response->successful()) {
