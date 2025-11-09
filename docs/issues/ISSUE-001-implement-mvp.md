@@ -179,3 +179,26 @@ En cours
 - `routes/web.php` (modifié)
 **Notes** : Livewire 3 installé et configuré. Approche hybride pour l'authentification : token Sanctum pour les API, session auth pour les routes web Livewire. Prêt pour continuer avec les composants Livewire (Register, Login, Dashboard, Profile).
 
+#### 2025-11-09 - Jordan (Fullstack Developer) - Phase 6 complète terminée
+**Statut** : En cours
+**Détails** : Phase 6 (Frontend - Composants Livewire) complète. Toutes les tâches 6.1 à 6.9 terminées :
+- **Tâche 6.4** : Composant Register créé avec validation côté client/serveur, appel API, gestion erreurs
+- **Tâche 6.5** : Composant Login créé avec validation, appel API, gestion erreurs
+- **Tâche 6.6** : Composant Dashboard créé pour afficher la planète d'origine avec toutes les caractéristiques
+- **Tâche 6.7** : Composant Profile créé pour la gestion du profil utilisateur (affichage et mise à jour)
+- **Tâche 6.8** : Navigation et déconnexion déjà intégrées dans le layout
+- **Tâche 6.9** : Routes web ajoutées (register, login, dashboard, profile, logout)
+**Fichiers créés/modifiés** :
+- `app/Livewire/Register.php` (nouveau)
+- `app/Livewire/Login.php` (nouveau)
+- `app/Livewire/Dashboard.php` (nouveau)
+- `app/Livewire/Profile.php` (nouveau)
+- `resources/views/livewire/register.blade.php` (nouveau)
+- `resources/views/livewire/login.blade.php` (nouveau)
+- `resources/views/livewire/dashboard.blade.php` (nouveau)
+- `resources/views/livewire/profile.blade.php` (nouveau)
+- `app/Livewire/Concerns/MakesApiRequests.php` (modifié - ajout méthodes publiques)
+- `routes/web.php` (modifié)
+**Notes** : Tous les composants Livewire fonctionnent avec l'approche API-first. Authentification hybride : token Sanctum pour API, session auth pour routes web. Phase 6 terminée ✅. Prêt pour Phase 7 (Tests).
+**Commit** : `d3d76da` - feat: Phase 6 complète - Composants Livewire
+
