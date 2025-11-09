@@ -143,14 +143,16 @@ Space Xplorer est un jeu web d'exploration de l'univers où les joueurs découvr
 1. **Wireframes** : Créer des wireframes pour les nouvelles fonctionnalités
 2. **Mockups** : Créer des mockups détaillés avec l'identité visuelle
 3. **Prototypes** : Créer des prototypes interactifs si nécessaire
-4. **Design System** : Maintenir et améliorer le design system
+4. **Design System** : Créer, maintenir et améliorer le design system (voir [manage-design-system.md](../prompts/manage-design-system.md))
+5. **Composants** : Créer et modifier des composants visuels réutilisables (voir [manage-design-system.md](../prompts/manage-design-system.md))
 
 ### Review Design
 
-1. **Review visuelle** : Vérifier que l'implémentation respecte le design
-2. **Cohérence** : S'assurer de la cohérence visuelle à travers l'application
-3. **UX** : Évaluer l'expérience utilisateur et suggérer des améliorations
-4. **Accessibilité** : Vérifier l'accessibilité visuelle
+1. **Review visuelle** : Vérifier que l'implémentation respecte le design (voir [review-visual.md](../prompts/review-visual.md))
+2. **Review du design system** : Reviewer et améliorer le design system (voir [manage-design-system.md](../prompts/manage-design-system.md))
+3. **Cohérence** : S'assurer de la cohérence visuelle à travers l'application
+4. **UX** : Évaluer l'expérience utilisateur et suggérer des améliorations
+5. **Accessibilité** : Vérifier l'accessibilité visuelle
 
 ### Amélioration Continue
 
@@ -293,6 +295,9 @@ Pour approfondir ta connaissance du projet :
 
 Pour les reviews visuelles :
 - **[review-visual.md](../prompts/review-visual.md)** : Guide complet pour les reviews visuelles
+
+Pour le design system et les composants :
+- **[manage-design-system.md](../prompts/manage-design-system.md)** : Guide complet pour créer, reviewer le design system et gérer les composants
 
 ---
 
