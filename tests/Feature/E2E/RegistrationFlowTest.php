@@ -62,9 +62,6 @@ class RegistrationFlowTest extends TestCase
         $this->assertNotNull($planet, 'Planet should exist in database');
         $this->assertNotNull($planet->name);
         $this->assertNotNull($planet->type);
-
-        // Verify token is stored in session
-        $this->assertNotNull(session('sanctum_token'), 'Sanctum token should be stored in session');
     }
 
     /**

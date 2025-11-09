@@ -5,7 +5,6 @@ namespace Tests\Feature\Livewire;
 use App\Models\Planet;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -90,8 +89,7 @@ class RegisterTest extends TestCase
             ->call('register')
             ->assertRedirect(route('dashboard'));
 
-        // Verify token was stored in session
-        $this->assertNotNull(Session::get('sanctum_token'));
+        // Verify user is authenticated
         $this->assertTrue(Auth::check());
 
         // Verify user was created

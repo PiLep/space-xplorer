@@ -8,7 +8,7 @@
 - **Frontend** : Livewire 3 components
 - **Database** : MySQL 8.0
 - **Architecture** : Monolithique (application unique Laravel)
-- **Approche** : API-first - Toute la logique métier via endpoints REST API, Livewire consomme ces APIs en interne
+- **Approche** : Hybride - API REST pour clients externes, services Laravel directement pour Livewire
 
 ### Organisation des dossiers
 
@@ -91,7 +91,9 @@ Planets
 
 ## API endpoints
 
-**Approche API-first** : Toute la logique métier est exposée via des endpoints API REST. Livewire consomme ces APIs en interne.
+**Approche hybride** :
+- **Livewire** : Utilise directement les services Laravel (`AuthService`, etc.) sans passer par l'API
+- **API REST** : Disponible pour les clients externes (applications mobiles, SPAs distants, etc.)
 
 ### Authentification
 
@@ -238,50 +240,33 @@ Toutes les réponses API suivent un format JSON standardisé :
 
 ### Architecture Frontend
 
-**Approche API-first** : Les composants Livewire consomment les endpoints API REST en interne. Toute la logique métier est dans l'API, Livewire sert uniquement d'interface utilisateur.
+**Approche hybride** :
+- **Livewire** : Utilise directement les services Laravel (`AuthService`, etc.) sans passer par l'API. Les composants Livewire appellent les services directement pour une meilleure performance et simplicité.
+- **API REST** : Disponible pour les clients externes (applications mobiles, SPAs distants, etc.) via Sanctum tokens.
 
-### Authentification Hybride
+### Authentification
 
 **Double authentification** :
-- **API** : Authentification par tokens Sanctum (`Authorization: Bearer {token}`)
-- **Routes Web** : Authentification par session Laravel (pour les routes Livewire)
+- **API** : Authentification par tokens Sanctum (`Authorization: Bearer {token}`) pour les clients externes
+- **Routes Web (Livewire)** : Authentification par session Laravel (`Auth::login($user)`) pour les routes web
 
-**Fonctionnement** :
-1. Lors de l'inscription/connexion via API (`POST /api/auth/register` ou `POST /api/auth/login`), le token Sanctum est créé
-2. Le token est stocké en session (`Session::put('sanctum_token', $token)`)
-3. L'utilisateur est également authentifié en session (`Auth::login($user)`) pour les routes web
-4. Les composants Livewire utilisent le token de session pour faire des requêtes API authentifiées
-5. Les routes web Livewire utilisent l'authentification de session (`middleware('auth')`)
+**Fonctionnement Livewire** :
+1. Les composants Livewire utilisent directement `AuthService` pour l'inscription/connexion
+2. L'utilisateur est authentifié en session (`Auth::login($user)`)
+3. Les routes web utilisent le middleware `auth` pour protéger les pages
+4. Pas d'appels API depuis Livewire - utilisation directe des services
 
-### Trait MakesApiRequests
+**Fonctionnement API (clients externes)** :
+1. Les clients externes appellent les endpoints `/api/auth/register` ou `/api/auth/login`
+2. Un token Sanctum est créé et retourné dans la réponse JSON
+3. Le client utilise ce token dans le header `Authorization: Bearer {token}` pour les requêtes suivantes
+4. Les routes API utilisent le middleware `auth:sanctum` pour protéger les endpoints
 
-**Localisation** : `app/Livewire/Concerns/MakesApiRequests.php`
-
-**Fonctionnalités** :
-- Méthodes helper pour faire des requêtes API authentifiées depuis Livewire
-- Récupération automatique du token depuis la session
-- Gestion des erreurs (validation, erreurs API)
-- Méthodes disponibles :
-  - `apiGet(string $endpoint)` : Requête GET authentifiée
-  - `apiPost(string $endpoint, array $data)` : Requête POST authentifiée
-  - `apiPut(string $endpoint, array $data)` : Requête PUT authentifiée
-  - `apiPostPublic(string $endpoint, array $data)` : Requête POST publique (pour register/login)
-
-**Utilisation** :
-```php
-use App\Livewire\Concerns\MakesApiRequests;
-
-class Dashboard extends Component
-{
-    use MakesApiRequests;
-    
-    public function mount()
-    {
-        $response = $this->apiGet('/auth/user');
-        // ...
-    }
-}
-```
+**Services utilisés par Livewire** :
+- `AuthService::register()` / `AuthService::registerFromArray()` : Inscription
+- `AuthService::login()` / `AuthService::loginFromCredentials()` : Connexion
+- `AuthService::logout()` : Déconnexion
+- `Auth::user()` : Récupération de l'utilisateur authentifié
 
 ### Composants Livewire (MVP)
 

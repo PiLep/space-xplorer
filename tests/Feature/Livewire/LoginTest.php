@@ -6,7 +6,6 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -63,8 +62,7 @@ class LoginTest extends TestCase
             ->call('login')
             ->assertRedirect(route('dashboard'));
 
-        // Verify token was stored in session
-        $this->assertNotNull(Session::get('sanctum_token'));
+        // Verify user is authenticated
         $this->assertTrue(Auth::check());
         $this->assertEquals($user->id, Auth::id());
     }

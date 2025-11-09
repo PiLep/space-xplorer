@@ -9,7 +9,6 @@ use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -22,9 +21,6 @@ class AuthController extends Controller
 
         // Create Sanctum token for API clients
         $token = $user->createToken('auth-token')->plainTextToken;
-
-        // Store token in session (for backward compatibility, though Livewire now uses direct service calls)
-        Session::put('sanctum_token', $token);
 
         return response()->json([
             'data' => [
@@ -51,9 +47,6 @@ class AuthController extends Controller
         // Create Sanctum token for API clients
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        // Store token in session (for backward compatibility, though Livewire now uses direct service calls)
-        Session::put('sanctum_token', $token);
-
         return response()->json([
             'data' => [
                 'user' => [
@@ -76,9 +69,6 @@ class AuthController extends Controller
     {
         // Revoke the token that was used to authenticate the current request
         $request->user()->currentAccessToken()->delete();
-
-        // Clear token from session for Livewire components
-        Session::forget('sanctum_token');
 
         // Logout user from session (only if session auth is being used)
         if (Auth::check()) {

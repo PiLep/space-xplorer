@@ -6,7 +6,6 @@ use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Livewire\Livewire;
 use Tests\TestCase;
 
@@ -24,7 +23,6 @@ class DashboardTest extends TestCase
         $user->update(['home_planet_id' => $planet->id]);
 
         Auth::login($user);
-        Session::put('sanctum_token', 'test-token');
 
         Livewire::test(\App\Livewire\Dashboard::class)
             ->call('loadUserAndPlanet')
@@ -45,7 +43,6 @@ class DashboardTest extends TestCase
         $user->update(['home_planet_id' => $planet->id]);
 
         Auth::login($user);
-        Session::put('sanctum_token', 'test-token');
 
         Livewire::test(\App\Livewire\Dashboard::class)
             ->call('loadUserAndPlanet')
@@ -62,7 +59,6 @@ class DashboardTest extends TestCase
         $user = User::factory()->create(['home_planet_id' => null]);
 
         Auth::login($user);
-        Session::put('sanctum_token', 'test-token');
 
         Livewire::test(\App\Livewire\Dashboard::class)
             ->call('loadUserAndPlanet')
@@ -91,7 +87,6 @@ class DashboardTest extends TestCase
         $user->update(['home_planet_id' => $planet->id]);
 
         Auth::login($user);
-        Session::put('sanctum_token', 'test-token');
 
         Livewire::test(\App\Livewire\Dashboard::class)
             ->call('loadUserAndPlanet')

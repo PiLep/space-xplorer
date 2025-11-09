@@ -60,7 +60,6 @@ class AuthService
         $user->refresh();
 
         // Authenticate user in session
-        // Sanctum will use session cookies for API authentication (stateful)
         Auth::login($user);
 
         return $user;
@@ -99,7 +98,6 @@ class AuthService
         }
 
         // Authenticate user in session
-        // Sanctum will use session cookies for API authentication (stateful)
         Auth::login($user);
 
         return $user;
