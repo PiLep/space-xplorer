@@ -89,10 +89,10 @@ Route::middleware('auth')->group(function () {
         if ($token) {
             try {
                 \Illuminate\Support\Facades\Http::withToken($token)
-                    ->post(config('app.url').'/api/auth/logout');
+                    ->post(config('app.url') . '/api/auth/logout');
             } catch (\Exception $e) {
                 // Log error but continue with logout
-                \Illuminate\Support\Facades\Log::error('Logout API call failed: '.$e->getMessage());
+                \Illuminate\Support\Facades\Log::error('Logout API call failed: ' . $e->getMessage());
             }
         }
 

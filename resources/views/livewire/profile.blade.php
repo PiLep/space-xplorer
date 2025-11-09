@@ -1,16 +1,29 @@
-<div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div class="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
     <x-page-header
         title="Profile Settings"
         description="Manage your account information and preferences."
     />
 
     @if ($loading)
-        <x-loading-spinner variant="simple" size="md" :showMessage="false" />
+        <x-loading-spinner
+            variant="simple"
+            size="md"
+            :showMessage="false"
+        />
     @elseif ($user)
-        <x-form-card title="Account Information" headerSeparated shadow="shadow-lg" padding="px-8 py-6">
+        <x-form-card
+            title="Account Information"
+            headerSeparated
+            shadow="shadow-lg"
+            padding="px-8 py-6"
+        >
             <!-- Error Message -->
             @if ($error)
-                <x-alert type="error" :message="$error" :showPrompt="false" />
+                <x-alert
+                    type="error"
+                    :message="$error"
+                    :showPrompt="false"
+                />
             @endif
 
             <!-- Name (read-only) -->
@@ -74,11 +87,24 @@
         </x-form-card>
     @else
         <!-- Error state: user data not loaded -->
-        <x-form-card title="Account Information" headerSeparated shadow="shadow-lg" padding="px-8 py-6">
+        <x-form-card
+            title="Account Information"
+            headerSeparated
+            shadow="shadow-lg"
+            padding="px-8 py-6"
+        >
             @if ($error)
-                <x-alert type="error" :message="$error" :showPrompt="false" />
+                <x-alert
+                    type="error"
+                    :message="$error"
+                    :showPrompt="false"
+                />
             @else
-                <x-alert type="error" message="Failed to load user data. Please try refreshing the page." :showPrompt="false" />
+                <x-alert
+                    type="error"
+                    message="Failed to load user data. Please try refreshing the page."
+                    :showPrompt="false"
+                />
             @endif
 
             <div class="mt-6">
