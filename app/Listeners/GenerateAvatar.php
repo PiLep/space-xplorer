@@ -104,24 +104,24 @@ class GenerateAvatar implements ShouldQueue
         // Create a prompt that generates a professional space technician/captain avatar
         // in the style of Alien (1979) - industrial, realistic, sci-fi aesthetic
         return "Close-up professional portrait headshot of a single {$character}, {$userName}, "
-            .'a seasoned space technician and ship captain, '
-            .'in the style of Alien (1979) movie aesthetic. '
-            .'Tight framing, head and shoulders only, zoomed in for maximum detail. '
-            .'Industrial sci-fi setting with realistic lighting and cinematic composition. '
-            .'Single person only, wearing a weathered technical jumpsuit with visible patches, '
-            .'insignia, and worn fabric details. '
-            .'Holding a data pad or technical tool in hand, visible in foreground. '
-            .'Facial features: determined expression, weathered skin with subtle scars or marks, '
-            .'professional haircut, focused eyes with slight bags from long shifts. '
-            .'Atmospheric lighting with blue and orange tones creating depth and dimension. '
-            .'Simple, subtle background: dark, muted tones with minimal detail, '
-            .'slightly blurred to emphasize the person. No distracting elements, '
-            .'just a clean, professional backdrop that makes the character stand out. '
-            .'Professional headshot portrait, one person only, no other people in frame, '
-            .'square format (1:1 aspect ratio), highly detailed facial features, '
-            .'photorealistic style with sharp focus on the face, '
-            .'moody and atmospheric, cinematic quality, high resolution, '
-            .'detailed skin texture, realistic shadows and highlights.';
+            . 'a seasoned space technician and ship captain, '
+            . 'in the style of Alien (1979) movie aesthetic. '
+            . 'Tight framing, head and shoulders only, zoomed in for maximum detail. '
+            . 'Industrial sci-fi setting with realistic lighting and cinematic composition. '
+            . 'Single person only, wearing a weathered technical jumpsuit with visible patches, '
+            . 'insignia, and worn fabric details. '
+            . 'Holding a data pad or technical tool in hand, visible in foreground. '
+            . 'Facial features: determined expression, weathered skin with subtle scars or marks, '
+            . 'professional haircut, focused eyes with slight bags from long shifts. '
+            . 'Atmospheric lighting with blue and orange tones creating depth and dimension. '
+            . 'Simple, subtle background: dark, muted tones with minimal detail, '
+            . 'slightly blurred to emphasize the person. No distracting elements, '
+            . 'just a clean, professional backdrop that makes the character stand out. '
+            . 'Professional headshot portrait, one person only, no other people in frame, '
+            . 'square format (1:1 aspect ratio), highly detailed facial features, '
+            . 'photorealistic style with sharp focus on the face, '
+            . 'moody and atmospheric, cinematic quality, high resolution, '
+            . 'detailed skin texture, realistic shadows and highlights.';
     }
 
     /**
