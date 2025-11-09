@@ -2,6 +2,10 @@
 
 > **Note**: Ce projet utilise également le système de règles Cursor moderne dans `.cursor/rules/` (format MDC). Ce fichier `AGENTS.md` reste disponible comme alternative simple et pour compatibilité.
 
+## 🚀 Démarrage Rapide
+
+- **[PROMPTS_GUIDE.md](./PROMPTS_GUIDE.md)** - Guide complet avec tous les prompts pour chaque étape du workflow
+
 ## Workflow
 
 Pour comprendre l'ordre d'intervention des agents et le processus complet :
