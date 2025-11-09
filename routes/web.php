@@ -1,7 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard;
-use App\Livewire\Login;
+use App\Livewire\LoginTerminal;
 use App\Livewire\Profile;
 use App\Livewire\Register;
 use Illuminate\Support\Facades\Route;
@@ -19,7 +19,7 @@ Route::get('/design-system', function () {
 // Public routes
 Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
-    Route::get('/login', Login::class)->name('login');
+    Route::get('/login', LoginTerminal::class)->name('login');
 });
 
 // Protected routes (require authentication)

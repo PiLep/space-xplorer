@@ -13,9 +13,9 @@
             <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-space-primary"></div>
         </div>
     @elseif ($user)
-        <div class="bg-white dark:bg-surface-dark shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-border-dark">
+        <div class="bg-white dark:bg-surface-dark shadow-lg rounded-lg overflow-hidden border border-gray-200 dark:border-border-dark scan-effect">
             <div class="px-8 py-6 border-b border-gray-200 dark:border-border-dark">
-                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white">Account Information</h2>
+                <h2 class="text-2xl font-semibold text-gray-900 dark:text-white dark:text-glow-subtle">Account Information</h2>
             </div>
 
             <form wire:submit="updateProfile" class="px-8 py-6">
@@ -105,7 +105,7 @@
                     <button
                         type="submit"
                         wire:loading.attr="disabled"
-                        class="bg-space-primary hover:bg-space-primary-dark text-space-black font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 disabled:opacity-50 transition-colors"
+                        class="bg-space-primary hover:bg-space-primary-dark text-space-black font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 disabled:opacity-50 transition-colors glow-primary hover:glow-primary"
                     >
                         <span wire:loading.remove wire:target="updateProfile">Save Changes</span>
                         <span wire:loading wire:target="updateProfile">Saving...</span>

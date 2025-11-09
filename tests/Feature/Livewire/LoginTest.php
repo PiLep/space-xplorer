@@ -19,7 +19,7 @@ class LoginTest extends TestCase
      */
     public function test_login_component_renders(): void
     {
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->assertStatus(200);
     }
 
@@ -28,7 +28,7 @@ class LoginTest extends TestCase
      */
     public function test_login_validates_required_fields(): void
     {
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->set('email', '')
             ->set('password', '')
             ->call('login')
@@ -40,7 +40,7 @@ class LoginTest extends TestCase
      */
     public function test_login_validates_email_format(): void
     {
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->set('email', 'invalid-email')
             ->set('password', 'password123')
             ->call('login')
@@ -74,7 +74,7 @@ class LoginTest extends TestCase
             ], 200),
         ]);
 
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->set('email', 'john@example.com')
             ->set('password', 'password123')
             ->call('login')
@@ -99,7 +99,7 @@ class LoginTest extends TestCase
             ], 422),
         ]);
 
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->set('email', 'john@example.com')
             ->set('password', 'wrongpassword')
             ->call('login')
@@ -118,7 +118,7 @@ class LoginTest extends TestCase
             ], 500),
         ]);
 
-        Livewire::test(\App\Livewire\Login::class)
+        Livewire::test(\App\Livewire\LoginTerminal::class)
             ->set('email', 'john@example.com')
             ->set('password', 'password123')
             ->call('login')

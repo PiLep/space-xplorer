@@ -1,3 +1,94 @@
+# Login v1 - Interface Classique
+
+**Date d'archivage** : 2024  
+**Statut** : 📦 Archivé - Remplacé par Login v2 (Terminal)
+
+## Description
+
+Version originale de la page de connexion avec une interface de formulaire classique, remplacée par la version terminal pour une meilleure intégration avec le thème spatial du projet.
+
+## Fichiers archivés
+
+### Composant Livewire
+- **Fichier** : `app/Livewire/Login.php`
+- **Route** : `/login` (anciennement)
+- **Vue** : `resources/views/livewire/login.blade.php`
+
+### Caractéristiques
+
+#### Interface Classique
+- Design de formulaire traditionnel
+- Labels et champs de formulaire standards
+- Messages d'erreur simples sous les champs
+- Bouton de soumission avec état de chargement
+- Lien vers l'inscription en bas du formulaire
+
+#### Fonctionnalités
+- Validation des champs email et password
+- Messages d'erreur en français
+- Redirection immédiate vers le dashboard après connexion
+- Support du mode sombre
+
+#### Code source
+
+**Composant Livewire** (`app/Livewire/Login.php`) :
+```php
+<?php
+
+namespace App\Livewire;
+
+use App\Services\AuthService;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('layouts.app')]
+class Login extends Component
+{
+    public $email = '';
+    public $password = '';
+
+    protected $rules = [
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ];
+
+    protected $messages = [
+        'email.required' => 'L\'email est requis.',
+        'email.email' => 'L\'email doit être valide.',
+        'password.required' => 'Le mot de passe est requis.',
+    ];
+
+    public function login(AuthService $authService)
+    {
+        $this->validate();
+
+        try {
+            $authService->loginFromCredentials($this->email, $this->password);
+
+            // Redirect to dashboard
+            return $this->redirect(route('dashboard'), navigate: true);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
+                }
+            }
+        } catch (\Exception $e) {
+            // Handle other errors
+            $this->addError('email', $e->getMessage() ?: 'Invalid credentials. Please try again.');
+        }
+    }
+
+    public function render()
+    {
+        return view('livewire.login');
+    }
+}
+```
+
+**Vue Blade** (`resources/views/livewire/login.blade.php`) :
+```blade
 <div class="max-w-md mx-auto mt-8">
     <div class="bg-white dark:bg-surface-dark shadow-md rounded-lg px-8 pt-6 pb-8 mb-4 border border-gray-200 dark:border-border-dark scan-effect">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white dark:text-glow-subtle mb-6 text-center">
@@ -64,3 +155,27 @@
         </form>
     </div>
 </div>
+```
+
+## Raison du remplacement
+
+Le login v1 a été remplacé par le login v2 (terminal) pour :
+- Mieux s'intégrer avec le thème spatial du projet
+- Offrir une expérience utilisateur plus immersive
+- Aligner l'interface avec l'identité visuelle du projet Space Xplorer
+- Améliorer la cohérence du design system
+
+## Notes
+
+- Cette implémentation utilisait le même service `AuthService` que la version terminal
+- Les messages d'erreur étaient en français dans cette version
+- Le design suivait le design system standard du projet
+- Support complet du mode sombre
+
+## Conservation
+
+Cette documentation est conservée pour référence historique et peut servir de base pour :
+- Comprendre l'évolution de l'interface de connexion
+- Réutiliser des patterns de formulaire classique si nécessaire
+- Référence pour d'autres formulaires du projet
+
