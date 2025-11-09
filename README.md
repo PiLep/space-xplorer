@@ -3,6 +3,7 @@
 Un jeu d'exploration de l'univers où les joueurs peuvent découvrir et explorer différents systèmes stellaires, planètes et objets célestes dans un univers virtuel.
 
 [![CI](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml/badge.svg)](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml)
+[![codecov](https://codecov.io/gh/PiLep/space-xplorer/branch/develop/graph/badge.svg)](https://codecov.io/gh/PiLep/space-xplorer)
 
 ## 🎮 À propos
 

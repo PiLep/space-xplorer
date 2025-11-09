@@ -169,7 +169,7 @@ Action demandée :
 
 ---
 
-## 🎯 Étape 6 : Review Fonctionnelle (Alex)
+## 🎯 Étape 7 : Review Fonctionnelle (Alex)
 
 ```
 Je suis Alex (Product Manager). Je veux reviewer fonctionnellement la fonctionnalité ISSUE-001.
@@ -183,14 +183,29 @@ Action demandée :
    @file docs/agents/PRODUCT.md
    @file docs/prompts/review-functional.md
 
-3. Effectuer la review fonctionnelle en vérifiant :
-   - Les critères d'acceptation de l'issue sont respectés
-   - L'expérience utilisateur correspond aux attentes
-   - Les fonctionnalités métier sont correctement implémentées
-   - Les cas d'usage sont couverts
-   - L'interface est intuitive
+3. Utiliser Chrome DevTools MCP pour tester visuellement :
+   - Naviguer vers http://localhost avec Chrome DevTools MCP
+   - Prendre des screenshots à chaque étape du parcours utilisateur
+   - Tester : inscription, connexion, visualisation planète, profil
+   - Vérifier la console pour les erreurs JavaScript
+   - Analyser les requêtes réseau pour vérifier les appels API
+   - Analyser visuellement chaque screenshot pour identifier les problèmes UX
 
-4. Ajouter le résultat dans l'issue avec statut :
+4. Effectuer la review fonctionnelle en vérifiant :
+   - Les critères d'acceptation de l'issue sont respectés (vérifiés visuellement)
+   - L'expérience utilisateur correspond aux attentes (analyse visuelle des screenshots)
+   - Les fonctionnalités métier sont correctement implémentées (testées avec Chrome DevTools)
+   - Les cas d'usage sont couverts (parcours complet testé visuellement)
+   - L'interface est intuitive (analyse visuelle)
+   - Pas d'erreurs JavaScript dans la console
+   - Les requêtes API fonctionnent correctement
+
+5. Documenter la review avec références aux screenshots :
+   - Inclure les screenshots pris dans la documentation
+   - Annoter les screenshots si nécessaire pour illustrer les problèmes
+   - Référencer les screenshots dans les recommandations
+
+6. Ajouter le résultat dans l'issue avec statut :
    - ✅ Approuvé fonctionnellement
    - ⚠️ Approuvé avec ajustements mineurs
    - ❌ Retour pour ajustements fonctionnels
@@ -198,7 +213,7 @@ Action demandée :
 
 ---
 
-## 🔀 Étape 7 : Créer une PR (Sam)
+## 🔀 Étape 8 : Créer une PR (Sam)
 
 ```
 Je suis Sam (Lead Developer). Je veux créer une Pull Request pour ISSUE-001.

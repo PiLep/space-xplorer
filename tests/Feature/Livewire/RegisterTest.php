@@ -1,160 +1,98 @@
 <?php
 
-namespace Tests\Feature\Livewire;
-
 use App\Models\Planet;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Session;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
-use Tests\TestCase;
 
-class RegisterTest extends TestCase
-{
-    use RefreshDatabase;
+it('renders register component', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->assertStatus(200);
+});
 
-    /**
-     * Test that the register component renders successfully.
-     */
-    public function test_register_component_renders(): void
-    {
-        Livewire::test(\App\Livewire\Register::class)
-            ->assertStatus(200);
-    }
+it('validates required fields during registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', '')
+        ->set('email', '')
+        ->set('password', '')
+        ->call('register')
+        ->assertHasErrors(['name', 'email', 'password']);
+});
 
-    /**
-     * Test that registration validates required fields.
-     */
-    public function test_registration_validates_required_fields(): void
-    {
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', '')
-            ->set('email', '')
-            ->set('password', '')
-            ->call('register')
-            ->assertHasErrors(['name', 'email', 'password']);
-    }
+it('validates email format during registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'invalid-email')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertHasErrors(['email']);
+});
 
-    /**
-     * Test that registration validates email format.
-     */
-    public function test_registration_validates_email_format(): void
-    {
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'invalid-email')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'password123')
-            ->call('register')
-            ->assertHasErrors(['email']);
-    }
+it('validates password confirmation during registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'different')
+        ->call('register')
+        ->assertHasErrors(['password']);
+});
 
-    /**
-     * Test that registration validates password confirmation.
-     */
-    public function test_registration_validates_password_confirmation(): void
-    {
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'john@example.com')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'different')
-            ->call('register')
-            ->assertHasErrors(['password']);
-    }
+it('validates password minimum length during registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'john@example.com')
+        ->set('password', 'short')
+        ->set('password_confirmation', 'short')
+        ->call('register')
+        ->assertHasErrors(['password']);
+});
 
-    /**
-     * Test that registration validates password minimum length.
-     */
-    public function test_registration_validates_password_minimum_length(): void
-    {
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'john@example.com')
-            ->set('password', 'short')
-            ->set('password_confirmation', 'short')
-            ->call('register')
-            ->assertHasErrors(['password']);
-    }
+it('allows successful registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertRedirect(route('dashboard'));
 
-    /**
-     * Test successful registration.
-     */
-    public function test_successful_registration(): void
-    {
-        $planet = Planet::factory()->create();
+    // Verify user is authenticated
+    expect(Auth::check())->toBeTrue();
 
-        // Mock the API response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'data' => [
-                    'user' => [
-                        'id' => 1,
-                        'name' => 'John Doe',
-                        'email' => 'john@example.com',
-                        'home_planet_id' => $planet->id,
-                    ],
-                    'token' => 'test-token',
-                ],
-                'message' => 'User registered successfully',
-                'status' => 'success',
-            ], 201),
-        ]);
+    // Verify user was created
+    $user = Auth::user();
+    expect($user)->not->toBeNull()
+        ->and($user->name)->toBe('John Doe')
+        ->and($user->email)->toBe('john@example.com');
+});
 
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'john@example.com')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'password123')
-            ->call('register')
-            ->assertRedirect(route('dashboard'));
+it('handles duplicate email during registration', function () {
+    // Create existing user
+    User::factory()->create(['email' => 'existing@example.com']);
 
-        // Verify token was stored in session
-        $this->assertEquals('test-token', Session::get('sanctum_token'));
-    }
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'existing@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertHasErrors(['email']);
+});
 
-    /**
-     * Test that registration handles API validation errors.
-     */
-    public function test_registration_handles_api_validation_errors(): void
-    {
-        // Mock API validation error response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'message' => 'The given data was invalid.',
-                'errors' => [
-                    'email' => ['The email has already been taken.'],
-                ],
-            ], 422),
-        ]);
+it('creates user with home planet during registration', function () {
+    Livewire::test(\App\Livewire\Register::class)
+        ->set('name', 'John Doe')
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('password_confirmation', 'password123')
+        ->call('register')
+        ->assertRedirect(route('dashboard'));
 
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'existing@example.com')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'password123')
-            ->call('register')
-            ->assertHasErrors(['email']);
-    }
-
-    /**
-     * Test that registration handles API errors gracefully.
-     */
-    public function test_registration_handles_api_errors(): void
-    {
-        // Mock API error response
-        Http::fake([
-            '*/api/auth/register' => Http::response([
-                'message' => 'Server error',
-            ], 500),
-        ]);
-
-        Livewire::test(\App\Livewire\Register::class)
-            ->set('name', 'John Doe')
-            ->set('email', 'john@example.com')
-            ->set('password', 'password123')
-            ->set('password_confirmation', 'password123')
-            ->call('register')
-            ->assertHasErrors(['email']);
-    }
-}
+    // Verify user was created with home planet
+    $user = Auth::user();
+    expect($user)->not->toBeNull()
+        ->and($user->home_planet_id)->not->toBeNull()
+        ->and($user->homePlanet)->not->toBeNull();
+});

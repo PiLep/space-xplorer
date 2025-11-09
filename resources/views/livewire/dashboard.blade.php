@@ -1,106 +1,66 @@
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="mb-8">
-        <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome back, {{ $user['name'] ?? 'Explorer' }}!
-        </h1>
-        <p class="text-lg text-gray-600 dark:text-gray-400">
-            Discover your home planet and begin your journey through the cosmos.
-        </p>
-    </div>
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Terminal Boot Messages (always visible at top) -->
+    <x-terminal-boot
+        :bootMessages="$bootMessages"
+        :terminalBooted="$terminalBooted"
+        :pollMethod="'nextBootStep'"
+    />
 
-    @if ($loading)
-        <div class="flex justify-center items-center py-12">
-            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    @if (!$terminalBooted)
+        <!-- Still booting -->
+        <div class="font-mono">
+            <x-terminal-message message="[WAIT] Initializing dashboard..." />
         </div>
-    @elseif ($error)
-        <div class="bg-red-100 dark:bg-red-900 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 px-4 py-3 rounded relative mb-4" role="alert">
-            <span class="block sm:inline">{{ $error }}</span>
-        </div>
-    @elseif ($planet)
-        <!-- Planet Card -->
-        <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mb-8">
-            <!-- Planet Header -->
-            <div class="bg-gradient-to-r from-blue-600 to-purple-600 px-8 py-6">
-                <h2 class="text-3xl font-bold text-white mb-2">{{ $planet['name'] }}</h2>
-                <p class="text-blue-100 text-lg capitalize">{{ $planet['type'] }}</p>
+    @else
+        <!-- Dashboard Content -->
+        <div class="animate-fade-in">
+            <div class="mb-8 font-mono">
+                <x-terminal-prompt command="load_user_session" />
+                @if ($user)
+                    <x-terminal-message
+                        message="[OK] Session loaded for user: {{ $user->name ?? 'UNKNOWN' }}"
+                        marginBottom="mb-4"
+                    />
+                @endif
+                <x-terminal-prompt command="display_home_planet" />
             </div>
 
-            <!-- Planet Description -->
-            <div class="px-8 py-6 border-b border-gray-200 dark:border-gray-700">
-                <p class="text-gray-700 dark:text-gray-300 text-lg leading-relaxed">
-                    {{ $planet['description'] }}
-                </p>
-            </div>
+            @if ($loading)
+                <x-loading-spinner message="[LOADING] Accessing planetary database..." />
+            @elseif ($error)
+                <x-alert
+                    type="error"
+                    :message="$error"
+                />
+            @elseif ($planet)
+                <!-- Planet Card -->
+                <x-planet-card :planet="$planet" />
 
-            <!-- Planet Characteristics -->
-            <div class="px-8 py-6">
-                <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Planet Characteristics</h3>
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Size -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">📏</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Size</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['size'] }}</p>
-                    </div>
-
-                    <!-- Temperature -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🌡️</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Temperature</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['temperature'] }}</p>
-                    </div>
-
-                    <!-- Atmosphere -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">💨</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Atmosphere</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['atmosphere'] }}</p>
-                    </div>
-
-                    <!-- Terrain -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🏔️</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Terrain</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['terrain'] }}</p>
-                    </div>
-
-                    <!-- Resources -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">💎</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Resources</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['resources'] }}</p>
-                    </div>
-
-                    <!-- Type -->
-                    <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-                        <div class="flex items-center mb-2">
-                            <span class="text-2xl mr-2">🪐</span>
-                            <h4 class="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">Type</h4>
-                        </div>
-                        <p class="text-lg font-semibold text-gray-900 dark:text-white capitalize">{{ $planet['type'] }}</p>
-                    </div>
+                <!-- Action Commands -->
+                <div class="mt-8 font-mono">
+                    <x-terminal-message
+                        message="[READY] System ready for commands"
+                        marginBottom="mb-4"
+                    />
+                    <x-button-group>
+                        <x-button
+                            variant="primary"
+                            size="lg"
+                            terminal
+                        >
+                            > EXPLORE_PLANETS
+                        </x-button>
+                        <x-button
+                            href="{{ route('profile') }}"
+                            variant="ghost"
+                            size="lg"
+                            terminal
+                        >
+                            > VIEW_PROFILE
+                        </x-button>
+                    </x-button-group>
                 </div>
-            </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="flex justify-center space-x-4">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                Explore More Planets
-            </button>
-            <a href="{{ route('profile') }}" class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-bold py-3 px-6 rounded-lg transition-colors">
-                View Profile
-            </a>
+            @endif
         </div>
     @endif
 </div>
