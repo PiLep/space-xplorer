@@ -7,10 +7,13 @@ use Illuminate\Support\Facades\Storage;
 /**
  * Mock ImageGenerationService automatiquement pour tous les tests Feature.
  *
- * Avec QUEUE_CONNECTION=null dans phpunit.xml, les listeners en queue ne s'exécutent pas,
- * mais on mock quand même le service au cas où.
+ * On utilise Queue::fake() pour éviter que les jobs soient réellement mis en queue,
+ * mais les listeners synchrones (comme GenerateHomePlanet) doivent toujours s'exécuter.
+ * Les listeners qui implémentent ShouldQueue seront fake, mais les autres s'exécuteront normalement.
  */
 beforeEach(function () {
+    // Fake queues pour les listeners qui implémentent ShouldQueue
+    // Mais les listeners synchrones (sans ShouldQueue) continueront de s'exécuter
     Queue::fake();
     Storage::fake('s3');
 
