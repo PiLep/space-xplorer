@@ -26,3 +26,9 @@ Homestead.yaml
 Thumbs.db
 *.sqlite
 *.sqlite-journal
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
+playwright-report/
