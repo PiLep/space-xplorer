@@ -232,12 +232,21 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 **Input** : Code approuvé par Sam, fonctionnalité testable  
 **Output** : Review fonctionnelle
 
+**Outils utilisés** :
+- **Chrome DevTools MCP** : Pour tester visuellement la fonctionnalité, prendre des screenshots, analyser l'interface, vérifier la console et les requêtes réseau
+- Navigation dans l'application via Chrome DevTools
+- Screenshots à chaque étape du parcours utilisateur
+- Analyse de la console pour les erreurs JavaScript
+- Analyse des requêtes réseau pour vérifier les appels API
+
 **Vérifications** :
-- ✅ Les critères d'acceptation de l'issue sont respectés
-- ✅ L'expérience utilisateur correspond aux attentes
-- ✅ Les fonctionnalités métier sont correctement implémentées
-- ✅ Les cas d'usage sont couverts
-- ✅ L'interface est intuitive et agréable
+- ✅ Les critères d'acceptation de l'issue sont respectés (vérifiés visuellement avec screenshots)
+- ✅ L'expérience utilisateur correspond aux attentes (analyse visuelle de l'interface)
+- ✅ Les fonctionnalités métier sont correctement implémentées (testées avec Chrome DevTools)
+- ✅ Les cas d'usage sont couverts (parcours complet testé visuellement)
+- ✅ L'interface est intuitive et agréable (analyse visuelle des screenshots)
+- ✅ Pas d'erreurs JavaScript dans la console
+- ✅ Les requêtes API fonctionnent correctement (vérification réseau)
 
 **Statuts possibles** :
 - ✅ Approuvé fonctionnellement : Tous les critères d'acceptation sont respectés, peut créer la PR
@@ -254,12 +263,22 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 - **Vérification finale perfectionniste** : Même après approbation (✅ ou ⚠️), Alex effectue une dernière vérification complète de la fonctionnalité pour s'assurer que tous les critères d'acceptation sont vraiment respectés et que l'expérience utilisateur est parfaite avant de créer la PR
 - Une fois approuvé ET vérifié finalement, le workflow continue vers la création de la PR
 
+**Processus de review visuelle** :
+1. **Navigation** : Utiliser Chrome DevTools MCP pour naviguer vers l'application (http://localhost)
+2. **Parcours utilisateur** : Tester chaque étape du parcours (inscription, connexion, visualisation planète, profil)
+3. **Screenshots** : Prendre des screenshots à chaque étape importante pour analyse visuelle
+4. **Analyse visuelle** : Analyser chaque screenshot pour identifier les problèmes d'interface et d'UX
+5. **Console** : Vérifier la console pour les erreurs JavaScript et warnings
+6. **Réseau** : Analyser les requêtes réseau pour vérifier que les appels API fonctionnent
+7. **Documentation** : Inclure les screenshots dans la review avec annotations si nécessaire
+
 **Tracking** :
 - Mettre à jour l'issue : statut "Approuvé" ou "En cours" selon le résultat, ajouter une entrée dans l'historique
 - Mettre à jour le plan : ajouter une entrée dans l'historique avec le résultat de la review fonctionnelle
-- Inclure les ajustements suggérés dans l'entrée d'historique
-- Si retour pour ajustements, documenter les ajustements apportés dans l'historique
-- Après approbation : Documenter la vérification finale perfectionniste effectuée par Alex
+- Inclure les ajustements suggérés dans l'entrée d'historique avec références aux screenshots
+- Inclure les screenshots pris dans la documentation de la review
+- Si retour pour ajustements, documenter les ajustements apportés dans l'historique avec références visuelles
+- Après approbation : Documenter la vérification finale perfectionniste effectuée par Alex avec confirmation visuelle
 - Format : Voir [update-tracking.md](./docs/prompts/update-tracking.md)
 
 **Référence** : [review-functional.md](./docs/prompts/review-functional.md)
@@ -449,7 +468,7 @@ Même après approbation à chaque étape, une **vérification finale** est effe
 
 - **Après approbation du plan** : Sam vérifie une dernière fois que le plan est complet et prêt pour l'implémentation
 - **Après approbation technique** : Sam effectue une dernière vérification complète du code (plan, tests, qualité, documentation) avant la review fonctionnelle
-- **Après approbation fonctionnelle** : Alex effectue une dernière vérification complète de la fonctionnalité (critères d'acceptation, UX, cas d'usage) avant la création de la PR
+- **Après approbation fonctionnelle** : Alex effectue une dernière vérification complète de la fonctionnalité (critères d'acceptation, UX, cas d'usage) avec analyse visuelle via Chrome DevTools MCP (screenshots, console, réseau) avant la création de la PR
 
 Cette approche perfectionniste garantit qu'aucun détail n'est oublié et que chaque étape est vraiment parfaite avant de continuer.
 
@@ -596,13 +615,14 @@ Le workflow Space Xplorer suit un processus rigoureux en **9 étapes principales
 4. **Review Architecturale** (Morgan) → Plan approuvé + **Vérification finale** (Sam)
 5. **Implémentation** (Jordan) → Code implémenté selon le plan
 6. **Review du Code** (Sam) → Code approuvé + **Vérification finale** (Sam)
-7. **Review Fonctionnelle** (Alex) → Fonctionnalité approuvée + **Vérification finale** (Alex)
+7. **Review Fonctionnelle** (Alex) → Fonctionnalité approuvée avec analyse visuelle (Chrome DevTools MCP) + **Vérification finale** (Alex)
 8. **Création de PR** (Sam) → Pull Request créée
 9. **Merge** (Sam) → Code mergé dans `develop` + Documents mis à jour
 
 **Points clés** :
 - ✅ Boucles jusqu'à perfection à chaque étape de review
 - ✅ Vérifications finales perfectionnistes après chaque approbation
+- ✅ Review fonctionnelle avec analyse visuelle via Chrome DevTools MCP (screenshots, console, réseau)
 - ✅ Tracking complet dans les documents (issues et tasks)
 - ✅ Synchronisation entre agents via les documents
 - ✅ Gestion des dépendances et blocages

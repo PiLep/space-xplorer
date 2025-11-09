@@ -2,46 +2,29 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\UserRegistered;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
-use App\Models\User;
+use App\Services\AuthService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
      * Register a new user.
      */
-    public function register(RegisterRequest $request): JsonResponse
+    public function register(RegisterRequest $request, AuthService $authService): JsonResponse
     {
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        $user = $authService->register($request);
 
-        // Dispatch event to generate home planet
-        event(new UserRegistered($user));
-
-        // Create Sanctum token
+        // Create Sanctum token for API clients
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        // Store token in session for Livewire components
-        // Livewire components will call API endpoints and need the token for subsequent requests
+        // Store token in session (for backward compatibility, though Livewire now uses direct service calls)
         Session::put('sanctum_token', $token);
-
-        // Authenticate user in session for web routes (Livewire pages)
-        Auth::login($user);
-
-        // Refresh user to get updated home_planet_id if planet was generated
-        $user->refresh();
 
         return response()->json([
             'data' => [
@@ -61,28 +44,15 @@ class AuthController extends Controller
     /**
      * Login user and return token.
      */
-    public function login(LoginRequest $request): JsonResponse
+    public function login(LoginRequest $request, AuthService $authService): JsonResponse
     {
-        $user = User::where('email', $request->email)->first();
+        $user = $authService->login($request);
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
-            ]);
-        }
-
-        // Revoke all existing tokens (optional: for single device login)
-        // $user->tokens()->delete();
-
-        // Create new Sanctum token
+        // Create Sanctum token for API clients
         $token = $user->createToken('auth-token')->plainTextToken;
 
-        // Store token in session for Livewire components
-        // Livewire components will call API endpoints and need the token for subsequent requests
+        // Store token in session (for backward compatibility, though Livewire now uses direct service calls)
         Session::put('sanctum_token', $token);
-
-        // Authenticate user in session for web routes (Livewire pages)
-        Auth::login($user);
 
         return response()->json([
             'data' => [

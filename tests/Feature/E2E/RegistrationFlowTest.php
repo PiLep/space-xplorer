@@ -5,7 +5,6 @@ namespace Tests\Feature\E2E;
 use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class RegistrationFlowTest extends TestCase
@@ -34,37 +33,6 @@ class RegistrationFlowTest extends TestCase
         $response = $this->get('/register');
         $response->assertStatus(200);
         $response->assertSee('Create Your Account');
-
-        // Mock API response to simulate real API call
-        $planet = Planet::factory()->create();
-        Http::fake([
-            '*/api/auth/register' => function ($request) use ($userData, $planet) {
-                // Actually create the user to test the full flow
-                $user = User::create([
-                    'name' => $userData['name'],
-                    'email' => $userData['email'],
-                    'password' => bcrypt($userData['password']),
-                    'home_planet_id' => $planet->id,
-                ]);
-
-                // Dispatch event to simulate planet generation
-                event(new \App\Events\UserRegistered($user));
-
-                return Http::response([
-                    'data' => [
-                        'user' => [
-                            'id' => $user->id,
-                            'name' => $user->name,
-                            'email' => $user->email,
-                            'home_planet_id' => $user->home_planet_id,
-                        ],
-                        'token' => 'test-token',
-                    ],
-                    'message' => 'User registered successfully',
-                    'status' => 'success',
-                ], 201);
-            },
-        ]);
 
         // Submit registration form via Livewire
         $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
@@ -147,13 +115,10 @@ class RegistrationFlowTest extends TestCase
     }
 
     /**
-     * Test that registration actually calls the API endpoint.
+     * Test that registration creates user and planet correctly.
      */
-    public function test_registration_calls_real_api_endpoint(): void
+    public function test_registration_creates_user_and_planet(): void
     {
-        // This test verifies that the Livewire component actually makes HTTP requests
-        // to the API endpoint
-
         $userData = [
             'name' => 'API Test User',
             'email' => 'apitest@example.com',
@@ -164,34 +129,6 @@ class RegistrationFlowTest extends TestCase
         // Count users before
         $usersBefore = User::count();
         $planetsBefore = Planet::count();
-
-        // Mock API response but verify the call is made
-        $planet = Planet::factory()->create();
-        Http::fake([
-            '*/api/auth/register' => function ($request) use ($userData, $planet) {
-                // Create user to simulate API behavior
-                $user = User::create([
-                    'name' => $userData['name'],
-                    'email' => $userData['email'],
-                    'password' => bcrypt($userData['password']),
-                    'home_planet_id' => $planet->id,
-                ]);
-
-                return Http::response([
-                    'data' => [
-                        'user' => [
-                            'id' => $user->id,
-                            'name' => $user->name,
-                            'email' => $user->email,
-                            'home_planet_id' => $user->home_planet_id,
-                        ],
-                        'token' => 'test-token',
-                    ],
-                    'message' => 'User registered successfully',
-                    'status' => 'success',
-                ], 201);
-            },
-        ]);
 
         // Submit registration
         $livewire = \Livewire\Livewire::test(\App\Livewire\Register::class)
@@ -204,14 +141,11 @@ class RegistrationFlowTest extends TestCase
         // Verify redirect happened (indicates success)
         $livewire->assertRedirect(route('dashboard'));
 
-        // Verify user was created (API was called)
-        $this->assertEquals($usersBefore + 1, User::count(), 'User should be created via API');
+        // Verify user was created
+        $this->assertEquals($usersBefore + 1, User::count(), 'User should be created');
 
-        // Verify API was called (check that Http fake was used)
-        Http::assertSent(function ($request) {
-            return str_contains($request->url(), '/api/auth/register') &&
-                   $request->method() === 'POST';
-        });
+        // Verify planet was created
+        $this->assertGreaterThan($planetsBefore, Planet::count(), 'Planet should be created');
 
         $user = User::where('email', $userData['email'])->first();
         $this->assertNotNull($user, 'User should exist');

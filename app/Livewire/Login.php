@@ -2,16 +2,13 @@
 
 namespace App\Livewire;
 
-use App\Livewire\Concerns\MakesApiRequests;
-use Illuminate\Support\Facades\Session;
+use App\Services\AuthService;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Login extends Component
 {
-    use MakesApiRequests;
-
     public $email = '';
 
     public $password = '';
@@ -27,36 +24,25 @@ class Login extends Component
         'password.required' => 'Le mot de passe est requis.',
     ];
 
-    public function login()
+    public function login(AuthService $authService)
     {
         $this->validate();
 
         try {
-            $response = $this->apiPostPublic('/auth/login', [
-                'email' => $this->email,
-                'password' => $this->password,
-            ]);
-
-            // Store token in session (already done in AuthController, but ensure it's there)
-            if (isset($response['data']['token'])) {
-                Session::put('sanctum_token', $response['data']['token']);
-            }
+            $authService->loginFromCredentials($this->email, $this->password);
 
             // Redirect to dashboard
             return $this->redirect(route('dashboard'), navigate: true);
-        } catch (\Exception $e) {
-            // Handle API errors
-            $errorData = json_decode($e->getMessage(), true);
-
-            if (is_array($errorData)) {
-                // Validation errors from API
-                foreach ($errorData as $field => $messages) {
-                    $this->addError($field, is_array($messages) ? $messages[0] : $messages);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Handle validation errors
+            foreach ($e->errors() as $field => $messages) {
+                foreach ($messages as $message) {
+                    $this->addError($field, $message);
                 }
-            } else {
-                // Other errors (e.g., invalid credentials)
-                $this->addError('email', $e->getMessage() ?: 'Invalid credentials. Please try again.');
             }
+        } catch (\Exception $e) {
+            // Handle other errors
+            $this->addError('email', $e->getMessage() ?: 'Invalid credentials. Please try again.');
         }
     }
 

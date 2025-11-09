@@ -1,35 +1,85 @@
-codecov:
-  token: # Optionnel : ajouter un token Codecov si nécessaire
-  notify:
-    wait_for_ci: true
-  comment:
-    layout: "reach,diff,flags,tree,reach"
-    behavior: default
-    require_changes: false
-
 coverage:
-  precision: 2
-  round: down
-  range: "70...100"
-  
   status:
     project:
       default:
-        target: 80%
+        target: auto
         threshold: 1%
-        base: auto
+        informational: false
     patch:
       default:
-        target: 80%
+        target: auto
+        threshold: 0%
+        informational: false
+    changes: false
 
 ignore:
   - "tests/"
   - "database/"
-  - "bootstrap/"
-  - "config/"
-  - "public/"
-  - "resources/"
-  - "routes/"
-  - "storage/"
   - "vendor/"
+  - "node_modules/"
+  - "public/"
+  - "storage/"
+  - "bootstrap/cache/"
+  - "*.md"
+  - ".github/"
+
+comment:
+  layout: "reach,diff,flags,components,tree,reach"
+  behavior: default
+  require_changes: false
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
+        target: auto
+        threshold: 1%
+  individual_components:
+    - component_id: api_controllers
+      name: API Controllers
+      paths:
+        - "app/Http/Controllers/Api/**"
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+        - type: patch
+          target: auto
+    - component_id: livewire_components
+      name: Livewire Components
+      paths:
+        - "app/Livewire/**"
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+        - type: patch
+          target: auto
+    - component_id: services
+      name: Services
+      paths:
+        - "app/Services/**"
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+        - type: patch
+          target: auto
+    - component_id: models
+      name: Models
+      paths:
+        - "app/Models/**"
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
+    - component_id: events_listeners
+      name: Events & Listeners
+      paths:
+        - "app/Events/**"
+        - "app/Listeners/**"
+      statuses:
+        - type: project
+          target: auto
+          threshold: 1%
 
