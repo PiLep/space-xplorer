@@ -19,7 +19,7 @@ beforeEach(function () {
         ->zeroOrMoreTimes()
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => 'images/generated/avatars/avatar.png',
             'disk' => 's3',
             'provider' => 'openai',
         ]);

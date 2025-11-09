@@ -2,8 +2,10 @@
 
 use App\Models\Planet;
 use App\Services\PlanetGeneratorService;
+use Illuminate\Support\Facades\Event;
 
 beforeEach(function () {
+    Event::fake(); // Fake events to prevent actual listener execution
     $this->service = new PlanetGeneratorService;
 });
 

@@ -22,11 +22,12 @@ class ImageGenerationService
      *
      * @param  string  $prompt  The text prompt describing the image to generate
      * @param  string|null  $provider  Optional provider name (defaults to config default)
+     * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'avatars', 'planets')
      * @return array Array containing 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
      * @throws \Exception If image generation fails
      */
-    public function generate(string $prompt, ?string $provider = null): array
+    public function generate(string $prompt, ?string $provider = null, ?string $subfolder = null): array
     {
         $provider = $provider ?? config('image-generation.default_provider');
 
@@ -42,7 +43,7 @@ class ImageGenerationService
             };
 
             // Save image to storage (S3) and return S3 URL
-            return $this->saveImageToStorage($result, $provider);
+            return $this->saveImageToStorage($result, $provider, $subfolder);
         } catch (RequestException $e) {
             Log::error('Image generation API request failed', [
                 'provider' => $provider,
@@ -216,16 +217,23 @@ class ImageGenerationService
      *
      * @param  array  $result  Result from image generation API
      * @param  string  $provider  Provider name
+     * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'avatars', 'planets')
      * @return array Array with 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
      * @throws \Exception If saving fails
      */
-    private function saveImageToStorage(array $result, string $provider): array
+    private function saveImageToStorage(array $result, string $provider, ?string $subfolder = null): array
     {
         $storageConfig = config('image-generation.storage');
         $disk = $storageConfig['disk'];
-        $path = $storageConfig['path'];
+        $basePath = $storageConfig['path'];
         $visibility = $storageConfig['visibility'];
+
+        // Build storage path with optional subfolder
+        $path = $basePath;
+        if ($subfolder) {
+            $path = rtrim($basePath, '/').'/'.trim($subfolder, '/');
+        }
 
         // Generate unique filename
         $filename = Str::uuid().'.png';

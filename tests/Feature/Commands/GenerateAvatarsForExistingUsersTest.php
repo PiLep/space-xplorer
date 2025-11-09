@@ -15,12 +15,13 @@ it('generates avatars for users without avatars', function () {
     $user2 = User::factory()->create(['avatar_url' => null]);
     $userWithAvatar = User::factory()->create(['avatar_url' => 'https://example.com/avatar.png']);
 
-    $avatarPath = 'images/generated/avatar.png';
+    $avatarPath = 'images/generated/avatars/avatar.png';
 
     // Mock the image generator
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->twice()
+        ->with(Mockery::any(), null, 'avatars')
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
             'path' => $avatarPath,
@@ -63,11 +64,12 @@ it('skips users who already have avatars', function () {
 it('respects limit option', function () {
     User::factory()->count(5)->create(['avatar_url' => null]);
 
-    $avatarPath = 'images/generated/avatar.png';
+    $avatarPath = 'images/generated/avatars/avatar.png';
 
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->times(2) // Only 2 times because of limit
+        ->with(Mockery::any(), null, 'avatars')
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
             'path' => $avatarPath,
@@ -93,14 +95,16 @@ it('handles errors gracefully and continues processing', function () {
     $user1 = User::factory()->create(['avatar_url' => null]);
     $user2 = User::factory()->create(['avatar_url' => null]);
 
-    $avatarPath = 'images/generated/avatar.png';
+    $avatarPath = 'images/generated/avatars/avatar.png';
 
     $mockGenerator = Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->once()
+        ->with(Mockery::any(), null, 'avatars')
         ->andThrow(new \Exception('API error'));
     $mockGenerator->shouldReceive('generate')
         ->once()
+        ->with(Mockery::any(), null, 'avatars')
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
             'path' => $avatarPath,

@@ -90,7 +90,7 @@ class GenerateAvatarsForExistingUsers extends Command
                 $prompt = $this->generateAvatarPrompt($user->name);
 
                 // Generate avatar image
-                $result = $imageGenerator->generate($prompt);
+                $result = $imageGenerator->generate($prompt, null, 'avatars');
 
                 // Store the path instead of full URL for flexibility
                 $user->update(['avatar_url' => $result['path']]);

@@ -10,8 +10,14 @@
             @if($showImage)
                 <!-- Planet Image -->
                 <div class="md:w-1/3 lg:w-2/5 flex-shrink-0">
+                    @php
+                        // Use generated image if available, otherwise fallback to provided imageUrl or default
+                        $finalImageUrl = $planet->image_url 
+                            ?? $imageUrl 
+                            ?? 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop&q=80';
+                    @endphp
                     <img 
-                        src="{{ $imageUrl ?? 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop&q=80' }}" 
+                        src="{{ $finalImageUrl }}" 
                         alt="{{ $planet->name }}"
                         class="w-full h-64 md:h-full object-cover"
                         onerror="this.src='https://via.placeholder.com/800x600/1a1a1a/00ff88?text={{ urlencode($planet->name) }}'"

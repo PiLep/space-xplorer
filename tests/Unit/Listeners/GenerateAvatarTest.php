@@ -29,15 +29,19 @@ it('queues avatar generation job when user is registered', function () {
 });
 
 it('generates avatar successfully when job is processed', function () {
-    $avatarPath = 'images/generated/avatar-123.png';
+    $avatarPath = 'images/generated/avatars/avatar-123.png';
     $avatarUrl = 'https://s3.example.com/'.$avatarPath;
 
     $this->imageGenerator
         ->shouldReceive('generate')
         ->once()
-        ->with(Mockery::on(function ($prompt) {
-            return is_string($prompt) && str_contains($prompt, 'space technician') && str_contains($prompt, 'ship captain');
-        }))
+        ->with(
+            Mockery::on(function ($prompt) {
+                return is_string($prompt) && str_contains($prompt, 'space technician') && str_contains($prompt, 'ship captain');
+            }),
+            null,
+            'avatars'
+        )
         ->andReturn([
             'url' => $avatarUrl,
             'path' => $avatarPath,
@@ -66,12 +70,16 @@ it('includes user name in avatar prompt', function () {
     $this->imageGenerator
         ->shouldReceive('generate')
         ->once()
-        ->with(Mockery::on(function ($prompt) use ($user) {
-            return str_contains($prompt, $user->name);
-        }))
+        ->with(
+            Mockery::on(function ($prompt) use ($user) {
+                return str_contains($prompt, $user->name);
+            }),
+            null,
+            'avatars'
+        )
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => 'images/generated/avatars/avatar.png',
             'disk' => 's3',
             'provider' => 'openai',
         ]);
@@ -88,6 +96,7 @@ it('throws exception when avatar generation fails (job will be retried)', functi
     $this->imageGenerator
         ->shouldReceive('generate')
         ->once()
+        ->with(Mockery::any(), null, 'avatars')
         ->andThrow(new \Exception('API error'));
 
     $event = new UserRegistered($this->user);
@@ -105,15 +114,19 @@ it('generates prompt with Alien movie aesthetic', function () {
     $this->imageGenerator
         ->shouldReceive('generate')
         ->once()
-        ->with(Mockery::on(function ($prompt) {
-            return str_contains(strtolower($prompt), 'alien')
-                && str_contains(strtolower($prompt), '1979')
-                && str_contains(strtolower($prompt), 'industrial')
-                && str_contains(strtolower($prompt), 'sci-fi');
-        }))
+        ->with(
+            Mockery::on(function ($prompt) {
+                return str_contains(strtolower($prompt), 'alien')
+                    && str_contains(strtolower($prompt), '1979')
+                    && str_contains(strtolower($prompt), 'industrial')
+                    && str_contains(strtolower($prompt), 'sci-fi');
+            }),
+            null,
+            'avatars'
+        )
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
-            'path' => 'images/generated/avatar.png',
+            'path' => 'images/generated/avatars/avatar.png',
             'disk' => 's3',
             'provider' => 'openai',
         ]);
@@ -132,9 +145,10 @@ it('logs success when avatar is generated', function () {
     $this->imageGenerator
         ->shouldReceive('generate')
         ->once()
+        ->with(Mockery::any(), null, 'avatars')
         ->andReturn([
             'url' => $avatarUrl,
-            'path' => 'images/generated/avatar.png',
+            'path' => 'images/generated/avatars/avatar.png',
             'disk' => 's3',
             'provider' => 'openai',
         ]);

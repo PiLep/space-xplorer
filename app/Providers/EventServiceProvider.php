@@ -2,9 +2,11 @@
 
 namespace App\Providers;
 
+use App\Events\PlanetCreated;
 use App\Events\UserRegistered;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
+use App\Listeners\GeneratePlanetImage;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -19,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         UserRegistered::class => [
             GenerateHomePlanet::class,
             GenerateAvatar::class,
+        ],
+        PlanetCreated::class => [
+            GeneratePlanetImage::class,
         ],
     ];
 
