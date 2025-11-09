@@ -21,6 +21,7 @@ abstract class TestCase extends BaseTestCase
 
         $mockGenerator = \Mockery::mock(ImageGenerationService::class);
         $mockGenerator->shouldReceive('generate')
+            ->with(Mockery::any(), Mockery::any(), Mockery::any())
             ->andReturn([
                 'url' => 'https://s3.example.com/avatar.png',
                 'path' => 'images/generated/avatars/avatar.png',

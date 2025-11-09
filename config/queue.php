@@ -35,6 +35,10 @@ return [
             'driver' => 'sync',
         ],
 
+        'null' => [
+            'driver' => 'null',
+        ],
+
         'database' => [
             'driver' => 'database',
             'connection' => env('DB_QUEUE_CONNECTION'),

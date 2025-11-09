@@ -17,6 +17,7 @@ beforeEach(function () {
     $mockGenerator = \Mockery::mock(ImageGenerationService::class);
     $mockGenerator->shouldReceive('generate')
         ->zeroOrMoreTimes()
+        ->with(Mockery::any(), Mockery::any(), Mockery::any())
         ->andReturn([
             'url' => 'https://s3.example.com/avatar.png',
             'path' => 'images/generated/avatars/avatar.png',

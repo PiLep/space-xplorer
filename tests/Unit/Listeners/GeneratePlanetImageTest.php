@@ -30,7 +30,7 @@ it('queues planet image generation job when planet is created', function () {
 
 it('generates planet image successfully when job is processed', function () {
     $imagePath = 'images/generated/planets/planet-123.png';
-    $imageUrl = 'https://s3.example.com/' . $imagePath;
+    $imageUrl = 'https://s3.example.com/'.$imagePath;
 
     $this->imageGenerator
         ->shouldReceive('generate')
@@ -147,7 +147,7 @@ it('throws exception when planet image generation fails (job will be retried)', 
 
     // The exception will be thrown, marking the job as failed
     // In a real queue, this would trigger a retry
-    expect(fn() => $this->listener->handle($event))
+    expect(fn () => $this->listener->handle($event))
         ->toThrow(\Exception::class, 'API error');
 
     $this->planet->refresh();
