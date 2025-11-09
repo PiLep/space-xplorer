@@ -305,9 +305,12 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 
 **Processus de merge** :
 1. **Vérification finale** : Sam vérifie une dernière fois que toutes les conditions sont remplies
-2. **Merge** : Sam merge la PR dans `develop` (merge commit ou squash selon les conventions du projet)
-3. **Nettoyage** : Supprimer la branche feature après le merge (optionnel mais recommandé)
-4. **Tracking final** : Mettre à jour les documents pour marquer la fonctionnalité comme terminée
+2. **Validation humaine** : 
+   - ⚠️ Si merge dans `main`/`master` (production) : **Validation humaine requise** par Lead Developer ou Tech Lead
+   - ✅ Si merge dans `develop` : Peut être automatisé après reviews techniques et fonctionnelles
+3. **Merge** : Sam merge la PR dans la branche cible (merge commit ou squash selon les conventions du projet)
+4. **Nettoyage** : Supprimer la branche feature après le merge (optionnel mais recommandé)
+5. **Tracking final** : Mettre à jour les documents pour marquer la fonctionnalité comme terminée
 
 **Tracking** :
 - **Sam** met à jour l'issue : statut "Terminé", ajouter une entrée finale avec la date de merge
@@ -413,6 +416,7 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 | **Sam** | Lead Developer | Création de branche, création de plans, review du code, création de PR, merge de PR |
 | **Morgan** | Architect | Review architecturale, cohérence technique |
 | **Jordan** | Fullstack Developer | Implémentation du code, écriture des tests |
+| **Taylor** | Workflow Manager | Surveillance du workflow, analyse des processus, rapports d'amélioration |
 
 ## Principes de Qualité
 
@@ -602,10 +606,86 @@ Le workflow Space Xplorer suit un processus rigoureux en **9 étapes principales
 - ✅ Tracking complet dans les documents (issues et tasks)
 - ✅ Synchronisation entre agents via les documents
 - ✅ Gestion des dépendances et blocages
+- ✅ Monitoring continu par Taylor (Workflow Manager) pour amélioration continue
+
+## Monitoring et Amélioration Continue
+
+### Agent Manager (Taylor)
+
+**Taylor**, le **Workflow Manager**, surveille en continu le déroulement du workflow pour identifier les améliorations possibles.
+
+**Rôle** :
+- Surveiller le respect du workflow à chaque étape
+- Analyser les temps de cycle et les itérations
+- Identifier les blocages et points de friction
+- Générer des rapports d'amélioration dans `docs/reports/`
+
+**Quand intervient Taylor** :
+- Après chaque issue complète (de la création au merge)
+- Périodiquement (mensuel/trimestriel) pour un bilan global
+- Quand un problème récurrent est identifié
+- Sur demande pour analyser un aspect spécifique
+
+**Actions** :
+- Action `monitor-workflow` : Créer un rapport d'analyse et d'amélioration
+- Rapports stockés dans `docs/reports/REPORT-{date}-{issue-number}-{titre}.md`
+
+**Référence** : [monitor-workflow.md](./docs/prompts/monitor-workflow.md)
+
+### Intégration dans le Workflow
+
+Le monitoring peut être effectué :
+1. **En continu** : Taylor observe le workflow pendant son déroulement
+2. **Après chaque issue** : Analyse complète d'une issue terminée
+3. **Périodiquement** : Rapports mensuels ou trimestriels sur plusieurs issues
+
+Les rapports de Taylor sont utilisés pour :
+- Améliorer le workflow lui-même
+- Optimiser les processus des agents
+- Identifier les besoins de formation ou clarification
+- Prioriser les améliorations à apporter
+
+## Points de Validation Humaine
+
+Certaines actions critiques nécessitent une **validation humaine** avant application pour garantir la qualité et la cohérence du projet.
+
+### Actions Nécessitant Validation Humaine
+
+1. **Nouvelles Règles Techniques** : Proposées par Morgan ou Sam
+   - ⚠️ Validation par Lead Developer humain ou Tech Lead requise
+   - Référence : [propose-technical-rule.md](./docs/prompts/propose-technical-rule.md)
+
+2. **Modifications de la Memory Bank** : Proposées par Morgan ou Sam
+   - ⚠️ Validation par Tech Lead ou Lead Developer humain requise
+   - Référence : [update-memory-bank.md](./docs/prompts/update-memory-bank.md)
+
+3. **Merge en Production** : Merge dans `main` ou `master`
+   - ⚠️ Validation par Lead Developer humain ou Tech Lead requise
+   - Note : Les merges dans `develop` peuvent être automatisés après reviews
+
+4. **Décisions Architecturales Majeures** : Changements impactants
+   - ⚠️ Validation par Tech Lead requise
+
+5. **Modifications de Sécurité** : Changements critiques de sécurité
+   - ⚠️ Validation par Tech Lead ou Security Lead requise
+
+6. **Changements de Scope Produit** : Modifications significatives du scope
+   - ⚠️ Validation par Product Owner requise
+
+### Processus de Validation
+
+1. **Proposition** : L'agent crée une proposition documentée
+2. **Review Interne** : Review par l'autre agent technique si applicable
+3. **Validation Humaine** : ⚠️ Validation humaine requise
+4. **Application** : Une fois validée, l'action est appliquée
+
+**Référence complète** : [HUMAN_VALIDATION.md](./docs/rules/HUMAN_VALIDATION.md)
 
 ## Références
 
 - [AGENTS.md](./AGENTS.md) : Liste complète des agents
 - [docs/prompts/](./docs/prompts/) : Guides d'actions pour chaque agent
 - [docs/agents/](./docs/agents/) : Descriptions détaillées des agents
+- [docs/reports/](./docs/reports/) : Rapports de monitoring et d'amélioration
+- [docs/rules/HUMAN_VALIDATION.md](./docs/rules/HUMAN_VALIDATION.md) : Points de validation humaine
 
