@@ -16,7 +16,7 @@ it('completes registration flow with real browser', function () {
         'password' => 'password123',
     ];
 
-    $script = $helper->createTestScript('Registration Flow', function () use ($userData) {
+    $script = $helper->createTestScript('Registration Flow', function () {
         return <<<'JS'
     // Navigate to registration page
     await page.goto('/register');
@@ -43,7 +43,7 @@ JS;
 
     // For now, we'll use HTTP tests as Playwright requires the app to be running
     // This is a placeholder that can be extended when the app is running
-    
+
     // Verify user can be created via API (simulating browser behavior)
     $response = $this->postJson('/api/auth/register', [
         'name' => $userData['name'],
@@ -53,12 +53,11 @@ JS;
     ]);
 
     $response->assertStatus(201);
-    
+
     $user = User::where('email', $userData['email'])->first();
     expect($user)->not->toBeNull()
         ->and($user->home_planet_id)->not->toBeNull();
-    
+
     $planet = Planet::find($user->home_planet_id);
     expect($planet)->not->toBeNull();
 });
-
