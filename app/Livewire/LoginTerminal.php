@@ -60,4 +60,3 @@ class LoginTerminal extends Component
         return view('livewire.login-terminal');
     }
 }
-
