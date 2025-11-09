@@ -70,14 +70,14 @@ tests/               # Tests unitaires et fonctionnels
 
 ```
 Users
-├── id
+├── id (ULID - 26 caractères)
 ├── name
 ├── email
-├── home_planet_id (foreign key → planets.id)
+├── home_planet_id (ULID - foreign key → planets.id)
 └── [autres champs standards Laravel]
 
 Planets
-├── id
+├── id (ULID - 26 caractères)
 ├── name (généré aléatoirement)
 ├── type (type de planète : tellurique, gazeuse, etc.)
 ├── size (petite, moyenne, grande)
@@ -88,6 +88,29 @@ Planets
 ├── description (générée à partir des caractéristiques)
 └── created_at / updated_at
 ```
+
+### Identifiants (ULIDs)
+
+**Choix technique** : Utilisation d'ULIDs (Universally Unique Lexicographically Sortable Identifier) pour tous les IDs de tables métier.
+
+**Avantages** :
+- **URL-friendly** : Pas de caractères spéciaux, peut être utilisé directement dans les URLs
+- **Triable** : Les ULIDs sont triables chronologiquement (basés sur le timestamp)
+- **Non-énumérable** : Plus difficile à deviner qu'un ID auto-incrémenté
+- **Meilleure sécurité** : Réduit les risques d'énumération d'IDs
+- **Distribué** : Peut être généré côté client sans collision
+
+**Format** : 26 caractères alphanumériques (ex: `01ARZ3NDEKTSV4RRFFQ69G5FAV`)
+
+**Tables concernées** :
+- `users` : ID en ULID
+- `planets` : ID en ULID
+- Toutes les futures tables métier utiliseront des ULIDs
+
+**Implémentation Laravel** :
+- Utilisation du trait `Illuminate\Database\Eloquent\Concerns\HasUlids` dans les modèles
+- Migration avec `$table->ulid('id')->primary()` au lieu de `$table->id()`
+- Les relations Eloquent fonctionnent automatiquement avec les ULIDs
 
 ## API endpoints
 

@@ -65,6 +65,10 @@ app/
 - Utilisation classique de MySQL (pas de fonctionnalités avancées)
 - Relations claires et bien définies
 - Migrations versionnées
+- **Identifiants** : Utilisation d'ULIDs (Universally Unique Lexicographically Sortable Identifier) pour tous les IDs de tables métier
+  - Avantages : URL-friendly, triable, non-énumérable, meilleure sécurité
+  - Format : 26 caractères (ex: `01ARZ3NDEKTSV4RRFFQ69G5FAV`)
+  - Tables concernées : `users`, `planets`, et toutes les futures tables métier
 
 ### Architecture Événementielle
 

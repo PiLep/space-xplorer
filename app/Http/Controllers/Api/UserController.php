@@ -38,7 +38,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
 
         // Authorization check: user can only update their own profile
-        if ($request->user()->id !== (int) $id) {
+        if ($request->user()->id !== $id) {
             return response()->json([
                 'message' => 'Unauthorized. You can only update your own profile.',
                 'status' => 'error',
