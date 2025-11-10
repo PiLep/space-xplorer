@@ -76,11 +76,9 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
    ```
 
 7. **Configurer MinIO (S3 local)** :
-   ```bash
-   # Créer le bucket pour les images
-   ./vendor/bin/sail artisan minio:setup
-   ```
-   - Console MinIO : http://localhost:9001 (minioadmin/minioadmin)
+   - Accéder à la console MinIO : http://localhost:9001 (minioadmin/minioadmin)
+   - Créer un bucket nommé `space-xplorer` (ou celui configuré dans `.env`)
+   - Cocher "Make this bucket public" pour que les images soient accessibles
 
 8. **Accéder à l'application**
    - Application : http://localhost
