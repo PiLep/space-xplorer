@@ -119,6 +119,9 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
 ./vendor/bin/sail test --coverage
 ```
 
+**Documentation sur les tests** :
+- **[Tester les Événements avec Listeners en Queue](./docs/setup/testing-events.md)** - Guide complet pour tester les événements avec des listeners en queue
+
 ## 📚 Documentation
 
 Ce projet utilise un système de workflow structuré avec des agents IA spécialisés :

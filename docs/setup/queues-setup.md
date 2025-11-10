@@ -110,3 +110,14 @@ C'est normal si aucun worker n'est lancé. Pour les rendre asynchrones :
 
 En production, utilisez un gestionnaire de processus comme Supervisor ou Laravel Horizon pour maintenir le worker de queue actif.
 
+## Tests avec Événements et Listeners en Queue
+
+Pour tester correctement les événements qui déclenchent des listeners en queue, consultez la documentation dédiée :
+
+📖 **[Tester les Événements avec Listeners en Queue](./testing-events.md)**
+
+Cette documentation explique :
+- Pourquoi `Queue::fake()` ne fonctionne pas pour tester les listeners `ShouldQueue`
+- Comment mock les services externes au lieu de fake la queue
+- Les protections mises en place contre les appels externes et les timeouts
+- Les bonnes pratiques pour tester avec des événements
