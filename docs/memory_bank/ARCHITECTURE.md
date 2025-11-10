@@ -177,27 +177,133 @@ Toutes les réponses API suivent un format JSON standardisé :
 
 ## Architecture événementielle
 
-### Événements (MVP)
+### Événements
 
-**Approche simplifiée pour le MVP** : Un seul événement essentiel pour démarrer.
+L'application utilise une architecture événementielle complète pour découpler les actions métier et permettre une traçabilité complète des événements importants.
 
-#### `UserRegistered`
+#### Cycle de vie utilisateur
 
-**Déclencheur** : Lors de l'inscription d'un nouveau joueur (`POST /api/auth/register`)
+##### `UserRegistered`
+
+**Déclencheur** : Lors de l'inscription d'un nouveau joueur (`POST /api/auth/register` ou via `AuthService`)
 
 **Listeners** :
 - `GenerateHomePlanet` : Génère automatiquement une planète d'origine aléatoire et l'assigne au joueur
+- `GenerateAvatar` : Génère automatiquement un avatar pour le joueur (en queue)
 
 **Flux** :
-1. Contrôleur API crée l'utilisateur
+1. Contrôleur API ou `AuthService` crée l'utilisateur
 2. Événement `UserRegistered` est dispatché avec l'utilisateur créé
-3. Listener `GenerateHomePlanet` génère une planète aléatoire
-4. La planète est assignée au joueur (`home_planet_id`)
+3. Listener `GenerateHomePlanet` génère une planète aléatoire et dispatch `PlanetCreated`
+4. Listener `GenerateAvatar` génère un avatar (asynchrone) et dispatch `AvatarGenerated` à la fin
 
-**Événements futurs** (à ajouter progressivement) :
-- `PlanetExplored` : Lorsqu'un joueur explore une planète
-- `DiscoveryMade` : Lorsqu'un joueur fait une découverte
-- [À compléter selon les besoins]
+##### `UserLoggedIn`
+
+**Déclencheur** : Lors de la connexion d'un joueur (`POST /api/auth/login` ou via `AuthService`)
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : tracking, notifications de bienvenue, etc.)
+
+##### `UserProfileUpdated`
+
+**Déclencheur** : Lors de la mise à jour du profil utilisateur (`PUT /api/users/{id}`)
+
+**Données** : Contient les attributs modifiés (anciennes et nouvelles valeurs)
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : regénération d'avatar si nom changé, tracking, etc.)
+
+#### Cycle de vie planète
+
+##### `PlanetCreated`
+
+**Déclencheur** : Lors de la création d'une planète (par `PlanetGeneratorService`)
+
+**Listeners** :
+- `GeneratePlanetImage` : Génère automatiquement une image de la planète (en queue)
+- `GeneratePlanetVideo` : Génère automatiquement une vidéo de la planète (en queue)
+
+**Flux** :
+1. `PlanetGeneratorService` crée la planète
+2. Événement `PlanetCreated` est dispatché
+3. Listeners génèrent les médias (asynchrone) et dispatchent les événements de complétion
+
+##### `PlanetImageGenerated`
+
+**Déclencheur** : Lorsque l'image d'une planète est générée avec succès (par `GeneratePlanetImage`)
+
+**Données** : Planète, chemin de l'image, URL complète
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : notifications utilisateur, analytics, etc.)
+
+##### `PlanetVideoGenerated`
+
+**Déclencheur** : Lorsque la vidéo d'une planète est générée avec succès (par `GeneratePlanetVideo`)
+
+**Données** : Planète, chemin de la vidéo, URL complète
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : notifications utilisateur, analytics, etc.)
+
+#### Génération de médias
+
+##### `AvatarGenerated`
+
+**Déclencheur** : Lorsque l'avatar d'un utilisateur est généré avec succès (par `GenerateAvatar`)
+
+**Données** : Utilisateur, chemin de l'avatar, URL complète
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : notifications utilisateur, analytics, etc.)
+
+#### Exploration (fonctionnalités futures)
+
+##### `PlanetExplored`
+
+**Déclencheur** : Lorsqu'un joueur explore une planète (à implémenter)
+
+**Données** : Utilisateur, planète explorée
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : tracking, attribution de points, achievements, etc.)
+
+##### `DiscoveryMade`
+
+**Déclencheur** : Lorsqu'un joueur fait une découverte (à implémenter)
+
+**Données** : Utilisateur, type de découverte, données additionnelles
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : tracking, achievements, notifications, etc.)
+
+### Flux événementiel complet
+
+```
+Inscription Utilisateur
+    ↓
+UserRegistered
+    ├─→ GenerateHomePlanet → PlanetCreated
+    │                          ├─→ GeneratePlanetImage → PlanetImageGenerated
+    │                          └─→ GeneratePlanetVideo → PlanetVideoGenerated
+    └─→ GenerateAvatar → AvatarGenerated
+
+Connexion Utilisateur
+    ↓
+UserLoggedIn
+
+Mise à jour Profil
+    ↓
+UserProfileUpdated
+```
+
+### Pattern d'utilisation
+
+**Principe** : Chaque action métier importante déclenche un événement, permettant :
+- **Découplage** : Les actions métier ne dépendent pas directement des effets de bord
+- **Traçabilité** : Tous les événements peuvent être loggés et analysés
+- **Extensibilité** : Facile d'ajouter de nouveaux listeners sans modifier le code existant
+- **Asynchrone** : Les listeners peuvent être en queue pour ne pas bloquer les requêtes utilisateur
 
 ## Authentification & Autorisation
 

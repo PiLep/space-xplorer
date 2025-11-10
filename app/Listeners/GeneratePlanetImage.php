@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\PlanetCreated;
+use App\Events\PlanetImageGenerated;
 use App\Exceptions\ImageGenerationException;
 use App\Exceptions\StorageException;
 use App\Services\ImageGenerationService;
@@ -84,6 +85,9 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
                 'image_path' => $result['path'],
                 'image_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
+
+            // Dispatch event to notify that planet image generation is complete
+            event(new PlanetImageGenerated($planet, $result['path'], $result['url']));
         } catch (S3Exception $s3Exception) {
             // Critical: Always reset generating status, even on S3 errors
             $this->resetGeneratingStatus($event->planet->id, 'image');

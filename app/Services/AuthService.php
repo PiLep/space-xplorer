@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\UserLoggedIn;
 use App\Events\UserRegistered;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -31,6 +32,9 @@ class AuthService
 
         // Authenticate user in session
         Auth::login($user);
+
+        // Dispatch event to track user login
+        event(new UserLoggedIn($user));
 
         return $user;
     }
@@ -62,6 +66,9 @@ class AuthService
         // Authenticate user in session
         Auth::login($user);
 
+        // Dispatch event to track user login
+        event(new UserLoggedIn($user));
+
         return $user;
     }
 
@@ -81,6 +88,9 @@ class AuthService
         // Authenticate user in session
         Auth::login($user);
 
+        // Dispatch event to track user login
+        event(new UserLoggedIn($user));
+
         return $user;
     }
 
@@ -99,6 +109,9 @@ class AuthService
 
         // Authenticate user in session
         Auth::login($user);
+
+        // Dispatch event to track user login
+        event(new UserLoggedIn($user));
 
         return $user;
     }

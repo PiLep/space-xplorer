@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Events\AvatarGenerated;
 use App\Events\UserRegistered;
 use App\Exceptions\ImageGenerationException;
 use App\Exceptions\StorageException;
@@ -83,6 +84,9 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
                 'avatar_path' => $result['path'],
                 'avatar_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
+
+            // Dispatch event to notify that avatar generation is complete
+            event(new AvatarGenerated($user, $result['path'], $result['url']));
         } catch (S3Exception $s3Exception) {
             // Critical: Always reset generating status, even on S3 errors
             $this->resetGeneratingStatus($event->user->id, 'avatar');

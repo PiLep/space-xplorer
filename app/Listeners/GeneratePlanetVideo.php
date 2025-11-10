@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\PlanetCreated;
+use App\Events\PlanetVideoGenerated;
 use App\Exceptions\StorageException;
 use App\Exceptions\VideoGenerationException;
 use App\Services\VideoGenerationService;
@@ -112,6 +113,9 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
                 'video_path' => $result['path'],
                 'video_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
+
+            // Dispatch event to notify that planet video generation is complete
+            event(new PlanetVideoGenerated($planet, $result['path'], $result['url']));
         } catch (S3Exception $s3Exception) {
             // Critical: Always reset generating status, even on S3 errors
             $this->resetGeneratingStatus($event->planet->id, 'video');
