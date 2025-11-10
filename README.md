@@ -103,6 +103,27 @@ Le projet inclut un système d'administration caché accessible via `/admin`. Po
 
 **Sécurité** : L'accès admin nécessite à la fois le flag `is_super_admin` ET la présence de l'email dans `ADMIN_EMAIL_WHITELIST`.
 
+### Génération automatique de ressources planètes
+
+Le système génère automatiquement **20 ressources d'images de planètes par jour** via une tâche planifiée (scheduler).
+
+- **Horaire** : Tous les jours à 2h00 du matin
+- **Statut initial** : Les ressources sont créées avec le statut `generating`
+- **Génération** : Les images sont générées de manière asynchrone via des jobs
+- **Validation** : Les ressources doivent être approuvées par un admin via `/admin/resources` avant d'être réutilisées
+
+Les prompts sont générés de manière variée pour couvrir tous les types de planètes selon leurs probabilités :
+- **Tellurique** : 40% des ressources
+- **Gazeuse** : 25% des ressources
+- **Glacée** : 15% des ressources
+- **Désertique** : 10% des ressources
+- **Océanique** : 10% des ressources
+
+**Note** : Pour que le scheduler fonctionne, vous devez configurer une tâche cron :
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
+
 ### Commandes utiles
 
 ```bash
@@ -126,6 +147,12 @@ Le projet inclut un système d'administration caché accessible via `/admin`. Po
 
 # Créer un super admin
 ./vendor/bin/sail artisan admin:make email@example.com
+
+# Générer des ressources planètes quotidiennes (20 par défaut)
+./vendor/bin/sail artisan resources:generate-daily-planets
+
+# Générer des ressources planètes avec un nombre personnalisé
+./vendor/bin/sail artisan resources:generate-daily-planets --count=30
 ```
 
 ## 🧪 Tests
