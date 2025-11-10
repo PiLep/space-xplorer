@@ -19,7 +19,7 @@
 <body class="bg-gray-50 dark:bg-space-black antialiased scanlines grain">
     <div class="min-h-screen flex flex-col">
         <!-- Main Content -->
-        <main class="flex-1 pb-16 px-4 sm:px-6 lg:px-8">
+        <main class="flex-1 pb-16">
             @isset($slot)
                 {{ $slot }}
             @else

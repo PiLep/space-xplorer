@@ -1,4 +1,4 @@
-<div class="mx-auto mt-8 max-w-4xl font-mono">
+<x-container variant="compact" class="mt-8 font-mono">
     <!-- Terminal Header -->
     <div class="mb-6">
         <x-terminal-prompt command="init_auth_terminal" />
@@ -74,4 +74,4 @@
             </div>
         </div>
     </div>
-</div>
+</x-container>
