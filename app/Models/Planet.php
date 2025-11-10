@@ -29,6 +29,8 @@ class Planet extends Model
         'description',
         'image_url',
         'video_url',
+        'image_generating',
+        'video_generating',
     ];
 
     /**
@@ -109,5 +111,37 @@ class Planet extends Model
                 return Storage::disk($disk)->url($value);
             }
         );
+    }
+
+    /**
+     * Check if planet image is available (not generating and URL exists).
+     */
+    public function hasImage(): bool
+    {
+        return ! $this->image_generating && $this->image_url !== null;
+    }
+
+    /**
+     * Check if planet video is available (not generating and URL exists).
+     */
+    public function hasVideo(): bool
+    {
+        return ! $this->video_generating && $this->video_url !== null;
+    }
+
+    /**
+     * Check if planet image is currently being generated.
+     */
+    public function isImageGenerating(): bool
+    {
+        return $this->image_generating === true;
+    }
+
+    /**
+     * Check if planet video is currently being generated.
+     */
+    public function isVideoGenerating(): bool
+    {
+        return $this->video_generating === true;
     }
 }

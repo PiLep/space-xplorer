@@ -5,10 +5,12 @@ namespace App\Listeners;
 use App\Events\PlanetCreated;
 use App\Services\ImageGenerationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class GeneratePlanetImage implements ShouldQueue
+class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
 {
     use InteractsWithQueue;
 
@@ -51,8 +53,14 @@ class GeneratePlanetImage implements ShouldQueue
             // Prevent duplicate image generation - if planet already has an image, skip
             $existingImage = $planet->getAttributes()['image_url'] ?? null;
             if ($existingImage) {
+                // Reset generating status if image already exists
+                $planet->update(['image_generating' => false]);
+
                 return;
             }
+
+            // Mark as generating before starting
+            $planet->update(['image_generating' => true]);
 
             // Generate planet image prompt in Alien style
             $prompt = $this->generatePlanetPrompt($planet);
@@ -62,7 +70,10 @@ class GeneratePlanetImage implements ShouldQueue
 
             // Store the path instead of full URL for flexibility
             // The URL will be reconstructed dynamically via the model accessor
-            $planet->update(['image_url' => $result['path']]);
+            $planet->update([
+                'image_url' => $result['path'],
+                'image_generating' => false,
+            ]);
 
             Log::info('Planet image generated successfully', [
                 'planet_id' => $planet->id,
@@ -71,6 +82,18 @@ class GeneratePlanetImage implements ShouldQueue
                 'image_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
         } catch (\Exception $e) {
+            // Reset generating status on error
+            try {
+                $planet = $event->planet->fresh();
+                $planet->update(['image_generating' => false]);
+            } catch (\Exception $updateException) {
+                // If we can't update, log but continue
+                Log::warning('Failed to reset image_generating status', [
+                    'planet_id' => $event->planet->id,
+                    'error' => $updateException->getMessage(),
+                ]);
+            }
+
             // Log the error but don't block planet creation
             Log::error('Failed to generate planet image', [
                 'planet_id' => $event->planet->id,
@@ -81,6 +104,33 @@ class GeneratePlanetImage implements ShouldQueue
             // Re-throw to mark job as failed (will be retried according to queue config)
             throw $e;
         }
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(PlanetCreated $event, Throwable $exception): void
+    {
+        // Reset generating status when job fails permanently
+        try {
+            $planet = $event->planet->fresh();
+            $planet->update(['image_generating' => false]);
+        } catch (\Exception $updateException) {
+            // If we can't update, log but continue
+            Log::warning('Failed to reset image_generating status after job failure', [
+                'planet_id' => $event->planet->id,
+                'error' => $updateException->getMessage(),
+            ]);
+        }
+
+        Log::error('Planet image generation failed after all retries', [
+            'planet_id' => $event->planet->id,
+            'planet_name' => $event->planet->name,
+            'exception' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
+        ]);
+
+        // TODO: Could notify admin, create a ticket, or trigger manual retry here
     }
 
     /**
@@ -156,15 +206,15 @@ class GeneratePlanetImage implements ShouldQueue
         // Create a prompt that generates a cinematic planet image
         // in the style of Alien (1979) - dark, atmospheric, realistic sci-fi
         return "Cinematic space view of {$planet->name}, a {$sizeDesc} {$typeDesc}, "
-            ."viewed from space. The planet's surface shows {$terrainDesc}. "
-            ."Temperature characteristics: {$tempDesc}. "
-            ."Atmosphere: {$atmoDesc}. "
-            .'Wide-angle shot from space, showing the planet in full view against the dark void of space. '
-            ."Color palette: {$colorPalette}, with dark, moody lighting in the style of Alien (1979). "
-            .'Realistic sci-fi space environment with stars visible in the background. '
-            .'Industrial, atmospheric aesthetic with cinematic quality. '
-            .'The planet should clearly show its surface characteristics and atmospheric conditions. '
-            .'Photorealistic style, high resolution, detailed surface texture, '
-            .'16:9 aspect ratio, professional space photography aesthetic.';
+            . "viewed from space. The planet's surface shows {$terrainDesc}. "
+            . "Temperature characteristics: {$tempDesc}. "
+            . "Atmosphere: {$atmoDesc}. "
+            . 'Wide-angle shot from space, showing the planet in full view against the dark void of space. '
+            . "Color palette: {$colorPalette}, with dark, moody lighting in the style of Alien (1979). "
+            . 'Realistic sci-fi space environment with stars visible in the background. '
+            . 'Industrial, atmospheric aesthetic with cinematic quality. '
+            . 'The planet should clearly show its surface characteristics and atmospheric conditions. '
+            . 'Photorealistic style, high resolution, detailed surface texture, '
+            . '16:9 aspect ratio, professional space photography aesthetic.';
     }
 }

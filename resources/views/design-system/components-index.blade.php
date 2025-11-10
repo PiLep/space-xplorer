@@ -49,10 +49,10 @@
                         > COMPOSANTS_SPECIALISES
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Composants spécifiques au projet : Planet Card, Loading Spinner
+                        Composants spécifiques au projet : Planet Card, Loading Spinner, Scan Placeholder
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        2 composants →
+                        3 composants →
                     </p>
                 </div>
             </a>

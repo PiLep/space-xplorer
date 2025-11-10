@@ -14,8 +14,13 @@
                 <div class="dark:border-border-dark border-b border-gray-200 px-8 py-6">
                     <div class="mb-4 flex items-center gap-6">
                         <!-- Avatar -->
-                        @if ($user['avatar_url'])
-                            <div class="flex-shrink-0 relative">
+                        <div class="flex-shrink-0 relative">
+                            @if ($user['avatar_generating'] ?? false)
+                                <!-- Avatar is being generated -->
+                                <div class="h-24 w-24 rounded-lg overflow-hidden">
+                                    <x-scan-placeholder type="avatar" :label="'SCANNING_AVATAR'" class="h-full w-full" />
+                                </div>
+                            @elseif ($user['avatar_url'] ?? null)
                                 <img
                                     src="{{ $user['avatar_url'] }}"
                                     alt="{{ $user['name'] }}'s avatar"
@@ -29,8 +34,17 @@
                                     class="dark:border-border-dark terminal-border-simple hidden flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
                                     <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
                                 </div>
-                            </div>
-                        @endif
+                            @else
+                                <!-- No avatar, show initials placeholder -->
+                                @php
+                                    $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
+                                @endphp
+                                <div
+                                    class="dark:border-border-dark terminal-border-simple flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
+                                    <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                </div>
+                            @endif
+                        </div>
                         <!-- User Info -->
                         <div class="flex-1">
                             <h2

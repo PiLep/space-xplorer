@@ -5,10 +5,12 @@ namespace App\Listeners;
 use App\Events\UserRegistered;
 use App\Services\ImageGenerationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class GenerateAvatar implements ShouldQueue
+class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
 {
     use InteractsWithQueue;
 
@@ -51,8 +53,14 @@ class GenerateAvatar implements ShouldQueue
             // Prevent duplicate avatar generation - if user already has an avatar, skip
             $existingAvatar = $user->getAttributes()['avatar_url'] ?? null;
             if ($existingAvatar) {
+                // Reset generating status if avatar already exists
+                $user->update(['avatar_generating' => false]);
+
                 return;
             }
+
+            // Mark as generating before starting
+            $user->update(['avatar_generating' => true]);
 
             // Generate avatar prompt in Alien style (technician/ship captain)
             $prompt = $this->generateAvatarPrompt($user->name);
@@ -62,7 +70,10 @@ class GenerateAvatar implements ShouldQueue
 
             // Store the path instead of full URL for flexibility
             // The URL will be reconstructed dynamically via the model accessor
-            $user->update(['avatar_url' => $result['path']]);
+            $user->update([
+                'avatar_url' => $result['path'],
+                'avatar_generating' => false,
+            ]);
 
             Log::info('Avatar generated successfully', [
                 'user_id' => $user->id,
@@ -70,6 +81,18 @@ class GenerateAvatar implements ShouldQueue
                 'avatar_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
         } catch (\Exception $e) {
+            // Reset generating status on error
+            try {
+                $user = $event->user->fresh();
+                $user->update(['avatar_generating' => false]);
+            } catch (\Exception $updateException) {
+                // If we can't update, log but continue
+                Log::warning('Failed to reset avatar_generating status', [
+                    'user_id' => $event->user->id,
+                    'error' => $updateException->getMessage(),
+                ]);
+            }
+
             // Log the error but don't block user registration
             Log::error('Failed to generate avatar for user', [
                 'user_id' => $event->user->id,
@@ -80,6 +103,33 @@ class GenerateAvatar implements ShouldQueue
             // Re-throw to mark job as failed (will be retried according to queue config)
             throw $e;
         }
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(UserRegistered $event, Throwable $exception): void
+    {
+        // Reset generating status when job fails permanently
+        try {
+            $user = $event->user->fresh();
+            $user->update(['avatar_generating' => false]);
+        } catch (\Exception $updateException) {
+            // If we can't update, log but continue
+            Log::warning('Failed to reset avatar_generating status after job failure', [
+                'user_id' => $event->user->id,
+                'error' => $updateException->getMessage(),
+            ]);
+        }
+
+        Log::error('Avatar generation failed after all retries', [
+            'user_id' => $event->user->id,
+            'user_name' => $event->user->name,
+            'exception' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
+        ]);
+
+        // TODO: Could notify admin, create a ticket, or trigger manual retry here
     }
 
     /**
@@ -104,24 +154,24 @@ class GenerateAvatar implements ShouldQueue
         // Create a prompt that generates a professional space technician/captain avatar
         // in the style of Alien (1979) - industrial, realistic, sci-fi aesthetic
         return "Close-up professional portrait headshot of a single {$character}, {$userName}, "
-            .'a seasoned space technician and ship captain, '
-            .'in the style of Alien (1979) movie aesthetic. '
-            .'Tight framing, head and shoulders only, zoomed in for maximum detail. '
-            .'Industrial sci-fi setting with realistic lighting and cinematic composition. '
-            .'Single person only, wearing a weathered technical jumpsuit with visible patches, '
-            .'insignia, and worn fabric details. '
-            .'Holding a data pad or technical tool in hand, visible in foreground. '
-            .'Facial features: determined expression, weathered skin with subtle scars or marks, '
-            .'professional haircut, focused eyes with slight bags from long shifts. '
-            .'Atmospheric lighting with blue and orange tones creating depth and dimension. '
-            .'Simple, subtle background: dark, muted tones with minimal detail, '
-            .'slightly blurred to emphasize the person. No distracting elements, '
-            .'just a clean, professional backdrop that makes the character stand out. '
-            .'Professional headshot portrait, one person only, no other people in frame, '
-            .'square format (1:1 aspect ratio), highly detailed facial features, '
-            .'photorealistic style with sharp focus on the face, '
-            .'moody and atmospheric, cinematic quality, high resolution, '
-            .'detailed skin texture, realistic shadows and highlights.';
+            . 'a seasoned space technician and ship captain, '
+            . 'in the style of Alien (1979) movie aesthetic. '
+            . 'Tight framing, head and shoulders only, zoomed in for maximum detail. '
+            . 'Industrial sci-fi setting with realistic lighting and cinematic composition. '
+            . 'Single person only, wearing a weathered technical jumpsuit with visible patches, '
+            . 'insignia, and worn fabric details. '
+            . 'Holding a data pad or technical tool in hand, visible in foreground. '
+            . 'Facial features: determined expression, weathered skin with subtle scars or marks, '
+            . 'professional haircut, focused eyes with slight bags from long shifts. '
+            . 'Atmospheric lighting with blue and orange tones creating depth and dimension. '
+            . 'Simple, subtle background: dark, muted tones with minimal detail, '
+            . 'slightly blurred to emphasize the person. No distracting elements, '
+            . 'just a clean, professional backdrop that makes the character stand out. '
+            . 'Professional headshot portrait, one person only, no other people in frame, '
+            . 'square format (1:1 aspect ratio), highly detailed facial features, '
+            . 'photorealistic style with sharp focus on the face, '
+            . 'moody and atmospheric, cinematic quality, high resolution, '
+            . 'detailed skin texture, realistic shadows and highlights.';
     }
 
     /**

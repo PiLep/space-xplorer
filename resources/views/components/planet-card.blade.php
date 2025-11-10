@@ -16,7 +16,13 @@
                                 'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop&q=80');
                     @endphp
 
-                    @if ($videoUrl)
+                    @if ($planet->isVideoGenerating())
+                        <!-- Video is being generated -->
+                        <x-scan-placeholder type="video" :label="'SCANNING_VIDEO: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
+                    @elseif ($planet->isImageGenerating() && !$videoUrl)
+                        <!-- Image is being generated (and no video available) -->
+                        <x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
+                    @elseif ($videoUrl)
                         <!-- Video with fallback to image -->
                         <video
                             id="planet-video-{{ $planet->id }}"
@@ -37,6 +43,9 @@
                             style="display: none;"
                             onerror="this.src='https://via.placeholder.com/800x600/1a1a1a/00ff88?text={{ urlencode($planet->name) }}'"
                         >
+                    @elseif ($planet->isImageGenerating())
+                        <!-- Image is being generated (video not available) -->
+                        <x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
                     @else
                         <!-- Image only (no video available) -->
                         <img

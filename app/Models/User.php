@@ -28,6 +28,7 @@ class User extends Authenticatable
         'password',
         'home_planet_id',
         'avatar_url',
+        'avatar_generating',
     ];
 
     /**
@@ -95,5 +96,21 @@ class User extends Authenticatable
                 return Storage::disk($disk)->url($value);
             }
         );
+    }
+
+    /**
+     * Check if user avatar is available (not generating and URL exists).
+     */
+    public function hasAvatar(): bool
+    {
+        return ! $this->avatar_generating && $this->avatar_url !== null;
+    }
+
+    /**
+     * Check if user avatar is currently being generated.
+     */
+    public function isAvatarGenerating(): bool
+    {
+        return $this->avatar_generating === true;
     }
 }

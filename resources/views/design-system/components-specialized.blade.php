@@ -81,6 +81,44 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Scan Placeholder -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Scan Placeholder</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    Indicateur visuel de scan en cours pour les générations d'images, vidéos ou avatars. Style Alien/sci-fi avec lignes de scan animées, grille de fond et spinner central.
+                </p>
+                <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                    <div class="space-y-6">
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Type Image (défaut) :</p>
+                            <div class="h-48 w-full rounded-lg overflow-hidden">
+                                <x-scan-placeholder type="image" label="SCANNING_IMAGE: KEPLER-452B" class="h-full w-full" />
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Type Video :</p>
+                            <div class="h-48 w-full rounded-lg overflow-hidden">
+                                <x-scan-placeholder type="video" label="SCANNING_VIDEO: KEPLER-452B" class="h-full w-full" />
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Type Avatar :</p>
+                            <div class="h-24 w-24 rounded-lg overflow-hidden">
+                                <x-scan-placeholder type="avatar" class="h-full w-full" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full" /&gt;<br>
+                            &lt;x-scan-placeholder type="video" :label="'SCANNING_VIDEO: ' . strtoupper($planet->name)" /&gt;<br>
+                            &lt;x-scan-placeholder type="avatar" /&gt;
+                        </code>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </x-design-system.layout>

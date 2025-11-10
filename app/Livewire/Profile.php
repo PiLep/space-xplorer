@@ -44,6 +44,7 @@ class Profile extends Component
                 'name' => $authUser->name,
                 'email' => $authUser->email,
                 'avatar_url' => $authUser->avatar_url,
+                'avatar_generating' => $authUser->avatar_generating ?? false,
                 'home_planet_id' => $authUser->home_planet_id,
                 'home_planet_name' => $authUser->homePlanet?->name ?? null,
             ];

@@ -5,10 +5,12 @@ namespace App\Listeners;
 use App\Events\PlanetCreated;
 use App\Services\VideoGenerationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
-class GeneratePlanetVideo implements ShouldQueue
+class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
 {
     use InteractsWithQueue;
 
@@ -59,8 +61,14 @@ class GeneratePlanetVideo implements ShouldQueue
             // Prevent duplicate video generation - if planet already has a video, skip
             $existingVideo = $planet->getAttributes()['video_url'] ?? null;
             if ($existingVideo) {
+                // Reset generating status if video already exists
+                $planet->update(['video_generating' => false]);
+
                 return;
             }
+
+            // Mark as generating before starting
+            $planet->update(['video_generating' => true]);
 
             // Generate planet video prompt in Alien style
             $prompt = $this->generatePlanetVideoPrompt($planet);
@@ -70,7 +78,10 @@ class GeneratePlanetVideo implements ShouldQueue
 
             // Store the path instead of full URL for flexibility
             // The URL will be reconstructed dynamically via the model accessor
-            $planet->update(['video_url' => $result['path']]);
+            $planet->update([
+                'video_url' => $result['path'],
+                'video_generating' => false,
+            ]);
 
             Log::info('Planet video generated successfully', [
                 'planet_id' => $planet->id,
@@ -79,6 +90,18 @@ class GeneratePlanetVideo implements ShouldQueue
                 'video_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
         } catch (\Exception $e) {
+            // Reset generating status on error
+            try {
+                $planet = $event->planet->fresh();
+                $planet->update(['video_generating' => false]);
+            } catch (\Exception $updateException) {
+                // If we can't update, log but continue
+                Log::warning('Failed to reset video_generating status', [
+                    'planet_id' => $event->planet->id,
+                    'error' => $updateException->getMessage(),
+                ]);
+            }
+
             // Log the error but don't block planet creation
             Log::error('Failed to generate planet video', [
                 'planet_id' => $event->planet->id,
@@ -89,6 +112,33 @@ class GeneratePlanetVideo implements ShouldQueue
             // Re-throw to mark job as failed (will be retried according to queue config)
             throw $e;
         }
+    }
+
+    /**
+     * Handle a job failure.
+     */
+    public function failed(PlanetCreated $event, Throwable $exception): void
+    {
+        // Reset generating status when job fails permanently
+        try {
+            $planet = $event->planet->fresh();
+            $planet->update(['video_generating' => false]);
+        } catch (\Exception $updateException) {
+            // If we can't update, log but continue
+            Log::warning('Failed to reset video_generating status after job failure', [
+                'planet_id' => $event->planet->id,
+                'error' => $updateException->getMessage(),
+            ]);
+        }
+
+        Log::error('Planet video generation failed after all retries', [
+            'planet_id' => $event->planet->id,
+            'planet_name' => $event->planet->name,
+            'exception' => $exception->getMessage(),
+            'trace' => $exception->getTraceAsString(),
+        ]);
+
+        // TODO: Could notify admin, create a ticket, or trigger manual retry here
     }
 
     /**
@@ -150,11 +200,11 @@ class GeneratePlanetVideo implements ShouldQueue
 
         // Simple prompt: planet viewed from space with slow rotation
         return "Seamless looping video of {$planet->name}, a {$sizeDesc} and {$typeDesc}, "
-            ."viewed from space. Planet surface: {$tempDesc}, {$terrainDesc}. "
-            ."Atmosphere: {$atmoDesc}. "
-            .'The planet slowly rotates in place, minimal camera movement. '
-            .'Dark space background with stars. '
-            .'Moody lighting in the style of Alien (1979) - deep blues, dark grays, muted colors. '
-            .'Photorealistic, cinematic quality, 16:9 aspect ratio, perfect seamless loop.';
+            . "viewed from space. Planet surface: {$tempDesc}, {$terrainDesc}. "
+            . "Atmosphere: {$atmoDesc}. "
+            . 'The planet slowly rotates in place, minimal camera movement. '
+            . 'Dark space background with stars. '
+            . 'Moody lighting in the style of Alien (1979) - deep blues, dark grays, muted colors. '
+            . 'Photorealistic, cinematic quality, 16:9 aspect ratio, perfect seamless loop.';
     }
 }
