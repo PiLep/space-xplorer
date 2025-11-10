@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ImageGenerationException;
 use App\Models\User;
 use App\Services\ImageGenerationService;
 use Illuminate\Support\Facades\Artisan;
@@ -101,7 +102,7 @@ it('handles errors gracefully and continues processing', function () {
     $mockGenerator->shouldReceive('generate')
         ->once()
         ->with(Mockery::any(), null, 'avatars')
-        ->andThrow(new \Exception('API error'));
+        ->andThrow(new ImageGenerationException('API error'));
     $mockGenerator->shouldReceive('generate')
         ->once()
         ->with(Mockery::any(), null, 'avatars')

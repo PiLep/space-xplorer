@@ -3,7 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\PlanetCreated;
+use App\Exceptions\ImageGenerationException;
+use App\Exceptions\StorageException;
 use App\Services\ImageGenerationService;
+use Aws\S3\Exception\S3Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
@@ -81,28 +84,54 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
                 'image_path' => $result['path'],
                 'image_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
-        } catch (\Exception $e) {
-            // Reset generating status on error
-            try {
-                $planet = $event->planet->fresh();
-                $planet->update(['image_generating' => false]);
-            } catch (\Exception $updateException) {
-                // If we can't update, log but continue
-                Log::warning('Failed to reset image_generating status', [
-                    'planet_id' => $event->planet->id,
-                    'error' => $updateException->getMessage(),
-                ]);
-            }
+        } catch (S3Exception $s3Exception) {
+            // Critical: Always reset generating status, even on S3 errors
+            $this->resetGeneratingStatus($event->planet->id, 'image');
+
+            // Log detailed S3 error information
+            Log::error('S3 error during planet image generation', [
+                'planet_id' => $event->planet->id,
+                's3_error_code' => $s3Exception->getAwsErrorCode(),
+                's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                's3_request_id' => $s3Exception->getAwsRequestId(),
+                'http_status' => $s3Exception->getStatusCode(),
+                'error' => $s3Exception->getMessage(),
+            ]);
+
+            // Re-throw to mark job as failed (will be retried according to queue config)
+            throw new StorageException(
+                "S3 error during image generation: {$s3Exception->getAwsErrorMessage()} (Code: {$s3Exception->getAwsErrorCode()})",
+                0,
+                $s3Exception
+            );
+        } catch (ImageGenerationException|StorageException $e) {
+            // Critical: Always reset generating status on any error
+            $this->resetGeneratingStatus($event->planet->id, 'image');
 
             // Log the error but don't block planet creation
             Log::error('Failed to generate planet image', [
                 'planet_id' => $event->planet->id,
                 'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            // Re-throw to mark job as failed (will be retried according to queue config)
+            // Re-throw custom exceptions as-is
             throw $e;
+        } catch (\Exception $e) {
+            // Critical: Always reset generating status on any error
+            $this->resetGeneratingStatus($event->planet->id, 'image');
+
+            // Log the error but don't block planet creation
+            Log::error('Failed to generate planet image', [
+                'planet_id' => $event->planet->id,
+                'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Wrap unknown exceptions in ImageGenerationException
+            throw new ImageGenerationException("Failed to generate planet image: {$e->getMessage()}", 0, $e);
         }
     }
 
@@ -111,26 +140,56 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
      */
     public function failed(PlanetCreated $event, Throwable $exception): void
     {
-        // Reset generating status when job fails permanently
-        try {
-            $planet = $event->planet->fresh();
-            $planet->update(['image_generating' => false]);
-        } catch (\Exception $updateException) {
-            // If we can't update, log but continue
-            Log::warning('Failed to reset image_generating status after job failure', [
-                'planet_id' => $event->planet->id,
-                'error' => $updateException->getMessage(),
-            ]);
-        }
+        // Critical: Always reset generating status when job fails permanently
+        $this->resetGeneratingStatus($event->planet->id, 'image');
 
-        Log::error('Planet image generation failed after all retries', [
+        $logContext = [
             'planet_id' => $event->planet->id,
             'planet_name' => $event->planet->name,
             'exception' => $exception->getMessage(),
-            'trace' => $exception->getTraceAsString(),
-        ]);
+            'exception_class' => get_class($exception),
+        ];
+
+        // Add S3-specific error details if applicable
+        if ($exception instanceof S3Exception) {
+            $logContext['s3_error_code'] = $exception->getAwsErrorCode();
+            $logContext['s3_error_message'] = $exception->getAwsErrorMessage();
+            $logContext['s3_request_id'] = $exception->getAwsRequestId();
+            $logContext['http_status'] = $exception->getStatusCode();
+        } else {
+            $logContext['trace'] = $exception->getTraceAsString();
+        }
+
+        Log::error('Planet image generation failed after all retries', $logContext);
 
         // TODO: Could notify admin, create a ticket, or trigger manual retry here
+    }
+
+    /**
+     * Reset generating status for a planet.
+     * This is a critical operation that must always succeed to prevent infinite loading states.
+     *
+     * @param  string  $planetId  The planet ID
+     * @param  string  $type  Type of generation ('image' or 'video')
+     */
+    private function resetGeneratingStatus(string $planetId, string $type): void
+    {
+        try {
+            $planet = \App\Models\Planet::find($planetId);
+            if ($planet) {
+                $field = $type === 'video' ? 'video_generating' : 'image_generating';
+                $planet->update([$field => false]);
+            }
+        } catch (\Exception $updateException) {
+            // If we can't update, log CRITICALLY but continue
+            // This prevents infinite loops but indicates a serious problem
+            Log::critical("CRITICAL: Failed to reset {$type}_generating status", [
+                'planet_id' => $planetId,
+                'type' => $type,
+                'error' => $updateException->getMessage(),
+                'exception_class' => get_class($updateException),
+            ]);
+        }
     }
 
     /**

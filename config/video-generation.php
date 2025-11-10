@@ -14,6 +14,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Enable Video Generation
+    |--------------------------------------------------------------------------
+    |
+    | Set to true to enable automatic video generation when planets are created.
+    | When disabled (default), videos will not be generated automatically, but you can
+    | still generate them manually via API or commands if needed.
+    |
+    */
+
+    'enabled' => env('VIDEO_GENERATION_ENABLED', false),
+
+    /*
+    |--------------------------------------------------------------------------
     | Default Provider
     |--------------------------------------------------------------------------
     |
