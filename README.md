@@ -85,6 +85,24 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
    - Mailpit (emails) : http://localhost:8025
    - MinIO Console : http://localhost:9001
 
+### Configuration du Super Admin
+
+Le projet inclut un système d'administration caché accessible via `/admin`. Pour configurer un super admin :
+
+1. **Créer un utilisateur normal** via l'inscription publique
+2. **Ajouter l'email dans `.env`** :
+   ```env
+   ADMIN_EMAIL_WHITELIST=admin@example.com,superadmin@example.com
+   ```
+   (Plusieurs emails séparés par des virgules)
+3. **Définir le flag super admin** :
+   ```bash
+   ./vendor/bin/sail artisan admin:make admin@example.com
+   ```
+4. **Se connecter** via `/admin/login` avec les identifiants de cet utilisateur
+
+**Sécurité** : L'accès admin nécessite à la fois le flag `is_super_admin` ET la présence de l'email dans `ADMIN_EMAIL_WHITELIST`.
+
 ### Commandes utiles
 
 ```bash
@@ -105,6 +123,9 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
 
 # Builder les assets en mode développement
 ./vendor/bin/sail npm run dev
+
+# Créer un super admin
+./vendor/bin/sail artisan admin:make email@example.com
 ```
 
 ## 🧪 Tests
