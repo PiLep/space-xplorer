@@ -11,7 +11,7 @@
 ])
 
 @php
-    $baseClasses = 'font-bold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-space-black disabled:opacity-50 disabled:cursor-not-allowed';
+    $baseClasses = 'font-bold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-white dark:focus:ring-offset-space-black cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
     
     $variantClasses = [
         'primary' => 'bg-space-primary hover:bg-space-primary-dark text-space-black focus:ring-space-primary glow-primary hover:glow-primary',

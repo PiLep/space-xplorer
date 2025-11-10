@@ -1,4 +1,4 @@
-<div class="max-w-md mx-auto mt-8">
+<x-container variant="compact" class="mt-8">
     <x-form-card title="Create Your Account">
         <!-- General Error Message -->
         @if ($errors->any())
@@ -74,4 +74,4 @@
             />
         </form>
     </x-form-card>
-</div>
+</x-container>

@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\PlanetCreated;
 use App\Models\Planet;
 
 /**
@@ -27,7 +28,7 @@ class PlanetGeneratorService
         $name = $this->generateName();
         $description = $this->generateDescription($type, $characteristics);
 
-        return Planet::create([
+        $planet = Planet::create([
             'name' => $name,
             'type' => $type,
             'size' => $characteristics['size'],
@@ -37,6 +38,11 @@ class PlanetGeneratorService
             'resources' => $characteristics['resources'],
             'description' => $description,
         ]);
+
+        // Dispatch event to generate planet image
+        event(new PlanetCreated($planet));
+
+        return $planet;
     }
 
     /**

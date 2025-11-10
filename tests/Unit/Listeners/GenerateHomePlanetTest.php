@@ -1,12 +1,16 @@
 <?php
 
+use App\Events\PlanetCreated;
 use App\Events\UserRegistered;
 use App\Listeners\GenerateHomePlanet;
 use App\Models\Planet;
 use App\Models\User;
 use App\Services\PlanetGeneratorService;
+use Illuminate\Support\Facades\Event;
 
 it('generates and assigns a planet to the user', function () {
+    Event::fake([PlanetCreated::class]); // Fake PlanetCreated to prevent image generation
+
     $user = User::factory()->create([
         'home_planet_id' => null,
     ]);
@@ -51,6 +55,8 @@ it('handles errors gracefully without blocking registration', function () {
 });
 
 it('completes successfully without errors', function () {
+    Event::fake([PlanetCreated::class]); // Fake PlanetCreated to prevent image generation
+
     $user = User::factory()->create([
         'home_planet_id' => null,
     ]);
@@ -67,6 +73,8 @@ it('completes successfully without errors', function () {
 });
 
 it('assigns a planet with all required characteristics', function () {
+    Event::fake([PlanetCreated::class]); // Fake PlanetCreated to prevent image generation
+
     $user = User::factory()->create([
         'home_planet_id' => null,
     ]);
@@ -90,6 +98,8 @@ it('assigns a planet with all required characteristics', function () {
 });
 
 it('assigns different home planets to multiple users', function () {
+    Event::fake([PlanetCreated::class]); // Fake PlanetCreated to prevent image generation
+
     $user1 = User::factory()->create(['home_planet_id' => null]);
     $user2 = User::factory()->create(['home_planet_id' => null]);
 

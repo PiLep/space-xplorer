@@ -1,4 +1,4 @@
-<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+<x-container variant="standard" class="py-8">
     <!-- Terminal Boot Messages (always visible at top) -->
     <x-terminal-boot
         :bootMessages="$bootMessages"
@@ -63,4 +63,4 @@
             @endif
         </div>
     @endif
-</div>
+</x-container>

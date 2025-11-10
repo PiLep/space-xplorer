@@ -75,9 +75,17 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
    ./vendor/bin/sail npm run build
    ```
 
-7. **Accéder à l'application**
+7. **Configurer MinIO (S3 local)** :
+   ```bash
+   # Créer le bucket pour les images
+   ./vendor/bin/sail artisan minio:setup
+   ```
+   - Console MinIO : http://localhost:9001 (minioadmin/minioadmin)
+
+8. **Accéder à l'application**
    - Application : http://localhost
    - Mailpit (emails) : http://localhost:8025
+   - MinIO Console : http://localhost:9001
 
 ### Commandes utiles
 
@@ -110,6 +118,9 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
 # Exécuter les tests avec coverage
 ./vendor/bin/sail test --coverage
 ```
+
+**Documentation sur les tests** :
+- **[Tester les Événements avec Listeners en Queue](./docs/setup/testing-events.md)** - Guide complet pour tester les événements avec des listeners en queue
 
 ## 📚 Documentation
 

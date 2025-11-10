@@ -11,6 +11,13 @@ class UserRegistered
     use Dispatchable, SerializesModels;
 
     /**
+     * Indicate that the event should be broadcast.
+     *
+     * @var bool
+     */
+    public $shouldBroadcast = false;
+
+    /**
      * Create a new event instance.
      */
     public function __construct(

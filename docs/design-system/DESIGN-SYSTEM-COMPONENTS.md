@@ -273,6 +273,32 @@ Voir **[COMPONENT-loading-spinner.md](./components/COMPONENT-loading-spinner.md)
 <x-loading-spinner variant="simple" size="md" :showMessage="false" />
 ```
 
+### Scan Placeholder
+
+Voir **[COMPONENT-scan-placeholder.md](./components/COMPONENT-scan-placeholder.md)** pour la documentation complète.
+
+**Usage** : Indicateur visuel de scan en cours pour les générations d'images, vidéos ou avatars
+
+**Variantes** :
+- **Image** (défaut) : Pour la génération d'images de planètes
+- **Video** : Pour la génération de vidéos de planètes
+- **Avatar** : Pour la génération d'avatars utilisateurs
+
+**Caractéristiques** :
+- Style Alien/sci-fi avec lignes de scan animées
+- Grille de fond subtile
+- Spinner central animé avec point pulsant
+- Texte en style terminal (vert)
+- Points de progression animés
+- Coins avec brackets décoratifs
+
+**Exemple** :
+```blade
+@if ($planet->isImageGenerating())
+    <x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full" />
+@endif
+```
+
 ## Composants Utilitaires
 
 Les composants utilitaires facilitent l'organisation et la mise en page des autres composants.
@@ -382,6 +408,7 @@ docs/design-system/components/
 ├── COMPONENT-terminal-link.md    (Terminal)
 ├── COMPONENT-planet-card.md      (Spécialisé)
 ├── COMPONENT-loading-spinner.md  (Spécialisé)
+├── COMPONENT-scan-placeholder.md (Spécialisé)
 ├── COMPONENT-button-group.md     (Utilitaires)
 ├── COMPONENT-navigation.md       (Utilitaires)
 ├── COMPONENT-modal.md            (Utilitaires)

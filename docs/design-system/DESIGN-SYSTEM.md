@@ -94,6 +94,12 @@ Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la do
 - **Badges** : Indicateurs de statut et labels
 - **Alerts** : Messages d'alerte et notifications
 
+### Composants Spécialisés
+
+- **Planet Card** : Affichage des caractéristiques d'une planète
+- **Loading Spinner** : Indicateur de chargement avec style terminal
+- **Scan Placeholder** : Indicateur visuel de scan en cours pour les générations d'images/vidéos/avatars
+
 ## Animations & Transitions
 
 Voir **[DESIGN-SYSTEM-ANIMATIONS.md](./DESIGN-SYSTEM-ANIMATIONS.md)** pour la documentation complète des animations.
@@ -232,7 +238,8 @@ docs/design-system/
     ├── COMPONENT-terminal-message.md (Terminal)
     ├── COMPONENT-terminal-link.md    (Terminal)
     ├── COMPONENT-planet-card.md      (Spécialisé)
-    └── COMPONENT-loading-spinner.md  (Spécialisé)
+    ├── COMPONENT-loading-spinner.md  (Spécialisé)
+    └── COMPONENT-scan-placeholder.md  (Spécialisé)
 ```
 
 ### Organisation des Composants
@@ -241,7 +248,7 @@ Les composants sont organisés en quatre catégories :
 
 1. **Composants de Base** : Éléments fondamentaux réutilisables (Button, Form Input, Form Card, Form Link, Page Header, Card, Alert)
 2. **Composants Terminal** : Interfaces de type console (Terminal Prompt, Terminal Boot, Terminal Message, Terminal Link)
-3. **Composants Spécialisés** : Composants spécifiques au projet (Planet Card, Loading Spinner)
+3. **Composants Spécialisés** : Composants spécifiques au projet (Planet Card, Loading Spinner, Scan Placeholder)
 4. **Composants Utilitaires** : Composants d'organisation (Button Group, Navigation, Modal)
 
 Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la documentation complète de tous les composants.

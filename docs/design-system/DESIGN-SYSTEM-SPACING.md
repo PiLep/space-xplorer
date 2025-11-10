@@ -131,53 +131,142 @@ Tous les espacements sont des multiples de 4px pour garantir la cohérence et fa
 
 ## Containers
 
-### Container Standard
+### Composant Container Réutilisable
 
-**Usage** : Contenu principal de la page
+Space Xplorer utilise un composant `<x-container>` standardisé pour garantir la cohérence des largeurs maximales et du responsive design à travers toute l'application.
 
-```html
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-  <!-- Contenu -->
-</div>
+**Usage** :
+```blade
+<x-container variant="standard">
+    <!-- Contenu -->
+</x-container>
+```
+
+### Variantes de Container
+
+#### Container Standard
+
+**Usage** : Pages standard (Dashboard, listes, contenu principal)
+
+```blade
+<x-container variant="standard" class="py-8">
+    <!-- Contenu -->
+</x-container>
 ```
 
 **Spécifications** :
-- Max-width : 1280px (`max-w-7xl`)
-- Centré : `mx-auto`
+- Desktop : `max-w-7xl` (1280px)
+- Tablet : `max-w-5xl` (1024px) - via breakpoint `md`
+- Mobile : Pleine largeur avec padding horizontal
 - Padding horizontal responsive :
-  - Mobile : 16px (`px-4`)
-  - Tablet : 24px (`sm:px-6`)
-  - Desktop : 32px (`lg:px-8`)
+  - Mobile (< 640px) : 16px (`px-4`)
+  - Tablet (640px - 1024px) : 24px (`sm:px-6`)
+  - Desktop (≥ 1024px) : 32px (`lg:px-8`)
 
-### Container Compact
+**Exemples d'utilisation** :
+- Dashboard principal
+- Pages de liste
+- Pages de contenu principal
 
-**Usage** : Formulaires, modals, cards
+#### Container Compact
 
-```html
-<div class="max-w-md mx-auto px-4">
-  <!-- Contenu -->
-</div>
+**Usage** : Pages compactes (Profile, formulaires, modals)
+
+```blade
+<x-container variant="compact" class="py-8">
+    <!-- Contenu -->
+</x-container>
 ```
 
 **Spécifications** :
-- Max-width : 448px (`max-w-md`)
-- Centré : `mx-auto`
-- Padding horizontal : 16px (`px-4`)
+- Desktop : `max-w-4xl` (896px) - pour meilleure lisibilité
+- Tablet : `max-w-3xl` (768px) - via breakpoint `md`
+- Mobile : Pleine largeur avec padding horizontal
+- Padding horizontal responsive : identique au container standard
 
-### Container Large
+**Exemples d'utilisation** :
+- Page Profile
+- Formulaires de connexion/inscription
+- Modals
+- Pages de formulaire
 
-**Usage** : Dashboards, tableaux de bord
+#### Container Full-Width
 
-```html
-<div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-  <!-- Contenu -->
-</div>
+**Usage** : Pages immersives, galeries, visualisations full-width
+
+```blade
+<x-container variant="full" class="py-8">
+    <!-- Contenu -->
+</x-container>
 ```
 
 **Spécifications** :
-- Max-width : 1280px (`max-w-screen-xl`)
-- Centré : `mx-auto`
-- Padding horizontal responsive
+- Toutes tailles : Pleine largeur (pas de max-width)
+- Padding horizontal responsive : identique au container standard
+
+**Exemples d'utilisation** :
+- Galeries d'images
+- Visualisations immersives
+- Pages nécessitant toute la largeur disponible
+
+### Stratégie de Largeur Maximale
+
+#### Par Type de Page
+
+**1. Pages Standard (Dashboard, Liste, Contenu principal)**
+- Utiliser `variant="standard"`
+- Largeur optimale pour le contenu principal
+- Permet d'afficher plusieurs colonnes sur desktop
+
+**2. Pages Compactes (Profile, Formulaires)**
+- Utiliser `variant="compact"`
+- Largeur réduite pour améliorer la lisibilité
+- Idéal pour les formulaires et les pages de profil
+
+**3. Pages Full-Width**
+- Utiliser `variant="full"`
+- Pour les pages nécessitant toute la largeur disponible
+- Utiliser avec parcimonie
+
+#### Terminal Bar
+
+La barre de navigation fixe en bas utilise toujours `max-w-7xl` pour rester cohérente avec le contenu principal :
+
+```blade
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+    <!-- Terminal bar content -->
+</div>
+```
+
+### Migration depuis l'Ancien Système
+
+**Avant** :
+```blade
+<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Contenu -->
+</div>
+```
+
+**Après** :
+```blade
+<x-container variant="standard" class="py-8">
+    <!-- Contenu -->
+</x-container>
+```
+
+**Avant** :
+```blade
+<div class="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+    <!-- Contenu -->
+</div>
+```
+
+**Après** :
+```blade
+<x-container variant="compact" class="py-8">
+    <!-- Contenu -->
+</x-container>
+```
 
 ## Espacements dans les Composants
 
@@ -301,44 +390,44 @@ Maintenir un rythme vertical cohérent :
 
 ### Page Standard
 
-```html
-<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-  <!-- Titre -->
-  <div class="mb-8">
-    <h1 class="text-4xl font-bold text-white mb-2">Titre</h1>
-    <p class="text-lg text-gray-400">Description</p>
-  </div>
+```blade
+<x-container variant="standard" class="py-8">
+    <!-- Titre -->
+    <div class="mb-8">
+        <h1 class="text-4xl font-bold text-white mb-2">Titre</h1>
+        <p class="text-lg text-gray-400">Description</p>
+    </div>
 
-  <!-- Contenu -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div class="bg-surface-dark rounded-lg p-6">
-      Card 1
+    <!-- Contenu -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-surface-dark rounded-lg p-6">
+            Card 1
+        </div>
+        <div class="bg-surface-dark rounded-lg p-6">
+            Card 2
+        </div>
+        <div class="bg-surface-dark rounded-lg p-6">
+            Card 3
+        </div>
     </div>
-    <div class="bg-surface-dark rounded-lg p-6">
-      Card 2
-    </div>
-    <div class="bg-surface-dark rounded-lg p-6">
-      Card 3
-    </div>
-  </div>
-</div>
+</x-container>
 ```
 
 ### Formulaire
 
-```html
-<div class="max-w-md mx-auto px-4 mt-8">
-  <div class="bg-surface-dark rounded-lg p-6 md:p-8">
-    <h2 class="text-2xl font-bold text-white mb-6">Formulaire</h2>
-    <form class="space-y-4">
-      <div>
-        <label class="block text-gray-300 mb-2">Label</label>
-        <input class="w-full p-3 rounded">
-      </div>
-      <button class="w-full p-3 mt-6">Submit</button>
-    </form>
-  </div>
-</div>
+```blade
+<x-container variant="compact" class="mt-8">
+    <div class="bg-surface-dark rounded-lg p-6 md:p-8">
+        <h2 class="text-2xl font-bold text-white mb-6">Formulaire</h2>
+        <form class="space-y-4">
+            <div>
+                <label class="block text-gray-300 mb-2">Label</label>
+                <input class="w-full p-3 rounded">
+            </div>
+            <button class="w-full p-3 mt-6">Submit</button>
+        </form>
+    </div>
+</x-container>
 ```
 
 ## Notes de Design

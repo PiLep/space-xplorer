@@ -95,6 +95,7 @@ class UserController extends Controller
                     'terrain' => $user->homePlanet->terrain,
                     'resources' => $user->homePlanet->resources,
                     'description' => $user->homePlanet->description,
+                    'image_url' => $user->homePlanet->image_url,
                 ],
             ],
             'status' => 'success',

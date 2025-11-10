@@ -27,6 +27,7 @@ class PlanetController extends Controller
                     'terrain' => $planet->terrain,
                     'resources' => $planet->resources,
                     'description' => $planet->description,
+                    'image_url' => $planet->image_url,
                 ],
             ],
             'status' => 'success',

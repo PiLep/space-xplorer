@@ -2,8 +2,12 @@
 
 namespace App\Providers;
 
+use App\Events\PlanetCreated;
 use App\Events\UserRegistered;
+use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
+use App\Listeners\GeneratePlanetImage;
+use App\Listeners\GeneratePlanetVideo;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -17,6 +21,11 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         UserRegistered::class => [
             GenerateHomePlanet::class,
+            GenerateAvatar::class,
+        ],
+        PlanetCreated::class => [
+            GeneratePlanetImage::class,
+            GeneratePlanetVideo::class,
         ],
     ];
 
@@ -25,7 +34,11 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        parent::boot();
+
+        // Disable automatic event discovery to prevent duplicate listener registration
+        // Laravel was registering both the class and the @handle method
+        $this->disableEventDiscovery();
     }
 
     /**

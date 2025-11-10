@@ -291,3 +291,5 @@ La navigation utilise un fond sombre (`bg-surface-dark`), des bordures subtiles 
 
 **Référence** : Voir **[DESIGN-SYSTEM.md](../DESIGN-SYSTEM.md)** pour la vue d'ensemble du design system.
 
+
+

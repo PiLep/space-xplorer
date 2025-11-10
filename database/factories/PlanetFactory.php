@@ -37,6 +37,8 @@ class PlanetFactory extends Factory
             'terrain' => fake()->randomElement(array_keys($typeConfig['terrain'])),
             'resources' => fake()->randomElement(array_keys($typeConfig['resources'])),
             'description' => fake()->sentence(20),
+            'image_generating' => false,
+            'video_generating' => false,
         ];
     }
 }
