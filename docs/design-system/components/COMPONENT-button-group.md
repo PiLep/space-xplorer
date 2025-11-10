@@ -319,3 +319,4 @@ La typographie est gérée par les boutons enfants, généralement avec `font-mo
 **Référence** : Voir **[DESIGN-SYSTEM-COMPONENTS.md](../DESIGN-SYSTEM-COMPONENTS.md)** pour la vue d'ensemble des composants.
 
 
+

@@ -176,3 +176,4 @@ Le composant s'adapte automatiquement :
 **Référence** : Voir **[DESIGN-SYSTEM.md](../DESIGN-SYSTEM.md)** pour la vue d'ensemble du design system.
 
 
+
