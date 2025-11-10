@@ -200,11 +200,11 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
 
         // Simple prompt: planet viewed from space with slow rotation
         return "Seamless looping video of {$planet->name}, a {$sizeDesc} and {$typeDesc}, "
-            . "viewed from space. Planet surface: {$tempDesc}, {$terrainDesc}. "
-            . "Atmosphere: {$atmoDesc}. "
-            . 'The planet slowly rotates in place, minimal camera movement. '
-            . 'Dark space background with stars. '
-            . 'Moody lighting in the style of Alien (1979) - deep blues, dark grays, muted colors. '
-            . 'Photorealistic, cinematic quality, 16:9 aspect ratio, perfect seamless loop.';
+            ."viewed from space. Planet surface: {$tempDesc}, {$terrainDesc}. "
+            ."Atmosphere: {$atmoDesc}. "
+            .'The planet slowly rotates in place, minimal camera movement. '
+            .'Dark space background with stars. '
+            .'Moody lighting in the style of Alien (1979) - deep blues, dark grays, muted colors. '
+            .'Photorealistic, cinematic quality, 16:9 aspect ratio, perfect seamless loop.';
     }
 }

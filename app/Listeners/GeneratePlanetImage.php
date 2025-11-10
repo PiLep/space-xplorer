@@ -206,15 +206,15 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
         // Create a prompt that generates a cinematic planet image
         // in the style of Alien (1979) - dark, atmospheric, realistic sci-fi
         return "Cinematic space view of {$planet->name}, a {$sizeDesc} {$typeDesc}, "
-            . "viewed from space. The planet's surface shows {$terrainDesc}. "
-            . "Temperature characteristics: {$tempDesc}. "
-            . "Atmosphere: {$atmoDesc}. "
-            . 'Wide-angle shot from space, showing the planet in full view against the dark void of space. '
-            . "Color palette: {$colorPalette}, with dark, moody lighting in the style of Alien (1979). "
-            . 'Realistic sci-fi space environment with stars visible in the background. '
-            . 'Industrial, atmospheric aesthetic with cinematic quality. '
-            . 'The planet should clearly show its surface characteristics and atmospheric conditions. '
-            . 'Photorealistic style, high resolution, detailed surface texture, '
-            . '16:9 aspect ratio, professional space photography aesthetic.';
+            ."viewed from space. The planet's surface shows {$terrainDesc}. "
+            ."Temperature characteristics: {$tempDesc}. "
+            ."Atmosphere: {$atmoDesc}. "
+            .'Wide-angle shot from space, showing the planet in full view against the dark void of space. '
+            ."Color palette: {$colorPalette}, with dark, moody lighting in the style of Alien (1979). "
+            .'Realistic sci-fi space environment with stars visible in the background. '
+            .'Industrial, atmospheric aesthetic with cinematic quality. '
+            .'The planet should clearly show its surface characteristics and atmospheric conditions. '
+            .'Photorealistic style, high resolution, detailed surface texture, '
+            .'16:9 aspect ratio, professional space photography aesthetic.';
     }
 }

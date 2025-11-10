@@ -98,7 +98,7 @@ jobs:
           CACHE_DRIVER: redis
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
-          QUEUE_CONNECTION: sync
+          QUEUE_CONNECTION: null
         run: ./vendor/bin/pest --coverage-clover=coverage.xml --coverage-html=coverage --log-junit=junit.xml
       
       - name: Upload Coverage to Codecov
@@ -260,7 +260,7 @@ jobs:
           CACHE_DRIVER: redis
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
-          QUEUE_CONNECTION: sync
+          QUEUE_CONNECTION: null
           APP_URL: http://localhost:8000
         run: |
           php artisan serve --host=0.0.0.0 --port=8000 > /dev/null 2>&1 &
