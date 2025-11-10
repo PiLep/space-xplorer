@@ -8,22 +8,32 @@
                 <!-- Planet Video/Image -->
                 <div class="relative z-0 flex min-h-0 flex-shrink-0 overflow-hidden md:w-1/3 lg:w-1/3 xl:w-2/5">
                     @php
-                        // Priority: video > generated image > provided imageUrl > default
+                        // Priority: video > generated image > provided imageUrl > scan placeholder
                         $videoUrl = $planet->video_url;
-                        $finalImageUrl =
-                            $planet->image_url ??
-                            ($imageUrl ??
-                                'https://images.unsplash.com/photo-1446776653964-20c1d3a81b06?w=800&h=600&fit=crop&q=80');
+                        $finalImageUrl = $planet->image_url ?? $imageUrl;
+                        $hasImage = !empty($finalImageUrl);
+                        // Generate fallback JavaScript for video error
+                        $videoErrorFallback = $hasImage
+                            ? "document.getElementById('planet-image-{$planet->id}').style.display='block';"
+                            : "document.getElementById('planet-scan-{$planet->id}').style.display='block';";
                     @endphp
 
                     @if ($planet->isVideoGenerating())
                         <!-- Video is being generated -->
-                        <x-scan-placeholder type="video" :label="'SCANNING_VIDEO: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
+                        <x-scan-placeholder
+                            type="video"
+                            :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
+                        />
                     @elseif ($planet->isImageGenerating() && !$videoUrl)
                         <!-- Image is being generated (and no video available) -->
-                        <x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
+                        <x-scan-placeholder
+                            type="image"
+                            :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
+                        />
                     @elseif ($videoUrl)
-                        <!-- Video with fallback to image -->
+                        <!-- Video with fallback to image or scan placeholder -->
                         <video
                             id="planet-video-{{ $planet->id }}"
                             src="{{ $videoUrl }}"
@@ -32,28 +42,65 @@
                             loop
                             muted
                             playsinline
-                            onerror="this.style.display='none'; document.getElementById('planet-image-{{ $planet->id }}').style.display='block';"
+                            onerror="this.style.display='none'; {{ $videoErrorFallback }}"
                         ></video>
                         <!-- Fallback image (hidden, shown if video fails) -->
-                        <img
-                            id="planet-image-{{ $planet->id }}"
-                            src="{{ $finalImageUrl }}"
-                            alt="{{ $planet->name }}"
-                            class="h-64 w-full object-cover md:h-full md:min-h-0 md:flex-1"
+                        @if ($hasImage)
+                            <img
+                                id="planet-image-{{ $planet->id }}"
+                                src="{{ $finalImageUrl }}"
+                                alt="{{ $planet->name }}"
+                                class="h-64 w-full object-cover md:h-full md:min-h-0 md:flex-1"
+                                style="display: none;"
+                                onerror="this.style.display='none'; document.getElementById('planet-scan-{{ $planet->id }}').style.display='block';"
+                            >
+                        @endif
+                        <!-- Fallback scan placeholder (hidden, shown if video and/or image fail) -->
+                        <div
+                            id="planet-scan-{{ $planet->id }}"
                             style="display: none;"
-                            onerror="this.src='https://via.placeholder.com/800x600/1a1a1a/00ff88?text={{ urlencode($planet->name) }}'"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
                         >
+                            <x-scan-placeholder
+                                type="image"
+                                :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                                class="h-full w-full"
+                            />
+                        </div>
                     @elseif ($planet->isImageGenerating())
                         <!-- Image is being generated (video not available) -->
-                        <x-scan-placeholder type="image" :label="'SCANNING_IMAGE: ' . strtoupper($planet->name)" class="h-64 w-full md:h-full md:min-h-0 md:flex-1" />
-                    @else
+                        <x-scan-placeholder
+                            type="image"
+                            :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
+                        />
+                    @elseif ($hasImage)
                         <!-- Image only (no video available) -->
                         <img
                             src="{{ $finalImageUrl }}"
                             alt="{{ $planet->name }}"
                             class="h-64 w-full object-cover md:h-full md:min-h-0 md:flex-1"
-                            onerror="this.src='https://via.placeholder.com/800x600/1a1a1a/00ff88?text={{ urlencode($planet->name) }}'"
+                            onerror="this.style.display='none'; document.getElementById('planet-scan-fallback-{{ $planet->id }}').style.display='block';"
                         >
+                        <!-- Fallback scan placeholder (hidden, shown if image fails) -->
+                        <div
+                            id="planet-scan-fallback-{{ $planet->id }}"
+                            style="display: none;"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
+                        >
+                            <x-scan-placeholder
+                                type="image"
+                                :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                                class="h-full w-full"
+                            />
+                        </div>
+                    @else
+                        <!-- No image available, show scan placeholder -->
+                        <x-scan-placeholder
+                            type="image"
+                            :label="'SCANNING_PLANETARY_SYSTEM: ' . strtoupper($planet->name)"
+                            class="h-64 w-full md:h-full md:min-h-0 md:flex-1"
+                        />
                     @endif
                 </div>
             @endif

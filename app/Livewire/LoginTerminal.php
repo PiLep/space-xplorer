@@ -15,6 +15,12 @@ class LoginTerminal extends Component
 
     public $status = '';
 
+    public $terminalBooted = false;
+
+    public $bootStep = 0;
+
+    public $bootMessages = [];
+
     protected $rules = [
         'email' => 'required|email',
         'password' => 'required|string',
@@ -25,6 +31,41 @@ class LoginTerminal extends Component
         'email.email' => 'Invalid email format.',
         'password.required' => 'Password required.',
     ];
+
+    public function mount()
+    {
+        $this->startTerminalBoot();
+    }
+
+    public function startTerminalBoot()
+    {
+        $this->terminalBooted = false;
+        $this->bootStep = 0;
+        $this->bootMessages = [];
+    }
+
+    public function nextBootStep()
+    {
+        $steps = [
+            '[INIT] Initializing authentication terminal...',
+            '[OK] Terminal initialized',
+            '[LOAD] Connecting to authentication server...',
+            '[OK] Server connection established',
+            '[LOAD] Loading authentication interface...',
+            '[OK] Interface ready',
+            '[READY] System ready for credentials',
+        ];
+
+        if ($this->bootStep < count($steps)) {
+            $this->bootMessages[] = $steps[$this->bootStep];
+            $this->bootStep++;
+
+            // Boot complete, show login form
+            if ($this->bootStep >= count($steps)) {
+                $this->terminalBooted = true;
+            }
+        }
+    }
 
     public function login(AuthService $authService)
     {
