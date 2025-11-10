@@ -103,10 +103,11 @@ Le projet inclut un système d'administration caché accessible via `/admin`. Po
 
 **Sécurité** : L'accès admin nécessite à la fois le flag `is_super_admin` ET la présence de l'email dans `ADMIN_EMAIL_WHITELIST`.
 
-### Génération automatique de ressources planètes
+### Génération automatique de ressources
 
-Le système génère automatiquement **20 ressources d'images de planètes par jour** via une tâche planifiée (scheduler).
+Le système génère automatiquement des ressources via des tâches planifiées (scheduler) :
 
+#### Ressources planètes (20 par jour)
 - **Horaire** : Tous les jours à 2h00 du matin
 - **Statut initial** : Les ressources sont créées avec le statut `generating`
 - **Génération** : Les images sont générées de manière asynchrone via des jobs
@@ -118,6 +119,12 @@ Les prompts sont générés de manière variée pour couvrir tous les types de p
 - **Glacée** : 15% des ressources
 - **Désertique** : 10% des ressources
 - **Océanique** : 10% des ressources
+
+#### Ressources avatars (20 par jour)
+- **Horaire** : Tous les jours à 2h30 du matin (30 minutes après les planètes)
+- **Distribution** : 50% hommes, 50% femmes
+- **Professions variées** : Techniciens, capitaines, explorateurs, ingénieurs, pilotes, scientifiques, mécaniciens, médecins, officiers de communication, agents de sécurité
+- **Même processus** : Génération asynchrone puis validation admin
 
 **Note** : Pour que le scheduler fonctionne, vous devez configurer une tâche cron :
 ```bash
@@ -153,6 +160,12 @@ Les prompts sont générés de manière variée pour couvrir tous les types de p
 
 # Générer des ressources planètes avec un nombre personnalisé
 ./vendor/bin/sail artisan resources:generate-daily-planets --count=30
+
+# Générer des ressources avatars quotidiennes (20 par défaut)
+./vendor/bin/sail artisan resources:generate-daily-avatars
+
+# Générer des ressources avatars avec un nombre personnalisé
+./vendor/bin/sail artisan resources:generate-daily-avatars --count=30
 ```
 
 ## 🧪 Tests
