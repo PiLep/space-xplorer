@@ -19,10 +19,10 @@
                         > COMPOSANTS_DE_BASE
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Éléments fondamentaux réutilisables : Button, Form Input, Form Card, Form Link, Page Header, Card, Alert
+                        Éléments fondamentaux réutilisables : Button, Form Input, Form Select, Form Card, Form Link, Page Header, Card, Alert, Badge
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        7 composants →
+                        9 composants →
                     </p>
                 </div>
             </a>
@@ -49,10 +49,10 @@
                         > COMPOSANTS_SPECIALISES
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Composants spécifiques au projet : Planet Card, Loading Spinner, Scan Placeholder
+                        Composants spécifiques au projet : Planet Card, Loading Spinner, Scan Placeholder, Stat Card
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        3 composants →
+                        4 composants →
                     </p>
                 </div>
             </a>
@@ -64,10 +64,10 @@
                         > COMPOSANTS_UTILITAIRES
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Composants d'organisation : Button Group, Navigation, Modal
+                        Composants d'organisation : Button Group, Navigation, Modal, Filter Card, Description List, Empty State
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        3 composants →
+                        6 composants →
                     </p>
                 </div>
             </a>

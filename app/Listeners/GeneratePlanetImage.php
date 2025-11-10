@@ -6,7 +6,9 @@ use App\Events\PlanetCreated;
 use App\Events\PlanetImageGenerated;
 use App\Exceptions\ImageGenerationException;
 use App\Exceptions\StorageException;
+use App\Models\Resource;
 use App\Services\ImageGenerationService;
+use App\Services\ResourceGenerationService;
 use Aws\S3\Exception\S3Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
@@ -36,7 +38,8 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
      * Create the event listener.
      */
     public function __construct(
-        private ImageGenerationService $imageGenerator
+        private ImageGenerationService $imageGenerator,
+        private ResourceGenerationService $resourceGenerator
     ) {
         //
     }
@@ -66,11 +69,78 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
             // Mark as generating before starting
             $planet->update(['image_generating' => true]);
 
+            // Try to use an approved planet image resource matching planet tags
+            $planetTags = $this->mapPlanetCharacteristicsToTags($planet);
+            $planetResource = Resource::findRandomApproved('planet_image', $planetTags);
+
+            if ($planetResource && $planetResource->file_path) {
+                // Use resource file path
+                $planet->update([
+                    'image_url' => $planetResource->file_path,
+                    'image_generating' => false,
+                ]);
+
+                Log::info('Planet image assigned from resource', [
+                    'planet_id' => $planet->id,
+                    'planet_name' => $planet->name,
+                    'resource_id' => $planetResource->id,
+                    'planet_tags' => $planetTags,
+                    'resource_tags' => $planetResource->tags,
+                    'image_path' => $planetResource->file_path,
+                ]);
+
+                // Dispatch event to notify that planet image assignment is complete
+                event(new PlanetImageGenerated($planet, $planetResource->file_path, $planetResource->file_url));
+
+                return;
+            }
+
+            // Fallback to direct generation (either no template available or 30% chance)
             // Generate planet image prompt in Alien style
             $prompt = $this->generatePlanetPrompt($planet);
 
             // Generate planet image in 'planets' subfolder
             $result = $this->imageGenerator->generate($prompt, null, 'planets');
+
+            // Extract tags from planet characteristics for resource
+            $planetTags = $this->mapPlanetCharacteristicsToTags($planet);
+
+            // Create a resource from this generated image so it can be reused
+            try {
+                $resource = Resource::create([
+                    'type' => 'planet_image',
+                    'status' => 'pending', // Requires admin approval before being reused
+                    'file_path' => $result['path'],
+                    'prompt' => $prompt,
+                    'tags' => $planetTags,
+                    'description' => "Auto-generated planet image for {$planet->name} ({$planet->type})",
+                    'metadata' => [
+                        'provider' => $result['provider'] ?? null,
+                        'generated_at' => now()->toIso8601String(),
+                        'auto_generated' => true,
+                        'planet_id' => $planet->id,
+                        'planet_type' => $planet->type,
+                        'planet_size' => $planet->size,
+                        'planet_temperature' => $planet->temperature,
+                        'planet_atmosphere' => $planet->atmosphere,
+                        'planet_terrain' => $planet->terrain,
+                    ],
+                    'created_by' => null, // System-generated
+                ]);
+
+                Log::info('Planet image resource created from direct generation', [
+                    'planet_id' => $planet->id,
+                    'planet_name' => $planet->name,
+                    'resource_id' => $resource->id,
+                    'image_path' => $result['path'],
+                ]);
+            } catch (\Exception $resourceException) {
+                // Log but don't fail the planet image generation if resource creation fails
+                Log::warning('Failed to create resource from generated planet image', [
+                    'planet_id' => $planet->id,
+                    'error' => $resourceException->getMessage(),
+                ]);
+            }
 
             // Store the path instead of full URL for flexibility
             // The URL will be reconstructed dynamically via the model accessor
@@ -194,6 +264,52 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
                 'exception_class' => get_class($updateException),
             ]);
         }
+    }
+
+    /**
+     * Map planet characteristics to tags for resource matching.
+     *
+     * Converts planet characteristics (type, size, temperature, atmosphere, terrain)
+     * into an array of tags that can be used to find matching resources.
+     *
+     * @param  \App\Models\Planet  $planet  The planet to map characteristics from
+     * @return array<string> Array of tags for resource matching
+     */
+    private function mapPlanetCharacteristicsToTags(\App\Models\Planet $planet): array
+    {
+        $tags = [];
+
+        // Add planet type as tag
+        if ($planet->type) {
+            $tags[] = strtolower($planet->type);
+        }
+
+        // Add size as tag
+        if ($planet->size) {
+            $tags[] = strtolower($planet->size);
+        }
+
+        // Add temperature as tag
+        if ($planet->temperature) {
+            $tags[] = strtolower($planet->temperature);
+        }
+
+        // Add atmosphere as tag
+        if ($planet->atmosphere) {
+            $tags[] = strtolower($planet->atmosphere);
+        }
+
+        // Add terrain as tag
+        if ($planet->terrain) {
+            $tags[] = strtolower($planet->terrain);
+        }
+
+        // Add resources level as tag
+        if ($planet->resources) {
+            $tags[] = strtolower($planet->resources);
+        }
+
+        return array_unique($tags);
     }
 
     /**

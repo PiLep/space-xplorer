@@ -226,6 +226,84 @@
                     </div>
                 </div>
 
+                <!-- Form Select -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-white mb-4 font-mono">Form Select</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                        Champ select avec label, validation et support du mode sombre. Compatible avec le design system.
+                    </p>
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <div class="max-w-md">
+                            <x-form-select
+                                name="example_type"
+                                label="Resource Type"
+                                placeholder="Select a type"
+                                :options="[
+                                    ['value' => 'avatar_image', 'label' => 'Avatar Image'],
+                                    ['value' => 'planet_image', 'label' => 'Planet Image'],
+                                    ['value' => 'planet_video', 'label' => 'Planet Video'],
+                                ]"
+                            />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                                &lt;x-form-select name="type" label="Type" :options="[...]" /&gt;
+                            </code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Badge -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold text-white mb-4 font-mono">Badge</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                        Indicateurs de statut et labels avec variantes sémantiques. Disponible en 3 tailles : sm, md, lg. Style standard arrondi ou style terminal avec bordures et effets de glow.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variantes Standard</h5>
+                            <div class="flex flex-wrap gap-2">
+                                <x-badge variant="success">Approved</x-badge>
+                                <x-badge variant="warning">Pending</x-badge>
+                                <x-badge variant="error">Rejected</x-badge>
+                                <x-badge variant="info">New</x-badge>
+                                <x-badge variant="generating" :pulse="true">Generating</x-badge>
+                                <x-badge variant="default">Tag</x-badge>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Style Terminal</h5>
+                            <div class="bg-space-black rounded-lg p-4">
+                                <div class="flex flex-wrap gap-2">
+                                    <x-badge variant="success" terminal>APPROVED</x-badge>
+                                    <x-badge variant="warning" terminal>PENDING</x-badge>
+                                    <x-badge variant="error" terminal>REJECTED</x-badge>
+                                    <x-badge variant="info" terminal>NEW</x-badge>
+                                    <x-badge variant="generating" terminal :pulse="true">GENERATING</x-badge>
+                                    <x-badge variant="default" terminal>TAG</x-badge>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Tailles</h5>
+                            <div class="flex flex-wrap gap-2 items-center">
+                                <x-badge variant="success" size="sm">Small</x-badge>
+                                <x-badge variant="success" size="md">Medium</x-badge>
+                                <x-badge variant="success" size="lg">Large</x-badge>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-badge variant="success" size="md"&gt;Approved&lt;/x-badge&gt;<br>
+                            &lt;x-badge variant="generating" :pulse="true"&gt;Generating&lt;/x-badge&gt;<br>
+                            &lt;x-badge variant="success" terminal&gt;APPROVED&lt;/x-badge&gt;
+                        </code>
+                    </div>
+                </div>
+
                 <!-- Alert -->
                 <div class="mt-8">
                     <h4 class="text-lg font-semibold text-white mb-4 font-mono">Alert</h4>

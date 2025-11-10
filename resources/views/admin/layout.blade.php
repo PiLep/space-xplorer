@@ -14,6 +14,7 @@
 
     <!-- Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body class="bg-gray-50 dark:bg-space-black antialiased">
     <div class="min-h-screen flex flex-col">
@@ -33,6 +34,9 @@
                             </a>
                             <a href="{{ route('admin.users.index') }}" class="border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                                 Users
+                            </a>
+                            <a href="{{ route('admin.resources.index') }}" class="border-transparent text-gray-500 dark:text-gray-400 hover:border-gray-300 hover:text-gray-700 dark:hover:text-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+                                Resources
                             </a>
                         </div>
                     </div>
@@ -66,6 +70,7 @@
             </div>
         </main>
     </div>
+    @livewireScripts
 </body>
 </html>
 

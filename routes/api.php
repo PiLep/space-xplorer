@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\PlanetController;
+use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,4 +22,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}/home-planet', [UserController::class, 'getHomePlanet']);
 
     Route::get('/planets/{id}', [PlanetController::class, 'show']);
+
+    Route::get('/resources/avatars', [ResourceController::class, 'getAvatars']);
 });

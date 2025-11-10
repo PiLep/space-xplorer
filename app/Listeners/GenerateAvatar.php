@@ -6,7 +6,9 @@ use App\Events\AvatarGenerated;
 use App\Events\UserRegistered;
 use App\Exceptions\ImageGenerationException;
 use App\Exceptions\StorageException;
+use App\Models\Resource;
 use App\Services\ImageGenerationService;
+use App\Services\ResourceGenerationService;
 use Aws\S3\Exception\S3Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
@@ -36,7 +38,8 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
      * Create the event listener.
      */
     public function __construct(
-        private ImageGenerationService $imageGenerator
+        private ImageGenerationService $imageGenerator,
+        private ResourceGenerationService $resourceGenerator
     ) {
         //
     }
@@ -66,11 +69,93 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
             // Mark as generating before starting
             $user->update(['avatar_generating' => true]);
 
+            // Extract gender tag from user name
+            $firstName = $this->extractFirstName($user->name);
+            $gender = $this->detectGender($firstName);
+            $genderTag = match ($gender) {
+                'male' => 'man',
+                'female' => 'woman',
+                default => null,
+            };
+
+            // Try to use an approved avatar resource matching user gender
+            $avatarResource = null;
+            if ($genderTag) {
+                $avatarResource = Resource::findRandomApproved('avatar_image', [$genderTag]);
+            }
+
+            // Fallback to any approved avatar if no gender-specific match found
+            if (! $avatarResource) {
+                $avatarResource = Resource::findRandomApproved('avatar_image');
+            }
+
+            if ($avatarResource && $avatarResource->file_path) {
+                // Use resource file path
+                $user->update([
+                    'avatar_url' => $avatarResource->file_path,
+                    'avatar_generating' => false,
+                ]);
+
+                Log::info('Avatar assigned from resource', [
+                    'user_id' => $user->id,
+                    'resource_id' => $avatarResource->id,
+                    'avatar_path' => $avatarResource->file_path,
+                    'avatar_url' => $avatarResource->file_url,
+                ]);
+
+                // Dispatch event to notify that avatar assignment is complete
+                event(new AvatarGenerated($user, $avatarResource->file_path, $avatarResource->file_url));
+
+                return;
+            }
+
+            // Fallback to direct generation if no approved resource available
             // Generate avatar prompt in Alien style (technician/ship captain)
             $prompt = $this->generateAvatarPrompt($user->name);
 
             // Generate avatar image in 'avatars' subfolder
             $result = $this->imageGenerator->generate($prompt, null, 'avatars');
+
+            // Extract gender tag from user name for resource
+            $firstName = $this->extractFirstName($user->name);
+            $gender = $this->detectGender($firstName);
+            $genderTag = match ($gender) {
+                'male' => 'man',
+                'female' => 'woman',
+                default => null,
+            };
+            $resourceTags = $genderTag ? [$genderTag] : [];
+
+            // Create a resource from this generated image so it can be reused
+            try {
+                $resource = Resource::create([
+                    'type' => 'avatar_image',
+                    'status' => 'pending', // Requires admin approval before being reused
+                    'file_path' => $result['path'],
+                    'prompt' => $prompt,
+                    'tags' => $resourceTags,
+                    'description' => "Auto-generated avatar for user {$user->name}",
+                    'metadata' => [
+                        'provider' => $result['provider'] ?? null,
+                        'generated_at' => now()->toIso8601String(),
+                        'auto_generated' => true,
+                        'user_id' => $user->id,
+                    ],
+                    'created_by' => null, // System-generated
+                ]);
+
+                Log::info('Avatar resource created from direct generation', [
+                    'user_id' => $user->id,
+                    'resource_id' => $resource->id,
+                    'avatar_path' => $result['path'],
+                ]);
+            } catch (\Exception $resourceException) {
+                // Log but don't fail the avatar generation if resource creation fails
+                Log::warning('Failed to create resource from generated avatar', [
+                    'user_id' => $user->id,
+                    'error' => $resourceException->getMessage(),
+                ]);
+            }
 
             // Store the path instead of full URL for flexibility
             // The URL will be reconstructed dynamically via the model accessor

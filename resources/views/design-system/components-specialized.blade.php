@@ -161,6 +161,42 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Stat Card -->
+                <div>
+                    <h3 class="mb-4 font-mono text-xl font-semibold text-white">Stat Card</h3>
+                    <p class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+                        Carte de statistique avec icône optionnelle pour afficher des métriques dans le style du design system.
+                    </p>
+                    <div
+                        class="dark:bg-surface-dark dark:border-border-dark terminal-border-simple rounded-lg border border-gray-200 bg-white p-6">
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <x-stat-card label="Total Users" value="1,234">
+                                <x-slot:icon>
+                                    <svg class="h-6 w-6 text-space-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </x-slot:icon>
+                            </x-stat-card>
+                            <x-stat-card label="Resources" value="567">
+                                <x-slot:icon>
+                                    <svg class="h-6 w-6 text-space-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </x-slot:icon>
+                            </x-stat-card>
+                            <x-stat-card label="Planets" value="89" />
+                        </div>
+                        <div class="mt-4">
+                            <p class="mb-2 text-xs text-gray-500 dark:text-gray-500">Usage :</p>
+                            <code class="text-space-primary bg-space-black block rounded px-2 py-1 font-mono text-xs">
+                                &lt;x-stat-card label="Total Users" value="1,234"&gt;<br>
+                                &nbsp;&nbsp;&lt;x-slot:icon&gt;...&lt;/x-slot:icon&gt;<br>
+                                &lt;/x-stat-card&gt;
+                            </code>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
     </x-design-system.layout>

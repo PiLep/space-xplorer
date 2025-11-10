@@ -25,37 +25,51 @@
     ></div>
 
     <!-- Center content -->
-    <div class="relative z-10 flex flex-col items-center justify-center gap-4 p-8 text-center">
-        <!-- Animated scanning icon -->
-        <div class="relative">
-            <div class="h-16 w-16 animate-spin rounded-full border-4 border-green-400 border-t-transparent"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <div class="h-8 w-8 animate-pulse rounded-full border-2 border-green-400"></div>
+    @if ($type === 'avatar')
+        <!-- Compact layout for avatar -->
+        <div class="relative z-10 flex items-center justify-center p-2">
+            <!-- Animated scanning icon - smaller for avatar -->
+            <div class="relative">
+                <div class="h-8 w-8 animate-spin rounded-full border-2 border-green-400 border-t-transparent"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="h-4 w-4 animate-pulse rounded-full border border-green-400"></div>
+                </div>
             </div>
         </div>
+    @else
+        <!-- Full layout for image/video -->
+        <div class="relative z-10 flex flex-col items-center justify-center gap-4 p-8 text-center">
+            <!-- Animated scanning icon -->
+            <div class="relative">
+                <div class="h-16 w-16 animate-spin rounded-full border-4 border-green-400 border-t-transparent"></div>
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="h-8 w-8 animate-pulse rounded-full border-2 border-green-400"></div>
+                </div>
+            </div>
 
-        <!-- Text -->
-        <div class="font-mono text-sm uppercase tracking-wider">
-            <div class="text-space-primary dark:text-space-primary mb-1 animate-pulse">{{ $displayLabel }}</div>
-            <div class="text-xs text-gray-400">PLEASE_WAIT...</div>
-        </div>
+            <!-- Text -->
+            <div class="font-mono text-sm uppercase tracking-wider">
+                <div class="text-space-primary dark:text-space-primary mb-1 animate-pulse">{{ $displayLabel }}</div>
+                <div class="text-xs text-gray-400">PLEASE_WAIT...</div>
+            </div>
 
-        <!-- Progress dots -->
-        <div class="flex gap-1">
-            <div
-                class="h-1 w-1 animate-pulse rounded-full bg-green-400"
-                style="animation-delay: 0s;"
-            ></div>
-            <div
-                class="h-1 w-1 animate-pulse rounded-full bg-green-400"
-                style="animation-delay: 0.2s;"
-            ></div>
-            <div
-                class="h-1 w-1 animate-pulse rounded-full bg-green-400"
-                style="animation-delay: 0.4s;"
-            ></div>
+            <!-- Progress dots -->
+            <div class="flex gap-1">
+                <div
+                    class="h-1 w-1 animate-pulse rounded-full bg-green-400"
+                    style="animation-delay: 0s;"
+                ></div>
+                <div
+                    class="h-1 w-1 animate-pulse rounded-full bg-green-400"
+                    style="animation-delay: 0.2s;"
+                ></div>
+                <div
+                    class="h-1 w-1 animate-pulse rounded-full bg-green-400"
+                    style="animation-delay: 0.4s;"
+                ></div>
+            </div>
         </div>
-    </div>
+    @endif
 
 
 </div>

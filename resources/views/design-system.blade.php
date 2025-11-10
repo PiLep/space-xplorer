@@ -387,6 +387,187 @@
                     </div>
                 </div>
             </div>
+
+            <!-- New Components -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4">Nouveaux Composants</h3>
+                <div class="space-y-6">
+                    <!-- Badge -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Badge</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Indicateurs de statut et labels avec variantes sémantiques. Disponible en 3 tailles : sm, md, lg.
+                        </p>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="text-sm text-gray-400 mb-2">Variantes :</p>
+                                <div class="flex flex-wrap gap-2">
+                                    <x-badge variant="success">Approved</x-badge>
+                                    <x-badge variant="warning">Pending</x-badge>
+                                    <x-badge variant="error">Rejected</x-badge>
+                                    <x-badge variant="info">New</x-badge>
+                                    <x-badge variant="generating" :pulse="true">Generating</x-badge>
+                                    <x-badge variant="default">Tag</x-badge>
+                                </div>
+                            </div>
+                            <div>
+                                <p class="text-sm text-gray-400 mb-2">Tailles :</p>
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <x-badge variant="success" size="sm">Small</x-badge>
+                                    <x-badge variant="success" size="md">Medium</x-badge>
+                                    <x-badge variant="success" size="lg">Large</x-badge>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-badge variant="success" size="md"&gt;Approved&lt;/x-badge&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Form Select -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Form Select</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Champ select avec label, validation et support du mode sombre. Compatible avec le design system.
+                        </p>
+                        <div class="max-w-md">
+                            <x-form-select
+                                name="example_type"
+                                label="Resource Type"
+                                placeholder="Select a type"
+                                :options="[
+                                    ['value' => 'avatar_image', 'label' => 'Avatar Image'],
+                                    ['value' => 'planet_image', 'label' => 'Planet Image'],
+                                    ['value' => 'planet_video', 'label' => 'Planet Video'],
+                                ]"
+                            />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-form-select name="type" label="Type" :options="[...]" /&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Filter Card -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Filter Card</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Conteneur standardisé pour les sections de filtres avec style cohérent.
+                        </p>
+                        <x-filter-card title="Filters">
+                            <form method="GET" class="flex gap-4 items-end">
+                                <div class="flex-1">
+                                    <x-form-select
+                                        name="type"
+                                        label="Type"
+                                        placeholder="All Types"
+                                        :options="[
+                                            ['value' => 'avatar_image', 'label' => 'Avatar Image'],
+                                            ['value' => 'planet_image', 'label' => 'Planet Image'],
+                                        ]"
+                                    />
+                                </div>
+                                <x-button type="submit" variant="ghost" size="sm">Filter</x-button>
+                            </form>
+                        </x-filter-card>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-filter-card title="Filters"&gt;...&lt;/x-filter-card&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Stat Card -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Stat Card</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Carte de statistique avec icône optionnelle pour afficher des métriques.
+                        </p>
+                        <div class="grid md:grid-cols-3 gap-4">
+                            <x-stat-card label="Total Users" value="1,234">
+                                <x-slot:icon>
+                                    <svg class="h-6 w-6 text-space-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                                    </svg>
+                                </x-slot:icon>
+                            </x-stat-card>
+                            <x-stat-card label="Resources" value="567">
+                                <x-slot:icon>
+                                    <svg class="h-6 w-6 text-space-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </svg>
+                                </x-slot:icon>
+                            </x-stat-card>
+                            <x-stat-card label="Planets" value="89" />
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-stat-card label="Total" value="123"&gt;...&lt;/x-stat-card&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Description List -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Description List</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            Liste de descriptions pour afficher des paires terme/valeur avec grille responsive.
+                        </p>
+                        <x-description-list :columns="2">
+                            <x-description-item term="ID" value="01ARZ3NDEKTSV4RRFFQ69G5FAV" :mono="true" />
+                            <x-description-item term="Type" value="Planet Image" />
+                            <x-description-item term="Status">
+                                <x-badge variant="success">Approved</x-badge>
+                            </x-description-item>
+                            <x-description-item term="Created" value="2025-11-10 12:34:56" />
+                        </x-description-list>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-description-list :columns="2"&gt;<br>
+                                &nbsp;&nbsp;&lt;x-description-item term="Label" value="Value" /&gt;<br>
+                                &lt;/x-description-list&gt;
+                            </code>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="bg-[#1a1a1a] border border-[#333333] rounded-lg p-6">
+                        <h4 class="text-lg font-semibold text-white mb-4 dark:text-glow-subtle">Empty State</h4>
+                        <p class="text-gray-400 text-sm mb-4">
+                            État vide avec icône optionnelle, titre, description et action pour guider l'utilisateur.
+                        </p>
+                        <div class="bg-[#0a0a0a] rounded-lg p-8">
+                            <x-empty-state
+                                title="No resources found"
+                                description="Get started by creating your first resource."
+                            >
+                                <x-slot:icon>
+                                    <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                    </svg>
+                                </x-slot:icon>
+                                <x-slot:action>
+                                    <x-button variant="primary" size="sm">Create Resource</x-button>
+                                </x-slot:action>
+                            </x-empty-state>
+                        </div>
+                        <div class="mt-4">
+                            <p class="text-xs text-gray-500 mb-2">Usage :</p>
+                            <code class="text-xs text-[#00ff88] bg-[#0a0a0a] px-2 py-1 rounded block">
+                                &lt;x-empty-state title="No items" description="..."&gt;...&lt;/x-empty-state&gt;
+                            </code>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 

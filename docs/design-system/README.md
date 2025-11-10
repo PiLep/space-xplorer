@@ -29,9 +29,11 @@ Tous les composants sont documentés dans le dossier `components/` et organisés
 - **[COMPONENT-button.md](./components/COMPONENT-button.md)** - Boutons avec variantes (Primary, Secondary, Danger, Ghost)
 - **[COMPONENT-form.md](./components/COMPONENT-form.md)** - Formulaires et champs de saisie avec validation
 - **[COMPONENT-form-input.md](./components/COMPONENT-form-input.md)** - Composant réutilisable pour les champs de formulaire (Classic, Terminal)
+- **[COMPONENT-form-select.md](./components/COMPONENT-form-select.md)** - Champ select avec label et validation
 - **[COMPONENT-form-card.md](./components/COMPONENT-form-card.md)** - Conteneur standardisé pour les formulaires (Standard, Header Séparé)
 - **[COMPONENT-card.md](./components/COMPONENT-card.md)** - Cards et conteneurs génériques
 - **[COMPONENT-alert.md](./components/COMPONENT-alert.md)** - Messages d'alerte et notifications
+- **[COMPONENT-badge.md](./components/COMPONENT-badge.md)** - Indicateurs de statut et labels avec variantes sémantiques
 
 #### Composants Terminal
 - **[COMPONENT-terminal-prompt.md](./components/COMPONENT-terminal-prompt.md)** - Ligne de commande terminal avec prompt système
@@ -40,11 +42,15 @@ Tous les composants sont documentés dans le dossier `components/` et organisés
 #### Composants Spécialisés
 - **[COMPONENT-planet-card.md](./components/COMPONENT-planet-card.md)** - Card spécialisée pour l'affichage des planètes
 - **[COMPONENT-loading-spinner.md](./components/COMPONENT-loading-spinner.md)** - Indicateur de chargement avec style terminal
+- **[COMPONENT-stat-card.md](./components/COMPONENT-stat-card.md)** - Carte de statistique avec icône optionnelle
 
 #### Composants Utilitaires
 - **[COMPONENT-button-group.md](./components/COMPONENT-button-group.md)** - Groupe de boutons avec layout flexible
 - **[COMPONENT-navigation.md](./components/COMPONENT-navigation.md)** - Navigation principale avec variantes (Sidebar, Top, Terminal)
 - **[COMPONENT-modal.md](./components/COMPONENT-modal.md)** - Dialogs pour interactions importantes (Standard, Confirmation, Form)
+- **[COMPONENT-filter-card.md](./components/COMPONENT-filter-card.md)** - Conteneur standardisé pour les sections de filtres
+- **[COMPONENT-description-list.md](./components/COMPONENT-description-list.md)** - Liste de descriptions pour pages de détails
+- **[COMPONENT-empty-state.md](./components/COMPONENT-empty-state.md)** - État vide avec icône et action optionnelles
 
 Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la documentation complète de tous les composants.
 
@@ -78,9 +84,11 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 - **Button** : Actions principales, secondaires, danger, ghost
 - **Form** : Formulaires et styles de base
 - **Form Input** : Composant réutilisable pour les champs de formulaire (Classic, Terminal)
+- **Form Select** : Champ select avec label et validation
 - **Form Card** : Conteneur standardisé pour les formulaires (Standard, Header Séparé)
 - **Card** : Conteneurs pour afficher des informations
 - **Alert** : Messages d'alerte et notifications (Success, Error, Warning, Info)
+- **Badge** : Indicateurs de statut et labels avec variantes sémantiques (Success, Warning, Error, Info, Generating, Default)
 
 ### Composants Terminal
 
@@ -91,17 +99,16 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 
 - **Planet Card** : Card spécialisée pour l'affichage des planètes
 - **Loading Spinner** : Indicateur de chargement avec style terminal (Small, Medium, Large)
+- **Stat Card** : Carte de statistique avec icône optionnelle pour afficher des métriques
 
 ### Composants Utilitaires
 
 - **Button Group** : Groupe de boutons avec layout flexible (alignement, espacement, largeur complète)
 - **Navigation** : Navigation principale avec variantes (Sidebar, Top Menu, Terminal Command Bar)
 - **Modal** : Dialogs pour interactions importantes (Standard, Confirmation, Form)
-
-### Composants à Venir
-
-- Badge
-- Empty State
+- **Filter Card** : Conteneur standardisé pour les sections de filtres
+- **Description List** : Liste de descriptions pour pages de détails avec grille responsive
+- **Empty State** : État vide avec icône et action optionnelles pour guider l'utilisateur
 
 ## Utilisation Rapide
 

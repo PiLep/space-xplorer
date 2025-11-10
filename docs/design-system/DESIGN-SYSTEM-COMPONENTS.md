@@ -66,6 +66,29 @@ Voir **[COMPONENT-form-input.md](./components/COMPONENT-form-input.md)** pour la
 />
 ```
 
+### Form Select
+
+Voir **[COMPONENT-form-select.md](./components/COMPONENT-form-select.md)** pour la documentation complète.
+
+**Usage** : Champ select avec label, validation et support du mode sombre. Compatible avec le design system.
+
+**Variantes** :
+- Classic : Style standard avec label au-dessus
+- Terminal : Style terminal avec prompt système
+
+**Exemple** :
+```blade
+<x-form-select
+    name="type"
+    label="Resource Type"
+    placeholder="Select a type"
+    :options="[
+        ['value' => 'avatar_image', 'label' => 'Avatar Image'],
+        ['value' => 'planet_image', 'label' => 'Planet Image'],
+    ]"
+/>
+```
+
 ### Form Card
 
 Voir **[COMPONENT-form-card.md](./components/COMPONENT-form-card.md)** pour la documentation complète.
@@ -136,6 +159,28 @@ Voir **[COMPONENT-card.md](./components/COMPONENT-card.md)** pour la documentati
   <h3 class="text-2xl font-semibold text-white mb-4">Titre</h3>
   <p class="text-gray-300">Contenu</p>
 </div>
+```
+
+### Badge
+
+Voir **[COMPONENT-badge.md](./components/COMPONENT-badge.md)** pour la documentation complète.
+
+**Usage** : Indicateurs de statut et labels avec variantes sémantiques
+
+**Variantes** :
+- Success : Statut approuvé, succès
+- Warning : Statut en attente, avertissement
+- Error : Statut rejeté, erreur
+- Info : Informations générales
+- Generating : Statut en génération (avec animation pulse)
+- Default : Badge neutre, tags génériques
+
+**Tailles** : `sm`, `md`, `lg`
+
+**Exemple** :
+```blade
+<x-badge variant="success">Approved</x-badge>
+<x-badge variant="generating" :pulse="true">Generating</x-badge>
 ```
 
 ### Alert
@@ -299,6 +344,26 @@ Voir **[COMPONENT-scan-placeholder.md](./components/COMPONENT-scan-placeholder.m
 @endif
 ```
 
+### Stat Card
+
+Voir **[COMPONENT-stat-card.md](./components/COMPONENT-stat-card.md)** pour la documentation complète.
+
+**Usage** : Carte de statistique avec icône optionnelle pour afficher des métriques
+
+**Caractéristiques** :
+- Label et valeur
+- Icône optionnelle via slot
+- Style cohérent avec le design system
+
+**Exemple** :
+```blade
+<x-stat-card label="Total Users" value="1,234">
+    <x-slot:icon>
+        <svg class="h-6 w-6 text-space-primary">...</svg>
+    </x-slot:icon>
+</x-stat-card>
+```
+
 ## Composants Utilitaires
 
 Les composants utilitaires facilitent l'organisation et la mise en page des autres composants.
@@ -356,12 +421,70 @@ Voir **[COMPONENT-modal.md](./components/COMPONENT-modal.md)** pour la documenta
 </x-modal>
 ```
 
-## Composants à Venir
+### Filter Card
 
-Les composants suivants sont prévus pour de futures versions :
+Voir **[COMPONENT-filter-card.md](./components/COMPONENT-filter-card.md)** pour la documentation complète.
 
-- **Badge** : Indicateurs de statut et labels
-- **Empty State** : États vides (pas de données)
+**Usage** : Conteneur standardisé pour les sections de filtres avec style cohérent
+
+**Caractéristiques** :
+- Titre optionnel
+- Style cohérent avec le design system
+- Support du mode sombre
+
+**Exemple** :
+```blade
+<x-filter-card title="Filters">
+    <form method="GET" class="flex gap-4 items-end">
+        <!-- Filtres -->
+    </form>
+</x-filter-card>
+```
+
+### Description List
+
+Voir **[COMPONENT-description-list.md](./components/COMPONENT-description-list.md)** pour la documentation complète.
+
+**Usage** : Liste de descriptions pour afficher des paires terme/valeur avec grille responsive
+
+**Caractéristiques** :
+- Grille responsive (1, 2, 3 colonnes)
+- Composant associé : `<x-description-item>` avec support mono pour IDs
+- Style cohérent pour dt/dd
+
+**Exemple** :
+```blade
+<x-description-list :columns="2">
+    <x-description-item term="ID" value="01ARZ3NDEKTSV4RRFFQ69G5FAV" :mono="true" />
+    <x-description-item term="Type" value="Planet Image" />
+</x-description-list>
+```
+
+### Empty State
+
+Voir **[COMPONENT-empty-state.md](./components/COMPONENT-empty-state.md)** pour la documentation complète.
+
+**Usage** : État vide avec icône optionnelle, titre, description et action pour guider l'utilisateur
+
+**Caractéristiques** :
+- Icône optionnelle via slot
+- Titre et description
+- Action optionnelle (bouton) via slot
+
+**Exemple** :
+```blade
+<x-empty-state
+    title="No resources found"
+    description="Get started by creating your first resource."
+>
+    <x-slot:icon>
+        <svg class="h-12 w-12 text-gray-400">...</svg>
+    </x-slot:icon>
+    <x-slot:action>
+        <x-button variant="primary" size="sm">Create Resource</x-button>
+    </x-slot:action>
+</x-empty-state>
+```
 
 ## Principes de Composition
 
