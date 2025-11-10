@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Aws\S3\Exception\S3Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use League\Flysystem\UnableToCheckFileExistence;
 
 class Planet extends Model
 {
@@ -48,7 +51,7 @@ class Planet extends Model
      * - Old format: Full URL stored (for backward compatibility)
      * - New format: Path stored (reconstructed dynamically)
      *
-     * Returns null if the file doesn't exist in storage.
+     * Returns null if the file doesn't exist in storage or if there's an error accessing storage.
      */
     protected function imageUrl(): Attribute
     {
@@ -67,12 +70,65 @@ class Planet extends Model
                 // Otherwise, it's a path - verify file exists before returning URL
                 $disk = config('image-generation.storage.disk', 's3');
 
-                // Check if file exists in storage
-                if (! Storage::disk($disk)->exists($value)) {
+                try {
+                    // Check if file exists in storage
+                    // Wrap in try-catch to handle S3 errors (403, network issues, etc.)
+                    if (! Storage::disk($disk)->exists($value)) {
+                        return null;
+                    }
+
+                    return Storage::disk($disk)->url($value);
+                } catch (UnableToCheckFileExistence $flysystemException) {
+                    // Flysystem wraps S3 exceptions, try to extract the underlying S3 exception
+                    $previous = $flysystemException->getPrevious();
+                    if ($previous instanceof S3Exception) {
+                        // Log detailed S3 error information
+                        Log::warning('S3 error checking image existence in storage', [
+                            'path' => $value,
+                            'disk' => $disk,
+                            's3_error_code' => $previous->getAwsErrorCode(),
+                            's3_error_message' => $previous->getAwsErrorMessage(),
+                            's3_request_id' => $previous->getAwsRequestId(),
+                            'http_status' => $previous->getStatusCode(),
+                            'error' => $previous->getMessage(),
+                            'flysystem_error' => $flysystemException->getMessage(),
+                        ]);
+                    } else {
+                        // Log Flysystem error without S3 details
+                        Log::warning('Flysystem error checking image existence in storage', [
+                            'path' => $value,
+                            'disk' => $disk,
+                            'error' => $flysystemException->getMessage(),
+                            'previous_exception' => $previous ? get_class($previous) : null,
+                        ]);
+                    }
+
+                    return null;
+                } catch (S3Exception $s3Exception) {
+                    // Log detailed S3 error information (direct S3 exception)
+                    Log::warning('S3 error checking image existence in storage', [
+                        'path' => $value,
+                        'disk' => $disk,
+                        's3_error_code' => $s3Exception->getAwsErrorCode(),
+                        's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                        's3_request_id' => $s3Exception->getAwsRequestId(),
+                        'http_status' => $s3Exception->getStatusCode(),
+                        'error' => $s3Exception->getMessage(),
+                    ]);
+
+                    return null;
+                } catch (\Exception $e) {
+                    // Log the error but don't break the application
+                    // Return null to indicate the file is not available
+                    Log::warning('Error checking image existence in storage', [
+                        'path' => $value,
+                        'disk' => $disk,
+                        'error' => $e->getMessage(),
+                        'exception_class' => get_class($e),
+                    ]);
+
                     return null;
                 }
-
-                return Storage::disk($disk)->url($value);
             }
         );
     }
@@ -84,7 +140,7 @@ class Planet extends Model
      * - Old format: Full URL stored (for backward compatibility)
      * - New format: Path stored (reconstructed dynamically)
      *
-     * Returns null if the file doesn't exist in storage.
+     * Returns null if the file doesn't exist in storage or if there's an error accessing storage.
      */
     protected function videoUrl(): Attribute
     {
@@ -103,12 +159,65 @@ class Planet extends Model
                 // Otherwise, it's a path - verify file exists before returning URL
                 $disk = config('video-generation.storage.disk', 's3');
 
-                // Check if file exists in storage
-                if (! Storage::disk($disk)->exists($value)) {
+                try {
+                    // Check if file exists in storage
+                    // Wrap in try-catch to handle S3 errors (403, network issues, etc.)
+                    if (! Storage::disk($disk)->exists($value)) {
+                        return null;
+                    }
+
+                    return Storage::disk($disk)->url($value);
+                } catch (UnableToCheckFileExistence $flysystemException) {
+                    // Flysystem wraps S3 exceptions, try to extract the underlying S3 exception
+                    $previous = $flysystemException->getPrevious();
+                    if ($previous instanceof S3Exception) {
+                        // Log detailed S3 error information
+                        Log::warning('S3 error checking video existence in storage', [
+                            'path' => $value,
+                            'disk' => $disk,
+                            's3_error_code' => $previous->getAwsErrorCode(),
+                            's3_error_message' => $previous->getAwsErrorMessage(),
+                            's3_request_id' => $previous->getAwsRequestId(),
+                            'http_status' => $previous->getStatusCode(),
+                            'error' => $previous->getMessage(),
+                            'flysystem_error' => $flysystemException->getMessage(),
+                        ]);
+                    } else {
+                        // Log Flysystem error without S3 details
+                        Log::warning('Flysystem error checking video existence in storage', [
+                            'path' => $value,
+                            'disk' => $disk,
+                            'error' => $flysystemException->getMessage(),
+                            'previous_exception' => $previous ? get_class($previous) : null,
+                        ]);
+                    }
+
+                    return null;
+                } catch (S3Exception $s3Exception) {
+                    // Log detailed S3 error information (direct S3 exception)
+                    Log::warning('S3 error checking video existence in storage', [
+                        'path' => $value,
+                        'disk' => $disk,
+                        's3_error_code' => $s3Exception->getAwsErrorCode(),
+                        's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                        's3_request_id' => $s3Exception->getAwsRequestId(),
+                        'http_status' => $s3Exception->getStatusCode(),
+                        'error' => $s3Exception->getMessage(),
+                    ]);
+
+                    return null;
+                } catch (\Exception $e) {
+                    // Log the error but don't break the application
+                    // Return null to indicate the file is not available
+                    Log::warning('Error checking video existence in storage', [
+                        'path' => $value,
+                        'disk' => $disk,
+                        'error' => $e->getMessage(),
+                        'exception_class' => get_class($e),
+                    ]);
+
                     return null;
                 }
-
-                return Storage::disk($disk)->url($value);
             }
         );
     }

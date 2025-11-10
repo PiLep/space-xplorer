@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\PlanetCreated;
+use App\Exceptions\ImageGenerationException;
 use App\Listeners\GeneratePlanetImage;
 use App\Models\Planet;
 use App\Services\ImageGenerationService;
@@ -141,14 +142,14 @@ it('throws exception when planet image generation fails (job will be retried)', 
         ->shouldReceive('generate')
         ->once()
         ->with(Mockery::any(), null, 'planets')
-        ->andThrow(new \Exception('API error'));
+        ->andThrow(new ImageGenerationException('API error'));
 
     $event = new PlanetCreated($this->planet);
 
     // The exception will be thrown, marking the job as failed
     // In a real queue, this would trigger a retry
     expect(fn () => $this->listener->handle($event))
-        ->toThrow(\Exception::class, 'API error');
+        ->toThrow(ImageGenerationException::class, 'API error');
 
     $this->planet->refresh();
     expect($this->planet->image_url)->toBeNull();

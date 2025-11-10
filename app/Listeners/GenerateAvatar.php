@@ -3,7 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\UserRegistered;
+use App\Exceptions\ImageGenerationException;
+use App\Exceptions\StorageException;
 use App\Services\ImageGenerationService;
+use Aws\S3\Exception\S3Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
@@ -80,28 +83,54 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
                 'avatar_path' => $result['path'],
                 'avatar_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
-        } catch (\Exception $e) {
-            // Reset generating status on error
-            try {
-                $user = $event->user->fresh();
-                $user->update(['avatar_generating' => false]);
-            } catch (\Exception $updateException) {
-                // If we can't update, log but continue
-                Log::warning('Failed to reset avatar_generating status', [
-                    'user_id' => $event->user->id,
-                    'error' => $updateException->getMessage(),
-                ]);
-            }
+        } catch (S3Exception $s3Exception) {
+            // Critical: Always reset generating status, even on S3 errors
+            $this->resetGeneratingStatus($event->user->id, 'avatar');
+
+            // Log detailed S3 error information
+            Log::error('S3 error during avatar generation', [
+                'user_id' => $event->user->id,
+                's3_error_code' => $s3Exception->getAwsErrorCode(),
+                's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                's3_request_id' => $s3Exception->getAwsRequestId(),
+                'http_status' => $s3Exception->getStatusCode(),
+                'error' => $s3Exception->getMessage(),
+            ]);
+
+            // Re-throw to mark job as failed (will be retried according to queue config)
+            throw new StorageException(
+                "S3 error during avatar generation: {$s3Exception->getAwsErrorMessage()} (Code: {$s3Exception->getAwsErrorCode()})",
+                0,
+                $s3Exception
+            );
+        } catch (ImageGenerationException | StorageException $e) {
+            // Critical: Always reset generating status on any error
+            $this->resetGeneratingStatus($event->user->id, 'avatar');
 
             // Log the error but don't block user registration
             Log::error('Failed to generate avatar for user', [
                 'user_id' => $event->user->id,
                 'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
                 'trace' => $e->getTraceAsString(),
             ]);
 
-            // Re-throw to mark job as failed (will be retried according to queue config)
+            // Re-throw custom exceptions as-is
             throw $e;
+        } catch (\Exception $e) {
+            // Critical: Always reset generating status on any error
+            $this->resetGeneratingStatus($event->user->id, 'avatar');
+
+            // Log the error but don't block user registration
+            Log::error('Failed to generate avatar for user', [
+                'user_id' => $event->user->id,
+                'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
+            // Wrap unknown exceptions in ImageGenerationException
+            throw new ImageGenerationException("Failed to generate avatar: {$e->getMessage()}", 0, $e);
         }
     }
 
@@ -110,26 +139,55 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
      */
     public function failed(UserRegistered $event, Throwable $exception): void
     {
-        // Reset generating status when job fails permanently
-        try {
-            $user = $event->user->fresh();
-            $user->update(['avatar_generating' => false]);
-        } catch (\Exception $updateException) {
-            // If we can't update, log but continue
-            Log::warning('Failed to reset avatar_generating status after job failure', [
-                'user_id' => $event->user->id,
-                'error' => $updateException->getMessage(),
-            ]);
-        }
+        // Critical: Always reset generating status when job fails permanently
+        $this->resetGeneratingStatus($event->user->id, 'avatar');
 
-        Log::error('Avatar generation failed after all retries', [
+        $logContext = [
             'user_id' => $event->user->id,
             'user_name' => $event->user->name,
             'exception' => $exception->getMessage(),
-            'trace' => $exception->getTraceAsString(),
-        ]);
+            'exception_class' => get_class($exception),
+        ];
+
+        // Add S3-specific error details if applicable
+        if ($exception instanceof S3Exception) {
+            $logContext['s3_error_code'] = $exception->getAwsErrorCode();
+            $logContext['s3_error_message'] = $exception->getAwsErrorMessage();
+            $logContext['s3_request_id'] = $exception->getAwsRequestId();
+            $logContext['http_status'] = $exception->getStatusCode();
+        } else {
+            $logContext['trace'] = $exception->getTraceAsString();
+        }
+
+        Log::error('Avatar generation failed after all retries', $logContext);
 
         // TODO: Could notify admin, create a ticket, or trigger manual retry here
+    }
+
+    /**
+     * Reset generating status for a user.
+     * This is a critical operation that must always succeed to prevent infinite loading states.
+     *
+     * @param  string  $userId  The user ID
+     * @param  string  $type  Type of generation ('avatar')
+     */
+    private function resetGeneratingStatus(string $userId, string $type): void
+    {
+        try {
+            $user = \App\Models\User::find($userId);
+            if ($user) {
+                $user->update(['avatar_generating' => false]);
+            }
+        } catch (\Exception $updateException) {
+            // If we can't update, log CRITICALLY but continue
+            // This prevents infinite loops but indicates a serious problem
+            Log::critical("CRITICAL: Failed to reset {$type}_generating status", [
+                'user_id' => $userId,
+                'type' => $type,
+                'error' => $updateException->getMessage(),
+                'exception_class' => get_class($updateException),
+            ]);
+        }
     }
 
     /**
@@ -154,24 +212,24 @@ class GenerateAvatar implements ShouldQueue, ShouldQueueAfterCommit
         // Create a prompt that generates a professional space technician/captain avatar
         // in the style of Alien (1979) - industrial, realistic, sci-fi aesthetic
         return "Close-up professional portrait headshot of a single {$character}, {$userName}, "
-            .'a seasoned space technician and ship captain, '
-            .'in the style of Alien (1979) movie aesthetic. '
-            .'Tight framing, head and shoulders only, zoomed in for maximum detail. '
-            .'Industrial sci-fi setting with realistic lighting and cinematic composition. '
-            .'Single person only, wearing a weathered technical jumpsuit with visible patches, '
-            .'insignia, and worn fabric details. '
-            .'Holding a data pad or technical tool in hand, visible in foreground. '
-            .'Facial features: determined expression, weathered skin with subtle scars or marks, '
-            .'professional haircut, focused eyes with slight bags from long shifts. '
-            .'Atmospheric lighting with blue and orange tones creating depth and dimension. '
-            .'Simple, subtle background: dark, muted tones with minimal detail, '
-            .'slightly blurred to emphasize the person. No distracting elements, '
-            .'just a clean, professional backdrop that makes the character stand out. '
-            .'Professional headshot portrait, one person only, no other people in frame, '
-            .'square format (1:1 aspect ratio), highly detailed facial features, '
-            .'photorealistic style with sharp focus on the face, '
-            .'moody and atmospheric, cinematic quality, high resolution, '
-            .'detailed skin texture, realistic shadows and highlights.';
+            . 'a seasoned space technician and ship captain, '
+            . 'in the style of Alien (1979) movie aesthetic. '
+            . 'Tight framing, head and shoulders only, zoomed in for maximum detail. '
+            . 'Industrial sci-fi setting with realistic lighting and cinematic composition. '
+            . 'Single person only, wearing a weathered technical jumpsuit with visible patches, '
+            . 'insignia, and worn fabric details. '
+            . 'Holding a data pad or technical tool in hand, visible in foreground. '
+            . 'Facial features: determined expression, weathered skin with subtle scars or marks, '
+            . 'professional haircut, focused eyes with slight bags from long shifts. '
+            . 'Atmospheric lighting with blue and orange tones creating depth and dimension. '
+            . 'Simple, subtle background: dark, muted tones with minimal detail, '
+            . 'slightly blurred to emphasize the person. No distracting elements, '
+            . 'just a clean, professional backdrop that makes the character stand out. '
+            . 'Professional headshot portrait, one person only, no other people in frame, '
+            . 'square format (1:1 aspect ratio), highly detailed facial features, '
+            . 'photorealistic style with sharp focus on the face, '
+            . 'moody and atmospheric, cinematic quality, high resolution, '
+            . 'detailed skin texture, realistic shadows and highlights.';
     }
 
     /**

@@ -2,6 +2,12 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiRequestException;
+use App\Exceptions\ImageGenerationException;
+use App\Exceptions\ProviderConfigurationException;
+use App\Exceptions\StorageException;
+use App\Exceptions\UnsupportedProviderException;
+use Aws\S3\Exception\S3Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -25,21 +31,25 @@ class ImageGenerationService
      * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'avatars', 'planets')
      * @return array Array containing 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
-     * @throws \Exception If image generation fails
+     * @throws ImageGenerationException If image generation fails
+     * @throws ProviderConfigurationException If provider is not configured
+     * @throws UnsupportedProviderException If provider is not supported
+     * @throws ApiRequestException If API request fails
+     * @throws StorageException If storage operation fails
      */
     public function generate(string $prompt, ?string $provider = null, ?string $subfolder = null): array
     {
         $provider = $provider ?? config('image-generation.default_provider');
 
         if (! $this->isProviderConfigured($provider)) {
-            throw new \Exception("Image generation provider '{$provider}' is not configured or missing API key.");
+            throw new ProviderConfigurationException($provider);
         }
 
         try {
             $result = match ($provider) {
                 'openai' => $this->generateWithOpenAI($prompt),
                 'stability' => $this->generateWithStability($prompt),
-                default => throw new \Exception("Unsupported image generation provider: {$provider}"),
+                default => throw new UnsupportedProviderException($provider, 'image generation'),
             };
 
             // Save image to storage (S3) and return S3 URL
@@ -52,7 +62,7 @@ class ImageGenerationService
                 'response' => $e->response?->json(),
             ]);
 
-            throw new \Exception("Failed to generate image: {$e->getMessage()}", 0, $e);
+            throw new ApiRequestException("Failed to generate image: {$e->getMessage()}", 0, $e);
         } catch (ConnectionException $e) {
             Log::error('Image generation API connection failed', [
                 'provider' => $provider,
@@ -60,7 +70,10 @@ class ImageGenerationService
                 'error' => $e->getMessage(),
             ]);
 
-            throw new \Exception("Failed to connect to image generation service: {$e->getMessage()}", 0, $e);
+            throw new ApiRequestException("Failed to connect to image generation service: {$e->getMessage()}", 0, $e);
+        } catch (ImageGenerationException|ProviderConfigurationException|UnsupportedProviderException|ApiRequestException|StorageException $e) {
+            // Re-throw custom exceptions as-is
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Image generation failed', [
                 'provider' => $provider,
@@ -68,7 +81,7 @@ class ImageGenerationService
                 'error' => $e->getMessage(),
             ]);
 
-            throw $e;
+            throw new ImageGenerationException("Image generation failed: {$e->getMessage()}", 0, $e);
         }
     }
 
@@ -101,7 +114,7 @@ class ImageGenerationService
 
         // OpenAI DALL-E 3 returns: { "data": [{ "url": "...", "revised_prompt": "..." }] }
         if (! isset($response['data'][0]['url'])) {
-            throw new \Exception('Invalid response from OpenAI API: missing image URL');
+            throw new ApiRequestException('Invalid response from OpenAI API: missing image URL');
         }
 
         return [
@@ -155,7 +168,7 @@ class ImageGenerationService
 
         // Stability AI returns: { "artifacts": [{ "base64": "...", "finishReason": "SUCCESS" }] }
         if (! isset($response['artifacts'][0]['base64'])) {
-            throw new \Exception('Invalid response from Stability AI: missing image data');
+            throw new ApiRequestException('Invalid response from Stability AI: missing image data');
         }
 
         // Stability AI returns base64, we need to decode and potentially save it
@@ -164,7 +177,7 @@ class ImageGenerationService
         $finishReason = $response['artifacts'][0]['finishReason'] ?? 'UNKNOWN';
 
         if ($finishReason !== 'SUCCESS') {
-            throw new \Exception("Stability AI generation finished with reason: {$finishReason}");
+            throw new ApiRequestException("Stability AI generation finished with reason: {$finishReason}");
         }
 
         return [
@@ -220,7 +233,7 @@ class ImageGenerationService
      * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'avatars', 'planets')
      * @return array Array with 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
-     * @throws \Exception If saving fails
+     * @throws StorageException If saving fails
      */
     private function saveImageToStorage(array $result, string $provider, ?string $subfolder = null): array
     {
@@ -248,18 +261,51 @@ class ImageGenerationService
                 // Stability AI: Decode base64
                 $imageContent = base64_decode($result['base64']);
                 if ($imageContent === false) {
-                    throw new \Exception('Failed to decode base64 image data');
+                    throw new StorageException('Failed to decode base64 image data');
                 }
             } else {
-                throw new \Exception('Invalid image data format from provider');
+                throw new StorageException('Invalid image data format from provider');
             }
 
-            // Save to storage
-            Storage::disk($disk)->put($storagePath, $imageContent, $visibility);
+            // Save to storage with specific S3 error handling
+            try {
+                Storage::disk($disk)->put($storagePath, $imageContent, $visibility);
+            } catch (S3Exception $s3Exception) {
+                // Log detailed S3 error information
+                Log::error('S3 error while saving image', [
+                    'provider' => $provider,
+                    'path' => $storagePath,
+                    'disk' => $disk,
+                    's3_error_code' => $s3Exception->getAwsErrorCode(),
+                    's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                    's3_request_id' => $s3Exception->getAwsRequestId(),
+                    'http_status' => $s3Exception->getStatusCode(),
+                    'error' => $s3Exception->getMessage(),
+                ]);
+
+                throw new StorageException(
+                    "Failed to save image to S3 storage: {$s3Exception->getAwsErrorMessage()} (Code: {$s3Exception->getAwsErrorCode()})",
+                    0,
+                    $s3Exception
+                );
+            }
 
             // Get public URL using Laravel Storage's native method
-            // This handles S3, MinIO, and other storage drivers correctly
-            $url = Storage::disk($disk)->url($storagePath);
+            // Wrap in try-catch to handle potential S3 errors when generating URL
+            try {
+                $url = Storage::disk($disk)->url($storagePath);
+            } catch (S3Exception $s3Exception) {
+                Log::warning('S3 error while generating image URL (file may still be saved)', [
+                    'path' => $storagePath,
+                    'disk' => $disk,
+                    's3_error_code' => $s3Exception->getAwsErrorCode(),
+                    's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                ]);
+
+                // If we can't get the URL, construct it manually or use the path
+                // The model accessor will handle URL reconstruction
+                $url = null;
+            }
 
             Log::info('Image saved to storage', [
                 'provider' => $provider,
@@ -277,12 +323,13 @@ class ImageGenerationService
         } catch (\Exception $e) {
             Log::error('Failed to save image to storage', [
                 'provider' => $provider,
-                'path' => $storagePath,
+                'path' => $storagePath ?? 'unknown',
                 'disk' => $disk,
                 'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
             ]);
 
-            throw new \Exception("Failed to save image to storage: {$e->getMessage()}", 0, $e);
+            throw new StorageException("Failed to save image to storage: {$e->getMessage()}", 0, $e);
         }
     }
 }

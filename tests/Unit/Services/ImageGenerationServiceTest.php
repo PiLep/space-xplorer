@@ -1,5 +1,8 @@
 <?php
 
+use App\Exceptions\ApiRequestException;
+use App\Exceptions\ProviderConfigurationException;
+use App\Exceptions\StorageException;
 use App\Services\ImageGenerationService;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -13,13 +16,13 @@ it('throws exception when provider is not configured', function () {
     config(['image-generation.providers.openai.api_key' => null]);
 
     expect(fn () => $this->service->generate('test prompt', 'openai'))
-        ->toThrow(\Exception::class, "Image generation provider 'openai' is not configured or missing API key");
+        ->toThrow(ProviderConfigurationException::class, "Provider 'openai' is not configured or missing API key.");
 });
 
 it('throws exception when provider does not exist', function () {
     // Provider doesn't exist in config, so it's not configured
     expect(fn () => $this->service->generate('test prompt', 'nonexistent'))
-        ->toThrow(\Exception::class, "Image generation provider 'nonexistent' is not configured or missing API key");
+        ->toThrow(ProviderConfigurationException::class, "Provider 'nonexistent' is not configured or missing API key.");
 });
 
 it('checks if provider is configured correctly', function () {
@@ -124,7 +127,7 @@ describe('OpenAI DALL-E generation', function () {
         ]);
 
         expect(fn () => $this->service->generate('test prompt'))
-            ->toThrow(\Exception::class, 'Invalid response from OpenAI API: missing image URL');
+            ->toThrow(ApiRequestException::class, 'Invalid response from OpenAI API: missing image URL');
     });
 
     it('handles OpenAI API errors', function () {
@@ -138,7 +141,7 @@ describe('OpenAI DALL-E generation', function () {
         ]);
 
         expect(fn () => $this->service->generate('test prompt'))
-            ->toThrow(\Exception::class, 'Failed to generate image');
+            ->toThrow(ApiRequestException::class, 'Failed to generate image');
     });
 });
 
@@ -226,7 +229,7 @@ describe('Stability AI generation', function () {
         ]);
 
         expect(fn () => $this->service->generate('test prompt', 'stability'))
-            ->toThrow(\Exception::class, 'Stability AI generation finished with reason: CONTENT_FILTERED');
+            ->toThrow(ApiRequestException::class, 'Stability AI generation finished with reason: CONTENT_FILTERED');
     });
 
     it('throws exception when Stability AI returns invalid response', function () {
@@ -237,7 +240,7 @@ describe('Stability AI generation', function () {
         ]);
 
         expect(fn () => $this->service->generate('test prompt', 'stability'))
-            ->toThrow(\Exception::class, 'Invalid response from Stability AI: missing image data');
+            ->toThrow(ApiRequestException::class, 'Invalid response from Stability AI: missing image data');
     });
 });
 
@@ -281,7 +284,7 @@ describe('S3 Storage', function () {
             ->andThrow(new \Exception('Storage error'));
 
         expect(fn () => $this->service->generate('test prompt'))
-            ->toThrow(\Exception::class, 'Failed to save image to storage');
+            ->toThrow(StorageException::class, 'Failed to save image to storage');
     });
 
     it('handles empty base64 when saving Stability AI image', function () {

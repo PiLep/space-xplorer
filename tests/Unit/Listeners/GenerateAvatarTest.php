@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\UserRegistered;
+use App\Exceptions\ImageGenerationException;
 use App\Listeners\GenerateAvatar;
 use App\Models\User;
 use App\Services\ImageGenerationService;
@@ -97,14 +98,14 @@ it('throws exception when avatar generation fails (job will be retried)', functi
         ->shouldReceive('generate')
         ->once()
         ->with(Mockery::any(), null, 'avatars')
-        ->andThrow(new \Exception('API error'));
+        ->andThrow(new ImageGenerationException('API error'));
 
     $event = new UserRegistered($this->user);
 
     // The exception will be thrown, marking the job as failed
     // In a real queue, this would trigger a retry
     expect(fn () => $this->listener->handle($event))
-        ->toThrow(\Exception::class, 'API error');
+        ->toThrow(ImageGenerationException::class, 'API error');
 
     $this->user->refresh();
     expect($this->user->avatar_url)->toBeNull();

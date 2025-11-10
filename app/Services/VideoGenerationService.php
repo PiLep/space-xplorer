@@ -2,6 +2,13 @@
 
 namespace App\Services;
 
+use App\Exceptions\ApiRequestException;
+use App\Exceptions\JobTimeoutException;
+use App\Exceptions\ProviderConfigurationException;
+use App\Exceptions\StorageException;
+use App\Exceptions\UnsupportedProviderException;
+use App\Exceptions\VideoGenerationException;
+use Aws\S3\Exception\S3Exception;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
@@ -25,14 +32,19 @@ class VideoGenerationService
      * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'planets')
      * @return array Array containing 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
-     * @throws \Exception If video generation fails
+     * @throws VideoGenerationException If video generation fails
+     * @throws ProviderConfigurationException If provider is not configured
+     * @throws UnsupportedProviderException If provider is not supported
+     * @throws ApiRequestException If API request fails
+     * @throws StorageException If storage operation fails
+     * @throws JobTimeoutException If job times out
      */
     public function generate(string $prompt, ?string $provider = null, ?string $subfolder = null): array
     {
         $provider = $provider ?? config('video-generation.default_provider');
 
         if (! $this->isProviderConfigured($provider)) {
-            throw new \Exception("Video generation provider '{$provider}' is not configured or missing API key.");
+            throw new ProviderConfigurationException($provider);
         }
 
         try {
@@ -40,7 +52,7 @@ class VideoGenerationService
                 'openai' => $this->generateWithOpenAI($prompt),
                 'runway' => $this->generateWithRunway($prompt),
                 'pika' => $this->generateWithPika($prompt),
-                default => throw new \Exception("Unsupported video generation provider: {$provider}"),
+                default => throw new UnsupportedProviderException($provider, 'video generation'),
             };
 
             // Save video to storage (S3) and return S3 URL
@@ -56,7 +68,7 @@ class VideoGenerationService
                 'response' => $responseBody,
             ]);
 
-            throw new \Exception("Failed to generate video: {$errorMessage}", 0, $e);
+            throw new ApiRequestException("Failed to generate video: {$errorMessage}", 0, $e);
         } catch (ConnectionException $e) {
             Log::error('Video generation API connection failed', [
                 'provider' => $provider,
@@ -64,7 +76,10 @@ class VideoGenerationService
                 'error' => $e->getMessage(),
             ]);
 
-            throw new \Exception("Failed to connect to video generation service: {$e->getMessage()}", 0, $e);
+            throw new ApiRequestException("Failed to connect to video generation service: {$e->getMessage()}", 0, $e);
+        } catch (VideoGenerationException|ProviderConfigurationException|UnsupportedProviderException|ApiRequestException|StorageException|JobTimeoutException $e) {
+            // Re-throw custom exceptions as-is
+            throw $e;
         } catch (\Exception $e) {
             Log::error('Video generation failed', [
                 'provider' => $provider,
@@ -72,7 +87,7 @@ class VideoGenerationService
                 'error' => $e->getMessage(),
             ]);
 
-            throw $e;
+            throw new VideoGenerationException("Video generation failed: {$e->getMessage()}", 0, $e);
         }
     }
 
@@ -122,7 +137,7 @@ class VideoGenerationService
 
         // OpenAI Sora returns: { "id": "video_...", "status": "queued"|"in_progress", ... }
         if (! isset($response['id'])) {
-            throw new \Exception('Invalid response from OpenAI API: missing video ID');
+            throw new ApiRequestException('Invalid response from OpenAI API: missing video ID');
         }
 
         $videoId = $response['id'];
@@ -168,7 +183,7 @@ class VideoGenerationService
 
             if ($status === 'failed') {
                 $errorMessage = $response['error']['message'] ?? $response['error'] ?? 'Unknown error';
-                throw new \Exception("Video generation job failed: {$errorMessage}");
+                throw new ApiRequestException("Video generation job failed: {$errorMessage}");
             }
 
             // Log progress if available
@@ -181,7 +196,7 @@ class VideoGenerationService
             }
         }
 
-        throw new \Exception('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
+        throw new JobTimeoutException('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
     }
 
     /**
@@ -239,7 +254,7 @@ class VideoGenerationService
 
         // RunwayML returns: { "id": "...", "status": "...", "output": ["..."] }
         if (! isset($response['id'])) {
-            throw new \Exception('Invalid response from RunwayML API: missing job ID');
+            throw new ApiRequestException('Invalid response from RunwayML API: missing job ID');
         }
 
         // Poll for completion
@@ -271,7 +286,7 @@ class VideoGenerationService
 
             if (isset($response['status']) && $response['status'] === 'succeeded') {
                 if (! isset($response['output']) || empty($response['output'])) {
-                    throw new \Exception('Job completed but no video URL in response');
+                    throw new ApiRequestException('Job completed but no video URL in response');
                 }
 
                 return [
@@ -282,11 +297,11 @@ class VideoGenerationService
             }
 
             if (isset($response['status']) && in_array($response['status'], ['failed', 'cancelled'])) {
-                throw new \Exception('Video generation job failed: '.($response['error'] ?? 'Unknown error'));
+                throw new ApiRequestException('Video generation job failed: '.($response['error'] ?? 'Unknown error'));
             }
         }
 
-        throw new \Exception('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
+        throw new JobTimeoutException('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
     }
 
     /**
@@ -315,7 +330,7 @@ class VideoGenerationService
 
         // Pika Labs returns: { "id": "...", "status": "...", "video_url": "..." }
         if (! isset($response['id'])) {
-            throw new \Exception('Invalid response from Pika Labs API: missing job ID');
+            throw new ApiRequestException('Invalid response from Pika Labs API: missing job ID');
         }
 
         // Poll for completion
@@ -347,7 +362,7 @@ class VideoGenerationService
 
             if (isset($response['status']) && $response['status'] === 'completed') {
                 if (! isset($response['video_url'])) {
-                    throw new \Exception('Job completed but no video URL in response');
+                    throw new ApiRequestException('Job completed but no video URL in response');
                 }
 
                 return [
@@ -358,11 +373,11 @@ class VideoGenerationService
             }
 
             if (isset($response['status']) && $response['status'] === 'failed') {
-                throw new \Exception('Video generation job failed: '.($response['error'] ?? 'Unknown error'));
+                throw new ApiRequestException('Video generation job failed: '.($response['error'] ?? 'Unknown error'));
             }
         }
 
-        throw new \Exception('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
+        throw new JobTimeoutException('Video generation job timed out after '.($maxAttempts * $pollInterval).' seconds');
     }
 
     /**
@@ -411,7 +426,7 @@ class VideoGenerationService
      * @param  string|null  $subfolder  Optional subfolder within the storage path (e.g., 'planets')
      * @return array Array with 'url' (S3 URL), 'path' (storage path), and 'provider'
      *
-     * @throws \Exception If saving fails
+     * @throws StorageException If saving fails
      */
     private function saveVideoToStorage(array $result, string $provider, ?string $subfolder = null): array
     {
@@ -439,14 +454,48 @@ class VideoGenerationService
                 // Other providers: Download from URL
                 $videoContent = Http::timeout(300)->get($result['url'])->body(); // 5 min timeout for video download
             } else {
-                throw new \Exception('Invalid video data format from provider: missing URL or content');
+                throw new StorageException('Invalid video data format from provider: missing URL or content');
             }
 
-            // Save to storage
-            Storage::disk($disk)->put($storagePath, $videoContent, $visibility);
+            // Save to storage with specific S3 error handling
+            try {
+                Storage::disk($disk)->put($storagePath, $videoContent, $visibility);
+            } catch (S3Exception $s3Exception) {
+                // Log detailed S3 error information
+                Log::error('S3 error while saving video', [
+                    'provider' => $provider,
+                    'path' => $storagePath,
+                    'disk' => $disk,
+                    's3_error_code' => $s3Exception->getAwsErrorCode(),
+                    's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                    's3_request_id' => $s3Exception->getAwsRequestId(),
+                    'http_status' => $s3Exception->getStatusCode(),
+                    'error' => $s3Exception->getMessage(),
+                ]);
+
+                throw new StorageException(
+                    "Failed to save video to S3 storage: {$s3Exception->getAwsErrorMessage()} (Code: {$s3Exception->getAwsErrorCode()})",
+                    0,
+                    $s3Exception
+                );
+            }
 
             // Get public URL using Laravel Storage's native method
-            $url = Storage::disk($disk)->url($storagePath);
+            // Wrap in try-catch to handle potential S3 errors when generating URL
+            try {
+                $url = Storage::disk($disk)->url($storagePath);
+            } catch (S3Exception $s3Exception) {
+                Log::warning('S3 error while generating video URL (file may still be saved)', [
+                    'path' => $storagePath,
+                    'disk' => $disk,
+                    's3_error_code' => $s3Exception->getAwsErrorCode(),
+                    's3_error_message' => $s3Exception->getAwsErrorMessage(),
+                ]);
+
+                // If we can't get the URL, construct it manually or use the path
+                // The model accessor will handle URL reconstruction
+                $url = null;
+            }
 
             Log::info('Video saved to storage', [
                 'provider' => $provider,
@@ -464,12 +513,13 @@ class VideoGenerationService
         } catch (\Exception $e) {
             Log::error('Failed to save video to storage', [
                 'provider' => $provider,
-                'path' => $storagePath,
+                'path' => $storagePath ?? 'unknown',
                 'disk' => $disk,
                 'error' => $e->getMessage(),
+                'exception_class' => get_class($e),
             ]);
 
-            throw new \Exception("Failed to save video to storage: {$e->getMessage()}", 0, $e);
+            throw new StorageException("Failed to save video to storage: {$e->getMessage()}", 0, $e);
         }
     }
 }
