@@ -31,7 +31,7 @@ class AdminAuthService
         }
 
         // Check if user email is in whitelist
-        $whitelist = env('ADMIN_EMAIL_WHITELIST', '');
+        $whitelist = config('admin.email_whitelist', '');
         $allowedEmails = array_map('trim', explode(',', $whitelist));
         $allowedEmails = array_filter($allowedEmails); // Remove empty values
 
