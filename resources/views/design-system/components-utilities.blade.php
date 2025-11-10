@@ -152,6 +152,100 @@
                     </code>
                 </div>
             </div>
+
+            <!-- Filter Card -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Filter Card</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    Conteneur standardisé pour les sections de filtres avec style cohérent du design system.
+                </p>
+                <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                    <x-filter-card title="Filters">
+                        <form method="GET" class="flex gap-4 items-end">
+                            <div class="flex-1">
+                                <x-form-select
+                                    name="type"
+                                    label="Type"
+                                    placeholder="All Types"
+                                    :options="[
+                                        ['value' => 'avatar_image', 'label' => 'Avatar Image'],
+                                        ['value' => 'planet_image', 'label' => 'Planet Image'],
+                                    ]"
+                                />
+                            </div>
+                            <x-button type="submit" variant="ghost" size="sm">Filter</x-button>
+                        </form>
+                    </x-filter-card>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-filter-card title="Filters"&gt;<br>
+                            &nbsp;&nbsp;&lt;form&gt;...&lt;/form&gt;<br>
+                            &lt;/x-filter-card&gt;
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description List -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Description List</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    Liste de descriptions pour afficher des paires terme/valeur avec grille responsive pour les pages de détails.
+                </p>
+                <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                    <x-description-list :columns="2">
+                        <x-description-item term="ID" value="01ARZ3NDEKTSV4RRFFQ69G5FAV" :mono="true" />
+                        <x-description-item term="Type" value="Planet Image" />
+                        <x-description-item term="Status">
+                            <x-badge variant="success">Approved</x-badge>
+                        </x-description-item>
+                        <x-description-item term="Created" value="2025-11-10 12:34:56" />
+                    </x-description-list>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-description-list :columns="2"&gt;<br>
+                            &nbsp;&nbsp;&lt;x-description-item term="Label" value="Value" /&gt;<br>
+                            &lt;/x-description-list&gt;
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Empty State</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    État vide avec icône optionnelle, titre, description et action pour guider l'utilisateur.
+                </p>
+                <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                    <div class="bg-space-black rounded-lg p-8">
+                        <x-empty-state
+                            title="No resources found"
+                            description="Get started by creating your first resource."
+                        >
+                            <x-slot:icon>
+                                <svg class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                                </svg>
+                            </x-slot:icon>
+                            <x-slot:action>
+                                <x-button variant="primary" size="sm">Create Resource</x-button>
+                            </x-slot:action>
+                        </x-empty-state>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-empty-state title="No items" description="..."&gt;<br>
+                            &nbsp;&nbsp;&lt;x-slot:icon&gt;...&lt;/x-slot:icon&gt;<br>
+                            &nbsp;&nbsp;&lt;x-slot:action&gt;...&lt;/x-slot:action&gt;<br>
+                            &lt;/x-empty-state&gt;
+                        </code>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 </x-design-system.layout>

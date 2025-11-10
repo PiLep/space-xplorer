@@ -55,16 +55,6 @@ IMAGE_GENERATION_STORAGE_VISIBILITY=public
 
 **Note** : L'endpoint `http://minio:9000` utilise le nom du service Docker. Pour accéder depuis votre machine locale, utilisez `http://localhost:9000`.
 
-## Test
-
-Une fois configuré, testez la génération d'image :
-
-```bash
-./vendor/bin/sail artisan image:test "A beautiful planet"
-```
-
-L'image sera sauvegardée dans MinIO et vous pourrez la voir dans la console MinIO ou via l'URL retournée.
-
 ## URLs
 
 - **API MinIO** : http://localhost:9000

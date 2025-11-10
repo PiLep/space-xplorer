@@ -76,16 +76,53 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
    ```
 
 7. **Configurer MinIO (S3 local)** :
-   ```bash
-   # Créer le bucket pour les images
-   ./vendor/bin/sail artisan minio:setup
-   ```
-   - Console MinIO : http://localhost:9001 (minioadmin/minioadmin)
+   - Accéder à la console MinIO : http://localhost:9001 (minioadmin/minioadmin)
+   - Créer un bucket nommé `space-xplorer` (ou celui configuré dans `.env`)
+   - Cocher "Make this bucket public" pour que les images soient accessibles
 
 8. **Accéder à l'application**
    - Application : http://localhost
    - Mailpit (emails) : http://localhost:8025
    - MinIO Console : http://localhost:9001
+
+### Configuration du Super Admin
+
+Le projet inclut un système d'administration caché accessible via `/admin`. Pour configurer un super admin :
+
+1. **Créer un utilisateur normal** via l'inscription publique
+2. **Ajouter l'email dans `.env`** :
+   ```env
+   ADMIN_EMAIL_WHITELIST=admin@example.com,superadmin@example.com
+   ```
+   (Plusieurs emails séparés par des virgules)
+3. **Définir le flag super admin** :
+   ```bash
+   ./vendor/bin/sail artisan admin:make admin@example.com
+   ```
+4. **Se connecter** via `/admin/login` avec les identifiants de cet utilisateur
+
+**Sécurité** : L'accès admin nécessite à la fois le flag `is_super_admin` ET la présence de l'email dans `ADMIN_EMAIL_WHITELIST`.
+
+### Génération automatique de ressources planètes
+
+Le système génère automatiquement **20 ressources d'images de planètes par jour** via une tâche planifiée (scheduler).
+
+- **Horaire** : Tous les jours à 2h00 du matin
+- **Statut initial** : Les ressources sont créées avec le statut `generating`
+- **Génération** : Les images sont générées de manière asynchrone via des jobs
+- **Validation** : Les ressources doivent être approuvées par un admin via `/admin/resources` avant d'être réutilisées
+
+Les prompts sont générés de manière variée pour couvrir tous les types de planètes selon leurs probabilités :
+- **Tellurique** : 40% des ressources
+- **Gazeuse** : 25% des ressources
+- **Glacée** : 15% des ressources
+- **Désertique** : 10% des ressources
+- **Océanique** : 10% des ressources
+
+**Note** : Pour que le scheduler fonctionne, vous devez configurer une tâche cron :
+```bash
+* * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
+```
 
 ### Commandes utiles
 
@@ -107,6 +144,15 @@ Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et 
 
 # Builder les assets en mode développement
 ./vendor/bin/sail npm run dev
+
+# Créer un super admin
+./vendor/bin/sail artisan admin:make email@example.com
+
+# Générer des ressources planètes quotidiennes (20 par défaut)
+./vendor/bin/sail artisan resources:generate-daily-planets
+
+# Générer des ressources planètes avec un nombre personnalisé
+./vendor/bin/sail artisan resources:generate-daily-planets --count=30
 ```
 
 ## 🧪 Tests

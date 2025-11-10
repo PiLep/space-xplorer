@@ -2,7 +2,14 @@
 
 namespace App\Providers;
 
+use App\Events\AvatarGenerated;
+use App\Events\DiscoveryMade;
 use App\Events\PlanetCreated;
+use App\Events\PlanetExplored;
+use App\Events\PlanetImageGenerated;
+use App\Events\PlanetVideoGenerated;
+use App\Events\UserLoggedIn;
+use App\Events\UserProfileUpdated;
 use App\Events\UserRegistered;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
@@ -19,13 +26,41 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
+        // User lifecycle events
         UserRegistered::class => [
             GenerateHomePlanet::class,
             GenerateAvatar::class,
         ],
+        UserLoggedIn::class => [
+            // Future listeners: TrackUserLogin, SendWelcomeNotification, etc.
+        ],
+        UserProfileUpdated::class => [
+            // Future listeners: RegenerateAvatarIfNameChanged, TrackProfileUpdate, etc.
+        ],
+
+        // Planet lifecycle events
         PlanetCreated::class => [
             GeneratePlanetImage::class,
             GeneratePlanetVideo::class,
+        ],
+        PlanetImageGenerated::class => [
+            // Future listeners: NotifyUserPlanetImageReady, TrackPlanetImageGeneration, etc.
+        ],
+        PlanetVideoGenerated::class => [
+            // Future listeners: NotifyUserPlanetVideoReady, TrackPlanetVideoGeneration, etc.
+        ],
+
+        // Media generation completion events
+        AvatarGenerated::class => [
+            // Future listeners: NotifyUserAvatarReady, TrackAvatarGeneration, etc.
+        ],
+
+        // Exploration events (future features)
+        PlanetExplored::class => [
+            // Future listeners: TrackExploration, AwardExplorationPoints, etc.
+        ],
+        DiscoveryMade::class => [
+            // Future listeners: TrackDiscovery, AwardDiscoveryAchievement, etc.
         ],
     ];
 

@@ -5,6 +5,7 @@ use App\Exceptions\ImageGenerationException;
 use App\Listeners\GenerateAvatar;
 use App\Models\User;
 use App\Services\ImageGenerationService;
+use App\Services\ResourceGenerationService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
@@ -13,7 +14,8 @@ beforeEach(function () {
     Storage::fake('s3');
     Queue::fake(); // Fake queues for testing
     $this->imageGenerator = Mockery::mock(ImageGenerationService::class);
-    $this->listener = new GenerateAvatar($this->imageGenerator);
+    $this->resourceGenerator = Mockery::mock(ResourceGenerationService::class);
+    $this->listener = new GenerateAvatar($this->imageGenerator, $this->resourceGenerator);
     $this->user = User::factory()->create();
 });
 
@@ -142,6 +144,10 @@ it('logs success when avatar is generated', function () {
     Log::shouldReceive('info')
         ->once()
         ->with('Avatar generated successfully', Mockery::type('array'));
+
+    // Allow other log calls (like warning for resource creation failures)
+    Log::shouldReceive('warning')->zeroOrMoreTimes();
+    Log::shouldReceive('error')->zeroOrMoreTimes();
 
     $this->imageGenerator
         ->shouldReceive('generate')

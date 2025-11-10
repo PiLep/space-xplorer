@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\UserProfileUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateProfileRequest;
 use App\Models\User;
@@ -45,15 +46,25 @@ class UserController extends Controller
             ], 403);
         }
 
+        // Track changed attributes for the event
+        $changedAttributes = [];
+
         // Update only provided fields
-        if ($request->has('name')) {
+        if ($request->has('name') && $user->name !== $request->name) {
+            $changedAttributes['name'] = ['old' => $user->name, 'new' => $request->name];
             $user->name = $request->name;
         }
-        if ($request->has('email')) {
+        if ($request->has('email') && $user->email !== $request->email) {
+            $changedAttributes['email'] = ['old' => $user->email, 'new' => $request->email];
             $user->email = $request->email;
         }
 
         $user->save();
+
+        // Dispatch event if any attributes were changed
+        if (! empty($changedAttributes)) {
+            event(new UserProfileUpdated($user, $changedAttributes));
+        }
 
         return response()->json([
             'data' => [

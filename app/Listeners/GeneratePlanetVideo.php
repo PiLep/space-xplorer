@@ -3,8 +3,10 @@
 namespace App\Listeners;
 
 use App\Events\PlanetCreated;
+use App\Events\PlanetVideoGenerated;
 use App\Exceptions\StorageException;
 use App\Exceptions\VideoGenerationException;
+use App\Models\Resource;
 use App\Services\VideoGenerationService;
 use Aws\S3\Exception\S3Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -93,6 +95,38 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
             // Mark as generating before starting
             $planet->update(['video_generating' => true]);
 
+            // 70% chance to use an approved template, 30% direct generation
+            $useTemplate = rand(1, 100) <= 70;
+
+            if ($useTemplate) {
+                // Try to get an approved planet video template
+                $template = Resource::approved()
+                    ->ofType('planet_video')
+                    ->inRandomOrder()
+                    ->first();
+
+                if ($template && $template->file_url) {
+                    // Use template file path
+                    $planet->update([
+                        'video_url' => $template->file_path,
+                        'video_generating' => false,
+                    ]);
+
+                    Log::info('Planet video assigned from template', [
+                        'planet_id' => $planet->id,
+                        'planet_name' => $planet->name,
+                        'template_id' => $template->id,
+                        'template_path' => $template->file_path,
+                    ]);
+
+                    // Dispatch event to notify that planet video generation is complete
+                    event(new PlanetVideoGenerated($planet, $template->file_path, $template->file_url));
+
+                    return;
+                }
+            }
+
+            // Fallback to direct generation (either no template available or 30% chance)
             // Generate planet video prompt in Alien style
             $prompt = $this->generatePlanetVideoPrompt($planet);
 
@@ -112,6 +146,9 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
                 'video_path' => $result['path'],
                 'video_url' => $result['url'], // Full URL for logging, but path is stored
             ]);
+
+            // Dispatch event to notify that planet video generation is complete
+            event(new PlanetVideoGenerated($planet, $result['path'], $result['url']));
         } catch (S3Exception $s3Exception) {
             // Critical: Always reset generating status, even on S3 errors
             $this->resetGeneratingStatus($event->planet->id, 'video');

@@ -32,6 +32,7 @@ class User extends Authenticatable
         'home_planet_id',
         'avatar_url',
         'avatar_generating',
+        'is_super_admin',
     ];
 
     /**
@@ -54,6 +55,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_super_admin' => 'boolean',
         ];
     }
 
