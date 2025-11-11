@@ -272,3 +272,4 @@ $iterations = 500; // Réduit de 1000 à 500 (suffisant pour précision)
 - [Mockery Documentation](https://docs.mockery.io/)
 
 
+

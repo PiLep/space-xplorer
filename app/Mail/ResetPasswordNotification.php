@@ -34,7 +34,7 @@ class ResetPasswordNotification extends Mailable
         $replyTo = config('mail.reply_to.address', $fromAddress);
 
         return new Envelope(
-            subject: 'Réinitialisation de votre mot de passe - ' . $appName,
+            subject: 'Réinitialisation de votre mot de passe - '.$appName,
             replyTo: $replyTo,
         );
     }
