@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification as CustomResetPasswordNotification;
 use Aws\S3\Exception\S3Exception;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
@@ -170,5 +171,15 @@ class User extends Authenticatable
     public function isAvatarGenerating(): bool
     {
         return $this->avatar_generating === true;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new CustomResetPasswordNotification($token));
     }
 }
