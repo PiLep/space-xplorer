@@ -40,7 +40,7 @@ class EmailService
         return [
             'X-Mailer' => $appName,
             'Precedence' => 'bulk',
-            'List-Unsubscribe' => $appUrl . '/unsubscribe',
+            'List-Unsubscribe' => $appUrl.'/unsubscribe',
             'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click',
         ];
     }
@@ -68,7 +68,7 @@ class EmailService
     {
         $separator = str_contains($url, '?') ? '&' : '?';
 
-        return $url . $separator . http_build_query([
+        return $url.$separator.http_build_query([
             'utm_source' => $source,
             'utm_medium' => $medium,
             'utm_campaign' => $campaign,

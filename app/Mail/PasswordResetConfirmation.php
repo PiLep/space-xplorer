@@ -34,7 +34,7 @@ class PasswordResetConfirmation extends Mailable
         $replyTo = config('mail.reply_to.address', $fromAddress);
 
         return new Envelope(
-            subject: 'Votre mot de passe a été réinitialisé - ' . $appName,
+            subject: 'Votre mot de passe a été réinitialisé - '.$appName,
             replyTo: $replyTo,
         );
     }

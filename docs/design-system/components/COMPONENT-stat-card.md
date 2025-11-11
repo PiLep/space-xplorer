@@ -37,3 +37,4 @@ Le composant Stat Card affiche une carte de statistique avec icône optionnelle 
 **Référence** : Voir **[DESIGN-SYSTEM.md](../DESIGN-SYSTEM.md)** pour la vue d'ensemble du design system.
 
 
+

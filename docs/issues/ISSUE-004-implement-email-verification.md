@@ -145,3 +145,4 @@ Implémenter le système de vérification d'email pour valider que les utilisate
 **Notes** : Priorité medium car non bloquant pour le MVP mais bonne pratique à implémenter tôt
 
 
+
