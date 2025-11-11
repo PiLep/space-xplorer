@@ -42,12 +42,21 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
     public $timeout = 1200; // 20 minutes (60 attempts × 10 seconds + buffer for download)
 
     /**
+     * Function to generate random number for template selection.
+     * In production, uses rand(). In tests, can be injected for determinism.
+     *
+     * @var callable|null
+     */
+    private $randomFunction;
+
+    /**
      * Create the event listener.
      */
     public function __construct(
-        private VideoGenerationService $videoGenerator
+        private VideoGenerationService $videoGenerator,
+        ?callable $randomFunction = null
     ) {
-        //
+        $this->randomFunction = $randomFunction ?? fn () => rand(1, 100);
     }
 
     /**
@@ -96,7 +105,7 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
             $planet->update(['video_generating' => true]);
 
             // 70% chance to use an approved template, 30% direct generation
-            $useTemplate = rand(1, 100) <= 70;
+            $useTemplate = $this->shouldUseTemplate();
 
             if ($useTemplate) {
                 // Try to get an approved planet video template
@@ -105,7 +114,7 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
                     ->inRandomOrder()
                     ->first();
 
-                if ($template && $template->file_url) {
+                if ($template && $template->file_path) {
                     // Use template file path
                     $planet->update([
                         'video_url' => $template->file_path,
@@ -228,6 +237,17 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
         Log::error('Planet video generation failed after all retries', $logContext);
 
         // TODO: Could notify admin, create a ticket, or trigger manual retry here
+    }
+
+    /**
+     * Determine if template should be used based on random chance.
+     * 70% chance to use template, 30% direct generation.
+     *
+     * @return bool True if template should be used
+     */
+    private function shouldUseTemplate(): bool
+    {
+        return ($this->randomFunction)() <= 70;
     }
 
     /**
