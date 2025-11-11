@@ -19,6 +19,7 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{id}', [UserController::class, 'show']);
     Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::put('/users/{id}/avatar', [UserController::class, 'updateAvatar']);
     Route::get('/users/{id}/home-planet', [UserController::class, 'getHomePlanet']);
 
     Route::get('/planets/{id}', [PlanetController::class, 'show']);
