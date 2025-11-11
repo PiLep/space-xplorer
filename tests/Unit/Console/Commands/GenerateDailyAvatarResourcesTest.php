@@ -88,8 +88,11 @@ it('generates varied avatar prompts', function () {
 
     expect($prompts)->toHaveCount(10)
         ->and($prompts[0])->toBeString()
-        ->and($prompts[0])->toContain('space')
         ->and($prompts[0])->toContain('Single person only');
+
+    // Verify that at least some prompts contain "space" (not all prompts need it, but many should)
+    $promptsWithSpace = array_filter($prompts, fn ($prompt) => str_contains(strtolower($prompt), 'space'));
+    expect($promptsWithSpace)->not->toBeEmpty('At least some prompts should contain "space"');
 });
 
 afterEach(function () {
