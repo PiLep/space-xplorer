@@ -20,7 +20,8 @@ Schedule::command(GenerateDailyPlanetResources::class)
     })
     ->onSuccess(function () {
         \Illuminate\Support\Facades\Log::info('Daily planet resources generation completed successfully');
-    });
+    })
+    ->thenPing(env('FORGE_HEARTBEAT_PLANET_RESOURCES'));
 
 // Schedule daily avatar resources generation
 // Runs every day at 2:30 AM (30 minutes after planets)
@@ -32,4 +33,5 @@ Schedule::command(GenerateDailyAvatarResources::class)
     })
     ->onSuccess(function () {
         \Illuminate\Support\Facades\Log::info('Daily avatar resources generation completed successfully');
-    });
+    })
+    ->thenPing(env('FORGE_HEARTBEAT_AVATAR_RESOURCES'));

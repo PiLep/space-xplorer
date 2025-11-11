@@ -132,6 +132,8 @@ Les prompts sont générés de manière variée pour couvrir tous les types de p
 * * * * * cd /path-to-your-project && php artisan schedule:run >> /dev/null 2>&1
 ```
 
+**Monitoring** : Les tâches planifiées sont configurées avec des heartbeats Laravel Forge pour un monitoring proactif. Consultez la [documentation de configuration des heartbeats](./docs/setup/forge-heartbeats.md) pour plus d'informations.
+
 ### Commandes utiles
 
 ```bash
