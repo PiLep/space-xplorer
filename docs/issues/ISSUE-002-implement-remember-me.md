@@ -101,10 +101,16 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 
 À faire
 
+### GitHub
+
+- **Issue GitHub** : [#4](https://github.com/PiLep/space-xplorer/issues/4)
+- **Branche** : `issue/002-remember-me`
+
 ### Historique
 
 #### 2025-01-XX - Alex (Product) - Création de l'issue
 **Statut** : À faire
 **Détails** : Issue créée pour améliorer l'expérience utilisateur avec la persistence de connexion
 **Notes** : Priorité haute car impact direct sur l'engagement utilisateur
+**GitHub** : Issue créée sur GitHub (#4) et branche dédiée créée (`issue/002-remember-me`)
 
