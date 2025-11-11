@@ -12,7 +12,7 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 
 ### Statut
 
-✅ Approuvé - Pull Request créée
+✅ Terminé
 
 ### Historique
 
@@ -103,6 +103,18 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 - ✅ Tous les tests passent (19 tests, 55 assertions)
 - ✅ Documentation complète (reviews techniques et fonctionnelles)
 - 📝 En attente de merge dans develop
+
+#### 2025-01-27 - Sam (Lead Dev) - Merge de la Pull Request
+**Statut** : ✅ Terminé
+**Détails** : Pull Request #5 mergée dans develop. La fonctionnalité "Remember Me" est maintenant disponible en production.
+**Fichiers modifiés** :
+- Merge commit : `8103420` - Merge pull request #5: [ISSUE-002] Implémenter la persistence de connexion (Remember Me)
+- Branche `issue/002-remember-me` supprimée après merge
+**Notes** :
+- ✅ Merge effectué avec succès dans `develop`
+- ✅ Tous les changements sont maintenant dans la branche principale
+- ✅ Fonctionnalité disponible en production
+- 🎉 **FONCTIONNALITÉ TERMINÉE** - Le workflow est complet de la création du plan au merge final
 
 ## Objectifs Techniques
 
