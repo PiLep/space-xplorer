@@ -23,6 +23,7 @@
             <div class="space-y-1 font-mono">
                 @foreach($items as $item)
                     <a href="{{ $item['route'] ?? $item['url'] ?? '#' }}" 
+                       wire:navigate
                        class="block px-4 py-2 rounded text-sm transition-colors {{ $isActive($item['route'] ?? $item['url'] ?? '') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary' }}"
                        @if($isActive($item['route'] ?? $item['url'] ?? '')) aria-current="page" @endif>
                         > {{ strtoupper($item['label'] ?? $item['text'] ?? '') }}
@@ -39,6 +40,7 @@
                     <span class="text-gray-500 dark:text-gray-500 hidden sm:inline">|</span>
                 @endif
                 <a href="{{ $item['route'] ?? $item['url'] ?? '#' }}" 
+                   wire:navigate
                    class="px-3 py-2 rounded transition-colors {{ $isActive($item['route'] ?? $item['url'] ?? '') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-400 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary' }}"
                    @if($isActive($item['route'] ?? $item['url'] ?? '')) aria-current="page" @endif>
                     > {{ strtoupper($item['label'] ?? $item['text'] ?? '') }}
@@ -94,6 +96,7 @@
                                 };
                             @endphp
                             <a href="{{ $item['route'] ?? $item['url'] ?? '#' }}" 
+                               wire:navigate
                                class="{{ $colorClass }} transition-colors"
                                @if($isActive($item['route'] ?? $item['url'] ?? '')) aria-current="page" @endif>
                                 > {{ strtoupper($item['label'] ?? $item['text'] ?? '') }}
