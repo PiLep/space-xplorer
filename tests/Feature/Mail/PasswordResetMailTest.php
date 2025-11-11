@@ -43,15 +43,21 @@ it('reset password notification contains reset URL', function () {
 
     $mailable = new ResetPasswordNotification($token, $user->email);
 
-    expect($mailable->envelope()->subject)->toBe('Réinitialisation de votre mot de passe - Stellar');
+    $appName = config('app.name', 'Stellar');
+    expect($mailable->envelope()->subject)->toBe('Réinitialisation de votre mot de passe - '.$appName);
 
     $content = $mailable->content();
     expect($content->view)->toBe('emails.auth.reset-password')
+        ->and($content->text)->toBe('emails.auth.reset-password-text')
         ->and($content->with['token'])->toBe($token)
         ->and($content->with['email'])->toBe($user->email)
         ->and($content->with['resetUrl'])->toContain('/reset-password/')
         ->and($content->with['resetUrl'])->toContain($token)
-        ->and($content->with['resetUrl'])->toContain('email='.urlencode($user->email));
+        ->and($content->with['resetUrl'])->toContain('email='.urlencode($user->email))
+        ->and($content->with['resetUrl'])->toContain('utm_source=email')
+        ->and($content->with['resetUrl'])->toContain('utm_medium=email')
+        ->and($content->with['resetUrl'])->toContain('utm_campaign=password-reset')
+        ->and($content->with)->toHaveKey('preheader');
 });
 
 it('sends password reset confirmation after successful reset', function () {
@@ -85,12 +91,15 @@ it('password reset confirmation contains user information', function () {
 
     $mailable = new PasswordResetConfirmation($user);
 
-    expect($mailable->envelope()->subject)->toBe('Votre mot de passe a été réinitialisé - Stellar');
+    $appName = config('app.name', 'Stellar');
+    expect($mailable->envelope()->subject)->toBe('Votre mot de passe a été réinitialisé - '.$appName);
 
     $content = $mailable->content();
     expect($content->view)->toBe('emails.auth.password-reset-confirmation')
+        ->and($content->text)->toBe('emails.auth.password-reset-confirmation-text')
         ->and($content->with['user']->id)->toBe($user->id)
-        ->and($content->with['user']->email)->toBe($user->email);
+        ->and($content->with['user']->email)->toBe($user->email)
+        ->and($content->with)->toHaveKey('preheader');
 });
 
 it('reset password notification is sent to correct email', function () {
