@@ -515,3 +515,14 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 **Review complète** : [VISUAL-REVIEW-003-password-reset-post.md](../reviews/VISUAL-REVIEW-003-password-reset-post.md)
 **Notes** : L'implémentation visuelle peut être approuvée pour la production. Toutes les recommandations design de la review pré-implémentation ont été respectées.
 
+#### 2025-11-11 - Sam (Lead Dev) - Création de la Pull Request et merge dans develop
+**Statut** : ✅ Terminée
+**Détails** : Pull Request #7 créée et mergée avec succès dans la branche `develop`. Tous les tests passent (521 tests, 1756 assertions), toutes les reviews sont approuvées (technique, fonctionnelle, visuelle).
+**Pull Request** : [#7](https://github.com/PiLep/space-xplorer/pull/7)
+**Commit de merge** : `7d92f49` - Merge de `issue/003-implement-password-reset` dans `develop`
+**Fichiers modifiés** :
+- Tous les fichiers de l'implémentation mergés dans `develop`
+- Documents déplacés dans `docs/issues/closed/`, `docs/tasks/closed/`, et `docs/reviews/closed/`
+**Issue GitHub** : #6 fermée automatiquement par la PR
+**Notes** : La fonctionnalité est maintenant disponible dans `develop` et prête pour le déploiement. Tous les documents ont été organisés dans les dossiers `closed/`.
+
