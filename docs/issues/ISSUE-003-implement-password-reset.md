@@ -270,7 +270,7 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 
 ### Statut
 
-En cours
+✅ Terminée
 
 ### Historique
 
@@ -359,4 +359,52 @@ En cours
 - `docs/issues/ISSUE-003-implement-password-reset.md` (mis à jour)
 **Review complète** : [ARCHITECT-REVIEW-003-TASK-password-reset.md](../reviews/ARCHITECT-REVIEW-003-TASK-password-reset.md)
 **Notes** : Le plan est prêt pour l'implémentation par Jordan (Fullstack Developer). Les recommandations Medium priority devraient être intégrées lors de l'implémentation pour renforcer la sécurité et la maintenabilité.
+
+#### 2025-01-27 - Jordan (Fullstack Dev) - Implémentation complète
+**Statut** : ✅ Terminée
+**Détails** : Implémentation complète de la réinitialisation de mot de passe selon le plan TASK-003. Toutes les phases ont été implémentées avec succès :
+- Phase 1 : Événements `PasswordResetRequested` et `PasswordResetCompleted` créés, service `PasswordResetService` implémenté avec invalidation Remember Me et sessions
+- Phase 2 : Form Requests `ForgotPasswordRequest` et `ResetPasswordRequest` créés avec validation complète
+- Phase 3 : Contrôleur `PasswordResetController` créé avec toutes les méthodes, invalidation Remember Me et sessions implémentée
+- Phase 4 : Composants Livewire `ForgotPassword` et `ResetPassword` créés avec style terminal, indicateur de force du mot de passe, lien ajouté à LoginTerminal
+- Phase 5 : Mailables `ResetPasswordNotification` et `PasswordResetConfirmation` créés, templates d'emails avec style terminal, notification personnalisée configurée dans User
+- Phase 6 : Routes web configurées avec middleware `guest` et rate limiting (3/heure pour demandes, 5/heure pour tentatives)
+- Phase 7 : Tests complets écrits (unitaires événements, intégration contrôleur, Livewire, rate limiting, emails) - 51 tests, 127 assertions, tous passent
+- Phase 8 : ARCHITECTURE.md mis à jour avec documentation complète
+
+**Fichiers créés** :
+- `app/Events/PasswordResetRequested.php`
+- `app/Events/PasswordResetCompleted.php`
+- `app/Services/PasswordResetService.php`
+- `app/Http/Requests/ForgotPasswordRequest.php`
+- `app/Http/Requests/ResetPasswordRequest.php`
+- `app/Http/Controllers/Auth/PasswordResetController.php`
+- `app/Livewire/ForgotPassword.php`
+- `app/Livewire/ResetPassword.php`
+- `app/Mail/ResetPasswordNotification.php`
+- `app/Mail/PasswordResetConfirmation.php`
+- `app/Notifications/ResetPasswordNotification.php`
+- `resources/views/livewire/forgot-password.blade.php`
+- `resources/views/livewire/reset-password.blade.php`
+- `resources/views/auth/reset-password.blade.php`
+- `resources/views/emails/auth/reset-password.blade.php`
+- `resources/views/emails/auth/password-reset-confirmation.blade.php`
+- `tests/Unit/Events/PasswordResetRequestedTest.php`
+- `tests/Unit/Events/PasswordResetCompletedTest.php`
+- `tests/Feature/Auth/PasswordResetTest.php`
+- `tests/Feature/Auth/PasswordResetRateLimitTest.php`
+- `tests/Feature/Livewire/ForgotPasswordTest.php`
+- `tests/Feature/Livewire/ResetPasswordTest.php`
+- `tests/Feature/Mail/PasswordResetMailTest.php`
+
+**Fichiers modifiés** :
+- `app/Models/User.php` (méthode `sendPasswordResetNotification`)
+- `routes/web.php` (routes de réinitialisation)
+- `resources/views/livewire/login-terminal.blade.php` (lien "Mot de passe oublié ?")
+- `docs/memory_bank/ARCHITECTURE.md` (documentation mise à jour)
+
+**Commit** : `cd161c0` - feat: implement password reset functionality
+**Branche** : `issue/003-implement-password-reset`
+**Tests** : ✅ 51 tests passent (127 assertions)
+**Notes** : Toutes les recommandations architecturales ont été intégrées (invalidation Remember Me et sessions, événements pour traçabilité). L'implémentation est complète et prête pour la review fonctionnelle et visuelle.
 
