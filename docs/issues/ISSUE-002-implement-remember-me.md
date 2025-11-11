@@ -160,7 +160,7 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 
 ### Statut
 
-✅ Approuvé fonctionnellement
+En review - Pull Request créée
 
 ### GitHub
 
@@ -259,4 +259,16 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 - ✅ **Expérience utilisateur** : Parcours fluide, fonctionnalité réduit efficacement la friction de reconnexion
 - ✅ **Fonctionnalités métier** : Toutes les fonctionnalités MVP implémentées et fonctionnelles
 - ✅ **Choix de design** : Le texte "Memorize identity pattern" est un choix intentionnel pour maintenir la cohérence du style terminal sci-fi, parfaitement aligné avec l'identité visuelle du projet
+
+#### 2025-01-27 - Sam (Lead Dev) - Pull Request créée
+**Statut** : En review
+**Détails** : Pull Request #5 créée vers develop. Tous les tests passent (19 tests, 55 assertions). Code approuvé techniquement et fonctionnellement.
+**Fichiers modifiés** :
+- PR #5 : https://github.com/PiLep/space-xplorer/pull/5
+**Notes** :
+- ✅ Tous les changements commités et poussés sur la branche `issue/002-remember-me`
+- ✅ Code formaté avec Pint (155 fichiers)
+- ✅ Tous les tests passent (19 tests, 55 assertions)
+- ✅ Documentation complète (reviews techniques et fonctionnelles)
+- 📝 En attente de merge dans develop
 
