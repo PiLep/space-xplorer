@@ -4,7 +4,7 @@ Un jeu d'exploration de l'univers où les joueurs peuvent découvrir et explorer
 
 [![CI](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml/badge.svg)](https://github.com/PiLep/space-xplorer/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/gh/PiLep/space-xplorer/branch/develop/graph/badge.svg)](https://codecov.io/gh/PiLep/space-xplorer)
-[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F35f48317-63cc-44db-bf96-0c25475d62e5&style=plastic)](https://forge.laravel.com/bananapower/celestial-canopy-ehr/2924148)
+[![Laravel Forge Site Deployment Status](https://img.shields.io/endpoint?url=https%3A%2F%2Fforge.laravel.com%2Fsite-badges%2F35f48317-63cc-44db-bf96-0c25475d62e5%3Fdate%3D1&style=flat-square)](https://forge.laravel.com/bananapower/celestial-canopy-ehr/2924148)
 
 ## 🎮 À propos
 
