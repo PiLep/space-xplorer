@@ -15,7 +15,7 @@ it('renders verify email component', function () {
 
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->assertStatus(200)
-        ->assertSee('[INFO] A verification code has been sent to your email');
+        ->assertSee('[INFO] Authentication token dispatched to registered corporate email address');
 });
 
 it('redirects to login if not authenticated', function () {
@@ -56,7 +56,7 @@ it('shows error with incorrect code', function () {
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->set('code', '000000')
         ->assertHasErrors(['code'])
-        ->assertSee('[ERROR] Invalid verification code');
+        ->assertSee('[AUTH_FAILURE] Invalid security clearance code');
 
     $user->refresh();
     expect($user->email_verified_at)->toBeNull();
@@ -75,7 +75,7 @@ it('shows error with expired code', function () {
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->set('code', $code)
         ->assertHasErrors(['code'])
-        ->assertSee('[ERROR] Verification code has expired');
+        ->assertSee('[EXPIRED] Security clearance token has expired');
 });
 
 it('shows error when maximum attempts exceeded', function () {
@@ -91,7 +91,7 @@ it('shows error when maximum attempts exceeded', function () {
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->set('code', '123456')
         ->assertHasErrors(['code'])
-        ->assertSee('[ERROR] Maximum verification attempts exceeded');
+        ->assertSee('[SECURITY_LOCKOUT] Maximum authentication attempts exceeded');
 });
 
 it('resends code when cooldown has passed', function () {
@@ -105,7 +105,7 @@ it('resends code when cooldown has passed', function () {
 
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->call('resend')
-        ->assertSee('[SUCCESS] New verification code sent');
+        ->assertSee('[SUCCESS] New security clearance token dispatched');
 });
 
 it('prevents resending code before cooldown', function () {
@@ -119,7 +119,7 @@ it('prevents resending code before cooldown', function () {
 
     Livewire::test(\App\Livewire\VerifyEmail::class)
         ->call('resend')
-        ->assertSee('[INFO] Resend available in');
+        ->assertSee('[RATE_LIMIT] Anti-fraud protocol active');
 });
 
 it('auto-formats code input to 6 digits', function () {
@@ -143,7 +143,7 @@ it('displays attempts remaining', function () {
     ]);
 
     Livewire::test(\App\Livewire\VerifyEmail::class)
-        ->assertSee('2 verification attempts remaining');
+        ->assertSee('2 authentication attempts remaining before security lockout');
 });
 
 it('displays masked email', function () {
