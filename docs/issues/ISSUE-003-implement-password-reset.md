@@ -239,11 +239,32 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 - Invalider automatiquement le cookie "Remember Me" lors de la réinitialisation (amélioration sécurité)
 - Ajouter des notifications push ou SMS pour la réinitialisation (optionnel)
 
+## Review Visuelle
+
+### Review Design Pré-Implémentation
+
+**Date** : 2025-01-XX  
+**Designer** : Riley  
+**Statut** : ⚠️ Review Design - Prêt pour planification avec recommandations design
+
+**Résumé** : Review visuelle pré-implémentation effectuée pour valider les aspects design et UX avant la création du plan de développement. L'issue est bien pensée mais nécessite des clarifications design pour l'implémentation.
+
+**Recommandations principales** :
+1. Utiliser le style terminal pour maintenir la cohérence avec `LoginTerminal`
+2. Réutiliser les composants du design system existants (terminal-prompt, terminal-message, form-input, button, terminal-link)
+3. Standardiser les messages avec le format terminal (`[SUCCESS]`, `[ERROR]`, `[INFO]`, etc.)
+4. Ajouter le lien "Mot de passe oublié ?" sur la page de connexion avec le style terminal
+5. Implémenter l'indicateur de force du mot de passe dès le MVP pour améliorer l'UX
+6. Créer des templates d'emails cohérents avec l'identité visuelle
+
+**Review complète** : [VISUAL-REVIEW-003-password-reset.md](../reviews/VISUAL-REVIEW-003-password-reset.md)
+
 ## Références
 
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Authentification
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Parcours utilisateur
 - [Laravel Password Reset](https://laravel.com/docs/authentication#password-reset)
+- [VISUAL-REVIEW-003-password-reset.md](../reviews/VISUAL-REVIEW-003-password-reset.md) - Review visuelle pré-implémentation
 
 ## Suivi et Historique
 
@@ -276,4 +297,17 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 **Détails** : Issue GitHub créée : [#6](https://github.com/PiLep/space-xplorer/issues/6)
 **Branche** : `issue/003-implement-password-reset`
 **Notes** : Issue synchronisée avec GitHub, prête pour le développement
+
+#### 2025-01-XX - Riley (Designer) - Review visuelle pré-implémentation
+**Statut** : À faire
+**Détails** : Review visuelle pré-implémentation effectuée pour valider les aspects design et UX avant la création du plan de développement
+**Recommandations** :
+- Utiliser le style terminal pour maintenir la cohérence avec `LoginTerminal`
+- Réutiliser les composants du design system existants
+- Standardiser les messages avec le format terminal
+- Ajouter le lien "Mot de passe oublié ?" sur la page de connexion avec le style terminal
+- Implémenter l'indicateur de force du mot de passe dès le MVP
+- Créer des templates d'emails cohérents avec l'identité visuelle
+**Review complète** : [VISUAL-REVIEW-003-password-reset.md](../reviews/VISUAL-REVIEW-003-password-reset.md)
+**Notes** : Review design complétée, prêt pour la création du plan de développement avec les clarifications design intégrées
 
