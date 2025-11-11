@@ -174,10 +174,12 @@ Space Xplorer est un jeu web d'exploration de l'univers où les joueurs découvr
 
 ### Review Visuelle
 
-1. **Tester visuellement** : Utiliser Chrome DevTools MCP pour tester l'interface
-2. **Prendre des screenshots** : Capturer les écrans importants
-3. **Analyser** : Vérifier la cohérence, l'accessibilité, et l'UX
-4. **Documenter** : Créer un rapport de review avec screenshots et recommandations
+1. **Tester visuellement** : Utiliser Chrome DevTools MCP pour naviguer et tester l'interface
+2. **Prendre des screenshots** : Capturer les écrans importants avec Chrome DevTools MCP ou Playwright
+3. **Sauvegarder les screenshots** : Stocker les screenshots dans `docs/issues/screenshots/` pour référence
+4. **Analyser** : Vérifier la cohérence, l'accessibilité, et l'UX
+5. **Documenter** : Créer un rapport de review avec screenshots et recommandations
+6. **Intégrer dans GitHub** : Ajouter les screenshots dans les issues GitHub avec des liens vers les images du repo
 
 ## Outils et Technologies
 
@@ -187,6 +189,12 @@ Space Xplorer est un jeu web d'exploration de l'univers où les joueurs découvr
 - **Alpine.js** : Pour les interactions côté client
 - **Livewire** : Composants frontend réactifs
 - **Chrome DevTools MCP** : Pour tester et analyser visuellement
+  - Navigation dans l'application (`navigate_page`)
+  - Snapshots de la structure (`take_snapshot`)
+  - Screenshots (`take_screenshot`)
+  - Analyse de la console (`list_console_messages`)
+  - Analyse des requêtes réseau (`list_network_requests`)
+- **Playwright** : Alternative pour capturer des screenshots si Chrome DevTools MCP ne permet pas de sauvegarder directement
 
 ### Design System
 
@@ -253,11 +261,25 @@ En tant qu'agent Designer, tu es responsable de faire une review visuelle des im
 ### Processus de Review Visuelle
 
 1. **Tester visuellement** : Utiliser Chrome DevTools MCP pour naviguer dans l'application
+   - Naviguer vers les pages concernées avec `navigate_page`
+   - Prendre des snapshots avec `take_snapshot` pour analyser la structure
+   - Vérifier la console avec `list_console_messages` pour les erreurs JavaScript
+   - Analyser les requêtes réseau avec `list_network_requests` si nécessaire
 2. **Prendre des screenshots** : Capturer les écrans importants à chaque étape
+   - Utiliser `take_screenshot` avec `fullPage: true` pour capturer toute la page
+   - Sauvegarder dans `docs/issues/screenshots/` avec un nom descriptif (ex: `screenshot-002-login-current-state.png`)
+   - Alternative : Utiliser Playwright si Chrome DevTools MCP ne permet pas de sauvegarder directement
 3. **Analyser le design** : Vérifier la cohérence visuelle, l'alignement, les espacements
 4. **Évaluer l'UX** : Vérifier que l'expérience utilisateur est fluide et intuitive
 5. **Vérifier l'accessibilité** : S'assurer que le design est accessible
 6. **Documenter** : Créer un rapport avec screenshots et recommandations
+   - Créer un fichier `VISUAL-REVIEW-{numero}-{titre}.md` dans `docs/reviews/`
+   - Ajouter une section "Review Visuelle" dans l'issue correspondante
+   - Inclure les screenshots avec des descriptions détaillées
+7. **Intégrer dans GitHub** : 
+   - Commiter et pusher les screenshots dans le repo
+   - Ajouter un commentaire sur l'issue GitHub avec le screenshot
+   - Utiliser le format Markdown : `![Description](https://raw.githubusercontent.com/{owner}/{repo}/{branch}/docs/issues/screenshots/{filename}.png)`
 
 ### Critères de Review Visuelle
 
@@ -281,10 +303,30 @@ Consulte **[review-visual.md](../prompts/review-visual.md)** pour :
 
 ### Quand Faire une Review Visuelle
 
-- Après l'implémentation d'une nouvelle fonctionnalité
-- Lors de la review fonctionnelle avec Alex
-- Avant la création de la PR
-- Quand des problèmes visuels sont identifiés
+- **Avant l'implémentation** : Review de l'issue et du plan pour valider les aspects design
+- **Après l'implémentation** : Vérifier que le design est correctement appliqué
+- **Lors de la review fonctionnelle** : Avec Alex pour valider l'UX visuelle
+- **Avant la création de la PR** : S'assurer que tout est conforme avant le merge
+- **Quand des problèmes visuels sont identifiés** : Review ciblée pour corriger les problèmes
+
+### Intégration avec GitHub
+
+Lors des reviews visuelles, intégrer les résultats dans GitHub :
+
+1. **Screenshots dans le repo** :
+   - Sauvegarder dans `docs/issues/screenshots/`
+   - Nommer avec le format : `screenshot-{numero}-{description}.png`
+   - Commiter et pusher vers la branche de l'issue
+
+2. **Commentaires sur l'issue GitHub** :
+   - Ajouter un commentaire avec le résumé de la review
+   - Inclure les screenshots avec des liens vers les images du repo
+   - Format : `![Description](https://raw.githubusercontent.com/{owner}/{repo}/{branch}/docs/issues/screenshots/{filename}.png)`
+
+3. **Mise à jour de l'issue locale** :
+   - Ajouter une section "Review Visuelle" dans l'issue Markdown
+   - Référencer la review complète dans `docs/reviews/`
+   - Documenter les recommandations design principales
 
 ## Références
 

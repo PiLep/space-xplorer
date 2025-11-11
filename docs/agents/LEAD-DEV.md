@@ -182,6 +182,32 @@ Avant de créer un plan, toujours se demander :
 - Quels tests doivent être écrits ?
 - La documentation doit-elle être mise à jour ?
 
+## Bonnes Pratiques pour la Création de Plans
+
+### Vérifications Préalables
+
+Avant de créer un plan, toujours :
+
+1. **Examiner le code existant** : Lire les fichiers concernés (Services, Controllers, Models, etc.) pour comprendre l'implémentation actuelle
+2. **Vérifier les migrations Laravel standards** : Beaucoup de fonctionnalités Laravel incluent déjà des migrations standards (ex: `remember_token` dans `users`, `sessions` table, etc.)
+3. **Comprendre les patterns utilisés** : Identifier les patterns d'authentification, de validation, etc. déjà en place
+4. **Consulter la documentation** : Lire ARCHITECTURE.md et STACK.md pour comprendre le contexte technique
+
+### Patterns d'Authentification Observés
+
+**Authentification hybride** :
+- **Livewire (routes web)** : Utilise `AuthService` directement avec authentification par session (`Auth::login($user)`)
+- **API (clients externes)** : Utilise `AuthController` avec tokens Sanctum (`$user->createToken()`)
+- **Remember Me** : Utilise `Auth::login($user, $remember)` avec le paramètre booléen `$remember`
+  - Le champ `remember_token` existe déjà dans la migration `create_users_table.php`
+  - Laravel gère automatiquement la génération et validation du token
+  - Pour l'API Sanctum, les tokens ont déjà une durée de vie longue, mais `remember` peut affecter la session web si utilisée
+
+**Services métier** :
+- `AuthService` : Centralise la logique d'authentification (register, login, logout)
+- Les méthodes acceptent soit des FormRequest soit des paramètres directs (pour Livewire)
+- Les événements sont dispatchés après les actions importantes (`UserRegistered`, `UserLoggedIn`)
+
 ## Références
 
 Pour approfondir ta connaissance technique :
