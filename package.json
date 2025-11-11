@@ -5,7 +5,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "test:e2e": "playwright test --reporter=list",
+        "test:e2e": "playwright test",
         "test:e2e:debug": "playwright test --debug",
         "test:e2e:report": "PLAYWRIGHT_HTML_REPORT=true playwright test --reporter=list,html && playwright show-report"
     },
