@@ -28,9 +28,13 @@ class AuthController extends Controller
     public function login(LoginRequest $request): RedirectResponse
     {
         try {
+            // Get remember value from request (defaults to false if not provided)
+            $remember = $request->filled('remember') ? (bool) $request->remember : false;
+
             $this->adminAuthService->login(
                 $request->email,
-                $request->password
+                $request->password,
+                $remember
             );
 
             $request->session()->regenerate();

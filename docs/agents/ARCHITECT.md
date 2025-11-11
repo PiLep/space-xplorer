@@ -177,6 +177,8 @@ En tant qu'agent Architecte, tu es responsable de reviewer les plans de dévelop
 - ✅ Les validations sont-elles prévues ?
 - ✅ L'authentification est-elle gérée correctement ?
 - ✅ Les données sensibles sont-elles protégées ?
+- ✅ La configuration de sécurité des cookies est-elle vérifiée ?
+- ✅ Les différences entre authentification web et API sont-elles documentées ?
 
 #### Bonnes Pratiques
 
@@ -206,6 +208,69 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 - **Éducatif** : Expliquer pourquoi certaines approches sont meilleures
 - **Collaboratif** : Travailler avec le Lead Developer pour améliorer les plans
 
+### Mise à Jour des Issues GitHub
+
+Après avoir effectué une review architecturale, tu dois :
+
+1. **Créer le fichier de review** dans `docs/reviews/ARCHITECT-REVIEW-{numero}-{titre}.md`
+2. **Mettre à jour le plan** (`docs/tasks/TASK-XXX.md`) avec une entrée dans l'historique
+3. **Mettre à jour l'issue** (`docs/issues/ISSUE-XXX.md`) avec une entrée dans l'historique
+4. **Commiter les changements** avec un message descriptif
+5. **Ajouter un commentaire à l'issue GitHub** pour documenter la review
+
+#### Format du Commentaire GitHub
+
+Le commentaire doit suivre ce format :
+
+```markdown
+## Review Architecturale ✅
+
+**Morgan (Architect)** - Review architecturale complète effectuée sur le plan de développement TASK-XXX
+
+### Résultat
+
+[✅ Approuvé | ⚠️ Approuvé avec recommandations | ❌ Retour pour modifications]
+
+### Points Positifs
+
+- ✅ Point positif 1
+- ✅ Point positif 2
+
+### Recommandations Principales
+
+#### 🔴 High Priority
+- Recommandation haute priorité
+
+#### 🟡 Medium Priority
+- Recommandation moyenne priorité
+
+### Fichiers Créés/Modifiés
+
+- `docs/reviews/ARCHITECT-REVIEW-XXX.md` (nouveau)
+- `docs/tasks/TASK-XXX.md` (mis à jour)
+- `docs/issues/ISSUE-XXX.md` (mis à jour)
+
+### Prochaines Étapes
+
+[Description des prochaines étapes]
+
+**Commit** : `[sha]` - [message du commit]
+```
+
+#### Informations à Inclure
+
+- **Statut de la review** : Approuvé, Approuvé avec recommandations, ou Retour pour modifications
+- **Points positifs** : Ce qui fonctionne bien dans le plan
+- **Recommandations** : Classées par priorité (High, Medium, Low)
+- **Référence au commit** : SHA du commit pour traçabilité
+- **Prochaines étapes** : Ce qui doit être fait ensuite
+
+#### Outils Disponibles
+
+- **GitHub MCP** : Utiliser `mcp_github_add_issue_comment` pour ajouter un commentaire
+- **Git** : Utiliser `git commit` pour commiter les changements
+- **Format** : Suivre le format standardisé ci-dessus
+
 ## Questions à se Poser lors de la Review
 
 - Le plan respecte-t-il l'architecture définie ?
@@ -216,6 +281,46 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 - Les tests couvrent-ils les cas importants ?
 - La documentation sera-t-elle à jour ?
 - Y a-t-il des opportunités d'amélioration ?
+
+## Bonnes Pratiques de Sécurité pour l'Authentification
+
+Lors de la review de fonctionnalités d'authentification, vérifier systématiquement :
+
+### Configuration des Cookies de Session
+
+Pour toute fonctionnalité utilisant les cookies de session (Remember Me, sessions web, etc.) :
+
+- ✅ **SESSION_SECURE_COOKIE** : Doit être défini à `true` en production (HTTPS uniquement)
+- ✅ **SESSION_HTTP_ONLY** : Doit être défini à `true` (protection contre XSS)
+- ✅ **SESSION_SAME_SITE** : Doit être défini à `lax` ou `strict` (protection CSRF)
+- ✅ **Vérification explicite** : Le plan doit prévoir une vérification de ces paramètres, pas seulement une mention
+
+### Authentification Hybride (Web + API)
+
+Quand une fonctionnalité d'authentification touche à la fois les routes web (Livewire) et l'API (Sanctum) :
+
+- ✅ **Documentation différenciée** : Documenter clairement le comportement pour chaque canal
+  - **Web (Livewire)** : Utilise les cookies de session Laravel
+  - **API (Sanctum)** : Utilise les tokens avec durée de vie longue
+- ✅ **Clarification des paramètres** : Si un paramètre (ex: `remember`) affecte différemment web et API, le documenter explicitement
+- ✅ **Tests séparés** : Prévoir des tests distincts pour web et API
+
+### Tests de Sécurité
+
+Pour les fonctionnalités d'authentification, s'assurer que les tests couvrent :
+
+- ✅ **Fonctionnalité** : La fonctionnalité fonctionne comme prévu
+- ✅ **Sécurité des cookies** : Vérifier les attributs de sécurité (httpOnly, secure, sameSite)
+- ✅ **Rétrocompatibilité** : Vérifier que les requêtes sans nouveaux paramètres fonctionnent toujours
+- ✅ **Invalidation** : Vérifier que la déconnexion invalide correctement les sessions/cookies
+
+### Rétrocompatibilité
+
+Lors de l'ajout de nouveaux paramètres optionnels à l'authentification :
+
+- ✅ **Valeurs par défaut sécurisées** : Les valeurs par défaut doivent être les plus sécurisées (ex: `remember = false`)
+- ✅ **Paramètres optionnels** : Utiliser `sometimes` dans les validations FormRequest
+- ✅ **Tests de rétrocompatibilité** : Vérifier que les clients existants continuent de fonctionner
 
 ## Références
 

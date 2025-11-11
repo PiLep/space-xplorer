@@ -155,3 +155,52 @@ it('redirects to intended URL after login', function () {
     // Should redirect to intended URL
     $response->assertRedirect(route('admin.users.index'));
 });
+
+it('validates remember field as boolean', function () {
+    $response = $this->post('/admin/login', [
+        'email' => 'admin@example.com',
+        'password' => $this->password,
+        'remember' => 'not-a-boolean',
+    ]);
+
+    $response->assertSessionHasErrors(['remember']);
+});
+
+it('accepts remember field as true', function () {
+    $response = $this->post('/admin/login', [
+        'email' => 'admin@example.com',
+        'password' => $this->password,
+        'remember' => true,
+    ]);
+
+    $response->assertRedirect(route('admin.users.index'))
+        ->assertSessionHasNoErrors();
+
+    expect(Auth::guard('admin')->check())->toBeTrue()
+        ->and(Auth::guard('admin')->id())->toBe($this->admin->id);
+});
+
+it('accepts remember field as false', function () {
+    $response = $this->post('/admin/login', [
+        'email' => 'admin@example.com',
+        'password' => $this->password,
+        'remember' => false,
+    ]);
+
+    $response->assertRedirect(route('admin.users.index'))
+        ->assertSessionHasNoErrors();
+
+    expect(Auth::guard('admin')->check())->toBeTrue();
+});
+
+it('works without remember field (backward compatibility)', function () {
+    $response = $this->post('/admin/login', [
+        'email' => 'admin@example.com',
+        'password' => $this->password,
+    ]);
+
+    $response->assertRedirect(route('admin.users.index'))
+        ->assertSessionHasNoErrors();
+
+    expect(Auth::guard('admin')->check())->toBeTrue();
+});

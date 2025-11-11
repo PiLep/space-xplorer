@@ -151,3 +151,33 @@ it('successfully logs out admin user', function () {
 
     expect(Auth::guard('admin')->check())->toBeFalse();
 });
+
+it('uses remember false by default', function () {
+    $user = User::factory()->create([
+        'email' => 'admin@example.com',
+        'password' => Hash::make($this->password),
+        'is_super_admin' => true,
+    ]);
+
+    $result = $this->service->login('admin@example.com', $this->password);
+
+    expect($result)->toBeInstanceOf(User::class)
+        ->and(Auth::guard('admin')->check())->toBeTrue();
+
+    // Verify user is authenticated (remember false means session cookie, not persistent cookie)
+});
+
+it('uses remember true when provided', function () {
+    $user = User::factory()->create([
+        'email' => 'admin@example.com',
+        'password' => Hash::make($this->password),
+        'is_super_admin' => true,
+    ]);
+
+    $result = $this->service->login('admin@example.com', $this->password, true);
+
+    expect($result)->toBeInstanceOf(User::class)
+        ->and(Auth::guard('admin')->check())->toBeTrue();
+
+    // Verify user is authenticated (remember true creates persistent cookie)
+});

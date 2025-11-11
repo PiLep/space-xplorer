@@ -39,6 +39,10 @@ class AuthController extends Controller
 
     /**
      * Login user and return token.
+     *
+     * The 'remember' parameter affects the session cookie lifetime for web clients.
+     * For API clients using Sanctum tokens, tokens already have a long lifetime.
+     * See ARCHITECTURE.md for more details on Remember Me behavior.
      */
     public function login(LoginRequest $request, AuthService $authService): JsonResponse
     {
