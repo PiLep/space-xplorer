@@ -6,11 +6,15 @@
     <div class="mb-6">
         <x-terminal-prompt command="init_email_verification" />
         <x-terminal-message
-            message="[INFO] A verification code has been sent to your email"
+            message="[SECURITY] STELLAR_CORP_MEGA_INC identity verification protocol activated"
             :marginBottom="''"
         />
         <x-terminal-message
-            message="[INFO] Enter the 6-digit code below to verify your email address"
+            message="[INFO] Authentication token dispatched to registered corporate email address"
+            :marginBottom="''"
+        />
+        <x-terminal-message
+            message="[REQUIRED] Enter 6-digit security clearance code to proceed with account activation"
             :marginBottom="''"
         />
     </div>
@@ -29,7 +33,7 @@
             <!-- Email Display (masked) -->
             <div class="mb-6">
                 <x-terminal-message
-                    :message="'[INFO] Code sent to: ' . $this->maskedEmail"
+                    :message="'[SECURITY] Token dispatched to corporate address: ' . $this->maskedEmail"
                     :marginBottom="''"
                 />
             </div>
@@ -40,7 +44,7 @@
                 <x-form-input
                     type="text"
                     name="code"
-                    label="enter_verification_code"
+                    label="enter_security_clearance_code"
                     wireModel="code"
                     placeholder="000000"
                     variant="terminal"
@@ -61,30 +65,30 @@
                         };
                     @endphp
                     <x-terminal-message
-                        :message="$prefix . ' ' . $this->attemptsRemaining . ' verification attempts remaining'"
+                        :message="$prefix . ' ' . $this->attemptsRemaining . ' authentication attempts remaining before security lockout'"
                         marginBottom="mb-4"
                     />
                 @endif
 
                 <!-- Submit Command -->
                 <div class="mt-8">
-                    <x-terminal-prompt command="verify_email" />
+                    <x-terminal-prompt command="verify_security_clearance" />
                     <x-button
                         type="submit"
                         variant="primary"
                         size="lg"
                         wireLoading="verify"
-                        wireLoadingText="[PROCESSING] Verifying code..."
+                        wireLoadingText="[PROCESSING] Validating security clearance..."
                         terminal
                     >
-                        > VERIFY_CODE
+                        > EXECUTE_VERIFICATION
                     </x-button>
                 </div>
             </form>
 
             <!-- Resend Code Section -->
             <div class="mt-6">
-                <x-terminal-message message="[INFO] Didn't receive the code?" />
+                <x-terminal-message message="[QUERY] Authentication token not received? Request new clearance code from STELLAR_CORP_MEGA_INC security division" />
                 @if ($this->canResend)
                     <form wire:submit="resend" class="mt-2">
                         <x-button
@@ -92,17 +96,45 @@
                             variant="secondary"
                             size="md"
                             wireLoading="resend"
-                            wireLoadingText="[PROCESSING] Sending new code..."
+                            wireLoadingText="[PROCESSING] Dispatching new security token..."
                             terminal
                         >
-                            > RESEND_CODE
+                            > REQUEST_NEW_TOKEN
                         </x-button>
                     </form>
                 @else
-                    <x-terminal-message
-                        :message="'[INFO] Resend available in ' . $this->resendCooldown . ' seconds'"
-                        marginTop="mt-2"
-                    />
+                    <div 
+                        class="mt-2 text-sm text-error dark:text-error"
+                        x-data="{ 
+                            seconds: {{ $this->resendCooldown }},
+                            init() {
+                                if (this.seconds > 0) {
+                                    const interval = setInterval(() => {
+                                        this.seconds--;
+                                        if (this.seconds <= 0) {
+                                            clearInterval(interval);
+                                        }
+                                    }, 1000);
+                                }
+                            }
+                        }"
+                    >
+                        <div x-show="seconds > 0">
+                            [SECURITY] New token request available in <span class="font-bold" x-text="seconds"></span> seconds (anti-fraud protocol)
+                        </div>
+                        <div x-show="seconds <= 0" x-cloak>
+                            <div class="mb-2">
+                                [INFO] Rate limit expired. Please refresh the page to request a new token.
+                            </div>
+                            <button 
+                                type="button"
+                                @click="window.location.reload()"
+                                class="text-space-primary dark:text-space-primary hover:underline text-xs"
+                            >
+                                > REFRESH_PAGE
+                            </button>
+                        </div>
+                    </div>
                 @endif
             </div>
         </div>
