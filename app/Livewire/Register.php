@@ -53,6 +53,9 @@ class Register extends Component
                 'password' => $this->password,
             ]);
 
+            // Réinitialiser le flag pour que l'animation se joue sur le dashboard après inscription
+            session(['terminal_boot_seen' => false]);
+
             // Redirect to dashboard
             return $this->redirect(route('dashboard'), navigate: true);
         } catch (\Illuminate\Validation\ValidationException $e) {

@@ -25,7 +25,21 @@ class Dashboard extends Component
 
     public function mount()
     {
-        $this->startTerminalBoot();
+        // Vérifier si l'animation a déjà été vue dans cette session
+        $terminalBootSeen = session('terminal_boot_seen', false);
+
+        if ($terminalBootSeen) {
+            // Si déjà vue, charger directement les données sans animation
+            $this->terminalBooted = true;
+            $this->bootStep = 0;
+            $this->bootMessages = [];
+            $this->loadUserAndPlanet();
+        } else {
+            // Première visite, démarrer l'animation
+            $this->startTerminalBoot();
+            // Marquer comme vue après le démarrage
+            session(['terminal_boot_seen' => true]);
+        }
     }
 
     public function startTerminalBoot()

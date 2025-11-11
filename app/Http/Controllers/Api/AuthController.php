@@ -76,6 +76,8 @@ class AuthController extends Controller
 
         // Logout user from session (only if session auth is being used)
         if (Auth::check()) {
+            // Réinitialiser le flag d'animation terminal lors de la déconnexion
+            session()->forget('terminal_boot_seen');
             Auth::guard('web')->logout();
         }
 
