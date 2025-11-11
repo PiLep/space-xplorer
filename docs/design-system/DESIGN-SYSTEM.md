@@ -239,17 +239,22 @@ docs/design-system/
     ├── COMPONENT-terminal-link.md    (Terminal)
     ├── COMPONENT-planet-card.md      (Spécialisé)
     ├── COMPONENT-loading-spinner.md  (Spécialisé)
-    └── COMPONENT-scan-placeholder.md  (Spécialisé)
+    ├── COMPONENT-scan-placeholder.md (Spécialisé)
+    ├── COMPONENT-container.md        (Base)
+    ├── COMPONENT-table.md            (Utilitaires)
+    ├── COMPONENT-progress-bar.md     (Utilitaires)
+    └── COMPONENT-email.md            (Email)
 ```
 
 ### Organisation des Composants
 
-Les composants sont organisés en quatre catégories :
+Les composants sont organisés en cinq catégories :
 
-1. **Composants de Base** : Éléments fondamentaux réutilisables (Button, Form Input, Form Card, Form Link, Page Header, Card, Alert)
+1. **Composants de Base** : Éléments fondamentaux réutilisables (Button, Form Input, Form Card, Form Link, Page Header, Card, Alert, Container)
 2. **Composants Terminal** : Interfaces de type console (Terminal Prompt, Terminal Boot, Terminal Message, Terminal Link)
 3. **Composants Spécialisés** : Composants spécifiques au projet (Planet Card, Loading Spinner, Scan Placeholder)
-4. **Composants Utilitaires** : Composants d'organisation (Button Group, Navigation, Modal)
+4. **Composants Utilitaires** : Composants d'organisation (Button Group, Navigation, Modal, Table, Progress Bar)
+5. **Templates Email** : Templates d'email avec style terminal (Reset Password Notification, Password Reset Confirmation)
 
 Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la documentation complète de tous les composants.
 

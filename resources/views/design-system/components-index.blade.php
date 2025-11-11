@@ -19,10 +19,10 @@
                         > COMPOSANTS_DE_BASE
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Éléments fondamentaux réutilisables : Button, Form Input, Form Select, Form Card, Form Link, Page Header, Card, Alert, Badge
+                        Éléments fondamentaux réutilisables : Button, Form Input, Form Select, Form Card, Form Link, Page Header, Card, Alert, Badge, Container
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        9 composants →
+                        10 composants →
                     </p>
                 </div>
             </a>
@@ -64,10 +64,25 @@
                         > COMPOSANTS_UTILITAIRES
                     </h3>
                     <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                        Composants d'organisation : Button Group, Navigation, Modal, Filter Card, Description List, Empty State
+                        Composants d'organisation : Button Group, Navigation, Modal, Filter Card, Description List, Empty State, Table, Progress Bar
                     </p>
                     <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
-                        6 composants →
+                        8 composants →
+                    </p>
+                </div>
+            </a>
+            
+            <!-- Templates Email -->
+            <a href="{{ route('design-system.components.emails') }}" class="group">
+                <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple hover:bg-gray-50 dark:hover:bg-surface-medium transition-colors cursor-pointer">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2 dark:text-glow-subtle font-mono group-hover:text-space-primary dark:group-hover:text-space-primary transition-colors">
+                        > TEMPLATES_EMAIL
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                        Templates d'email avec style terminal : Reset Password Notification, Password Reset Confirmation
+                    </p>
+                    <p class="text-xs text-space-secondary dark:text-space-secondary font-mono">
+                        2 templates →
                     </p>
                 </div>
             </a>
