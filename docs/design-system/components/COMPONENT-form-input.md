@@ -124,7 +124,7 @@ Le composant Form Input est un composant réutilisable pour créer des champs de
 ```html
 <div class="mb-6">
     <div class="text-sm text-gray-500 dark:text-gray-500 mb-2">
-        <span class="text-space-primary dark:text-space-primary">SYSTEM@SPACE-XPLORER:~$</span> 
+        <span class="text-space-primary dark:text-space-primary">SYSTEM@STELLAR:~$</span> 
         <span class="text-space-secondary dark:text-space-secondary">enter_email</span>
     </div>
     <input

@@ -296,7 +296,7 @@ class Modal extends Component
     <div class="bg-surface-dark border border-border-dark rounded-lg p-6 max-w-md w-full terminal-border-simple">
         <div class="mb-4">
             <div class="text-sm text-space-primary font-mono mb-2">
-                SYSTEM@SPACE-XPLORER:~$ <span class="text-space-secondary">confirm_action</span>
+                SYSTEM@STELLAR:~$ <span class="text-space-secondary">confirm_action</span>
             </div>
         </div>
         <h2 class="text-2xl font-bold text-white mb-4 font-mono">CONFIRMATION</h2>

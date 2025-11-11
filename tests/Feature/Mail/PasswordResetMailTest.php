@@ -43,7 +43,7 @@ it('reset password notification contains reset URL', function () {
 
     $mailable = new ResetPasswordNotification($token, $user->email);
 
-    expect($mailable->envelope()->subject)->toBe('Réinitialisation de votre mot de passe - Space Xplorer');
+    expect($mailable->envelope()->subject)->toBe('Réinitialisation de votre mot de passe - Stellar');
 
     $content = $mailable->content();
     expect($content->view)->toBe('emails.auth.reset-password')
@@ -85,7 +85,7 @@ it('password reset confirmation contains user information', function () {
 
     $mailable = new PasswordResetConfirmation($user);
 
-    expect($mailable->envelope()->subject)->toBe('Votre mot de passe a été réinitialisé - Space Xplorer');
+    expect($mailable->envelope()->subject)->toBe('Votre mot de passe a été réinitialisé - Stellar');
 
     $content = $mailable->content();
     expect($content->view)->toBe('emails.auth.password-reset-confirmation')

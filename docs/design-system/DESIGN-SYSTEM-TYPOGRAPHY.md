@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-La typographie de Space Xplorer combine une police moderne et lisible (Instrument Sans) avec une police monospace pour les données techniques, créant une hiérarchie claire qui guide l'utilisateur dans l'exploration de l'univers spatial.
+La typographie de Stellar combine une police moderne et lisible (Instrument Sans) avec une police monospace pour les données techniques, créant une hiérarchie claire qui guide l'utilisateur dans l'exploration de l'univers spatial.
 
 ## Familles de Polices
 
@@ -50,7 +50,7 @@ La typographie de Space Xplorer combine une police moderne et lisible (Instrumen
 **Exemple** :
 ```html
 <h1 class="text-4xl font-bold tracking-tight text-white mb-4">
-  Welcome to Space Xplorer
+  Welcome to Stellar
 </h1>
 ```
 

@@ -14,7 +14,7 @@
                 </a>
                 <h2 class="mb-2 font-mono text-3xl font-bold text-white">COMPOSANTS_SPECIALISES</h2>
                 <p class="text-gray-600 dark:text-gray-400">
-                    Composants spécifiques au projet Space Xplorer
+                    Composants spécifiques au projet Stellar
                 </p>
             </div>
 

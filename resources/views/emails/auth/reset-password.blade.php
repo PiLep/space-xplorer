@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Réinitialisation de mot de passe - Space Xplorer</title>
+    <title>Réinitialisation de mot de passe - Stellar</title>
     <style>
         body {
             font-family: 'Courier New', monospace;
@@ -72,7 +72,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+            <div class="prompt">SYSTEM@STELLAR:~$</div>
             <div class="message success">[INFO] Password Reset Request</div>
         </div>
 
@@ -81,7 +81,7 @@
         </div>
 
         <div class="message">
-            Vous avez demandé la réinitialisation de votre mot de passe pour votre compte Space Xplorer.
+            Vous avez demandé la réinitialisation de votre mot de passe pour votre compte Stellar.
         </div>
 
         <div class="message info">
@@ -107,9 +107,9 @@
         </div>
 
         <div class="footer">
-            <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+            <div class="prompt">SYSTEM@STELLAR:~$</div>
             <div class="message" style="font-size: 12px; color: #666666;">
-                Space Xplorer - Exploration Spatiale Interactive
+                Stellar - Exploration Spatiale Interactive
             </div>
         </div>
     </div>

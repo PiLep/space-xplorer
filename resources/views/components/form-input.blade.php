@@ -46,12 +46,12 @@
                     if (!$user->relationLoaded('homePlanet')) {
                         $user->load('homePlanet');
                     }
-                    $planetName = $user->homePlanet?->name ?? 'SPACE-XPLORER';
+                    $planetName = $user->homePlanet?->name ?? 'STELLAR';
                     $userName = str_replace(' ', '_', strtoupper($user->name));
                     $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
                     $prompt = $userName . '@' . $planetNameUpper . ':~$';
                 } else {
-                    $prompt = 'SYSTEM@SPACE-XPLORER:~$';
+                    $prompt = 'SYSTEM@STELLAR:~$';
                 }
             @endphp
             <span class="text-space-primary dark:text-space-primary">{{ $prompt }}</span> 

@@ -1,6 +1,6 @@
-# Design System - Space Xplorer
+# Design System - Stellar
 
-Bienvenue dans le design system de Space Xplorer ! Ce système définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial.
+Bienvenue dans le design system de Stellar ! Ce système définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial.
 
 ## Documentation
 
@@ -15,6 +15,10 @@ Bienvenue dans le design system de Space Xplorer ! Ce système définit l'identi
 - **[DESIGN-SYSTEM-SPACING.md](./DESIGN-SYSTEM-SPACING.md)** - Espacements et grilles
 - **[DESIGN-SYSTEM-ANIMATIONS.md](./DESIGN-SYSTEM-ANIMATIONS.md)** - Animations et transitions
 - **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** - Vue d'ensemble des composants
+
+### Branding
+
+- **[BRANDING-FAVICONS.md](./BRANDING-FAVICONS.md)** - Favicons et icônes de l'application (PWA, iOS, Android)
 
 ### Accessibilité
 
@@ -31,6 +35,8 @@ Tous les composants sont documentés dans le dossier `components/` et organisés
 - **[COMPONENT-form-input.md](./components/COMPONENT-form-input.md)** - Composant réutilisable pour les champs de formulaire (Classic, Terminal)
 - **[COMPONENT-form-select.md](./components/COMPONENT-form-select.md)** - Champ select avec label et validation
 - **[COMPONENT-form-card.md](./components/COMPONENT-form-card.md)** - Conteneur standardisé pour les formulaires (Standard, Header Séparé)
+- **[COMPONENT-page-header.md](./components/COMPONENT-page-header.md)** - En-tête de page standardisé avec titre et description
+- **[COMPONENT-logo.md](./components/COMPONENT-logo.md)** - Logo "STELLAR" avec style terminal/sci-fi (5 tailles: xs, sm, md, lg, xl, scanlines optionnelles)
 - **[COMPONENT-card.md](./components/COMPONENT-card.md)** - Cards et conteneurs génériques
 - **[COMPONENT-alert.md](./components/COMPONENT-alert.md)** - Messages d'alerte et notifications
 - **[COMPONENT-badge.md](./components/COMPONENT-badge.md)** - Indicateurs de statut et labels avec variantes sémantiques
@@ -86,6 +92,8 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 - **Form Input** : Composant réutilisable pour les champs de formulaire (Classic, Terminal)
 - **Form Select** : Champ select avec label et validation
 - **Form Card** : Conteneur standardisé pour les formulaires (Standard, Header Séparé)
+- **Page Header** : En-tête de page standardisé avec titre et description
+- **Logo** : Logo "STELLAR" avec style terminal/sci-fi (5 tailles: xs, sm, md, lg, xl, scanlines optionnelles)
 - **Card** : Conteneurs pour afficher des informations
 - **Alert** : Messages d'alerte et notifications (Success, Error, Warning, Info)
 - **Badge** : Indicateurs de statut et labels avec variantes sémantiques (Success, Warning, Error, Info, Generating, Default)

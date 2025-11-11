@@ -1,10 +1,10 @@
-# Get Started - Usine Logicielle Space Xplorer
+# Get Started - Usine Logicielle Stellar
 
-Guide pour démarrer avec le système de workflow et les agents IA de Space Xplorer.
+Guide pour démarrer avec le système de workflow et les agents IA de Stellar.
 
 ## Vue d'Ensemble
 
-Space Xplorer utilise un système de workflow structuré avec des **agents IA** spécialisés qui collaborent pour développer des fonctionnalités de manière organisée et traçable.
+Stellar utilise un système de workflow structuré avec des **agents IA** spécialisés qui collaborent pour développer des fonctionnalités de manière organisée et traçable.
 
 ### Les Agents
 

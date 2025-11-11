@@ -25,7 +25,7 @@ Le composant Terminal Boot affiche une séquence de messages de démarrage syst�
 ### Structure
 
 ```
-SYSTEM@SPACE-XPLORER:~$ boot_terminal
+SYSTEM@STELLAR:~$ boot_terminal
 [INIT] Initializing terminal interface...
 [OK] Terminal initialized
 [LOAD] Connecting to database...

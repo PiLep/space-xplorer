@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>404 - Page Not Found | Space Xplorer</title>
+    <title>404 - Page Not Found | Stellar</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
         <!-- Terminal Header -->
         <div class="mb-6">
             <div class="text-sm text-space-primary dark:text-space-primary mb-2">
-                <span class="text-gray-500 dark:text-gray-500">SYSTEM@SPACE-XPLORER:~$</span> <span class="text-space-primary dark:text-space-primary">locate_coordinates</span>
+                <span class="text-gray-500 dark:text-gray-500">SYSTEM@STELLAR:~$</span> <span class="text-space-primary dark:text-space-primary">locate_coordinates</span>
             </div>
             <div class="text-sm text-error dark:text-error mb-2">
                 [ERROR] Coordinates not found in star system database

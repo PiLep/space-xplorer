@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Les templates d'email de Space Xplorer sont conçus pour maintenir la cohérence avec l'identité visuelle rétro-futuriste du design system. Ils utilisent le style terminal avec des couleurs fluorescentes et une typographie monospace pour créer une expérience immersive même dans les emails.
+Les templates d'email de Stellar sont conçus pour maintenir la cohérence avec l'identité visuelle rétro-futuriste du design system. Ils utilisent le style terminal avec des couleurs fluorescentes et une typographie monospace pour créer une expérience immersive même dans les emails.
 
 ## Principes de Design
 
@@ -26,7 +26,7 @@ Tous les emails suivent cette structure :
 
 ```
 ┌─────────────────────────────────────┐
-│ SYSTEM@SPACE-XPLORER:~$             │
+│ SYSTEM@STELLAR:~$             │
 │ [STATUS] Message d'en-tête          │
 ├─────────────────────────────────────┤
 │                                     │
@@ -35,7 +35,7 @@ Tous les emails suivent cette structure :
 │ [ACTION] Bouton d'action            │
 │                                     │
 ├─────────────────────────────────────┤
-│ SYSTEM@SPACE-XPLORER:~$             │
+│ SYSTEM@STELLAR:~$             │
 │ Footer                              │
 └─────────────────────────────────────┘
 ```
@@ -48,7 +48,7 @@ En-tête standardisé avec prompt système et message de statut.
 
 ```html
 <div class="header">
-    <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+    <div class="prompt">SYSTEM@STELLAR:~$</div>
     <div class="message success">[STATUS] Message</div>
 </div>
 ```
@@ -87,9 +87,9 @@ Footer standardisé avec prompt système et informations de l'application.
 
 ```html
 <div class="footer">
-    <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+    <div class="prompt">SYSTEM@STELLAR:~$</div>
     <div class="message" style="font-size: 12px; color: #666666;">
-        Space Xplorer - Exploration Spatiale Interactive
+        Stellar - Exploration Spatiale Interactive
     </div>
 </div>
 ```
@@ -255,7 +255,7 @@ body {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Titre de l'Email - Space Xplorer</title>
+    <title>Titre de l'Email - Stellar</title>
     <style>
         /* Styles CSS standard */
     </style>
@@ -263,7 +263,7 @@ body {
 <body>
     <div class="container">
         <div class="header">
-            <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+            <div class="prompt">SYSTEM@STELLAR:~$</div>
             <div class="message success">[STATUS] Message d'en-tête</div>
         </div>
 
@@ -278,9 +278,9 @@ body {
         </div>
 
         <div class="footer">
-            <div class="prompt">SYSTEM@SPACE-XPLORER:~$</div>
+            <div class="prompt">SYSTEM@STELLAR:~$</div>
             <div class="message" style="font-size: 12px; color: #666666;">
-                Space Xplorer - Exploration Spatiale Interactive
+                Stellar - Exploration Spatiale Interactive
             </div>
         </div>
     </div>

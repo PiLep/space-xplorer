@@ -1,4 +1,4 @@
-# Architecture - Space Xplorer
+# Architecture - Stellar
 
 ## Architecture technique
 

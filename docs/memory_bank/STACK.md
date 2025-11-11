@@ -1,4 +1,4 @@
-# Stack Technique - Space Xplorer
+# Stack Technique - Stellar
 
 ## Vue d'ensemble
 

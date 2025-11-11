@@ -1,10 +1,10 @@
-# Get Started - Space Xplorer
+# Get Started - Stellar
 
-Guide complet pour démarrer le projet Space Xplorer en local.
+Guide complet pour démarrer le projet Stellar en local.
 
 ## Vue d'Ensemble
 
-Space Xplorer utilise **Laravel Sail** (Docker) pour simplifier l'environnement de développement. Tous les services nécessaires (PHP, MySQL, Redis) sont conteneurisés.
+Stellar utilise **Laravel Sail** (Docker) pour simplifier l'environnement de développement. Tous les services nécessaires (PHP, MySQL, Redis) sont conteneurisés.
 
 ## Prérequis
 
@@ -239,7 +239,7 @@ Toutes les commandes Laravel doivent être préfixées par `./vendor/bin/sail` :
 
 ```env
 # Application
-APP_NAME="Space Xplorer"
+APP_NAME="Stellar"
 APP_ENV=local
 APP_DEBUG=true
 APP_URL=http://localhost

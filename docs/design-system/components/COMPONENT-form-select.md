@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Form Select est un champ select avec label, validation et support du mode sombre. Il est compatible avec le design system Space Xplorer.
+Le composant Form Select est un champ select avec label, validation et support du mode sombre. Il est compatible avec le design system Stellar.
 
 **Quand l'utiliser** :
 - Champs de sélection dans les formulaires

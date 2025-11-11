@@ -28,7 +28,7 @@ class PasswordResetConfirmation extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Votre mot de passe a été réinitialisé - Space Xplorer',
+            subject: 'Votre mot de passe a été réinitialisé - Stellar',
         );
     }
 
