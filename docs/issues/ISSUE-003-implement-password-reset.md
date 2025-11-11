@@ -338,3 +338,25 @@ En cours
 **Branche Git** : `issue/003-implement-password-reset`
 **Notes** : Estimation totale : ~12h de développement. Le plan est prêt pour la review architecturale par Morgan (Architect).
 
+#### 2025-01-27 - Morgan (Architect) - Review architecturale du plan
+**Statut** : En cours
+**Détails** : Review architecturale complète effectuée sur le plan de développement TASK-003. Le plan est approuvé avec recommandations.
+**Résultat** : ✅ Approuvé avec recommandations
+**Points positifs** :
+- Intégration complète des recommandations architecturales de la review pré-planification
+- Architecture événementielle bien pensée avec événements `PasswordResetRequested` et `PasswordResetCompleted`
+- Sécurité bien couverte (rate limiting, invalidation Remember Me, tokens sécurisés)
+- Tests complets prévus (unitaires, intégration, Livewire, rate limiting, emails)
+- Documentation prévue (mise à jour ARCHITECTURE.md)
+**Recommandations principales** :
+- 🟡 Medium Priority : Clarifier l'invalidation des sessions web en plus du Remember Me dans la tâche 3.2
+- 🟡 Medium Priority : Vérifier la configuration de sécurité des cookies (`SESSION_SECURE_COOKIE`, `SESSION_HTTP_ONLY`, `SESSION_SAME_SITE`)
+- 🟢 Low Priority : Clarifier la structure des données des événements dans les tâches 1.1 et 1.2
+- 🟢 Low Priority : Préciser l'approche technique pour le rate limiting dans la tâche 6.2
+**Fichiers modifiés** :
+- `docs/reviews/ARCHITECT-REVIEW-003-TASK-password-reset.md` (nouveau)
+- `docs/tasks/TASK-003-implement-password-reset.md` (mis à jour)
+- `docs/issues/ISSUE-003-implement-password-reset.md` (mis à jour)
+**Review complète** : [ARCHITECT-REVIEW-003-TASK-password-reset.md](../reviews/ARCHITECT-REVIEW-003-TASK-password-reset.md)
+**Notes** : Le plan est prêt pour l'implémentation par Jordan (Fullstack Developer). Les recommandations Medium priority devraient être intégrées lors de l'implémentation pour renforcer la sécurité et la maintenabilité.
+
