@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le système d'espacement de Space Xplorer utilise une échelle basée sur 4px pour créer une cohérence visuelle à travers toute l'application. Les grilles adaptatives assurent un layout responsive sur tous les appareils.
+Le système d'espacement de Stellar utilise une échelle basée sur 4px pour créer une cohérence visuelle à travers toute l'application. Les grilles adaptatives assurent un layout responsive sur tous les appareils.
 
 ## Système d'Espacement
 
@@ -133,7 +133,7 @@ Tous les espacements sont des multiples de 4px pour garantir la cohérence et fa
 
 ### Composant Container Réutilisable
 
-Space Xplorer utilise un composant `<x-container>` standardisé pour garantir la cohérence des largeurs maximales et du responsive design à travers toute l'application.
+Stellar utilise un composant `<x-container>` standardisé pour garantir la cohérence des largeurs maximales et du responsive design à travers toute l'application.
 
 **Usage** :
 ```blade

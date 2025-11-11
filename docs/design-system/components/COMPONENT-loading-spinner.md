@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Loading Spinner affiche un indicateur de chargement avec un message optionnel dans le style terminal de Space Xplorer. Il est utilisé pour indiquer qu'une opération est en cours.
+Le composant Loading Spinner affiche un indicateur de chargement avec un message optionnel dans le style terminal de Stellar. Il est utilisé pour indiquer qu'une opération est en cours.
 
 **Quand l'utiliser** :
 - Chargement de données asynchrones

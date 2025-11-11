@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Scan Placeholder affiche un indicateur visuel de scan en cours dans le style Alien/sci-fi de Space Xplorer. Il est utilisé pour indiquer qu'une image, vidéo ou avatar est en cours de génération par le système.
+Le composant Scan Placeholder affiche un indicateur visuel de scan en cours dans le style Alien/sci-fi de Stellar. Il est utilisé pour indiquer qu'une image, vidéo ou avatar est en cours de génération par le système.
 
 **Quand l'utiliser** :
 - Génération d'image de planète en cours

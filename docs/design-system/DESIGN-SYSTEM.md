@@ -1,8 +1,8 @@
-# Design System - Space Xplorer
+# Design System - Stellar
 
 ## Vue d'Ensemble
 
-Le design system de Space Xplorer définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial. Inspiré de l'esthétique rétro-futuriste des films Alien, le design system combine une ambiance sombre et industrielle avec des accents fluorescents pour créer une interface qui évoque les vaisseaux spatiaux et les stations spatiales.
+Le design system de Stellar définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial. Inspiré de l'esthétique rétro-futuriste des films Alien, le design system combine une ambiance sombre et industrielle avec des accents fluorescents pour créer une interface qui évoque les vaisseaux spatiaux et les stations spatiales.
 
 **Objectifs** :
 - Créer une identité visuelle forte et reconnaissable

@@ -1,6 +1,6 @@
-# Technical Rules - Space Xplorer
+# Technical Rules - Stellar
 
-Ce document contient les règles techniques validées pour le projet Space Xplorer. Ces règles améliorent la qualité du code et standardisent les bonnes pratiques de l'équipe.
+Ce document contient les règles techniques validées pour le projet Stellar. Ces règles améliorent la qualité du code et standardisent les bonnes pratiques de l'équipe.
 
 ## Processus d'Ajout
 

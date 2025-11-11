@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>503 - Service Unavailable | Space Xplorer</title>
+    <title>503 - Service Unavailable | Stellar</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +18,7 @@
         <!-- Terminal Header -->
         <div class="mb-6">
             <div class="text-sm text-space-primary dark:text-space-primary mb-2">
-                <span class="text-gray-500 dark:text-gray-500">SYSTEM@SPACE-XPLORER:~$</span> <span class="text-space-primary dark:text-space-primary">check_system_status</span>
+                <span class="text-gray-500 dark:text-gray-500">SYSTEM@STELLAR:~$</span> <span class="text-space-primary dark:text-space-primary">check_system_status</span>
             </div>
             <div class="text-sm text-warning dark:text-warning mb-2">
                 [WARNING] System maintenance in progress

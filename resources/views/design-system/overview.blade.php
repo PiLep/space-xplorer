@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Design System - Space Xplorer')
+@section('title', 'Design System - Stellar')
 
 @section('content')
 <x-design-system.layout>
@@ -10,7 +10,7 @@
             OVERVIEW
         </h2>
         <p class="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-            Documentation complète du design system de Space Xplorer. 
+            Documentation complète du design system de Stellar. 
             Esthétique rétro-futuriste inspirée des films Alien.
         </p>
     </div>

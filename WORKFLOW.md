@@ -1,8 +1,8 @@
-# Workflow - Space Xplorer
+# Workflow - Stellar
 
 ## Vue d'Ensemble
 
-Ce document décrit le workflow complet de développement de Space Xplorer, de la création d'une issue produit jusqu'au merge de la Pull Request dans `develop`. Le workflow garantit la qualité technique et fonctionnelle à chaque étape grâce à des reviews approfondies et des vérifications finales perfectionnistes.
+Ce document décrit le workflow complet de développement de Stellar, de la création d'une issue produit jusqu'au merge de la Pull Request dans `develop`. Le workflow garantit la qualité technique et fonctionnelle à chaque étape grâce à des reviews approfondies et des vérifications finales perfectionnistes.
 
 ## Schéma du Workflow
 

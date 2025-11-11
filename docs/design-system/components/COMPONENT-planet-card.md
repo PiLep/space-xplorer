@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Planet Card est spécialement conçu pour afficher les caractéristiques et informations d'une planète dans Space Xplorer. Il utilise un layout horizontal avec image, header avec nom et type, description, et liste de caractéristiques pour une présentation claire et immersive.
+Le composant Planet Card est spécialement conçu pour afficher les caractéristiques et informations d'une planète dans Stellar. Il utilise un layout horizontal avec image, header avec nom et type, description, et liste de caractéristiques pour une présentation claire et immersive.
 
 **Quand l'utiliser** :
 - Affichage de la planète d'origine d'un joueur

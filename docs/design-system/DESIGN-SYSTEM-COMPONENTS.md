@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Les composants de Space Xplorer sont conçus pour être réutilisables, cohérents, et alignés avec l'identité visuelle rétro-futuriste inspirée des films Alien. Chaque composant respecte les principes du design system et assure une expérience utilisateur optimale.
+Les composants de Stellar sont conçus pour être réutilisables, cohérents, et alignés avec l'identité visuelle rétro-futuriste inspirée des films Alien. Chaque composant respecte les principes du design system et assure une expérience utilisateur optimale.
 
 ## Structure des Composants
 
@@ -212,7 +212,7 @@ Voir **[COMPONENT-terminal-prompt.md](./components/COMPONENT-terminal-prompt.md)
 
 **Caractéristiques** :
 - Style monospace avec prompt système
-- Format `SYSTEM@SPACE-XPLORER:~$ command`
+- Format `SYSTEM@STELLAR:~$ command`
 - Support des couleurs du design system
 
 **Exemple** :

@@ -1,8 +1,8 @@
-# Project Brief - Space Xplorer
+# Project Brief - Stellar
 
 ## Vision métier
 
-Space Xplorer est un jeu d'exploration de l'univers. Les joueurs peuvent découvrir et explorer différents systèmes stellaires, planètes et objets célestes dans un univers virtuel.
+Stellar est un jeu d'exploration de l'univers. Les joueurs peuvent découvrir et explorer différents systèmes stellaires, planètes et objets célestes dans un univers virtuel.
 
 **MVP (Version initiale)** : 
 - Chaque joueur commence avec une planète d'origine générée aléatoirement

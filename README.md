@@ -1,4 +1,4 @@
-# Space Xplorer 🚀
+# Stellar 🚀
 
 Un jeu d'exploration de l'univers où les joueurs peuvent découvrir et explorer différents systèmes stellaires, planètes et objets célestes dans un univers virtuel.
 
@@ -7,7 +7,7 @@ Un jeu d'exploration de l'univers où les joueurs peuvent découvrir et explorer
 
 ## 🎮 À propos
 
-Space Xplorer est un jeu web d'exploration spatiale développé avec Laravel et Livewire. Chaque joueur commence avec une planète d'origine générée aléatoirement et peut explorer l'univers progressivement.
+Stellar est un jeu web d'exploration spatiale développé avec Laravel et Livewire. Chaque joueur commence avec une planète d'origine générée aléatoirement et peut explorer l'univers progressivement.
 
 ### Fonctionnalités MVP
 
@@ -197,7 +197,7 @@ Ce projet utilise un système de workflow structuré avec des agents IA spécial
 
 ### 🧠 Memory Bank
 
-Documentation du projet Space Xplorer :
+Documentation du projet Stellar :
 
 - **[PROJECT_BRIEF.md](./docs/memory_bank/PROJECT_BRIEF.md)** - Vision métier, fonctionnalités, personas, flux utilisateurs
 - **[ARCHITECTURE.md](./docs/memory_bank/ARCHITECTURE.md)** - Architecture technique, modèle de données, API endpoints, flux métier
@@ -248,4 +248,4 @@ Ce projet est open-source et disponible sous la [MIT License](https://opensource
 
 ---
 
-**Space Xplorer** - Explore the universe 🌌
+**Stellar** - Explore the universe 🌌

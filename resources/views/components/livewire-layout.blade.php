@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Space Xplorer') }}</title>
+    <title>{{ config('app.name', 'Stellar') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,13 +33,13 @@
                                 if (!$user->relationLoaded('homePlanet')) {
                                     $user->load('homePlanet');
                                 }
-                                $planetName = $user->homePlanet?->name ?? 'SPACE-XPLORER';
+                                $planetName = $user->homePlanet?->name ?? 'STELLAR';
                                 $userName = str_replace(' ', '_', strtoupper($user->name));
                                 $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
                             @endphp
                             <span class="text-warning dark:text-warning">{{ $userName }}</span><span class="text-gray-500 dark:text-gray-500">@</span><span class="text-space-secondary dark:text-space-secondary">{{ $planetNameUpper }}</span><span class="text-gray-500 dark:text-gray-500">:~$</span>
                         @else
-                            SYSTEM@SPACE-XPLORER:~$
+                            SYSTEM@STELLAR:~$
                         @endauth
                     </span>
                     <div class="flex items-center gap-4 text-sm">

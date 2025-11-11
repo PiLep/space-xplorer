@@ -1,6 +1,6 @@
-# Design System - Space Xplorer
+# Design System - Stellar
 
-Bienvenue dans le design system de Space Xplorer ! Ce système définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial.
+Bienvenue dans le design system de Stellar ! Ce système définit l'identité visuelle, les composants réutilisables, et les principes de design pour créer une expérience utilisateur cohérente et immersive dans l'univers spatial.
 
 ## Documentation
 

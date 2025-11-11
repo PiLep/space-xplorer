@@ -45,7 +45,7 @@ Chaque alerte contient :
 | `type` | string | `'error'` | Type d'alerte : `error`, `warning`, `success`, `info` |
 | `message` | string | `''` | Message à afficher |
 | `showPrompt` | bool | `true` | Afficher la ligne de prompt terminal |
-| `prompt` | string | `'SYSTEM@SPACE-XPLORER:~$'` | Texte du prompt système |
+| `prompt` | string | `'SYSTEM@STELLAR:~$'` | Texte du prompt système |
 
 ### Configuration des Types
 
@@ -84,7 +84,7 @@ Voir le fichier complet pour l'implémentation détaillée.
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$ ERROR
+SYSTEM@STELLAR:~$ ERROR
 [ERROR] Failed to load planet data
 ```
 
@@ -96,7 +96,7 @@ SYSTEM@SPACE-XPLORER:~$ ERROR
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$ SUCCESS
+SYSTEM@STELLAR:~$ SUCCESS
 [SUCCESS] Planet data loaded successfully
 ```
 
@@ -108,7 +108,7 @@ SYSTEM@SPACE-XPLORER:~$ SUCCESS
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$ WARNING
+SYSTEM@STELLAR:~$ WARNING
 [WARNING] Low fuel reserves detected
 ```
 
@@ -120,7 +120,7 @@ SYSTEM@SPACE-XPLORER:~$ WARNING
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$ INFO
+SYSTEM@STELLAR:~$ INFO
 [INFO] System maintenance scheduled for tonight
 ```
 

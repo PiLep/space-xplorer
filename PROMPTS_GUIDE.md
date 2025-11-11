@@ -1,14 +1,14 @@
-# 📝 Guide des Prompts - Space Xplorer
+# 📝 Guide des Prompts - Stellar
 
 Ce guide contient des prompts prêts à l'emploi pour chaque étape du workflow, utilisant les références Cursor (`@file`, `@folder`) pour inclure automatiquement le contexte nécessaire.
 
 ## 🎯 Prompt de Démarrage (Créer la Première Issue)
 
 ```
-Je suis Alex (Product Manager) et je veux initialiser le projet Space Xplorer en créant la première issue produit pour le MVP.
+Je suis Alex (Product Manager) et je veux initialiser le projet Stellar en créant la première issue produit pour le MVP.
 
 Contexte du projet :
-- Space Xplorer est un jeu d'exploration de l'univers où les joueurs découvrent des planètes
+- Stellar est un jeu d'exploration de l'univers où les joueurs découvrent des planètes
 - Stack : Laravel 12, Livewire 3, MySQL, Laravel Sanctum
 - Architecture : API-first, event-driven
 

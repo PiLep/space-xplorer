@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Badge affiche des indicateurs de statut, des labels et des tags dans le style du design system Space Xplorer. Il est utilisé pour afficher des informations catégorisées avec des couleurs sémantiques.
+Le composant Badge affiche des indicateurs de statut, des labels et des tags dans le style du design system Stellar. Il est utilisé pour afficher des informations catégorisées avec des couleurs sémantiques.
 
 **Quand l'utiliser** :
 - Indicateurs de statut (approved, pending, rejected, generating)

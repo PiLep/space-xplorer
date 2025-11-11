@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->command->info('🌌 Seeding Space Xplorer database...');
+        $this->command->info('🌌 Seeding Stellar database...');
         $this->command->newLine();
 
         // Password par défaut pour tous les utilisateurs de test

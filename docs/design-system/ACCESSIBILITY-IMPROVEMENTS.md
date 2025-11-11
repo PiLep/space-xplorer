@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Ce document décrit les améliorations d'accessibilité apportées aux composants du design system Space Xplorer pour répondre aux standards WCAG 2.1 niveau AA.
+Ce document décrit les améliorations d'accessibilité apportées aux composants du design system Stellar pour répondre aux standards WCAG 2.1 niveau AA.
 
 ## Date de Mise à Jour
 

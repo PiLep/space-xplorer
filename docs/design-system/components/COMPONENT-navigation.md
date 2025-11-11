@@ -103,7 +103,7 @@ La navigation utilise un fond sombre (`bg-surface-dark`), des bordures subtiles 
 <div class="fixed bottom-0 left-0 right-0 bg-surface-dark dark:bg-surface-dark border-t border-border-dark dark:border-border-dark font-mono z-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
         <div class="flex items-center gap-2">
-            <span class="text-gray-500 dark:text-gray-500 text-sm">SYSTEM@SPACE-XPLORER:~$</span>
+            <span class="text-gray-500 dark:text-gray-500 text-sm">SYSTEM@STELLAR:~$</span>
             <div class="flex-1 flex items-center gap-4 text-sm">
                 <a href="/dashboard" class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors">
                     > DASHBOARD

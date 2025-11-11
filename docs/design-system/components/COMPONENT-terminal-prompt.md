@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Le composant Terminal Prompt affiche une ligne de commande terminal avec le prompt système et une commande optionnelle. Il est utilisé pour créer l'ambiance terminal/spatial dans l'interface Space Xplorer.
+Le composant Terminal Prompt affiche une ligne de commande terminal avec le prompt système et une commande optionnelle. Il est utilisé pour créer l'ambiance terminal/spatial dans l'interface Stellar.
 
 **Quand l'utiliser** :
 - Affichage de commandes système dans les pages
@@ -15,13 +15,13 @@ Le composant Terminal Prompt affiche une ligne de commande terminal avec le prom
 ### Apparence
 
 Ligne de commande avec :
-- Prompt système en gris : `SYSTEM@SPACE-XPLORER:~$`
+- Prompt système en gris : `SYSTEM@STELLAR:~$`
 - Commande en couleur primaire (vert) : `command_name`
 
 ### Structure
 
 ```blade
-SYSTEM@SPACE-XPLORER:~$ command_name
+SYSTEM@STELLAR:~$ command_name
 ```
 
 ## Spécifications Techniques
@@ -31,7 +31,7 @@ SYSTEM@SPACE-XPLORER:~$ command_name
 | Prop | Type | Défaut | Description |
 |------|------|--------|-------------|
 | `command` | string | `''` | Nom de la commande à afficher |
-| `prompt` | string | `'SYSTEM@SPACE-XPLORER:~$'` | Texte du prompt système |
+| `prompt` | string | `'SYSTEM@STELLAR:~$'` | Texte du prompt système |
 
 ### Classes Tailwind
 
@@ -53,7 +53,7 @@ SYSTEM@SPACE-XPLORER:~$ command_name
 ```blade
 @props([
     'command' => '',
-    'prompt' => 'SYSTEM@SPACE-XPLORER:~$',
+    'prompt' => 'SYSTEM@STELLAR:~$',
 ])
 
 <div class="text-sm text-space-primary dark:text-space-primary mb-2">
@@ -74,7 +74,7 @@ SYSTEM@SPACE-XPLORER:~$ command_name
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$ load_user_session
+SYSTEM@STELLAR:~$ load_user_session
 ```
 
 ### Exemple 2 : Prompt Personnalisé
@@ -99,7 +99,7 @@ SECURITY@SPACE-XPLORER:~$ authenticate
 
 **Résultat** :
 ```
-SYSTEM@SPACE-XPLORER:~$
+SYSTEM@STELLAR:~$
 ```
 
 ## Responsive

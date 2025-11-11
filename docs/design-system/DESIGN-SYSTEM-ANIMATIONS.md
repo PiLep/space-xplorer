@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Les animations et transitions de Space Xplorer sont subtiles et fonctionnelles, créant une expérience utilisateur fluide sans distraire de l'immersion dans l'univers spatial. Des effets spéciaux comme les scanlines et les lueurs évoquent l'esthétique des écrans CRT des vaisseaux spatiaux.
+Les animations et transitions de Stellar sont subtiles et fonctionnelles, créant une expérience utilisateur fluide sans distraire de l'immersion dans l'univers spatial. Des effets spéciaux comme les scanlines et les lueurs évoquent l'esthétique des écrans CRT des vaisseaux spatiaux.
 
 ## Durées
 

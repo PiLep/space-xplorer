@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-Ce document présente l'audit d'accessibilité des composants du design system Space Xplorer, conformément aux standards WCAG 2.1 (niveau AA).
+Ce document présente l'audit d'accessibilité des composants du design system Stellar, conformément aux standards WCAG 2.1 (niveau AA).
 
 ## Méthodologie
 

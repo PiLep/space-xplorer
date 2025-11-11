@@ -2,7 +2,7 @@
 
 ## Vue d'Ensemble
 
-La palette de couleurs de Space Xplorer est inspirée de l'esthétique rétro-futuriste des films Alien. Elle combine des tons sombres pour créer une ambiance spatiale immersive avec des accents fluorescents (verts et bleus) qui évoquent les écrans CRT des vaisseaux spatiaux.
+La palette de couleurs de Stellar est inspirée de l'esthétique rétro-futuriste des films Alien. Elle combine des tons sombres pour créer une ambiance spatiale immersive avec des accents fluorescents (verts et bleus) qui évoquent les écrans CRT des vaisseaux spatiaux.
 
 ## Couleurs Principales
 

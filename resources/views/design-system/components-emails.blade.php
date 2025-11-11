@@ -26,7 +26,7 @@
                     <div class="bg-gray-100 dark:bg-space-black rounded-lg p-4 overflow-x-auto">
                         <div style="max-width: 600px; margin: 0 auto; background-color: #1a1a1a; border: 1px solid #00ff00; padding: 30px; font-family: 'Courier New', monospace;">
                             <div style="border-bottom: 1px solid #00ff00; padding-bottom: 20px; margin-bottom: 30px;">
-                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@SPACE-XPLORER:~$</div>
+                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@STELLAR:~$</div>
                                 <div style="color: #00ff00; font-size: 14px; margin-bottom: 20px;">[INFO] Password Reset Request</div>
                             </div>
 
@@ -35,7 +35,7 @@
                             </div>
 
                             <div style="color: #00ff00; font-size: 14px; margin-bottom: 20px;">
-                                Vous avez demandé la réinitialisation de votre mot de passe pour votre compte Space Xplorer.
+                                Vous avez demandé la réinitialisation de votre mot de passe pour votre compte Stellar.
                             </div>
 
                             <div style="color: #00ffff; font-size: 14px; margin-bottom: 20px;">
@@ -61,9 +61,9 @@
                             </div>
 
                             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #00ff00; font-size: 12px; color: #666666;">
-                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@SPACE-XPLORER:~$</div>
+                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@STELLAR:~$</div>
                                 <div style="font-size: 12px; color: #666666;">
-                                    Space Xplorer - Exploration Spatiale Interactive
+                                    Stellar - Exploration Spatiale Interactive
                                 </div>
                             </div>
                         </div>
@@ -94,7 +94,7 @@
                     <div class="bg-gray-100 dark:bg-space-black rounded-lg p-4 overflow-x-auto">
                         <div style="max-width: 600px; margin: 0 auto; background-color: #1a1a1a; border: 1px solid #00ff00; padding: 30px; font-family: 'Courier New', monospace;">
                             <div style="border-bottom: 1px solid #00ff00; padding-bottom: 20px; margin-bottom: 30px;">
-                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@SPACE-XPLORER:~$</div>
+                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@STELLAR:~$</div>
                                 <div style="color: #00ff00; font-size: 14px; margin-bottom: 20px;">[SUCCESS] Password Reset Completed</div>
                             </div>
 
@@ -125,9 +125,9 @@
                             </div>
 
                             <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #00ff00; font-size: 12px; color: #666666;">
-                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@SPACE-XPLORER:~$</div>
+                                <div style="color: #00ff00; font-size: 14px; margin-bottom: 10px;">SYSTEM@STELLAR:~$</div>
                                 <div style="font-size: 12px; color: #666666;">
-                                    Space Xplorer - Exploration Spatiale Interactive
+                                    Stellar - Exploration Spatiale Interactive
                                 </div>
                             </div>
                         </div>

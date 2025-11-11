@@ -28,7 +28,7 @@ class ResetPasswordNotification extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Réinitialisation de votre mot de passe - Space Xplorer',
+            subject: 'Réinitialisation de votre mot de passe - Stellar',
         );
     }
 
