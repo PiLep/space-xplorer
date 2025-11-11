@@ -2,6 +2,7 @@
 
 use App\Models\Planet;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 it('has users relationship', function () {
@@ -169,4 +170,257 @@ it('isVideoGenerating returns false when video_generating is false', function ()
     $planet = Planet::factory()->create(['video_generating' => false]);
 
     expect($planet->isVideoGenerating())->toBeFalse();
+});
+
+it('handles UnableToCheckFileExistence exception when checking image existence', function () {
+    $path = 'planets/image.jpg';
+    $planet = Planet::factory()->create(['image_url' => $path]);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow(new \League\Flysystem\UnableToCheckFileExistence('Cannot check file'));
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once();
+
+    expect($planet->image_url)->toBeNull();
+});
+
+it('handles UnableToCheckFileExistence exception when checking video existence', function () {
+    $path = 'planets/video.mp4';
+    $planet = Planet::factory()->create(['video_url' => $path]);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow(new \League\Flysystem\UnableToCheckFileExistence('Cannot check file'));
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once();
+
+    expect($planet->video_url)->toBeNull();
+});
+
+it('handles generic exception when checking image existence', function () {
+    $path = 'planets/image.jpg';
+    $planet = Planet::factory()->create(['image_url' => $path]);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow(new \Exception('Generic error'));
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once();
+
+    expect($planet->image_url)->toBeNull();
+});
+
+it('handles generic exception when checking video existence', function () {
+    $path = 'planets/video.mp4';
+    $planet = Planet::factory()->create(['video_url' => $path]);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow(new \Exception('Generic error'));
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once();
+
+    expect($planet->video_url)->toBeNull();
+});
+
+it('handles UnableToCheckFileExistence with S3Exception as previous when checking image existence', function () {
+    $path = 'planets/image.jpg';
+    $planet = Planet::factory()->create(['image_url' => $path]);
+
+    $s3Exception = Mockery::mock(\Aws\S3\Exception\S3Exception::class);
+    $s3Exception->shouldReceive('getAwsErrorCode')->andReturn('AccessDenied');
+    $s3Exception->shouldReceive('getAwsErrorMessage')->andReturn('Access Denied');
+    $s3Exception->shouldReceive('getAwsRequestId')->andReturn('request-123');
+    $s3Exception->shouldReceive('getStatusCode')->andReturn(403);
+    $s3Exception->shouldReceive('getMessage')->andReturn('S3 Error');
+
+    // Create UnableToCheckFileExistence with S3Exception as previous
+    // Constructor: (message, code, previous)
+    $flysystemException = new \League\Flysystem\UnableToCheckFileExistence('Cannot check file', 0, $s3Exception);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($flysystemException);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'S3 error checking image existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['s3_error_code']) && $context['s3_error_code'] === 'AccessDenied';
+        })
+    );
+
+    expect($planet->image_url)->toBeNull();
+});
+
+it('handles UnableToCheckFileExistence without S3Exception as previous when checking image existence', function () {
+    $path = 'planets/image.jpg';
+    $planet = Planet::factory()->create(['image_url' => $path]);
+
+    $flysystemException = new \League\Flysystem\UnableToCheckFileExistence('Cannot check file');
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($flysystemException);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'Flysystem error checking image existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['error']) && ! isset($context['s3_error_code']);
+        })
+    );
+
+    expect($planet->image_url)->toBeNull();
+});
+
+it('handles direct S3Exception when checking image existence', function () {
+    $path = 'planets/image.jpg';
+    $planet = Planet::factory()->create(['image_url' => $path]);
+
+    $s3Exception = Mockery::mock(\Aws\S3\Exception\S3Exception::class);
+    $s3Exception->shouldReceive('getAwsErrorCode')->andReturn('NoSuchKey');
+    $s3Exception->shouldReceive('getAwsErrorMessage')->andReturn('The specified key does not exist');
+    $s3Exception->shouldReceive('getAwsRequestId')->andReturn('request-456');
+    $s3Exception->shouldReceive('getStatusCode')->andReturn(404);
+    $s3Exception->shouldReceive('getMessage')->andReturn('S3 Error');
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($s3Exception);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'S3 error checking image existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['s3_error_code']) && $context['s3_error_code'] === 'NoSuchKey';
+        })
+    );
+
+    expect($planet->image_url)->toBeNull();
+});
+
+it('handles UnableToCheckFileExistence with S3Exception as previous when checking video existence', function () {
+    $path = 'planets/video.mp4';
+    $planet = Planet::factory()->create(['video_url' => $path]);
+
+    $s3Exception = Mockery::mock(\Aws\S3\Exception\S3Exception::class);
+    $s3Exception->shouldReceive('getAwsErrorCode')->andReturn('AccessDenied');
+    $s3Exception->shouldReceive('getAwsErrorMessage')->andReturn('Access Denied');
+    $s3Exception->shouldReceive('getAwsRequestId')->andReturn('request-123');
+    $s3Exception->shouldReceive('getStatusCode')->andReturn(403);
+    $s3Exception->shouldReceive('getMessage')->andReturn('S3 Error');
+
+    // Create UnableToCheckFileExistence with S3Exception as previous
+    $flysystemException = new \League\Flysystem\UnableToCheckFileExistence('Cannot check file', 0, $s3Exception);
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($flysystemException);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'S3 error checking video existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['s3_error_code']) && $context['s3_error_code'] === 'AccessDenied';
+        })
+    );
+
+    expect($planet->video_url)->toBeNull();
+});
+
+it('handles UnableToCheckFileExistence without S3Exception as previous when checking video existence', function () {
+    $path = 'planets/video.mp4';
+    $planet = Planet::factory()->create(['video_url' => $path]);
+
+    $flysystemException = new \League\Flysystem\UnableToCheckFileExistence('Cannot check file');
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($flysystemException);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'Flysystem error checking video existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['error']) && ! isset($context['s3_error_code']);
+        })
+    );
+
+    expect($planet->video_url)->toBeNull();
+});
+
+it('handles direct S3Exception when checking video existence', function () {
+    $path = 'planets/video.mp4';
+    $planet = Planet::factory()->create(['video_url' => $path]);
+
+    $s3Exception = Mockery::mock(\Aws\S3\Exception\S3Exception::class);
+    $s3Exception->shouldReceive('getAwsErrorCode')->andReturn('NoSuchKey');
+    $s3Exception->shouldReceive('getAwsErrorMessage')->andReturn('The specified key does not exist');
+    $s3Exception->shouldReceive('getAwsRequestId')->andReturn('request-456');
+    $s3Exception->shouldReceive('getStatusCode')->andReturn(404);
+    $s3Exception->shouldReceive('getMessage')->andReturn('S3 Error');
+
+    $mockDisk = Mockery::mock();
+    $mockDisk->shouldReceive('exists')
+        ->with($path)
+        ->andThrow($s3Exception);
+
+    Storage::shouldReceive('disk')
+        ->with('s3')
+        ->andReturn($mockDisk);
+
+    Log::shouldReceive('warning')->once()->with(
+        'S3 error checking video existence in storage',
+        Mockery::on(function ($context) {
+            return isset($context['s3_error_code']) && $context['s3_error_code'] === 'NoSuchKey';
+        })
+    );
+
+    expect($planet->video_url)->toBeNull();
+});
+
+afterEach(function () {
+    \Mockery::close();
 });

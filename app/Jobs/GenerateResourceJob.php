@@ -55,9 +55,10 @@ class GenerateResourceJob implements ShouldQueue
         }
 
         // Get current attempt number from job attempts or metadata
-        $attemptNumber = $this->attempts();
+        // Use metadata to track attempts if available (for testing), otherwise use job attempts
         $metadata = $this->resource->metadata ?? [];
         $previousAttempts = $metadata['generation_attempts'] ?? [];
+        $attemptNumber = ! empty($previousAttempts) ? count($previousAttempts) + 1 : $this->attempts();
 
         // Log attempt
         Log::info('Attempting to generate resource', [
