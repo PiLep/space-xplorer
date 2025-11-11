@@ -1,114 +1,49 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mot de passe réinitialisé - Stellar</title>
-    <style>
-        body {
-            font-family: 'Courier New', monospace;
-            background-color: #0a0a0a;
-            color: #00ff00;
-            margin: 0;
-            padding: 20px;
-            line-height: 1.6;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #1a1a1a;
-            border: 1px solid #00ff00;
-            padding: 30px;
-        }
-        .header {
-            border-bottom: 1px solid #00ff00;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-        .prompt {
-            color: #00ff00;
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-        .message {
-            color: #00ff00;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .success {
-            color: #00ff00;
-        }
-        .info {
-            color: #00ffff;
-        }
-        .footer {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #00ff00;
-            font-size: 12px;
-            color: #666666;
-        }
-        .recommendations {
-            background-color: #0a0a0a;
-            border-left: 3px solid #00ffff;
-            padding: 15px;
-            margin: 20px 0;
-        }
-        .recommendations h3 {
-            color: #00ffff;
-            font-size: 14px;
-            margin-top: 0;
-        }
-        .recommendations ul {
-            margin: 10px 0;
-            padding-left: 20px;
-        }
-        .recommendations li {
-            margin: 5px 0;
-            font-size: 12px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="header">
-            <div class="prompt">SYSTEM@STELLAR:~$</div>
-            <div class="message success">[SUCCESS] Password Reset Completed</div>
-        </div>
+@component('emails.layouts.base', ['title' => 'Mot de passe réinitialisé - Stellar', 'preheader' => $preheader ?? 'Votre mot de passe a été réinitialisé avec succès.'])
+    @component('emails.components.header', ['prompt' => 'SYSTEM@STELLAR:~$', 'message' => '[SUCCESS] Password Reset Completed', 'type' => 'success'])
+    @endcomponent
 
-        <div class="message">
-            Bonjour {{ $user->name }},
-        </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td style="color: #00ff00; font-size: 14px; margin-bottom: 20px; font-family: 'Courier New', monospace; line-height: 1.6;">
+                Bonjour {{ $user->name }},
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #00ff00; font-size: 14px; margin-bottom: 20px; font-family: 'Courier New', monospace; line-height: 1.6;">
+                [CONFIRMATION] Votre mot de passe a été réinitialisé avec succès.
+            </td>
+        </tr>
+        <tr>
+            <td style="color: #00ff00; font-size: 14px; margin-bottom: 20px; font-family: 'Courier New', monospace; line-height: 1.6;">
+                Si vous n'avez pas effectué cette action, veuillez nous contacter immédiatement.
+            </td>
+        </tr>
+    </table>
 
-        <div class="message success">
-            [CONFIRMATION] Votre mot de passe a été réinitialisé avec succès.
-        </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #0a0a0a; border-left: 3px solid #00ffff; margin: 20px 0;">
+        <tr>
+            <td style="padding: 15px;">
+                <div style="color: #00ffff; font-size: 14px; margin-top: 0; margin-bottom: 10px; font-family: 'Courier New', monospace; font-weight: bold;">
+                    [SECURITY] Recommandations de sécurité :
+                </div>
+                <ul style="margin: 10px 0; padding-left: 20px; color: #00ff00; font-size: 12px; font-family: 'Courier New', monospace; line-height: 1.6;">
+                    <li style="margin: 5px 0;">Utilisez un mot de passe unique et fort</li>
+                    <li style="margin: 5px 0;">Ne partagez jamais votre mot de passe</li>
+                    <li style="margin: 5px 0;">Changez régulièrement votre mot de passe</li>
+                    <li style="margin: 5px 0;">Activez l'authentification à deux facteurs si disponible</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
 
-        <div class="message">
-            Si vous n'avez pas effectué cette action, veuillez nous contacter immédiatement.
-        </div>
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+        <tr>
+            <td style="color: #00ffff; font-size: 14px; font-family: 'Courier New', monospace; line-height: 1.6;">
+                [INFO] Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.
+            </td>
+        </tr>
+    </table>
 
-        <div class="recommendations">
-            <h3>[SECURITY] Recommandations de sécurité :</h3>
-            <ul>
-                <li>Utilisez un mot de passe unique et fort</li>
-                <li>Ne partagez jamais votre mot de passe</li>
-                <li>Changez régulièrement votre mot de passe</li>
-                <li>Activez l'authentification à deux facteurs si disponible</li>
-            </ul>
-        </div>
-
-        <div class="message info">
-            [INFO] Vous pouvez maintenant vous connecter avec votre nouveau mot de passe.
-        </div>
-
-        <div class="footer">
-            <div class="prompt">SYSTEM@STELLAR:~$</div>
-            <div class="message" style="font-size: 12px; color: #666666;">
-                Stellar - Exploration Spatiale Interactive
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+    @component('emails.components.footer')
+    @endcomponent
+@endcomponent
