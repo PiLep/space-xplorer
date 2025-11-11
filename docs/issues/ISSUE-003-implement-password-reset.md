@@ -270,7 +270,7 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 
 ### Statut
 
-À faire
+En cours
 
 ### Historique
 
@@ -328,4 +328,13 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 - 🟢 Low Priority : Mettre à jour ARCHITECTURE.md après implémentation
 **Review complète** : [ARCHITECT-REVIEW-003-password-reset.md](../reviews/ARCHITECT-REVIEW-003-password-reset.md)
 **Notes** : Review architecturale complétée. L'issue est prête pour la création du plan de développement par Sam (Lead Developer) en tenant compte des recommandations architecturales, notamment l'invalidation du Remember Me qui devrait être implémentée dès le MVP pour la sécurité.
+
+#### 2025-01-27 - Sam (Lead Dev) - Création du plan de développement
+**Statut** : En cours
+**Détails** : Plan de développement créé pour l'implémentation de la réinitialisation de mot de passe. Le plan intègre toutes les recommandations architecturales (invalidation Remember Me, événements `PasswordResetRequested` et `PasswordResetCompleted`) et les recommandations design (style terminal, composants design system, indicateur de force du mot de passe). Le plan décompose l'issue en 8 phases avec 20 tâches au total.
+**Fichiers modifiés** : 
+- `docs/tasks/TASK-003-implement-password-reset.md` (nouveau)
+- `docs/issues/ISSUE-003-implement-password-reset.md` (mis à jour)
+**Branche Git** : `issue/003-implement-password-reset`
+**Notes** : Estimation totale : ~12h de développement. Le plan est prêt pour la review architecturale par Morgan (Architect).
 
