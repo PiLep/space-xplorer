@@ -12,7 +12,7 @@ Implémenter le système complet de réinitialisation de mot de passe pour perme
 
 ### Statut
 
-À faire
+En cours
 
 ### Historique
 
@@ -21,6 +21,27 @@ Implémenter le système complet de réinitialisation de mot de passe pour perme
 **Détails** : Plan de développement créé pour l'implémentation de la réinitialisation de mot de passe. Le plan intègre toutes les recommandations architecturales (invalidation Remember Me, événements `PasswordResetRequested` et `PasswordResetCompleted`) et les recommandations design (style terminal, composants design system, indicateur de force du mot de passe). Le plan décompose l'issue en 8 phases avec 20 tâches au total.
 **Fichiers modifiés** : docs/tasks/TASK-003-implement-password-reset.md
 **Notes** : Estimation totale : ~12h de développement. Le plan est prêt pour la review architecturale par Morgan (Architect).
+
+#### 2025-01-27 - Morgan (Architect) - Review architecturale
+**Statut** : En cours
+**Détails** : Review architecturale complète effectuée sur le plan de développement. Le plan est approuvé avec recommandations. Le plan intègre correctement toutes les recommandations architecturales de la review pré-planification et suit les patterns établis dans le projet.
+**Résultat** : ✅ Approuvé avec recommandations
+**Points positifs** :
+- Intégration complète des recommandations architecturales
+- Architecture événementielle bien pensée
+- Sécurité bien couverte (rate limiting, invalidation Remember Me, tokens sécurisés)
+- Tests complets prévus
+- Documentation prévue
+**Recommandations principales** :
+- 🟡 Medium Priority : Clarifier l'invalidation des sessions web en plus du Remember Me
+- 🟡 Medium Priority : Vérifier la configuration de sécurité des cookies
+- 🟢 Low Priority : Clarifier la structure des données des événements dans les tâches
+- 🟢 Low Priority : Préciser l'approche technique pour le rate limiting
+**Fichiers modifiés** :
+- `docs/reviews/ARCHITECT-REVIEW-003-TASK-password-reset.md` (nouveau)
+- `docs/tasks/TASK-003-implement-password-reset.md` (mis à jour)
+- `docs/issues/ISSUE-003-implement-password-reset.md` (mis à jour)
+**Notes** : Le plan est prêt pour l'implémentation par Jordan (Fullstack Developer) en tenant compte des recommandations Medium priority.
 
 ## Objectifs Techniques
 
