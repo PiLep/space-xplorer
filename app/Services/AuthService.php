@@ -85,8 +85,11 @@ class AuthService
             ]);
         }
 
-        // Authenticate user in session
-        Auth::login($user);
+        // Get remember value from request (defaults to false if not provided)
+        $remember = $request->filled('remember') ? (bool) $request->remember : false;
+
+        // Authenticate user in session with remember me option
+        Auth::login($user, $remember);
 
         // Dispatch event to track user login
         event(new UserLoggedIn($user));
@@ -96,8 +99,10 @@ class AuthService
 
     /**
      * Login user from credentials (for Livewire).
+     *
+     * @param  bool  $remember  Whether to create a "remember me" cookie
      */
-    public function loginFromCredentials(string $email, string $password): User
+    public function loginFromCredentials(string $email, string $password, bool $remember = false): User
     {
         $user = User::where('email', $email)->first();
 
@@ -107,8 +112,8 @@ class AuthService
             ]);
         }
 
-        // Authenticate user in session
-        Auth::login($user);
+        // Authenticate user in session with remember me option
+        Auth::login($user, $remember);
 
         // Dispatch event to track user login
         event(new UserLoggedIn($user));

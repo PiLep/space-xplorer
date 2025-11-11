@@ -53,6 +53,21 @@
                     />
                 </div>
 
+                <!-- Remember Me Checkbox -->
+                <div class="flex items-center">
+                    <input
+                        type="checkbox"
+                        id="remember"
+                        name="remember"
+                        value="1"
+                        {{ old('remember') ? 'checked' : '' }}
+                        class="w-4 h-4 text-space-primary bg-surface-dark border-border-dark rounded focus:ring-space-primary focus:ring-2 cursor-pointer transition-colors duration-150"
+                    >
+                    <label for="remember" class="ml-2 text-sm text-gray-600 dark:text-gray-400 cursor-pointer">
+                        Memorize identity pattern
+                    </label>
+                </div>
+
                 <div>
                     <x-button type="submit" variant="primary" size="lg" class="w-full">
                         Sign in

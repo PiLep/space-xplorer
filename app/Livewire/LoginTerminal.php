@@ -13,6 +13,8 @@ class LoginTerminal extends Component
 
     public $password = '';
 
+    public $remember = false;
+
     public $status = '';
 
     public $terminalBooted = false;
@@ -24,6 +26,7 @@ class LoginTerminal extends Component
     protected $rules = [
         'email' => 'required|email',
         'password' => 'required|string',
+        'remember' => 'sometimes|boolean',
     ];
 
     protected $messages = [
@@ -73,7 +76,7 @@ class LoginTerminal extends Component
         $this->validate();
 
         try {
-            $authService->loginFromCredentials($this->email, $this->password);
+            $authService->loginFromCredentials($this->email, $this->password, $this->remember);
             $this->status = '[SUCCESS] Authentication successful. Redirecting...';
 
             // Small delay to show success message

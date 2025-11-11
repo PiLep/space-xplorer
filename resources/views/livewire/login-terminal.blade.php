@@ -61,6 +61,23 @@
                             marginBottom="mb-6"
                         />
 
+                        <!-- Remember Me Checkbox -->
+                        <div class="mb-6">
+                            <label class="flex items-center cursor-pointer group">
+                                <input
+                                    type="checkbox"
+                                    wire:model="remember"
+                                    id="remember"
+                                    name="remember"
+                                    aria-label="Memorize identity pattern"
+                                    class="w-4 h-4 text-space-primary bg-surface-dark border-border-dark rounded focus:ring-space-primary focus:ring-2 cursor-pointer transition-colors duration-150"
+                                >
+                                <span class="ml-2 text-gray-300 dark:text-gray-300 text-sm font-mono group-hover:text-space-primary transition-colors duration-150">
+                                    [OPTION] Memorize identity pattern
+                                </span>
+                            </label>
+                        </div>
+
                         <!-- Submit Command -->
                         <div class="mt-8">
                             <x-terminal-prompt command="authenticate" />
