@@ -12,8 +12,10 @@ class AdminAuthService
     /**
      * Login admin user and authenticate them with admin guard.
      * Verifies is_super_admin flag and email whitelist.
+     *
+     * @param  bool  $remember  Whether to create a "remember me" cookie
      */
-    public function login(string $email, string $password): User
+    public function login(string $email, string $password, bool $remember = false): User
     {
         $user = User::where('email', $email)->first();
 
@@ -41,8 +43,8 @@ class AdminAuthService
             ]);
         }
 
-        // Authenticate user with admin guard
-        Auth::guard('admin')->login($user);
+        // Authenticate user with admin guard and remember me option
+        Auth::guard('admin')->login($user, $remember);
 
         return $user;
     }

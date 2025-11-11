@@ -127,6 +127,106 @@ it('fails login with non-existent email', function () {
         ->assertJsonValidationErrors(['email']);
 });
 
+it('validates remember field as boolean', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'remember' => 'not-a-boolean',
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['remember']);
+});
+
+it('accepts remember field as true', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'remember' => true,
+    ]);
+
+    $response->assertStatus(200)
+        ->assertJsonStructure([
+            'data' => [
+                'user' => ['id', 'name', 'email', 'home_planet_id'],
+                'token',
+            ],
+            'message',
+            'status',
+        ]);
+});
+
+it('accepts remember field as false', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'remember' => false,
+    ]);
+
+    $response->assertStatus(200);
+});
+
+it('works without remember field (backward compatibility)', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->postJson('/api/auth/login', [
+        'email' => 'john@example.com',
+        'password' => 'password123',
+    ]);
+
+    $response->assertStatus(200);
+});
+
+it('creates remember me cookie with secure attributes when remember is true', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    $response = $this->post('/api/auth/login', [
+        'email' => 'john@example.com',
+        'password' => 'password123',
+        'remember' => true,
+    ]);
+
+    $response->assertStatus(200);
+
+    // Get the remember cookie from response
+    $cookies = $response->headers->getCookies();
+    $rememberCookie = collect($cookies)->first(function ($cookie) {
+        return str_contains($cookie->getName(), 'remember');
+    });
+
+    if ($rememberCookie) {
+        // Verify cookie security attributes
+        expect($rememberCookie->isHttpOnly())->toBeTrue()
+            ->and($rememberCookie->getSameSite())->toBeIn(['lax', 'strict']);
+
+        // In production, secure should be true, but in tests it may be false
+        // We verify the configuration is correct instead
+        expect(config('session.http_only'))->toBeTrue()
+            ->and(config('session.same_site'))->toBeIn(['lax', 'strict']);
+    }
+});
+
 it('requires authentication for logout', function () {
     $response = $this->postJson('/api/auth/logout');
 

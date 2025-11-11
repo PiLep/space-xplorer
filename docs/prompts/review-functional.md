@@ -7,10 +7,24 @@ Cette action permet à l'agent Product Manager (Alex) de reviewer fonctionnellem
 ## Quand Utiliser Cette Action
 
 L'agent Product Manager doit faire une review fonctionnelle quand :
-- Le code a été approuvé par le Lead Developer (Sam)
+- Le code a été approuvé par le Lead Developer (Sam) (vérifier le statut dans la task : "Code Review approuvé")
 - La fonctionnalité est testable (déployée en environnement de test ou localement)
 - Une validation métier est nécessaire avant la mise en production
 - Il faut vérifier que les critères d'acceptation sont respectés
+
+### Comment Identifier une Issue Prête pour Review Fonctionnelle
+
+1. **Vérifier le statut de la task** (`docs/tasks/TASK-XXX.md`) :
+   - Le statut doit indiquer "Code Review approuvé" ou "Implémentation terminée - Code Review approuvé"
+   - L'historique doit contenir une entrée de Sam (Lead Dev) avec "Code Review approuvé"
+
+2. **Vérifier le statut de l'issue** (`docs/issues/ISSUE-XXX.md`) :
+   - Le statut doit indiquer "En cours - Code Review approuvé" ou similaire
+   - Il ne doit pas y avoir encore d'entrée de review fonctionnelle dans l'historique
+
+3. **Vérifier les reviews existantes** (`docs/reviews/`) :
+   - Il doit y avoir une `CODE-REVIEW-XXX.md` approuvée
+   - Il ne doit pas encore y avoir de `FUNCTIONAL-REVIEW-XXX.md`
 
 ## Format de la Review
 
@@ -311,35 +325,157 @@ L'implémentation fonctionnelle est excellente et répond parfaitement aux besoi
 
 ## Instructions pour l'Agent Product Manager
 
-Quand tu reviews fonctionnellement une implémentation :
+### Processus Étape par Étape
 
-1. **Lire l'issue** : Revoir les critères d'acceptation de l'issue originale
-2. **Tester la fonctionnalité** : Utiliser la fonctionnalité comme un utilisateur final
-3. **Vérifier les critères** : S'assurer que tous les critères d'acceptation sont respectés
-4. **Évaluer l'UX** : Vérifier que l'expérience utilisateur est agréable
-5. **Identifier les ajustements** : Suggérer des améliorations si nécessaire
-6. **Prendre une décision** : Approuver ou demander des ajustements
-7. **Documenter** : Créer une review complète et actionnable
-8. **Mettre à jour les documents** : Ajouter une entrée dans l'historique de l'issue et du plan
+Quand tu reviews fonctionnellement une implémentation, suis ces étapes dans l'ordre :
+
+#### Étape 1 : Préparation et Lecture
+
+1. **Identifier l'issue à reviewer** :
+   - Chercher dans `docs/issues/` les issues avec statut "En cours - Code Review approuvé"
+   - Vérifier qu'il n'y a pas encore de review fonctionnelle dans `docs/reviews/FUNCTIONAL-REVIEW-XXX.md`
+
+2. **Lire l'issue complète** (`docs/issues/ISSUE-XXX.md`) :
+   - Revoir les critères d'acceptation
+   - Comprendre le contexte métier et la valeur utilisateur
+   - Noter les fonctionnalités attendues
+
+3. **Lire le plan de développement** (`docs/tasks/TASK-XXX.md`) :
+   - Comprendre ce qui a été implémenté
+   - Vérifier que le code a été approuvé par Sam (Lead Dev)
+
+4. **Lire la review de code** (`docs/reviews/CODE-REVIEW-XXX.md`) :
+   - Comprendre ce qui a été validé techniquement
+   - Noter les points d'attention mentionnés
+
+#### Étape 2 : Préparation de l'Environnement de Test
+
+1. **Vérifier que l'application est lancée** :
+   ```bash
+   ./vendor/bin/sail ps  # Vérifier que les conteneurs sont actifs
+   ```
+   - Si l'application n'est pas lancée, la lancer avec `./vendor/bin/sail up -d`
+
+2. **Ouvrir l'application dans Chrome DevTools MCP** :
+   - Utiliser `mcp_chrome-devtools_new_page` avec l'URL de l'application (généralement `http://localhost`)
+   - Naviguer vers la page concernée par la fonctionnalité
+
+#### Étape 3 : Test Fonctionnel
+
+1. **Tester la fonctionnalité comme un utilisateur final** :
+   - Utiliser Chrome DevTools MCP pour interagir avec l'interface :
+     - `mcp_chrome-devtools_take_snapshot` pour voir l'état de l'interface
+     - `mcp_chrome-devtools_fill` pour remplir les formulaires
+     - `mcp_chrome-devtools_click` pour cliquer sur les boutons
+     - `mcp_chrome-devtools_wait_for` pour attendre les changements
+   - Tester tous les cas d'usage principaux
+   - Tester les cas limites si possible
+
+2. **Vérifier visuellement** :
+   - Prendre des snapshots de l'interface pour vérifier le design
+   - Vérifier que l'interface est cohérente avec le style du projet
+   - Vérifier l'accessibilité (attributs ARIA, labels, etc.)
+
+3. **Vérifier les tests automatisés** :
+   - Lire les tests dans `tests/` pour comprendre ce qui est testé
+   - Vérifier que les tests passent (optionnel, généralement déjà vérifié par Sam)
+
+#### Étape 4 : Analyse et Évaluation
+
+1. **Vérifier les critères d'acceptation** :
+   - Pour chaque critère de l'issue, vérifier qu'il est respecté
+   - Noter les critères partiellement respectés ou non respectés
+
+2. **Évaluer l'expérience utilisateur** :
+   - Le parcours est-il fluide ?
+   - Les messages d'erreur sont-ils clairs ?
+   - L'interface est-elle intuitive ?
+   - La fonctionnalité répond-elle au besoin métier ?
+
+3. **Identifier les ajustements** :
+   - Noter les points à améliorer (priorité High/Medium/Low)
+   - Noter les problèmes identifiés
+   - Suggérer des améliorations si nécessaire
+
+#### Étape 5 : Documentation
+
+1. **Créer la review fonctionnelle** :
+   - Créer un fichier `docs/reviews/FUNCTIONAL-REVIEW-XXX-{titre-kebab-case}.md`
+   - Suivre la structure complète fournie dans ce guide
+   - Remplir toutes les sections pertinentes
+
+2. **Mettre à jour l'issue** (`docs/issues/ISSUE-XXX.md`) :
+   - Ajouter une entrée dans l'historique avec le résultat de la review
+   - Mettre à jour le statut selon la décision (Approuvé / Approuvé avec ajustements / Retour)
+   - Voir [update-tracking.md](./update-tracking.md) pour le format exact
+
+3. **Mettre à jour le plan** (`docs/tasks/TASK-XXX.md`) :
+   - Ajouter une entrée dans l'historique avec le résultat de la review
+   - Mettre à jour le statut si nécessaire
+
+#### Étape 6 : Décision Finale
+
+1. **Prendre une décision** :
+   - ✅ **Approuvé fonctionnellement** : La fonctionnalité répond aux besoins, peut être déployée
+   - ⚠️ **Approuvé avec ajustements mineurs** : La fonctionnalité est bonne mais des améliorations sont suggérées (non bloquantes)
+   - ❌ **Retour pour ajustements fonctionnels** : La fonctionnalité nécessite des modifications avant validation
+
+2. **Documenter la décision** :
+   - La décision doit être claire dans la section "Statut" de la review
+   - Les ajustements demandés doivent être détaillés dans la section "Ajustements Demandés"
 
 ### Mise à Jour des Documents
 
-Après avoir reviewé fonctionnellement :
-- **Dans l'issue (ISSUE-XXX)** : Ajouter une entrée dans "Suivi et Historique" avec le résultat de la review fonctionnelle
-- **Dans le plan (TASK-XXX)** : Ajouter une entrée dans l'historique
-- **Mettre à jour le statut** : Si approuvé, passer à "Approuvé", si retour, garder "En review"
+Après avoir reviewé fonctionnellement, mettre à jour les documents suivants :
 
-Voir [update-tracking.md](./update-tracking.md) pour le format exact.
+1. **Dans l'issue (ISSUE-XXX.md)** :
+   - Ajouter une entrée dans "Suivi et Historique" avec le résultat de la review fonctionnelle
+   - Mettre à jour le statut :
+     - Si approuvé : "✅ Approuvé fonctionnellement" ou "✅ Approuvé fonctionnellement avec ajustements mineurs"
+     - Si retour : Garder "En cours" ou mettre "En review fonctionnelle"
+   - Format : Voir [update-tracking.md](./update-tracking.md) pour le format exact
+
+2. **Dans le plan (TASK-XXX.md)** :
+   - Ajouter une entrée dans l'historique avec le résultat de la review fonctionnelle
+   - Mettre à jour le statut :
+     - Si approuvé : Ajouter "Review fonctionnelle approuvée" au statut existant
+     - Si retour : Garder le statut actuel
+   - Format : Voir [update-tracking.md](./update-tracking.md) pour le format exact
+
+3. **Créer le fichier de review** :
+   - Créer `docs/reviews/FUNCTIONAL-REVIEW-XXX-{titre-kebab-case}.md`
+   - Suivre la structure complète fournie dans ce guide
 
 ## Checklist de Review Fonctionnelle
 
-- [ ] Tous les critères d'acceptation de l'issue sont respectés
+### Avant de Commencer
+
+- [ ] L'issue a été identifiée (statut "En cours - Code Review approuvé")
+- [ ] L'issue a été lue complètement (critères d'acceptation compris)
+- [ ] Le plan de développement a été lu (TASK-XXX.md)
+- [ ] La review de code a été lue (CODE-REVIEW-XXX.md)
+- [ ] L'application est lancée et accessible
+- [ ] Chrome DevTools MCP est configuré et fonctionnel
+
+### Pendant la Review
+
+- [ ] La fonctionnalité a été testée comme un utilisateur final
+- [ ] Tous les critères d'acceptation de l'issue sont vérifiés
 - [ ] L'expérience utilisateur est fluide et agréable
 - [ ] Les fonctionnalités métier sont correctement implémentées
 - [ ] Les cas d'usage principaux sont couverts
-- [ ] L'interface est intuitive
-- [ ] Les messages d'erreur sont clairs
+- [ ] L'interface est intuitive et cohérente avec le design system
+- [ ] Les messages d'erreur sont clairs et utiles
 - [ ] La fonctionnalité répond aux besoins du persona
+- [ ] Les tests automatisés ont été vérifiés (si disponibles)
+
+### Après la Review
+
+- [ ] Le fichier FUNCTIONAL-REVIEW-XXX.md a été créé
+- [ ] Toutes les sections pertinentes ont été remplies
+- [ ] L'issue (ISSUE-XXX.md) a été mise à jour avec le résultat
+- [ ] Le plan (TASK-XXX.md) a été mis à jour avec le résultat
+- [ ] La décision finale est claire (Approuvé / Ajustements / Retour)
 
 ## Statuts de Review
 

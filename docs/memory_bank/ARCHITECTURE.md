@@ -330,9 +330,37 @@ UserProfileUpdated
 **Autorisation** :
 - Un utilisateur ne peut modifier que son propre profil (`PUT /api/users/{id}` vérifie que `auth()->id() === $user->id`)
 
+**Remember Me (Persistance de connexion)** :
+
+La fonctionnalité "Remember Me" permet aux utilisateurs de rester connectés même après la fermeture du navigateur.
+
+**Comportement pour les connexions Web (Livewire)** :
+- Lors de la connexion via le formulaire Livewire, l'utilisateur peut cocher la checkbox "Se souvenir de moi"
+- Si cochée, Laravel crée un cookie "Remember Me" avec une durée de vie prolongée (30 jours par défaut)
+- Le cookie utilise le champ `remember_token` dans la table `users` pour la validation
+- La déconnexion invalide automatiquement le cookie Remember Me
+
+**Comportement pour les connexions API (Sanctum)** :
+- Pour les clients API externes utilisant Sanctum, les tokens ont déjà une durée de vie longue
+- Le paramètre `remember` dans `POST /api/auth/login` affecte principalement la session web si utilisée
+- Les tokens Sanctum sont indépendants du mécanisme Remember Me des sessions web
+- Les tokens Sanctum persistent jusqu'à leur révocation explicite ou expiration
+
+**Configuration de sécurité** :
+- Les cookies Remember Me respectent la configuration de session dans `config/session.php` :
+  - `SESSION_HTTP_ONLY` : `true` (protection XSS) - configuré par défaut
+  - `SESSION_SECURE_COOKIE` : doit être `true` en production (HTTPS uniquement)
+  - `SESSION_SAME_SITE` : `lax` par défaut (protection CSRF)
+- La durée de vie du cookie Remember Me est gérée par Laravel (30 jours par défaut)
+- Cette durée est différente de `SESSION_LIFETIME` (120 minutes pour les sessions normales)
+
+**Limitations connues** :
+- L'invalidation du cookie Remember Me lors du changement de mot de passe n'est pas encore implémentée (issue future)
+
 **Évolutions futures** :
 - Système de rôles (admin, modérateur, joueur)
 - Permissions granulaires
+- Invalidation automatique du Remember Me lors du changement de mot de passe
 - [À compléter selon les besoins]
 
 ## Génération de planètes

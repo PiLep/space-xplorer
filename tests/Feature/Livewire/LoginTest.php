@@ -148,3 +148,52 @@ it('sets error status on authentication failure', function () {
         ->assertSet('status', '[ERROR] Validation failed.')
         ->assertHasErrors(['email']);
 });
+
+it('has remember property defaulting to false', function () {
+    Livewire::test(\App\Livewire\LoginTerminal::class)
+        ->assertSet('remember', false);
+});
+
+it('validates remember field as boolean', function () {
+    $component = Livewire::test(\App\Livewire\LoginTerminal::class)
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('remember', 'not-a-boolean')
+        ->call('login');
+
+    $component->assertHasErrors(['remember']);
+});
+
+it('allows login with remember set to true', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    Livewire::test(\App\Livewire\LoginTerminal::class)
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('remember', true)
+        ->call('login')
+        ->assertRedirect(route('dashboard'));
+
+    expect(Auth::check())->toBeTrue()
+        ->and(Auth::id())->toBe($user->id);
+});
+
+it('allows login with remember set to false', function () {
+    $user = User::factory()->create([
+        'email' => 'john@example.com',
+        'password' => Hash::make('password123'),
+    ]);
+
+    Livewire::test(\App\Livewire\LoginTerminal::class)
+        ->set('email', 'john@example.com')
+        ->set('password', 'password123')
+        ->set('remember', false)
+        ->call('login')
+        ->assertRedirect(route('dashboard'));
+
+    expect(Auth::check())->toBeTrue()
+        ->and(Auth::id())->toBe($user->id);
+});
