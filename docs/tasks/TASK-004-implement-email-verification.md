@@ -12,7 +12,7 @@ Implémenter un système de vérification d'email par code à 6 chiffres pour va
 
 ### Statut
 
-En review
+PR créée
 
 ### Historique
 
@@ -30,6 +30,18 @@ En review
 - 37 tests écrits et tous passent (18 unitaires, 7 intégration, 12 fonctionnels)
 - Améliorations suggérées : documentation ARCHITECTURE.md, constantes dans User model, PHPDoc supplémentaires
 **Notes** : Code prêt pour validation fonctionnelle par Alex (Product Manager). Les améliorations suggérées sont optionnelles et peuvent être faites dans une prochaine itération.
+
+#### 2025-11-11 - Sam (Lead Developer) - Création de la Pull Request
+**Statut** : PR créée
+**Détails** : 
+- Pull Request créée : [#11](https://github.com/PiLep/space-xplorer/pull/11)
+- Branche : `feature/ISSUE-004-implement-email-verification` → `develop`
+- Tous les fichiers committés et poussés
+- Code formaté avec Pint
+- Tous les tests passent (37 tests)
+- Documentation ARCHITECTURE.md mise à jour
+- PR prête pour review et merge
+**Notes** : PR créée selon le format standardisé. Prête pour validation fonctionnelle et merge dans develop.
 
 ## Objectifs Techniques
 
