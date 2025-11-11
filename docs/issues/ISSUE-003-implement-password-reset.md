@@ -311,3 +311,21 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 **Review complète** : [VISUAL-REVIEW-003-password-reset.md](../reviews/VISUAL-REVIEW-003-password-reset.md)
 **Notes** : Review design complétée, prêt pour la création du plan de développement avec les clarifications design intégrées
 
+#### 2025-01-27 - Morgan (Architect) - Review architecturale pré-planification
+**Statut** : À faire
+**Détails** : Review architecturale effectuée pour vérifier la cohérence de l'issue avec l'architecture définie avant la création du plan de développement
+**Résultat** : ⚠️ Approuvé avec recommandations architecturales
+**Points positifs** :
+- Approche API-first respectée
+- Utilisation appropriée des fonctionnalités Laravel natives
+- Pattern FormRequest cohérent avec l'architecture
+- Aspects de sécurité bien couverts
+**Recommandations principales** :
+- 🔴 High Priority : Implémenter l'invalidation du Remember Me lors de la réinitialisation dès le MVP (sécurité)
+- 🟡 Medium Priority : Considérer l'ajout d'événements `PasswordResetRequested` et `PasswordResetCompleted` pour la traçabilité
+- 🟡 Medium Priority : Vérifier la configuration de sécurité des cookies (SESSION_SECURE_COOKIE, SESSION_HTTP_ONLY, SESSION_SAME_SITE)
+- 🟢 Low Priority : Clarifier l'utilisation du service PasswordResetService (direct `Password::` peut être suffisant pour MVP)
+- 🟢 Low Priority : Mettre à jour ARCHITECTURE.md après implémentation
+**Review complète** : [ARCHITECT-REVIEW-003-password-reset.md](../reviews/ARCHITECT-REVIEW-003-password-reset.md)
+**Notes** : Review architecturale complétée. L'issue est prête pour la création du plan de développement par Sam (Lead Developer) en tenant compte des recommandations architecturales, notamment l'invalidation du Remember Me qui devrait être implémentée dès le MVP pour la sécurité.
+
