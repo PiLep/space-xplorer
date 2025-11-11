@@ -4,6 +4,7 @@ use App\Livewire\Dashboard;
 use App\Livewire\LoginTerminal;
 use App\Livewire\Profile;
 use App\Livewire\Register;
+use App\Livewire\VerifyEmail;
 use App\Services\AuthService;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +101,9 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
+
+    // Email Verification Route
+    Route::get('/email/verify', VerifyEmail::class)->name('email.verify');
 
     // Logout route (web)
     Route::post('/logout', function (AuthService $authService) {

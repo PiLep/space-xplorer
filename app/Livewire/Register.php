@@ -106,7 +106,7 @@ class Register extends Component
                 'password' => $this->password,
             ]);
 
-            $this->status = '[SUCCESS] Account created successfully. Redirecting...';
+            $this->status = '[SUCCESS] Account created successfully. Redirecting to email verification...';
 
             // Réinitialiser le flag pour que l'animation se joue sur le dashboard après inscription
             session(['terminal_boot_seen' => false]);
@@ -114,8 +114,8 @@ class Register extends Component
             // Small delay to show success message
             sleep(1);
 
-            // Redirect to dashboard
-            return $this->redirect(route('dashboard'), navigate: true);
+            // Redirect to email verification page
+            return $this->redirect(route('email.verify'), navigate: true);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Handle validation errors
             $this->status = '[ERROR] Validation failed.';
