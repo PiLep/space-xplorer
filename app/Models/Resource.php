@@ -196,6 +196,27 @@ class Resource extends Model
     }
 
     /**
+     * Scope a query to only include resources with valid files.
+     *
+     * Note: This requires loading resources to check file_url, so use sparingly.
+     * For better performance, filter after loading a small batch.
+     */
+    public function scopeWithValidFile(Builder $query): Builder
+    {
+        // This is a placeholder scope - actual filtering happens in memory
+        // because file_url is a computed accessor that checks storage
+        return $query;
+    }
+
+    /**
+     * Check if this resource has a valid file.
+     */
+    public function hasValidFile(): bool
+    {
+        return $this->file_url !== null;
+    }
+
+    /**
      * Scope a query to filter resources by matching tags.
      *
      * Finds resources where at least one tag matches any of the provided tags.
