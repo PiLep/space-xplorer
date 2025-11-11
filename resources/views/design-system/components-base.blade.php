@@ -226,6 +226,60 @@
                     </div>
                 </div>
 
+                <!-- Container -->
+                <div class="mt-8">
+                    <h4 class="text-lg font-semibold text-white mb-4 font-mono">Container</h4>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                        Composant utilitaire pour créer des conteneurs avec largeurs maximales standardisées et padding responsive. Assure une cohérence visuelle à travers toute l'application.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Standard (défaut)</h5>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                                Largeur optimale pour le contenu principal (dashboard, listes, pages de contenu).
+                            </p>
+                            <div class="bg-gray-100 dark:bg-space-black rounded-lg p-4">
+                                <x-container variant="standard" class="py-4 bg-white dark:bg-surface-dark rounded border border-gray-200 dark:border-border-dark">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Contenu dans un container standard</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">max-w-7xl md:max-w-5xl</p>
+                                </x-container>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Compact</h5>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                                Largeur réduite pour améliorer la lisibilité (profiles, formulaires, modals).
+                            </p>
+                            <div class="bg-gray-100 dark:bg-space-black rounded-lg p-4">
+                                <x-container variant="compact" class="py-4 bg-white dark:bg-surface-dark rounded border border-gray-200 dark:border-border-dark">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Contenu dans un container compact</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">max-w-4xl md:max-w-3xl</p>
+                                </x-container>
+                            </div>
+                        </div>
+                        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                            <h5 class="text-base font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Full</h5>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                                Pleine largeur pour les pages immersives (galeries, visualisations).
+                            </p>
+                            <div class="bg-gray-100 dark:bg-space-black rounded-lg p-4">
+                                <x-container variant="full" class="py-4 bg-white dark:bg-surface-dark rounded border border-gray-200 dark:border-border-dark">
+                                    <p class="text-sm text-gray-600 dark:text-gray-400">Contenu dans un container full-width</p>
+                                    <p class="text-xs text-gray-500 dark:text-gray-500 mt-2">Pleine largeur avec padding responsive</p>
+                                </x-container>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                        <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                            &lt;x-container variant="standard" class="py-8"&gt;<br>
+                            &nbsp;&nbsp;&lt;!-- Contenu --&gt;<br>
+                            &lt;/x-container&gt;
+                        </code>
+                    </div>
+                </div>
+
                 <!-- Form Select -->
                 <div class="mb-8">
                     <h4 class="text-lg font-semibold text-white mb-4 font-mono">Form Select</h4>

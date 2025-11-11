@@ -265,3 +265,4 @@ Les pages admin utilisent **correctement** les composants du design system exist
 
 La création de ces composants améliorera la maintenabilité et la cohérence du design system.
 
+

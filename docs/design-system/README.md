@@ -89,6 +89,7 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 - **Card** : Conteneurs pour afficher des informations
 - **Alert** : Messages d'alerte et notifications (Success, Error, Warning, Info)
 - **Badge** : Indicateurs de statut et labels avec variantes sémantiques (Success, Warning, Error, Info, Generating, Default)
+- **Container** : Composant utilitaire pour la mise en page avec largeurs maximales standardisées (Standard, Compact, Full)
 
 ### Composants Terminal
 
@@ -109,6 +110,12 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 - **Filter Card** : Conteneur standardisé pour les sections de filtres
 - **Description List** : Liste de descriptions pour pages de détails avec grille responsive
 - **Empty State** : État vide avec icône et action optionnelles pour guider l'utilisateur
+- **Table** : Composant complet pour afficher des données tabulaires avec headers, rows, pagination et variantes
+- **Progress Bar** : Indicateur visuel de progression avec pourcentage et couleurs personnalisables
+
+### Templates Email
+
+- **Email Templates** : Templates d'email avec style terminal pour maintenir la cohérence du design system (Reset Password Notification, Password Reset Confirmation)
 
 ## Utilisation Rapide
 

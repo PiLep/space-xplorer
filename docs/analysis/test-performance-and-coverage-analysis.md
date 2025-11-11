@@ -271,3 +271,4 @@ $iterations = 500; // Réduit de 1000 à 500 (suffisant pour précision)
 - [Pest PHP Documentation](https://pestphp.com/docs)
 - [Mockery Documentation](https://docs.mockery.io/)
 
+

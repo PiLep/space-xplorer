@@ -246,6 +246,150 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Table -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Table</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    Composant complet pour afficher des données tabulaires avec headers, rows, pagination et variantes de style.
+                </p>
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Default</h4>
+                        <x-table
+                            :headers="[
+                                ['label' => 'ID', 'key' => 'id', 'align' => 'right', 'cellClass' => 'font-mono text-gray-500 dark:text-gray-400'],
+                                ['label' => 'Name', 'key' => 'name', 'cellClass' => 'font-medium text-gray-900 dark:text-white'],
+                                ['label' => 'Status', 'key' => 'status', 'cellClass' => 'text-gray-900 dark:text-gray-300'],
+                                ['label' => 'Created', 'key' => 'created_at', 'format' => 'datetime', 'cellClass' => 'text-gray-900 dark:text-gray-400'],
+                            ]"
+                            :rows="[
+                                ['id' => 1, 'name' => 'John Doe', 'status' => 'Active', 'created_at' => '2025-01-15 10:30:00'],
+                                ['id' => 2, 'name' => 'Jane Smith', 'status' => 'Pending', 'created_at' => '2025-01-14 14:20:00'],
+                                ['id' => 3, 'name' => 'Bob Johnson', 'status' => 'Active', 'created_at' => '2025-01-13 09:15:00'],
+                            ]"
+                            emptyMessage="No data found"
+                        />
+                    </div>
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Compact</h4>
+                        <x-table
+                            variant="compact"
+                            :headers="[
+                                ['label' => 'Name', 'key' => 'name', 'cellClass' => 'text-gray-900 dark:text-white'],
+                                ['label' => 'Email', 'key' => 'email', 'cellClass' => 'text-gray-900 dark:text-gray-300'],
+                                ['label' => 'Status', 'key' => 'status', 'cellClass' => 'text-gray-900 dark:text-gray-300'],
+                            ]"
+                            :rows="[
+                                ['name' => 'John Doe', 'email' => 'john@example.com', 'status' => 'Active'],
+                                ['name' => 'Jane Smith', 'email' => 'jane@example.com', 'status' => 'Pending'],
+                            ]"
+                        />
+                    </div>
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Variante Striped</h4>
+                        <x-table
+                            variant="striped"
+                            :headers="[
+                                ['label' => 'Resource', 'key' => 'name', 'cellClass' => 'text-gray-900 dark:text-white'],
+                                ['label' => 'Type', 'key' => 'type', 'cellClass' => 'text-gray-900 dark:text-gray-300'],
+                                ['label' => 'Status', 'key' => 'status', 'cellClass' => 'text-gray-900 dark:text-gray-300'],
+                            ]"
+                            :rows="[
+                                ['name' => 'Avatar Image', 'type' => 'avatar_image', 'status' => 'Approved'],
+                                ['name' => 'Planet Image', 'type' => 'planet_image', 'status' => 'Generating'],
+                                ['name' => 'Planet Video', 'type' => 'planet_video', 'status' => 'Pending'],
+                            ]"
+                        />
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                    <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                        &lt;x-table<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;:headers="[['label' => 'Name', 'key' => 'name']]"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;:rows="$items"<br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;variant="default"<br>
+                        /&gt;
+                    </code>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div>
+                <h3 class="text-xl font-semibold text-white mb-4 font-mono">Progress Bar</h3>
+                <p class="text-gray-600 dark:text-gray-400 text-sm mb-4">
+                    Indicateur visuel de progression avec pourcentage et couleurs personnalisables.
+                </p>
+                <div class="space-y-6">
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Couleurs</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Blue (défaut)</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">75%</span>
+                                </div>
+                                <x-progress-bar :percentage="75" color="blue" />
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Green</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">90%</span>
+                                </div>
+                                <x-progress-bar :percentage="90" color="green" />
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Orange</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">50%</span>
+                                </div>
+                                <x-progress-bar :percentage="50" color="orange" />
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Red</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">25%</span>
+                                </div>
+                                <x-progress-bar :percentage="25" color="red" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
+                        <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">Tailles</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Fine (h-2)</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">60%</span>
+                                </div>
+                                <x-progress-bar :percentage="60" color="blue" height="h-2" />
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Standard (h-3)</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">75%</span>
+                                </div>
+                                <x-progress-bar :percentage="75" color="blue" height="h-3" />
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm mb-1">
+                                    <span class="text-gray-600 dark:text-gray-400">Thick (h-6)</span>
+                                    <span class="text-gray-900 dark:text-white font-medium">80%</span>
+                                </div>
+                                <x-progress-bar :percentage="80" color="green" height="h-6" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <p class="text-xs text-gray-500 dark:text-gray-500 mb-2">Usage :</p>
+                    <code class="text-xs text-space-primary bg-space-black px-2 py-1 rounded block font-mono">
+                        &lt;x-progress-bar :percentage="75" color="blue" /&gt;<br>
+                        &lt;x-progress-bar :percentage="90" color="green" height="h-4" /&gt;
+                    </code>
+                </div>
+            </div>
         </div>
     </section>
 </x-design-system.layout>

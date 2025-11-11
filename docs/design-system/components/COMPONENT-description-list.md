@@ -42,3 +42,4 @@ Le composant `<x-description-item>` est utilisé à l'intérieur de `<x-descript
 
 **Référence** : Voir **[DESIGN-SYSTEM.md](../DESIGN-SYSTEM.md)** pour la vue d'ensemble du design system.
 
+

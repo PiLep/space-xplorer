@@ -81,6 +81,11 @@
                 <p class="text-sm text-gray-600 dark:text-gray-400">Effets visuels Alien</p>
             </a>
             
+            <a href="{{ route('design-system.components.emails') }}" class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 hover:bg-gray-50 dark:hover:bg-surface-medium transition-colors terminal-border-simple group">
+                <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 group-hover:text-space-primary dark:group-hover:text-space-primary font-mono">EMAILS</h4>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Templates d'email avec style terminal</p>
+            </a>
+            
             <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-6 terminal-border-simple">
                 <h4 class="text-lg font-semibold text-gray-900 dark:text-white mb-2 font-mono">DOCUMENTATION</h4>
                 <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">Consultez la documentation complète dans le dossier <code class="text-space-primary dark:text-space-primary">docs/design-system/</code></p>

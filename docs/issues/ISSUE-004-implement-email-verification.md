@@ -144,3 +144,4 @@ Implémenter le système de vérification d'email pour valider que les utilisate
 **Détails** : Issue créée pour améliorer la sécurité et la qualité des données avec la vérification d'email
 **Notes** : Priorité medium car non bloquant pour le MVP mais bonne pratique à implémenter tôt
 
+

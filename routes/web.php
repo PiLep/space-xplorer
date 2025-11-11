@@ -59,6 +59,10 @@ Route::prefix('design-system')->name('design-system.')->group(function () {
         Route::get('/utilities', function () {
             return view('design-system.components-utilities');
         })->name('utilities');
+
+        Route::get('/emails', function () {
+            return view('design-system.components-emails');
+        })->name('emails');
     });
 
     Route::get('/effects', function () {

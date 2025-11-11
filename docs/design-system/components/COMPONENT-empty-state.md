@@ -43,3 +43,4 @@ Le composant Empty State affiche un état vide avec icône optionnelle, titre, d
 
 **Référence** : Voir **[DESIGN-SYSTEM.md](../DESIGN-SYSTEM.md)** pour la vue d'ensemble du design system.
 
+

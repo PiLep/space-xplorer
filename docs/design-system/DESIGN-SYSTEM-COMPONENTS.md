@@ -486,6 +486,113 @@ Voir **[COMPONENT-empty-state.md](./components/COMPONENT-empty-state.md)** pour 
 </x-empty-state>
 ```
 
+### Table
+
+Voir **[COMPONENT-table.md](./components/COMPONENT-table.md)** pour la documentation complète.
+
+**Usage** : Composant complet pour afficher des données tabulaires avec headers, rows, pagination et variantes de style
+
+**Variantes** :
+- Default : Style standard avec padding généreux
+- Compact : Style compact avec padding réduit
+- Striped : Lignes alternées pour améliorer la lisibilité
+
+**Fonctionnalités** :
+- Formatage automatique des dates (date, datetime, datetime-full)
+- Alignement des colonnes (left, center, right)
+- Pagination intégrée
+- Mode responsive avec scroll horizontal
+- Support des relations (dot notation)
+
+**Exemple** :
+```blade
+<x-table
+    :headers="[
+        ['label' => 'Name', 'key' => 'name'],
+        ['label' => 'Email', 'key' => 'email'],
+        ['label' => 'Created', 'key' => 'created_at', 'format' => 'datetime'],
+    ]"
+    :rows="$users"
+    :pagination="$users"
+/>
+```
+
+### Container
+
+Voir **[COMPONENT-container.md](./components/COMPONENT-container.md)** pour la documentation complète.
+
+**Usage** : Composant utilitaire pour créer des conteneurs avec largeurs maximales standardisées et padding responsive
+
+**Variantes** :
+- Standard : Largeur optimale pour le contenu principal (max-w-7xl md:max-w-5xl)
+- Compact : Largeur réduite pour meilleure lisibilité (max-w-4xl md:max-w-3xl)
+- Full : Pleine largeur pour pages immersives
+
+**Caractéristiques** :
+- Padding horizontal responsive (px-4 sm:px-6 lg:px-8)
+- Centrage automatique
+- Classes additionnelles supportées
+
+**Exemple** :
+```blade
+<x-container variant="standard" class="py-8">
+    <!-- Contenu -->
+</x-container>
+```
+
+### Progress Bar
+
+Voir **[COMPONENT-progress-bar.md](./components/COMPONENT-progress-bar.md)** pour la documentation complète.
+
+**Usage** : Indicateur visuel de progression avec pourcentage et couleurs personnalisables
+
+**Variantes de couleur** :
+- Blue : Progression générale (défaut)
+- Green : Succès ou progression positive
+- Orange : Avertissement ou progression moyenne
+- Red : Erreur ou progression critique
+
+**Caractéristiques** :
+- Pourcentage automatiquement limité entre 0 et 100
+- Hauteur personnalisable (h-2, h-3, h-4, h-6)
+- Support du mode sombre
+
+**Exemple** :
+```blade
+<x-progress-bar :percentage="75" color="blue" />
+<x-progress-bar :percentage="90" color="green" height="h-4" />
+```
+
+## Templates Email
+
+Les templates d'email maintiennent la cohérence avec l'identité visuelle rétro-futuriste du design system.
+
+### Email Templates
+
+Voir **[COMPONENT-email.md](./components/COMPONENT-email.md)** pour la documentation complète.
+
+**Usage** : Templates d'email avec style terminal pour maintenir la cohérence du design system
+
+**Caractéristiques** :
+- Style terminal avec typographie monospace
+- Fond sombre avec bordures fluorescentes
+- Messages avec préfixes système ([INFO], [SUCCESS], [ERROR], etc.)
+- Boutons d'action avec style terminal
+- Compatibilité email (styles inline)
+
+**Templates disponibles** :
+- **Reset Password Notification** : Email de réinitialisation de mot de passe
+- **Password Reset Confirmation** : Email de confirmation après réinitialisation
+
+**Exemple** :
+```php
+use App\Mail\ResetPasswordNotification;
+
+Mail::to($user->email)->send(
+    new ResetPasswordNotification($token, $user->email)
+);
+```
+
 ## Principes de Composition
 
 ### Réutilisabilité
