@@ -103,6 +103,71 @@ npm install
 - `take_screenshot` : Capturer une image de la page pour documentation
 - `evaluate_script` : Exécuter du JavaScript pour tester des interactions
 
+### Règle 3 : Utilisation obligatoire d'un layout pour toutes les vues Blade
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Alex (Product)  
+**Validée par** : À valider
+
+**Description** : Toutes les vues Blade (`resources/views/**/*.blade.php`) qui sont rendues directement par un contrôleur doivent utiliser un layout approprié via `@extends('layouts.app')` ou un autre layout spécifique. Les composants Livewire utilisent l'attribut `#[Layout('layouts.app')]` dans leur classe PHP, mais les vues Blade classiques doivent toujours étendre un layout.
+
+**Quand appliquer** :
+- Lors de la création d'une nouvelle vue Blade rendue par un contrôleur
+- Lors de la modification d'une vue Blade existante
+- Lors de la review de code d'une nouvelle fonctionnalité
+- Lors de la vérification visuelle avec Chrome DevTools MCP
+
+**Exemples** :
+
+**Bon exemple** :
+```php
+// resources/views/auth/reset-password.blade.php
+@extends('layouts.app')
+
+@section('content')
+    <livewire:reset-password :token="$token" :email="$email" />
+@endsection
+```
+
+```php
+// app/Livewire/ResetPassword.php
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.app')]
+class ResetPassword extends Component
+{
+    // ...
+}
+```
+
+**Mauvais exemple** :
+```php
+// ❌ Vue Blade sans layout - CSS ne sera pas chargé
+@php
+    // This view is used by the controller to pass token and email to Livewire component
+@endphp
+
+<livewire:reset-password :token="$token" :email="$email" />
+```
+
+**Justification** : 
+- Garantit que le CSS et les assets JavaScript sont toujours chargés correctement
+- Assure une cohérence visuelle sur toutes les pages de l'application
+- Évite les problèmes d'affichage où les styles ne sont pas appliqués
+- Le layout `layouts.app` inclut les directives `@vite` nécessaires pour charger les assets
+- Les composants Livewire peuvent utiliser l'attribut `#[Layout]` mais les vues Blade classiques doivent utiliser `@extends`
+- Permet de maintenir une structure HTML cohérente (head, body, scripts) sur toutes les pages
+
+**Exceptions** :
+- Les composants Blade (`resources/views/components/**/*.blade.php`) n'ont pas besoin d'étendre un layout car ils sont inclus dans d'autres vues
+- Les partials Blade (`resources/views/partials/**/*.blade.php`) n'ont pas besoin d'étendre un layout car ils sont inclus dans d'autres vues
+- Les emails (`resources/views/emails/**/*.blade.php`) peuvent utiliser un layout spécifique pour les emails
+
+**Vérification** :
+- Lors de la review de code, vérifier que toutes les vues Blade rendues par des contrôleurs utilisent `@extends`
+- Lors de la vérification visuelle avec Chrome DevTools MCP, vérifier que le CSS est chargé (inspecter les éléments et vérifier les styles appliqués)
+- Si une page s'affiche sans styles, vérifier immédiatement si le layout est utilisé
+
 ---
 
 ## Format d'une Règle
