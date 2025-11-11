@@ -146,6 +146,74 @@ Planets
 - Ne révèle jamais si un email existe dans le système (message de succès générique)
 - Tokens uniques et sécurisés (gérés automatiquement par Laravel)
 
+### Vérification d'email
+
+**Routes Web** :
+- `GET /email/verify` - Page de vérification d'email (middleware `auth`, composant Livewire `VerifyEmail`)
+
+**Fonctionnement** :
+- Après l'inscription, un code de vérification à 6 chiffres est généré et envoyé par email
+- L'utilisateur est redirigé vers `/email/verify` pour saisir le code
+- Lors de la connexion, si l'email n'est pas vérifié, l'utilisateur est redirigé vers `/email/verify`
+- Le code est hashé avant stockage dans la base de données (sécurité)
+- Le code expire après 15 minutes
+- Maximum 5 tentatives de vérification par code
+- Cooldown de 2 minutes entre les renvois de code
+
+**Sécurité** :
+- Codes générés de manière cryptographiquement sécurisée (`random_int(100000, 999999)`)
+- Codes hashés avant stockage (utiliser `Hash::make()`)
+- Vérification avec `Hash::check()` pour comparer le code saisi avec le hash stocké
+- Expiration après 15 minutes
+- Limitation à 5 tentatives de vérification par code
+- Limitation à 1 renvoi toutes les 2 minutes
+- Vérification que l'utilisateur correspond bien au code (pas de vérification croisée entre utilisateurs)
+
+**Service** :
+- `EmailVerificationService` : Service de gestion de la vérification d'email
+  - `generateCode(User $user): string` - Génère un code, le hash, le stocke, l'envoie par email
+  - `verifyCode(User $user, string $code): bool` - Vérifie le code et marque l'email comme vérifié
+  - `resendCode(User $user): void` - Génère et envoie un nouveau code
+  - `isCodeValid(User $user, string $code): bool` - Vérifie si le code est valide (sans incrémenter tentatives)
+  - `clearVerificationCode(User $user): void` - Nettoie le code après vérification
+
+**Modèle User** :
+- Champs ajoutés pour la vérification d'email :
+  - `email_verification_code` (string, nullable) - Code hashé
+  - `email_verification_code_expires_at` (timestamp, nullable) - Date d'expiration
+  - `email_verification_attempts` (integer, default: 0) - Nombre de tentatives
+  - `email_verification_code_sent_at` (timestamp, nullable) - Date d'envoi du dernier code
+- Méthodes helper :
+  - `hasVerifiedEmail()` - Vérifie si l'email est vérifié
+  - `hasPendingVerificationCode()` - Vérifie si un code est en attente et non expiré
+  - `canResendVerificationCode()` - Vérifie si le renvoi est autorisé (2 minutes écoulées)
+  - `hasExceededVerificationAttempts()` - Vérifie si les tentatives max sont atteintes (5)
+
+**Composant Livewire** :
+- `VerifyEmail` : Composant pour la page de vérification avec style terminal
+  - Formatage automatique du code (6 chiffres uniquement)
+  - Messages d'erreur spécifiques selon les cas
+  - Feedback visuel des tentatives avec couleurs adaptées
+  - Compteur de cooldown pour le renvoi
+  - Email masqué pour la sécurité
+
+**Mailable** :
+- `EmailVerificationNotification` : Email contenant le code de vérification à 6 chiffres
+  - Template HTML et texte avec style terminal cohérent
+  - Code affiché de manière proéminente
+  - Instructions claires sur où saisir le code
+
+**Flux** :
+1. Inscription → Génération et envoi du code → Redirection vers `/email/verify`
+2. Connexion avec email non vérifié → Redirection vers `/email/verify`
+3. Page de vérification → Saisie du code → Validation → Marquer email comme vérifié → Redirection vers dashboard
+4. Possibilité de renvoyer le code avec limitation de fréquence (cooldown de 2 minutes)
+
+**Comportement MVP** :
+- Pour le MVP, on ne bloque pas l'accès aux fonctionnalités si l'email n'est pas vérifié (sauf redirection après login)
+- Redirection vers la vérification après inscription et après connexion si email non vérifié
+- Dans une version future, on pourra bloquer certaines fonctionnalités si l'email n'est pas vérifié
+
 ### Endpoints utilisateurs (MVP)
 
 - `GET /api/users/{id}` - Détails d'un utilisateur (authentification requise)
@@ -481,6 +549,7 @@ Lors de la réinitialisation de mot de passe réussie :
 - **LoginTerminal** : Formulaire de connexion avec style terminal (`/login`)
 - **ForgotPassword** : Formulaire de demande de réinitialisation de mot de passe (`/forgot-password`)
 - **ResetPassword** : Formulaire de réinitialisation de mot de passe avec indicateur de force (`/reset-password/{token}`)
+- **VerifyEmail** : Page de vérification d'email avec code à 6 chiffres (`/email/verify`)
 - **Dashboard** : Affichage de la planète d'origine (`/dashboard`)
 - **Profile** : Gestion du profil utilisateur (`/profile`)
 
@@ -490,6 +559,7 @@ Lors de la réinitialisation de mot de passe réussie :
 - `/login` : Connexion (guest)
 - `/forgot-password` : Demande de réinitialisation de mot de passe (guest)
 - `/reset-password/{token}` : Formulaire de réinitialisation (guest)
+- `/email/verify` : Vérification d'email (auth)
 - `/dashboard` : Tableau de bord (auth)
 - `/profile` : Profil utilisateur (auth)
 - `POST /logout` : Déconnexion (auth)

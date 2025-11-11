@@ -3,7 +3,12 @@
 use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
+
+beforeEach(function () {
+    Mail::fake();
+});
 
 it('renders register component', function () {
     Livewire::test(\App\Livewire\Register::class)
@@ -49,7 +54,7 @@ it('validates password minimum length during registration', function () {
         ->assertHasErrors(['password']);
 });
 
-it('allows successful registration', function () {
+it('allows successful registration and redirects to email verification', function () {
     // Ensure mock is set up (should be done by tests/Feature/Pest.php, but explicit call ensures it)
     // The beforeEach in tests/Feature/Pest.php should handle this, but calling it explicitly
     // ensures the mock is ready before Livewire creates the user
@@ -60,7 +65,7 @@ it('allows successful registration', function () {
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
         ->call('register')
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('email.verify'));
 
     // Verify user is authenticated
     expect(Auth::check())->toBeTrue();
@@ -69,7 +74,8 @@ it('allows successful registration', function () {
     $user = Auth::user();
     expect($user)->not->toBeNull()
         ->and($user->name)->toBe('John Doe')
-        ->and($user->email)->toBe('john1@example.com');
+        ->and($user->email)->toBe('john1@example.com')
+        ->and($user->email_verified_at)->toBeNull();
 });
 
 it('handles duplicate email during registration', function () {

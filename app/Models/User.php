@@ -34,6 +34,11 @@ class User extends Authenticatable
         'avatar_url',
         'avatar_generating',
         'is_super_admin',
+        'email_verified_at',
+        'email_verification_code',
+        'email_verification_code_expires_at',
+        'email_verification_attempts',
+        'email_verification_code_sent_at',
     ];
 
     /**
@@ -57,6 +62,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_super_admin' => 'boolean',
+            'email_verification_code_expires_at' => 'datetime',
+            'email_verification_code_sent_at' => 'datetime',
         ];
     }
 
@@ -181,5 +188,63 @@ class User extends Authenticatable
     public function sendPasswordResetNotification($token): void
     {
         $this->notify(new CustomResetPasswordNotification($token));
+    }
+
+    /**
+     * Maximum verification attempts per code.
+     */
+    public const MAX_VERIFICATION_ATTEMPTS = 5;
+
+    /**
+     * Cooldown time in minutes before resending code.
+     */
+    public const RESEND_COOLDOWN_MINUTES = 2;
+
+    /**
+     * Check if the user's email has been verified.
+     *
+     * @return bool True if email is verified, false otherwise
+     */
+    public function hasVerifiedEmail(): bool
+    {
+        return $this->email_verified_at !== null;
+    }
+
+    /**
+     * Check if the user has a pending verification code that is not expired.
+     *
+     * @return bool True if a valid verification code exists, false otherwise
+     */
+    public function hasPendingVerificationCode(): bool
+    {
+        return $this->email_verification_code !== null
+            && $this->email_verification_code_expires_at !== null
+            && $this->email_verification_code_expires_at->isFuture();
+    }
+
+    /**
+     * Check if the user can resend a verification code (cooldown check).
+     *
+     * @return bool True if cooldown period has passed, false otherwise
+     */
+    public function canResendVerificationCode(): bool
+    {
+        if ($this->email_verification_code_sent_at === null) {
+            return true;
+        }
+
+        $cooldownEnd = $this->email_verification_code_sent_at->copy()->addMinutes(self::RESEND_COOLDOWN_MINUTES);
+
+        return now()->isAfter($cooldownEnd);
+    }
+
+    /**
+     * Check if the user has exceeded the maximum verification attempts.
+     *
+     * @return bool True if maximum attempts reached, false otherwise
+     */
+    public function hasExceededVerificationAttempts(): bool
+    {
+        return $this->email_verification_attempts >= self::MAX_VERIFICATION_ATTEMPTS;
     }
 }

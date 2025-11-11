@@ -14,6 +14,9 @@
     } elseif (str_contains($message, '[ERROR]')) {
         $type = 'error';
         $colorClass = 'text-error dark:text-error';
+    } elseif (str_contains($message, '[WARNING]')) {
+        $type = 'warning';
+        $colorClass = 'text-warning dark:text-warning';
     } elseif (str_contains($message, '[INFO]')) {
         $type = 'info';
         $colorClass = 'text-space-secondary dark:text-space-secondary';

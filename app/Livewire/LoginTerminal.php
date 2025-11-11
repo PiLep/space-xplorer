@@ -89,7 +89,7 @@ class LoginTerminal extends Component
         $this->validate();
 
         try {
-            $authService->loginFromCredentials($this->email, $this->password, $this->remember);
+            $user = $authService->loginFromCredentials($this->email, $this->password, $this->remember);
             $this->status = '[SUCCESS] Authentication successful. Redirecting...';
 
             // Réinitialiser le flag pour que l'animation se joue sur le dashboard après login
@@ -97,6 +97,11 @@ class LoginTerminal extends Component
 
             // Small delay to show success message
             sleep(1);
+
+            // Check if email is verified, redirect accordingly
+            if (! $user->hasVerifiedEmail()) {
+                return $this->redirect(route('email.verify'), navigate: true);
+            }
 
             // Redirect to dashboard
             return $this->redirect(route('dashboard'), navigate: true);
