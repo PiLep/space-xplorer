@@ -53,7 +53,69 @@
 
 /* Alien-inspired Visual Effects */
 
-/* Scanlines CRT Effect */
+/* Background Texture */
+@layer utilities {
+    .bg-textured {
+        position: relative;
+        background: 
+            /* Points avec positions très aléatoires et couleurs/intensités variées */
+            radial-gradient(circle at 17px 43px, rgba(0, 255, 150, 0.7) 1.5px, transparent 0),
+            radial-gradient(circle at 89px 127px, rgba(0, 180, 255, 0.5) 1px, transparent 0),
+            radial-gradient(circle at 156px 23px, rgba(20, 255, 120, 0.4) 1px, transparent 0),
+            radial-gradient(circle at 34px 198px, rgba(0, 160, 240, 0.6) 1.5px, transparent 0),
+            radial-gradient(circle at 203px 87px, rgba(10, 255, 140, 0.5) 1px, transparent 0),
+            radial-gradient(circle at 67px 54px, rgba(0, 190, 250, 0.4) 1px, transparent 0),
+            radial-gradient(circle at 142px 176px, rgba(0, 240, 130, 0.6) 1.5px, transparent 0),
+            radial-gradient(circle at 187px 145px, rgba(0, 175, 245, 0.5) 1px, transparent 0),
+            /* Fond de base */
+            #0a0a0a;
+        background-size: 
+            /* Points avec tailles très variées pour éviter la régularité */
+            247px 231px, 189px 203px, 213px 197px, 201px 219px, 227px 191px, 195px 205px, 209px 223px, 187px 215px;
+        background-position: 
+            /* Points avec positions décalées de manière très irrégulière */
+            0 0, 73px 41px, 128px 89px, 47px 156px, 203px 23px, 31px 112px, 167px 198px, 194px 134px;
+    }
+    
+    .bg-textured::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: 
+            /* Gradients spatiaux animés */
+            radial-gradient(ellipse 120% 80% at 20% 10%, rgba(0, 40, 80, 0.6) 0%, transparent 50%),
+            radial-gradient(ellipse 100% 120% at 80% 90%, rgba(0, 50, 100, 0.5) 0%, transparent 60%),
+            radial-gradient(ellipse 80% 100% at 50% 50%, rgba(0, 30, 60, 0.4) 0%, transparent 70%);
+        background-size: 100% 100%, 100% 100%, 100% 100%;
+        animation: gradient-drift 60s ease-in-out infinite;
+        pointer-events: none;
+        z-index: 0;
+    }
+    
+    @keyframes gradient-drift {
+        0%, 100% {
+            background-position: 0% 0%, 0% 0%, 0% 0%;
+            opacity: 1;
+        }
+        25% {
+            background-position: 5% 3%, -3% 5%, 2% -2%;
+            opacity: 0.95;
+        }
+        50% {
+            background-position: -2% 5%, 4% -2%, -3% 3%;
+            opacity: 1;
+        }
+        75% {
+            background-position: 3% -3%, -5% 4%, 4% 2%;
+            opacity: 0.95;
+        }
+    }
+}
+
+    /* Scanlines CRT Effect */
 @layer utilities {
     .scanlines {
         position: relative;
@@ -68,14 +130,47 @@
         bottom: 0;
         background: repeating-linear-gradient(
             0deg,
-            rgba(0, 0, 0, 0.3),
-            rgba(0, 0, 0, 0.3) 2px,
-            transparent 2px,
-            transparent 4px
+            rgba(0, 0, 0, 0.5),
+            rgba(0, 0, 0, 0.5) 1px,
+            transparent 1px,
+            transparent 2px
         );
         pointer-events: none;
         z-index: 9999;
         mix-blend-mode: overlay;
+        opacity: 0.8;
+    }
+    
+    /* Scanlines sur le titre */
+    .scanlines-title {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .scanlines-title::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: repeating-linear-gradient(
+            0deg,
+            rgba(0, 255, 136, 0.08),
+            rgba(0, 255, 136, 0.08) 2px,
+            transparent 2px,
+            transparent 4px
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        pointer-events: none;
+        mix-blend-mode: screen;
+        opacity: 0.5;
+        font-weight: inherit;
+        font-size: inherit;
+        font-family: inherit;
+        letter-spacing: inherit;
     }
     
     /* Grain/Noise Texture */
@@ -89,24 +184,24 @@
         background: 
             repeating-linear-gradient(
                 0deg,
-                rgba(0, 0, 0, 0.1),
-                rgba(0, 0, 0, 0.1) 1px,
+                rgba(0, 0, 0, 0.2),
+                rgba(0, 0, 0, 0.2) 1px,
                 transparent 1px,
                 transparent 2px
             ),
             repeating-linear-gradient(
                 90deg,
-                rgba(0, 0, 0, 0.1),
-                rgba(0, 0, 0, 0.1) 1px,
+                rgba(0, 0, 0, 0.2),
+                rgba(0, 0, 0, 0.2) 1px,
                 transparent 1px,
                 transparent 2px
             );
-        background-size: 2px 2px;
+        background-size: 1px 1px;
         pointer-events: none;
         z-index: 9998;
         mix-blend-mode: overlay;
-        opacity: 0.6;
-        animation: grain 0.5s steps(6) infinite;
+        opacity: 0.9;
+        animation: grain 0.3s steps(8) infinite;
     }
     
     @keyframes grain {
@@ -145,9 +240,9 @@
     /* Text Glow Effects */
     .text-glow-primary {
         text-shadow: 
-            0 0 10px rgba(0, 255, 136, 0.5),
-            0 0 20px rgba(0, 255, 136, 0.3),
-            0 0 30px rgba(0, 255, 136, 0.2);
+            0 0 5px rgba(0, 255, 136, 0.3),
+            0 0 10px rgba(0, 255, 136, 0.2),
+            0 0 15px rgba(0, 255, 136, 0.1);
     }
     
     .text-glow-secondary {
@@ -226,16 +321,22 @@
     @keyframes pulse-glow {
         0%, 100% {
             opacity: 1;
-            box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+            text-shadow: 
+                0 0 5px rgba(0, 255, 136, 0.3),
+                0 0 10px rgba(0, 255, 136, 0.2),
+                0 0 15px rgba(0, 255, 136, 0.1);
         }
         50% {
-            opacity: 0.8;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+            opacity: 0.98;
+            text-shadow: 
+                0 0 7px rgba(0, 255, 136, 0.35),
+                0 0 12px rgba(0, 255, 136, 0.25),
+                0 0 18px rgba(0, 255, 136, 0.15);
         }
     }
     
     .pulse-glow {
-        animation: pulse-glow 2s ease-in-out infinite;
+        animation: pulse-glow 3s ease-in-out infinite;
     }
     
     /* Hologram effect */

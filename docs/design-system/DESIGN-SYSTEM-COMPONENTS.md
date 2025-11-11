@@ -147,6 +147,28 @@ Voir **[COMPONENT-page-header.md](./components/COMPONENT-page-header.md)** pour 
 />
 ```
 
+### Logo
+
+Voir **[COMPONENT-logo.md](./components/COMPONENT-logo.md)** pour la documentation complète.
+
+**Usage** : Logo "STELLAR" avec style terminal/sci-fi du design system
+
+**Variantes de taille** :
+- Extra Small (`xs`) : Barre de navigation en bas
+- Small (`sm`) : Navigation, footer
+- Medium (`md`) : En-têtes de pages
+- Large (`lg`) : Landing page principale (défaut)
+- Extra Large (`xl`) : Hero sections
+
+**Options** :
+- `showScanlines` : Afficher les scanlines discrètes (défaut: `true`)
+
+**Exemple** :
+```blade
+<x-logo size="lg" :showScanlines="true" />
+<x-logo size="sm" :showScanlines="false" />
+```
+
 ### Card
 
 Voir **[COMPONENT-card.md](./components/COMPONENT-card.md)** pour la documentation complète.

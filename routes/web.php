@@ -5,17 +5,17 @@ use App\Livewire\LoginTerminal;
 use App\Livewire\Profile;
 use App\Livewire\Register;
 use App\Services\AuthService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Home page - redirect based on authentication
+// Home page - Landing page
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('dashboard');
-    }
-
-    return redirect()->route('login');
+    return view('landing');
 })->name('home');
+
+// Legacy landing route (redirect to home)
+Route::get('/landing', function () {
+    return redirect()->route('home');
+})->name('landing');
 
 // Design System pages
 Route::prefix('design-system')->name('design-system.')->group(function () {
@@ -63,6 +63,10 @@ Route::prefix('design-system')->name('design-system.')->group(function () {
         Route::get('/emails', function () {
             return view('design-system.components-emails');
         })->name('emails');
+
+        Route::get('/logo', function () {
+            return view('design-system.logo-preview');
+        })->name('logo');
     });
 
     Route::get('/effects', function () {

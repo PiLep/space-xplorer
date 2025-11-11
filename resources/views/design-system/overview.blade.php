@@ -51,6 +51,46 @@
         </div>
     </section>
 
+    <!-- Branding Section -->
+    <section class="mb-12">
+        <h3 class="text-2xl font-bold text-white mb-6 font-mono">BRANDING</h3>
+        
+        <div class="bg-white dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded-lg p-8 terminal-border-simple">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h4 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 dark:text-glow-subtle font-mono">LOGO_STELLAR</h4>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">
+                        Le logo "STELLAR" est l'élément central de l'identité visuelle. Il utilise une typographie monospace 
+                        avec effet glow et scanlines optionnelles pour créer une ambiance rétro-futuriste.
+                    </p>
+                    <div class="space-y-3">
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                            <span class="text-space-primary dark:text-space-primary">[INFO]</span> 5 variantes de taille disponibles (xs, sm, md, lg, xl)
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                            <span class="text-space-primary dark:text-space-primary">[INFO]</span> Scanlines optionnelles pour l'ambiance terminal
+                        </p>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                            <span class="text-space-primary dark:text-space-primary">[INFO]</span> Animation pulse subtile intégrée
+                        </p>
+                    </div>
+                    <div class="mt-6 space-y-2">
+                        <a href="{{ route('design-system.components.logo') }}" 
+                           class="inline-block bg-space-primary hover:bg-space-primary-dark text-space-black font-bold py-2 px-6 rounded-lg transition-colors duration-150 font-mono text-sm">
+                            > VIEW_LOGO_PREVIEW
+                        </a>
+                        <p class="text-xs text-gray-500 dark:text-gray-500 font-mono">
+                            [INFO] Favicons disponibles pour PWA, iOS et Android
+                        </p>
+                    </div>
+                </div>
+                <div class="bg-space-black rounded-lg p-8 flex items-center justify-center">
+                    <x-logo size="lg" :showScanlines="true" />
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Quick Links -->
     <section class="mb-12">
         <h3 class="text-2xl font-bold text-white mb-6 font-mono">NAVIGATION_RAPIDE</h3>

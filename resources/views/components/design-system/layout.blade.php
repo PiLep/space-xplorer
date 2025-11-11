@@ -10,7 +10,12 @@
         }
         // Gérer les sous-pages de composants
         if (str_starts_with($currentPage, 'components.')) {
-            $currentPage = 'components';
+            // Exception pour la page logo qui doit être détectée comme "logo"
+            if ($currentPage === 'components.logo') {
+                $currentPage = 'logo';
+            } else {
+                $currentPage = 'components';
+            }
         }
     }
 @endphp
@@ -45,6 +50,12 @@
                         class="{{ $currentPage === 'spacing' ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary' }} block rounded px-4 py-2 text-sm transition-colors"
                     >
                         > SPACING
+                    </a>
+                    <a
+                        href="{{ route('design-system.components.logo') }}"
+                        class="{{ $currentPage === 'logo' ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary' }} block rounded px-4 py-2 text-sm transition-colors"
+                    >
+                        > BRANDING
                     </a>
                     <a
                         href="{{ route('design-system.components') }}"

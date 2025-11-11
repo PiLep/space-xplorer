@@ -7,6 +7,13 @@
 
     <title>{{ config('app.name', 'Stellar') }} - @yield('title', 'Explore the Universe')</title>
 
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +26,7 @@
 <body class="bg-gray-50 dark:bg-space-black antialiased scanlines grain">
     <div class="min-h-screen flex flex-col">
         <!-- Main Content -->
-        <main class="flex-1 pb-16">
+        <main class="flex-1 {{ request()->routeIs('home') ? '' : 'pb-16' }}">
             @isset($slot)
                 {{ $slot }}
             @else
@@ -28,10 +35,14 @@
         </main>
 
         <!-- Terminal Command Bar -->
+        @unless(request()->routeIs('home'))
         <div class="fixed bottom-0 left-0 right-0 bg-surface-dark dark:bg-surface-dark border-t border-border-dark dark:border-border-dark font-mono z-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('home') }}" class="flex-shrink-0">
+                            <x-logo size="xs" :showScanlines="false" />
+                        </a>
                         <span class="text-gray-500 dark:text-gray-500 text-sm">
                             @auth
                                 @php
@@ -83,6 +94,7 @@
                 </div>
             </div>
         </div>
+        @endunless
 
         <!-- Footer -->
         <footer class="bg-white dark:bg-surface-dark border-t border-gray-200 dark:border-border-dark mt-auto hidden">
