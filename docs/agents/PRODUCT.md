@@ -174,6 +174,27 @@ Chaque issue suit un format standardisé. Consulte **[create-issue.md](../prompt
 - **Priorisation** : Indique la priorité selon la valeur utilisateur
 - **Références** : Lie vers la documentation pertinente
 
+### Synchronisation avec GitHub
+
+Quand tu crées une issue importante ou que tu veux la suivre sur GitHub :
+
+1. **Créer l'issue GitHub** : Utilise les outils GitHub MCP pour créer l'issue sur le repository
+   - Titre : Identique à l'issue locale
+   - Description : Contenu complet de l'issue locale
+   - Labels : Ajouter `enhancement`, `bug`, `improvement` selon le type, et `high-priority`, `medium-priority`, `low-priority` selon la priorité
+
+2. **Créer une branche dédiée** (optionnel) : Pour commiter l'issue dans une branche dédiée
+   - Convention : `issue/{numero}-{titre-kebab-case}` (ex: `issue/002-remember-me`)
+   - Commiter le fichier de l'issue dans cette branche
+   - Pousser la branche sur GitHub
+
+3. **Mettre à jour l'issue locale** : Ajouter une section "GitHub" dans le suivi avec :
+   - Le lien vers l'issue GitHub (#numero)
+   - Le nom de la branche si créée
+   - Mettre à jour l'historique avec la création GitHub
+
+**Note** : La branche de développement (`feature/ISSUE-XXX`) sera créée par Sam (Lead Developer) lors de la création du plan de développement.
+
 ## Références
 
 Pour approfondir ta connaissance du projet :
