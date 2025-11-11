@@ -21,27 +21,72 @@
                                     <x-scan-placeholder type="avatar" :label="'SCANNING_AVATAR'" class="h-full w-full" />
                                 </div>
                             @elseif ($user['avatar_url'] ?? null)
-                                <img
-                                    src="{{ $user['avatar_url'] }}"
-                                    alt="{{ $user['name'] }}'s avatar"
-                                    class="border-space-primary dark:border-space-primary terminal-border-simple h-24 w-24 rounded-lg border-2 object-cover shadow-lg avatar-image"
-                                    onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
-                                />
-                                @php
-                                    $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
-                                @endphp
-                                <div
-                                    class="dark:border-border-dark terminal-border-simple hidden flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
-                                    <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                <div class="relative h-24 w-24" x-data="{ showButton: false }" @mouseenter="showButton = true" @mouseleave="showButton = false">
+                                    <img
+                                        src="{{ $user['avatar_url'] }}"
+                                        alt="{{ $user['name'] }}'s avatar"
+                                        class="border-space-primary dark:border-space-primary terminal-border-simple h-24 w-24 rounded-lg border-2 object-cover shadow-lg avatar-image"
+                                        onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                                        wire:key="avatar-{{ $user['id'] }}-{{ md5($user['avatar_url'] ?? '') }}"
+                                    />
+                                    @php
+                                        $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
+                                    @endphp
+                                    <div
+                                        class="dark:border-border-dark terminal-border-simple hidden flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
+                                        <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                    </div>
+                                    <!-- Regenerate Profile Button - Visible on hover of image -->
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 transition-opacity" 
+                                         :class="{ 'opacity-100': showButton }"
+                                         x-show="showButton"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0"
+                                         x-transition:enter-end="opacity-100"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100"
+                                         x-transition:leave-end="opacity-0">
+                                        <button
+                                            wire:click="openAvatarModal"
+                                            class="bg-space-primary hover:bg-space-primary-dark text-white rounded-full p-3 shadow-lg transition-colors focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2"
+                                            title="Regenerate bio-physical profile"
+                                        >
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                             @else
                                 <!-- No avatar, show initials placeholder -->
-                                @php
-                                    $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
-                                @endphp
-                                <div
-                                    class="dark:border-border-dark terminal-border-simple flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
-                                    <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                <div class="relative h-24 w-24" x-data="{ showButton: false }" @mouseenter="showButton = true" @mouseleave="showButton = false">
+                                    @php
+                                        $initials = strtoupper(substr($user['name'], 0, 1) . (strpos($user['name'], ' ') !== false ? substr($user['name'], strpos($user['name'], ' ') + 1, 1) : ''));
+                                    @endphp
+                                    <div
+                                        class="dark:border-border-dark terminal-border-simple flex h-24 w-24 flex-shrink-0 items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-600 bg-gray-200 dark:bg-gray-800 avatar-placeholder">
+                                        <span class="font-mono text-xl font-bold text-gray-600 dark:text-gray-300">{{ $initials }}</span>
+                                    </div>
+                                    <!-- Regenerate Profile Button - Visible on hover -->
+                                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 rounded-lg opacity-0 transition-opacity" 
+                                         :class="{ 'opacity-100': showButton }"
+                                         x-show="showButton"
+                                         x-transition:enter="transition ease-out duration-200"
+                                         x-transition:enter-start="opacity-0"
+                                         x-transition:enter-end="opacity-100"
+                                         x-transition:leave="transition ease-in duration-150"
+                                         x-transition:leave-start="opacity-100"
+                                         x-transition:leave-end="opacity-0">
+                                        <button
+                                            wire:click="openAvatarModal"
+                                            class="bg-space-primary hover:bg-space-primary-dark text-white rounded-full p-3 shadow-lg transition-colors focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2"
+                                            title="Regenerate bio-physical profile"
+                                        >
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                                            </svg>
+                                        </button>
+                                    </div>
                                 </div>
                             @endif
                         </div>
@@ -116,6 +161,107 @@
                 </div>
             </div>
         </div>
+
+        <!-- Avatar Selection Modal -->
+        @if ($showAvatarModal)
+            <div class="fixed inset-0 bg-black bg-opacity-50 dark:bg-black/50 flex items-center justify-center z-50"
+                 wire:click.self="closeAvatarModal"
+                 x-data="{ show: @entangle('showAvatarModal') }"
+                 x-show="show"
+                 x-transition:enter="transition ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 role="dialog"
+                 aria-modal="true">
+                <div class="bg-surface-dark dark:bg-surface-dark border border-border-dark dark:border-border-dark rounded-lg p-6 max-w-4xl w-full terminal-border-simple mx-4 max-h-[90vh] overflow-y-auto"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 scale-95"
+                     x-transition:enter-end="opacity-100 scale-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 scale-100"
+                     x-transition:leave-end="opacity-0 scale-95">
+                    <!-- Header -->
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold text-white font-mono">
+                            REGENERATE_BIO_PROFILE
+                        </h2>
+                        <button wire:click="closeAvatarModal"
+                                class="text-gray-400 hover:text-white transition-colors focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-space-black rounded"
+                                aria-label="Close">
+                            <span class="font-mono text-2xl leading-none">×</span>
+                        </button>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="mb-6">
+                        @if ($loadingAvatars)
+                            <div class="flex items-center justify-center py-12">
+                                <x-loading-spinner
+                                    variant="simple"
+                                    size="md"
+                                    :showMessage="false"
+                                />
+                            </div>
+                        @elseif ($avatarMessage && !$selectingAvatar)
+                            <x-alert
+                                :type="str_contains($avatarMessage, '[OK]') ? 'success' : 'error'"
+                                :message="$avatarMessage"
+                                :showPrompt="false"
+                            />
+                        @elseif (count($availableAvatars) > 0)
+                            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                                @foreach ($availableAvatars as $avatar)
+                                    <button
+                                        wire:click="selectAvatar('{{ $avatar['id'] }}')"
+                                        wire:loading.attr="disabled"
+                                        class="group relative w-24 h-24 rounded-lg overflow-hidden border-2 border-gray-600 dark:border-gray-700 hover:border-space-primary dark:hover:border-space-primary transition-all focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-space-black {{ $selectingAvatar ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"
+                                        title="{{ $avatar['description'] ?? 'Regenerate with this profile' }}">
+                                        <img
+                                            src="{{ $avatar['file_url'] }}"
+                                            alt="{{ $avatar['description'] ?? 'Avatar' }}"
+                                            class="w-full h-full object-cover group-hover:scale-110 transition-transform"
+                                            onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');"
+                                        />
+                                        <div class="hidden absolute inset-0 flex items-center justify-center bg-gray-800">
+                                            <span class="font-mono text-xs text-gray-400">ERROR</span>
+                                        </div>
+                                        @if ($selectingAvatar)
+                                            <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                                <x-loading-spinner
+                                                    variant="simple"
+                                                    size="sm"
+                                                    :showMessage="false"
+                                                />
+                                            </div>
+                                        @endif
+                                    </button>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="text-center py-12">
+                                <p class="text-gray-400 font-mono">[WAIT] No bio-profiles available for regeneration.</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="flex justify-end gap-4">
+                        <x-button
+                            wire:click="closeAvatarModal"
+                            variant="ghost"
+                            size="sm"
+                            terminal
+                            :disabled="$selectingAvatar"
+                        >
+                            > CLOSE
+                        </x-button>
+                    </div>
+                </div>
+            </div>
+        @endif
     @else
         <!-- Error state: user data not loaded -->
         <x-form-card
