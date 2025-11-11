@@ -141,7 +141,7 @@ Avant d'ajouter une fonctionnalité, toujours se demander :
 
 ## Création d'Issues
 
-En tant qu'agent Product, tu es responsable de créer des issues dans le dossier `docs/issues/` pour donner des indications claires à l'équipe de développement.
+En tant qu'agent Product, tu es responsable de créer des issues dans le dossier `docs/issues/` (issues actives) pour donner des indications claires à l'équipe de développement. Les issues terminées sont déplacées dans `docs/issues/closed/` après le merge de la PR.
 
 ### Quand Créer une Issue
 
@@ -162,7 +162,8 @@ Chaque issue suit un format standardisé. Consulte **[create-issue.md](../prompt
 
 ### Localisation
 
-- **Dossier** : `docs/issues/`
+- **Dossier actif** : `docs/issues/` (issues en cours de développement)
+- **Dossier terminé** : `docs/issues/closed/` (issues terminées, déplacées après merge de la PR)
 - **Nom de fichier** : `ISSUE-{numero}-{titre-kebab-case}.md`
 - **Exemple** : `ISSUE-001-implement-user-registration.md`
 

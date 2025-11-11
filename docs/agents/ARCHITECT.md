@@ -143,7 +143,7 @@ En tant qu'agent Architecte, tu es responsable de reviewer les plans de dévelop
 
 ### Processus de Review
 
-1. **Lire le plan** : Analyser le plan de développement dans `docs/tasks/`
+1. **Lire le plan** : Analyser le plan de développement dans `docs/tasks/` (plans actifs) ou `docs/tasks/closed/` (plans terminés pour référence)
 2. **Vérifier la cohérence** : S'assurer que le plan respecte l'architecture
 3. **Valider les choix techniques** : Vérifier que les choix sont appropriés
 4. **Identifier les risques** : Détecter les problèmes potentiels
@@ -196,9 +196,12 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 
 ### Localisation
 
-- **Plans à reviewer** : `docs/tasks/`
-- **Reviews** : Créer un fichier de review ou annoter le plan
-- **Format** : `REVIEW-{numero}-{titre-kebab-case}.md` ou annotations dans le plan
+- **Plans à reviewer** : `docs/tasks/` (plans actifs en cours de développement)
+- **Plans terminés** : `docs/tasks/closed/` (plans terminés, déplacés après merge de la PR)
+- **Reviews** : Créer un fichier de review dans `docs/reviews/` (actives) ou `docs/reviews/closed/` (terminées)
+- **Format** : `ARCHITECT-REVIEW-{numero}-{titre-kebab-case}.md` ou annotations dans le plan
+
+**Note** : Les reviews terminées sont déplacées dans `docs/reviews/closed/` après le merge de la PR pour maintenir une organisation claire.
 
 ### Principes de Review
 
@@ -212,9 +215,9 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 
 Après avoir effectué une review architecturale, tu dois :
 
-1. **Créer le fichier de review** dans `docs/reviews/ARCHITECT-REVIEW-{numero}-{titre}.md`
-2. **Mettre à jour le plan** (`docs/tasks/TASK-XXX.md`) avec une entrée dans l'historique
-3. **Mettre à jour l'issue** (`docs/issues/ISSUE-XXX.md`) avec une entrée dans l'historique
+1. **Créer le fichier de review** dans `docs/reviews/ARCHITECT-REVIEW-{numero}-{titre}.md` (sera déplacé dans `docs/reviews/closed/` après merge de la PR)
+2. **Mettre à jour le plan** (`docs/tasks/TASK-XXX.md` ou `docs/tasks/closed/TASK-XXX.md` si terminé) avec une entrée dans l'historique
+3. **Mettre à jour l'issue** (`docs/issues/ISSUE-XXX.md` ou `docs/issues/closed/ISSUE-XXX.md` si terminée) avec une entrée dans l'historique
 4. **Commiter les changements** avec un message descriptif
 5. **Ajouter un commentaire à l'issue GitHub** pour documenter la review
 

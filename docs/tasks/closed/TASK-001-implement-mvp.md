@@ -2,7 +2,7 @@
 
 ## Issue Associée
 
-[ISSUE-001-implement-mvp.md](../issues/ISSUE-001-implement-mvp.md)
+[ISSUE-001-implement-mvp.md](../issues/closed/ISSUE-001-implement-mvp.md)
 
 ## Vue d'Ensemble
 
@@ -679,7 +679,7 @@ database/
 
 ## Références
 
-- [ISSUE-001-implement-mvp.md](../issues/ISSUE-001-implement-mvp.md) - Issue produit associée
+- [ISSUE-001-implement-mvp.md](../issues/closed/ISSUE-001-implement-mvp.md) - Issue produit associée
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Architecture technique complète, modèle de données, endpoints API, flux métier
 - [STACK.md](../memory_bank/STACK.md) - Stack technique détaillée
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Vision métier, fonctionnalités MVP, personas, flux utilisateurs, système de planètes
@@ -1587,6 +1587,6 @@ L'implémentation du MVP est **excellente** et **approuvée**. Jordan a fait un 
 ### Références
 
 - [TASK-001-implement-mvp.md](./TASK-001-implement-mvp.md) - Plan technique complet
-- [ISSUE-001-implement-mvp.md](../issues/ISSUE-001-implement-mvp.md) - Issue produit associée
+- [ISSUE-001-implement-mvp.md](../issues/closed/ISSUE-001-implement-mvp.md) - Issue produit associée
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Architecture technique mise à jour
 

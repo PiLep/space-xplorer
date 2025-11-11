@@ -2,7 +2,7 @@
 
 ## Issue Associée
 
-[ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+[ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 
 ## Vue d'Ensemble
 
@@ -24,10 +24,10 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 
 #### 2025-01-XX - Morgan (Architect) - Review architecturale
 **Statut** : En cours
-**Détails** : Plan reviewé et approuvé avec recommandations. Le plan respecte l'architecture définie et les choix techniques sont appropriés. Voir ARCHITECT-REVIEW-002-remember-me.md pour les détails complets.
+**Détails** : Plan reviewé et approuvé avec recommandations. Le plan respecte l'architecture définie et les choix techniques sont appropriés. Voir [ARCHITECT-REVIEW-002-remember-me.md](../reviews/closed/ARCHITECT-REVIEW-002-remember-me.md) pour les détails complets.
 **Fichiers modifiés** : 
-- docs/reviews/ARCHITECT-REVIEW-002-remember-me.md (nouveau)
-- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
+- docs/reviews/closed/ARCHITECT-REVIEW-002-remember-me.md (nouveau)
+- docs/tasks/closed/TASK-002-implement-remember-me.md (mis à jour)
 **Notes** : 
 - ✅ Plan approuvé avec recommandations
 - ⚠️ Recommandations principales : vérification explicite de la configuration de sécurité des cookies (High), documentation API Sanctum (Medium), tests de sécurité du cookie (Medium)
@@ -65,8 +65,8 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 **Statut** : ✅ Code Review approuvé avec modifications mineures
 **Détails** : Review complète du code implémenté. L'implémentation respecte parfaitement le plan, les conventions Laravel, et toutes les recommandations des reviews précédentes ont été prises en compte. Le code est propre, bien structuré, et les tests sont complets (19 tests passent).
 **Fichiers modifiés** :
-- docs/reviews/CODE-REVIEW-002-remember-me.md (nouveau)
-- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
+- docs/reviews/closed/CODE-REVIEW-002-remember-me.md (nouveau)
+- docs/tasks/closed/TASK-002-implement-remember-me.md (mis à jour)
 **Notes** :
 - ✅ Toutes les tâches du plan sont complétées
 - ✅ Code respecte les conventions Laravel et est formaté avec Pint
@@ -81,9 +81,9 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 **Statut** : ✅ Approuvé fonctionnellement
 **Détails** : Review fonctionnelle complète de la fonctionnalité "Remember Me" implémentée. Tous les critères d'acceptation de l'issue sont respectés. La fonctionnalité réduit efficacement la friction de reconnexion pour les utilisateurs réguliers.
 **Fichiers modifiés** :
-- docs/reviews/FUNCTIONAL-REVIEW-002-remember-me.md (nouveau)
-- docs/issues/ISSUE-002-implement-remember-me.md (mis à jour)
-- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
+- docs/reviews/closed/FUNCTIONAL-REVIEW-002-remember-me.md (nouveau)
+- docs/issues/closed/ISSUE-002-implement-remember-me.md (mis à jour)
+- docs/tasks/closed/TASK-002-implement-remember-me.md (mis à jour)
 **Notes** :
 - ✅ **Tous les critères d'acceptation respectés** : Checkbox présente, logique implémentée, cookie persiste, fonctionne pour Livewire et API, déconnexion invalide le cookie, tests complets (19 tests passent)
 - ✅ **Tests fonctionnels** : 19 tests passent sans erreur (55 assertions) couvrant tous les cas d'usage
@@ -293,7 +293,7 @@ Aucun nouvel événement ou listener nécessaire. Les événements existants (`U
 
 ## Références
 
-- [ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+- [ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Authentification et sessions
 - [STACK.md](../memory_bank/STACK.md) - Stack technique
 - [Laravel Authentication - Remember Me](https://laravel.com/docs/authentication#remembering-users)

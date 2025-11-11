@@ -176,7 +176,7 @@ Space Xplorer est un jeu web d'exploration de l'univers où les joueurs découvr
 
 1. **Tester visuellement** : Utiliser Chrome DevTools MCP pour naviguer et tester l'interface
 2. **Prendre des screenshots** : Capturer les écrans importants avec Chrome DevTools MCP ou Playwright
-3. **Sauvegarder les screenshots** : Stocker les screenshots dans `docs/issues/screenshots/` pour référence
+3. **Sauvegarder les screenshots** : Stocker les screenshots dans `docs/issues/screenshots/` pour référence (même pour les issues terminées dans `docs/issues/closed/`)
 4. **Analyser** : Vérifier la cohérence, l'accessibilité, et l'UX
 5. **Documenter** : Créer un rapport de review avec screenshots et recommandations
 6. **Intégrer dans GitHub** : Ajouter les screenshots dans les issues GitHub avec des liens vers les images du repo
@@ -273,7 +273,7 @@ En tant qu'agent Designer, tu es responsable de faire une review visuelle des im
 4. **Évaluer l'UX** : Vérifier que l'expérience utilisateur est fluide et intuitive
 5. **Vérifier l'accessibilité** : S'assurer que le design est accessible
 6. **Documenter** : Créer un rapport avec screenshots et recommandations
-   - Créer un fichier `VISUAL-REVIEW-{numero}-{titre}.md` dans `docs/reviews/`
+   - Créer un fichier `VISUAL-REVIEW-{numero}-{titre}.md` dans `docs/reviews/` (sera déplacé dans `docs/reviews/closed/` après merge de la PR)
    - Ajouter une section "Review Visuelle" dans l'issue correspondante
    - Inclure les screenshots avec des descriptions détaillées
 7. **Intégrer dans GitHub** : 

@@ -2,11 +2,11 @@
 
 ## Plan Implémenté
 
-[TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+[TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 
 ## Issue Associée
 
-[ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+[ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 
 ## Statut
 
@@ -274,7 +274,7 @@ L'implémentation est excellente et prête pour la production. Le code respecte 
 
 ## Références
 
-- [TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+- [TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 - [ARCHITECT-REVIEW-002-remember-me.md](./ARCHITECT-REVIEW-002-remember-me.md)
 - [VISUAL-REVIEW-002-remember-me.md](./VISUAL-REVIEW-002-remember-me.md)
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md)

@@ -336,6 +336,11 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 - **Sam** met à jour le plan : statut "Terminé", ajouter une entrée finale avec la date de merge
 - Inclure le hash du commit de merge dans les entrées d'historique
 - Documenter la fin du workflow dans les deux documents (issue et task)
+- **Organisation** : Déplacer les documents terminés dans les dossiers `closed/` :
+  - `docs/issues/ISSUE-{numero}-{titre}.md` → `docs/issues/closed/ISSUE-{numero}-{titre}.md`
+  - `docs/tasks/TASK-{numero}-{titre}.md` → `docs/tasks/closed/TASK-{numero}-{titre}.md`
+  - `docs/reviews/{TYPE}-REVIEW-{numero}-{titre}.md` → `docs/reviews/closed/{TYPE}-REVIEW-{numero}-{titre}.md`
+- Mettre à jour tous les liens relatifs dans les documents déplacés pour pointer vers les nouveaux emplacements
 - Format : Voir [update-tracking.md](./docs/prompts/update-tracking.md)
 
 **Note** : Si des ajustements mineurs ont été suggérés lors de la review fonctionnelle mais n'ont pas été faits avant la PR, ils peuvent être traités dans une issue séparée ou dans une PR suivante.
@@ -489,6 +494,19 @@ Cette approche perfectionniste garantit qu'aucun détail n'est oublié et que ch
 - **Issue** (`docs/issues/`) : Mise à jour par Alex (création, review fonctionnelle) et Sam (création du plan, review du code, création de PR, merge final)
 - **Task** (`docs/tasks/`) : Mise à jour par Sam (création, merge final), Morgan (review architecturale), Jordan (implémentation), Sam (review du code), Alex (review fonctionnelle)
 
+### Organisation des Documents Terminés
+
+Une fois qu'une issue est terminée (merge de la PR dans `develop`), les documents associés sont déplacés dans des dossiers `closed/` pour maintenir une organisation claire :
+
+- **Issues terminées** : `docs/issues/closed/ISSUE-{numero}-{titre}.md`
+- **Tasks terminées** : `docs/tasks/closed/TASK-{numero}-{titre}.md`
+- **Reviews terminées** : `docs/reviews/closed/{TYPE}-REVIEW-{numero}-{titre}.md`
+
+Cette organisation permet de :
+- Séparer clairement les issues actives des issues terminées
+- Faciliter la navigation dans la documentation
+- Maintenir un historique complet des fonctionnalités développées
+
 **Format de tracking** : Chaque document doit contenir une section "Suivi et Historique" avec :
 - Statut actuel (À faire, En cours, En review, Approuvé, Terminé)
 - Historique chronologique des actions avec dates, agents, détails et fichiers modifiés
@@ -601,9 +619,14 @@ Dans un plan :
 
 ## Documents Générés
 
-- `docs/issues/ISSUE-{numero}-{titre}.md` : Issues produit
-- `docs/tasks/TASK-{numero}-{titre}.md` : Plans de développement
+- `docs/issues/ISSUE-{numero}-{titre}.md` : Issues produit actives
+- `docs/issues/closed/ISSUE-{numero}-{titre}.md` : Issues produit terminées
+- `docs/tasks/TASK-{numero}-{titre}.md` : Plans de développement actifs
+- `docs/tasks/closed/TASK-{numero}-{titre}.md` : Plans de développement terminés
+- `docs/reviews/closed/{TYPE}-REVIEW-{numero}-{titre}.md` : Reviews des fonctionnalités terminées
 - Code source : Fichiers PHP, migrations, tests, etc.
+
+**Note** : Les documents terminés sont automatiquement déplacés dans les dossiers `closed/` après le merge de la PR pour maintenir une organisation claire.
 
 ## Résumé du Workflow
 

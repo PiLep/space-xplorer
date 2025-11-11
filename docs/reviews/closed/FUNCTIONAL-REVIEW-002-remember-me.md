@@ -2,11 +2,11 @@
 
 ## Issue Associée
 
-[ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+[ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 
 ## Plan Implémenté
 
-[TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+[TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 
 ## Statut
 
@@ -138,8 +138,8 @@ L'implémentation fonctionnelle de "Remember Me" est excellente et répond parfa
 
 ## Références
 
-- [ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
-- [TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+- [ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
+- [TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 - [CODE-REVIEW-002-remember-me.md](./CODE-REVIEW-002-remember-me.md)
 - [VISUAL-REVIEW-002-remember-me.md](./VISUAL-REVIEW-002-remember-me.md)
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Parcours utilisateur
