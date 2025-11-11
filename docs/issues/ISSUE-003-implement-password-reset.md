@@ -474,3 +474,17 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 **Commit** : `1ca052e` - fix: add missing layout to reset-password view and add technical rule
 **Notes** : Le problème est résolu et la page s'affiche maintenant correctement avec tous les styles. La règle technique évitera que ce problème ne se reproduise.
 
+#### 2025-11-11 - Riley (Designer) - Ajout des screenshots dans l'issue GitHub
+**Statut** : ✅ Terminée
+**Détails** : Ajout des screenshots de la fonctionnalité de réinitialisation de mot de passe dans l'issue GitHub #6 pour la review visuelle. Les screenshots montrent :
+- Page de connexion avec le lien "Mot de passe oublié ?"
+- Page de demande de réinitialisation
+- Message de succès après envoi du lien
+**Fichiers ajoutés** :
+- `docs/issues/screenshots/screenshot-003-login-page.png`
+- `docs/issues/screenshots/screenshot-003-forgot-password-page.png`
+- `docs/issues/screenshots/screenshot-003-forgot-password-success.png`
+**Commit** : `0a79122` - docs: add screenshots for password reset visual review
+**Commentaire GitHub** : [Commentaire avec screenshots](https://github.com/PiLep/space-xplorer/issues/6#issuecomment-3516140922)
+**Notes** : Les screenshots ont été capturés avec Playwright et ajoutés dans l'issue GitHub pour faciliter la review visuelle. Le design respecte bien l'identité visuelle terminal et la cohérence avec le reste de l'application.
+
