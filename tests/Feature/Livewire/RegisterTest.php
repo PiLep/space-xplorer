@@ -64,6 +64,7 @@ it('allows successful registration and redirects to email verification', functio
         ->set('email', 'john1@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertRedirect(route('email.verify'));
 
@@ -97,8 +98,9 @@ it('creates user with home planet during registration', function () {
         ->set('email', 'jane@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('email.verify'));
 
     // Verify user was created with home planet
     $user = Auth::user();
@@ -128,9 +130,10 @@ it('handles ValidationException from AuthService', function () {
         ->set('email', 'validation@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('Custom validation error');
+        ->assertSet('status', '[ERROR] Validation failed.');
 });
 
 it('handles generic Exception from AuthService', function () {
@@ -147,9 +150,10 @@ it('handles generic Exception from AuthService', function () {
         ->set('email', 'error@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('Database connection failed');
+        ->assertSet('status', '[ERROR] Registration failed.');
 });
 
 it('handles generic Exception with empty message', function () {
@@ -166,9 +170,10 @@ it('handles generic Exception with empty message', function () {
         ->set('email', 'empty@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('An error occurred during registration. Please try again.');
+        ->assertSet('status', '[ERROR] Registration failed.');
 });
 
 afterEach(function () {

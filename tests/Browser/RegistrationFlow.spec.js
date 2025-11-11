@@ -21,19 +21,22 @@ test.describe('Registration Flow', () => {
     await page.fill('input[name="password"]', 'password123');
     await page.fill('input[name="password_confirmation"]', 'password123');
     
+    // Accept terms and conditions (required field)
+    await page.check('input[name="terms_accepted"]');
+    
     // Submit the form and wait for navigation
     // Livewire uses AJAX, so we need to wait for the navigation to complete
-    const navigationPromise = page.waitForURL('**/dashboard', { timeout: 15000 });
+    const navigationPromise = page.waitForURL('**/email/verify', { timeout: 15000 });
     await page.click('button[type="submit"]');
     
     // Wait for navigation with timeout
     await navigationPromise;
     
-    // Verify we're on the dashboard
-    await expect(page).toHaveURL(/.*dashboard/, { timeout: 5000 });
+    // Verify we're on the email verification page
+    await expect(page).toHaveURL(/.*email\/verify/, { timeout: 5000 });
     
-    // Verify dashboard content - check for "DASHBOARD" text (uppercase in terminal UI)
-    await expect(page.locator('body')).toContainText('DASHBOARD', { timeout: 5000 });
+    // Verify email verification page content
+    await expect(page.locator('body')).toContainText(/verify|verification/i, { timeout: 5000 });
   });
 
   test('should show validation errors for invalid data', async ({ page }) => {
