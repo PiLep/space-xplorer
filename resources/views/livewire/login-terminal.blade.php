@@ -94,6 +94,17 @@
                         </div>
                     </form>
 
+                    <!-- Forgot Password Link -->
+                    <div class="mt-4">
+                        <x-terminal-message message="[INFO] Forgot your password?" />
+                        <x-terminal-link
+                            href="{{ route('password.request') }}"
+                            text="> RESET_PASSWORD"
+                            marginTop="mt-2"
+                            :showBorder="false"
+                        />
+                    </div>
+
                     <!-- Register Link -->
                     <div class="mt-4">
                         <x-terminal-message message="[INFO] New user? Create an account:" />

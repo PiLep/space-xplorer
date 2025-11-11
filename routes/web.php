@@ -75,6 +75,17 @@ Route::get('/design-system', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/register', Register::class)->name('register');
     Route::get('/login', LoginTerminal::class)->name('login');
+
+    // Password Reset Routes
+    Route::get('/forgot-password', \App\Livewire\ForgotPassword::class)->name('password.request');
+    Route::post('/forgot-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'sendResetLink'])
+        ->middleware('throttle:3,60') // 3 requests per hour
+        ->name('password.email');
+    Route::get('/reset-password/{token}', [\App\Http\Controllers\Auth\PasswordResetController::class, 'showResetForm'])
+        ->name('password.reset');
+    Route::post('/reset-password', [\App\Http\Controllers\Auth\PasswordResetController::class, 'reset'])
+        ->middleware('throttle:5,60') // 5 requests per hour
+        ->name('password.update');
 });
 
 // Protected routes (require authentication)
