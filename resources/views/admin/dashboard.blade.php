@@ -23,6 +23,51 @@
         </div>
     </div>
 
+    <!-- Resource Statistics -->
+    <div class="mb-8">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">Resource Statistics</h2>
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            @foreach($resourceStats as $type => $stat)
+                <div class="bg-surface-dark dark:bg-surface-dark overflow-hidden shadow rounded-lg border border-border-dark dark:border-border-dark">
+                    <div class="p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <h3 class="text-sm font-medium text-gray-900 dark:text-white">
+                                {{ $stat['label'] }}
+                            </h3>
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                                {{ $stat['color'] === 'red' ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200' : '' }}
+                                {{ $stat['color'] === 'orange' ? 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200' : '' }}
+                                {{ $stat['color'] === 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : '' }}
+                                {{ $stat['color'] === 'blue' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' : '' }}">
+                                {{ ucfirst($stat['status']) }}
+                            </span>
+                        </div>
+                        <dl>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">
+                                Current / Optimal
+                            </dt>
+                            <dd class="text-lg font-medium text-gray-900 dark:text-white mb-2">
+                                {{ $stat['current'] }} / {{ $stat['optimal'] }}
+                            </dd>
+                            <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate mb-1">
+                                Optimization
+                            </dt>
+                            <dd class="flex items-center gap-2">
+                                <x-progress-bar 
+                                    :percentage="$stat['capped_percentage']" 
+                                    :color="$stat['color']" 
+                                />
+                                <span class="text-sm font-medium text-gray-900 dark:text-white min-w-[3.5rem] text-right">
+                                    {{ number_format($stat['percentage'], 1) }}%
+                                </span>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+
     <div class="bg-surface-dark dark:bg-surface-dark shadow rounded-lg border border-border-dark dark:border-border-dark">
         <div class="px-4 py-5 sm:p-6">
             <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-white mb-4">Recent Users</h3>
