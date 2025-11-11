@@ -135,7 +135,12 @@ Implémenter le système de vérification d'email pour valider que les utilisate
 
 ### Statut
 
-À faire
+En cours
+
+### GitHub
+
+- **Issue GitHub** : [#10](https://github.com/PiLep/space-xplorer/issues/10)
+- **Branche** : `feature/ISSUE-004-implement-email-verification`
 
 ### Historique
 
@@ -143,6 +148,14 @@ Implémenter le système de vérification d'email pour valider que les utilisate
 **Statut** : À faire
 **Détails** : Issue créée pour améliorer la sécurité et la qualité des données avec la vérification d'email
 **Notes** : Priorité medium car non bloquant pour le MVP mais bonne pratique à implémenter tôt
+
+#### 2025-01-XX - Sam (Lead Developer) - Création de la branche et issue GitHub
+**Statut** : En cours
+**Détails** : 
+- Branche `feature/ISSUE-004-implement-email-verification` créée depuis `develop`
+- Issue GitHub créée : [#10](https://github.com/PiLep/space-xplorer/issues/10)
+- Labels ajoutés : `enhancement`, `medium-priority`
+**Notes** : Prêt pour la création du plan de développement
 
 
 
