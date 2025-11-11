@@ -459,3 +459,18 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 **Review complète** : [FUNCTIONAL-REVIEW-003-password-reset.md](../reviews/FUNCTIONAL-REVIEW-003-password-reset.md)
 **Notes** : La fonctionnalité répond parfaitement aux besoins métier et peut être approuvée pour la production. Tous les critères d'acceptation sont respectés, l'expérience utilisateur est excellente, et la sécurité est bien gérée.
 
+#### 2025-01-27 - Alex (Product) - Correction bug CSS manquant
+**Statut** : ✅ Terminée
+**Détails** : Correction d'un bug découvert lors de la review fonctionnelle : la vue `reset-password.blade.php` n'utilisait pas de layout, ce qui empêchait le chargement du CSS. La vue a été corrigée pour utiliser `@extends('layouts.app')`. Une règle technique (Règle 3) a également été ajoutée pour éviter que ce problème ne se reproduise à l'avenir.
+**Problème identifié** : La page de réinitialisation de mot de passe s'affichait sans CSS car la vue Blade n'utilisait pas de layout
+**Solution appliquée** :
+- Ajout de `@extends('layouts.app')` et `@section('content')` dans `resources/views/auth/reset-password.blade.php`
+- Ajout de la Règle 3 dans `TECHNICAL_RULES.md` : Utilisation obligatoire d'un layout pour toutes les vues Blade
+- Mise à jour de `.cursor/rules/code-standards.mdc` avec la référence rapide
+**Fichiers modifiés** :
+- `resources/views/auth/reset-password.blade.php` (correction du layout)
+- `docs/rules/TECHNICAL_RULES.md` (ajout Règle 3)
+- `.cursor/rules/code-standards.mdc` (mise à jour référence rapide)
+**Commit** : `1ca052e` - fix: add missing layout to reset-password view and add technical rule
+**Notes** : Le problème est résolu et la page s'affiche maintenant correctement avec tous les styles. La règle technique évitera que ce problème ne se reproduise.
+
