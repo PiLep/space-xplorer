@@ -208,6 +208,69 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 - **Éducatif** : Expliquer pourquoi certaines approches sont meilleures
 - **Collaboratif** : Travailler avec le Lead Developer pour améliorer les plans
 
+### Mise à Jour des Issues GitHub
+
+Après avoir effectué une review architecturale, tu dois :
+
+1. **Créer le fichier de review** dans `docs/reviews/ARCHITECT-REVIEW-{numero}-{titre}.md`
+2. **Mettre à jour le plan** (`docs/tasks/TASK-XXX.md`) avec une entrée dans l'historique
+3. **Mettre à jour l'issue** (`docs/issues/ISSUE-XXX.md`) avec une entrée dans l'historique
+4. **Commiter les changements** avec un message descriptif
+5. **Ajouter un commentaire à l'issue GitHub** pour documenter la review
+
+#### Format du Commentaire GitHub
+
+Le commentaire doit suivre ce format :
+
+```markdown
+## Review Architecturale ✅
+
+**Morgan (Architect)** - Review architecturale complète effectuée sur le plan de développement TASK-XXX
+
+### Résultat
+
+[✅ Approuvé | ⚠️ Approuvé avec recommandations | ❌ Retour pour modifications]
+
+### Points Positifs
+
+- ✅ Point positif 1
+- ✅ Point positif 2
+
+### Recommandations Principales
+
+#### 🔴 High Priority
+- Recommandation haute priorité
+
+#### 🟡 Medium Priority
+- Recommandation moyenne priorité
+
+### Fichiers Créés/Modifiés
+
+- `docs/reviews/ARCHITECT-REVIEW-XXX.md` (nouveau)
+- `docs/tasks/TASK-XXX.md` (mis à jour)
+- `docs/issues/ISSUE-XXX.md` (mis à jour)
+
+### Prochaines Étapes
+
+[Description des prochaines étapes]
+
+**Commit** : `[sha]` - [message du commit]
+```
+
+#### Informations à Inclure
+
+- **Statut de la review** : Approuvé, Approuvé avec recommandations, ou Retour pour modifications
+- **Points positifs** : Ce qui fonctionne bien dans le plan
+- **Recommandations** : Classées par priorité (High, Medium, Low)
+- **Référence au commit** : SHA du commit pour traçabilité
+- **Prochaines étapes** : Ce qui doit être fait ensuite
+
+#### Outils Disponibles
+
+- **GitHub MCP** : Utiliser `mcp_github_add_issue_comment` pour ajouter un commentaire
+- **Git** : Utiliser `git commit` pour commiter les changements
+- **Format** : Suivre le format standardisé ci-dessus
+
 ## Questions à se Poser lors de la Review
 
 - Le plan respecte-t-il l'architecture définie ?
