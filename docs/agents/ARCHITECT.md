@@ -177,6 +177,8 @@ En tant qu'agent Architecte, tu es responsable de reviewer les plans de dévelop
 - ✅ Les validations sont-elles prévues ?
 - ✅ L'authentification est-elle gérée correctement ?
 - ✅ Les données sensibles sont-elles protégées ?
+- ✅ La configuration de sécurité des cookies est-elle vérifiée ?
+- ✅ Les différences entre authentification web et API sont-elles documentées ?
 
 #### Bonnes Pratiques
 
@@ -216,6 +218,46 @@ Consulte **[review-task.md](../prompts/review-task.md)** pour :
 - Les tests couvrent-ils les cas importants ?
 - La documentation sera-t-elle à jour ?
 - Y a-t-il des opportunités d'amélioration ?
+
+## Bonnes Pratiques de Sécurité pour l'Authentification
+
+Lors de la review de fonctionnalités d'authentification, vérifier systématiquement :
+
+### Configuration des Cookies de Session
+
+Pour toute fonctionnalité utilisant les cookies de session (Remember Me, sessions web, etc.) :
+
+- ✅ **SESSION_SECURE_COOKIE** : Doit être défini à `true` en production (HTTPS uniquement)
+- ✅ **SESSION_HTTP_ONLY** : Doit être défini à `true` (protection contre XSS)
+- ✅ **SESSION_SAME_SITE** : Doit être défini à `lax` ou `strict` (protection CSRF)
+- ✅ **Vérification explicite** : Le plan doit prévoir une vérification de ces paramètres, pas seulement une mention
+
+### Authentification Hybride (Web + API)
+
+Quand une fonctionnalité d'authentification touche à la fois les routes web (Livewire) et l'API (Sanctum) :
+
+- ✅ **Documentation différenciée** : Documenter clairement le comportement pour chaque canal
+  - **Web (Livewire)** : Utilise les cookies de session Laravel
+  - **API (Sanctum)** : Utilise les tokens avec durée de vie longue
+- ✅ **Clarification des paramètres** : Si un paramètre (ex: `remember`) affecte différemment web et API, le documenter explicitement
+- ✅ **Tests séparés** : Prévoir des tests distincts pour web et API
+
+### Tests de Sécurité
+
+Pour les fonctionnalités d'authentification, s'assurer que les tests couvrent :
+
+- ✅ **Fonctionnalité** : La fonctionnalité fonctionne comme prévu
+- ✅ **Sécurité des cookies** : Vérifier les attributs de sécurité (httpOnly, secure, sameSite)
+- ✅ **Rétrocompatibilité** : Vérifier que les requêtes sans nouveaux paramètres fonctionnent toujours
+- ✅ **Invalidation** : Vérifier que la déconnexion invalide correctement les sessions/cookies
+
+### Rétrocompatibilité
+
+Lors de l'ajout de nouveaux paramètres optionnels à l'authentification :
+
+- ✅ **Valeurs par défaut sécurisées** : Les valeurs par défaut doivent être les plus sécurisées (ex: `remember = false`)
+- ✅ **Paramètres optionnels** : Utiliser `sometimes` dans les validations FormRequest
+- ✅ **Tests de rétrocompatibilité** : Vérifier que les clients existants continuent de fonctionner
 
 ## Références
 
