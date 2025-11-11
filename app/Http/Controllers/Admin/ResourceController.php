@@ -47,6 +47,14 @@ class ResourceController extends Controller
     }
 
     /**
+     * Display the quick review page for pending resources.
+     */
+    public function review(): View
+    {
+        return view('admin.resources.review');
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create(): View

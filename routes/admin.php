@@ -26,6 +26,7 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
 
     // Resources management
     Route::get('/resources', [ResourceController::class, 'index'])->name('resources.index');
+    Route::get('/resources/review', [ResourceController::class, 'review'])->name('resources.review');
     Route::get('/resources/create', [ResourceController::class, 'create'])->name('resources.create');
     Route::post('/resources', [ResourceController::class, 'store'])->name('resources.store');
     Route::get('/resources/{resource}', [ResourceController::class, 'show'])->name('resources.show');

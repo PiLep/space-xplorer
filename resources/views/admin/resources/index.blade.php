@@ -8,6 +8,9 @@ use Illuminate\Support\Str;
 <div class="flex justify-between items-center mb-8">
     <x-page-header title="Resources" />
     <div class="flex gap-4">
+        <x-button href="{{ route('admin.resources.review') }}" variant="secondary" size="sm">
+            ⚡ Quick Review
+        </x-button>
         <x-button href="{{ route('admin.resources.create') }}" variant="primary" size="sm">
             + Generate Resource
         </x-button>
