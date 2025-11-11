@@ -58,23 +58,19 @@
     .bg-textured {
         position: relative;
         background: 
-            /* Points avec positions très aléatoires et couleurs/intensités variées */
-            radial-gradient(circle at 17px 43px, rgba(0, 255, 150, 0.7) 1.5px, transparent 0),
-            radial-gradient(circle at 89px 127px, rgba(0, 180, 255, 0.5) 1px, transparent 0),
-            radial-gradient(circle at 156px 23px, rgba(20, 255, 120, 0.4) 1px, transparent 0),
-            radial-gradient(circle at 34px 198px, rgba(0, 160, 240, 0.6) 1.5px, transparent 0),
-            radial-gradient(circle at 203px 87px, rgba(10, 255, 140, 0.5) 1px, transparent 0),
-            radial-gradient(circle at 67px 54px, rgba(0, 190, 250, 0.4) 1px, transparent 0),
-            radial-gradient(circle at 142px 176px, rgba(0, 240, 130, 0.6) 1.5px, transparent 0),
-            radial-gradient(circle at 187px 145px, rgba(0, 175, 245, 0.5) 1px, transparent 0),
+            /* Points dispersés avec intensité réduite */
+            radial-gradient(circle at 17px 43px, rgba(0, 255, 150, 0.25) 1px, transparent 0),
+            radial-gradient(circle at 89px 127px, rgba(0, 180, 255, 0.2) 1px, transparent 0),
+            radial-gradient(circle at 156px 23px, rgba(20, 255, 120, 0.2) 1px, transparent 0),
+            radial-gradient(circle at 203px 87px, rgba(10, 255, 140, 0.25) 1px, transparent 0),
             /* Fond de base */
             #0a0a0a;
         background-size: 
-            /* Points avec tailles très variées pour éviter la régularité */
-            247px 231px, 189px 203px, 213px 197px, 201px 219px, 227px 191px, 195px 205px, 209px 223px, 187px 215px;
+            /* Tailles variées pour dispersion */
+            300px 280px, 250px 230px, 280px 250px, 260px 240px;
         background-position: 
-            /* Points avec positions décalées de manière très irrégulière */
-            0 0, 73px 41px, 128px 89px, 47px 156px, 203px 23px, 31px 112px, 167px 198px, 194px 134px;
+            /* Positions dispersées */
+            0 0, 120px 80px, 200px 150px, 80px 200px;
     }
     
     .bg-textured::before {
@@ -447,25 +443,60 @@
         animation: fade-in 0.6s ease-out forwards;
     }
     
-    /* Fade out animation for boot messages */
+    /* Fade out animation for boot messages - optimized for smoothness */
     @keyframes fade-out-up {
         from {
             opacity: 1;
             transform: translateY(0);
-            max-height: 100px;
-            margin-bottom: 0.25rem;
         }
         to {
             opacity: 0;
-            transform: translateY(-10px);
-            max-height: 0;
-            margin-bottom: 0;
-            overflow: hidden;
+            transform: translateY(-12px);
         }
     }
     
     .fade-out-boot-message {
-        animation: fade-out-up 0.8s ease-out forwards;
+        animation: fade-out-up 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        will-change: opacity, transform;
+    }
+    
+    /* Slide up animation for main content */
+    @keyframes slide-up-reveal {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .slide-up-reveal {
+        animation: slide-up-reveal 1.2s ease-out forwards;
+    }
+    
+    /* Tagline rotation animation */
+    @keyframes tagline-rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    
+    .tagline-word {
+        will-change: color, transform;
+    }
+    
+    /* Tagline word highlight with warning color */
+    .tagline-word.highlighted {
+        color: rgb(255, 170, 0) !important;
+        text-shadow: 
+            0 0 8px rgba(255, 170, 0, 0.5),
+            0 0 15px rgba(255, 170, 0, 0.3),
+            0 0 25px rgba(255, 170, 0, 0.2);
     }
     
     /* Hide scrollbar but keep functionality */
@@ -476,6 +507,210 @@
     
     .scrollbar-hide::-webkit-scrollbar {
         display: none;  /* Chrome, Safari and Opera */
+    }
+    
+    /* Typewriter effect */
+    @keyframes typewriter {
+        from {
+            width: 0;
+        }
+        to {
+            width: 100%;
+        }
+    }
+    
+    @keyframes blink-cursor {
+        0%, 50% {
+            opacity: 1;
+        }
+        51%, 100% {
+            opacity: 0;
+        }
+    }
+    
+    .typewriter {
+        overflow: hidden;
+        white-space: nowrap;
+        border-right: 2px solid rgba(0, 255, 136, 0.7);
+        animation: typewriter 2s steps(40, end), blink-cursor 0.75s step-end infinite;
+    }
+    
+    .typewriter-complete {
+        border-right: none;
+    }
+    
+    /* Floating particles animation */
+    @keyframes float-particle {
+        0% {
+            transform: translateY(100vh) translateX(0) rotate(0deg);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.15; /* Reduced from 0.3 to 0.15 */
+        }
+        90% {
+            opacity: 0.15; /* Reduced from 0.3 to 0.15 */
+        }
+        100% {
+            transform: translateY(-100vh) translateX(100px) rotate(360deg);
+            opacity: 0;
+        }
+    }
+    
+    .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: rgba(0, 255, 136, 0.2); /* Reduced opacity from 0.5 to 0.2 */
+        border-radius: 50%;
+        pointer-events: none;
+        animation: float-particle linear infinite;
+    }
+    
+    /* Glitch effect */
+    @keyframes glitch {
+        0% {
+            transform: translate(0);
+        }
+        20% {
+            transform: translate(-2px, 2px);
+        }
+        40% {
+            transform: translate(-2px, -2px);
+        }
+        60% {
+            transform: translate(2px, 2px);
+        }
+        80% {
+            transform: translate(2px, -2px);
+        }
+        100% {
+            transform: translate(0);
+        }
+    }
+    
+    @keyframes glitch-text {
+        0%, 100% {
+            text-shadow: 
+                0 0 5px rgba(0, 255, 136, 0.3),
+                0 0 10px rgba(0, 255, 136, 0.2);
+            transform: translate(0);
+        }
+        15% {
+            text-shadow: 
+                -2px 0 0 rgba(255, 0, 0, 0.5),
+                2px 0 0 rgba(0, 255, 255, 0.5),
+                0 0 8px rgba(0, 255, 136, 0.4);
+            transform: translate(-1px, 1px);
+        }
+        30% {
+            text-shadow: 
+                2px 0 0 rgba(255, 0, 0, 0.5),
+                -2px 0 0 rgba(0, 255, 255, 0.5),
+                0 0 8px rgba(0, 255, 136, 0.4);
+            transform: translate(1px, -1px);
+        }
+        45% {
+            text-shadow: 
+                -3px 0 0 rgba(255, 0, 0, 0.6),
+                3px 0 0 rgba(0, 255, 255, 0.6),
+                0 0 10px rgba(0, 255, 136, 0.5);
+            transform: translate(-1px, 1px);
+        }
+        60% {
+            text-shadow: 
+                3px 0 0 rgba(255, 0, 0, 0.6),
+                -3px 0 0 rgba(0, 255, 255, 0.6),
+                0 0 10px rgba(0, 255, 136, 0.5);
+            transform: translate(1px, -1px);
+        }
+        75% {
+            text-shadow: 
+                -1px 0 0 rgba(255, 0, 0, 0.4),
+                1px 0 0 rgba(0, 255, 0, 0.4),
+                0 0 6px rgba(0, 255, 136, 0.3);
+            transform: translate(-0.5px, 0.5px);
+        }
+        90% {
+            text-shadow: 
+                0 0 5px rgba(0, 255, 136, 0.3),
+                0 0 10px rgba(0, 255, 136, 0.2);
+            transform: translate(0);
+        }
+    }
+    
+    .glitch-subtle {
+        animation: glitch-text 8s infinite;
+    }
+    
+    /* Status indicator pulse */
+    @keyframes status-pulse {
+        0%, 100% {
+            opacity: 1;
+            box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+        }
+        50% {
+            opacity: 0.8;
+            box-shadow: 0 0 0 8px rgba(0, 255, 136, 0);
+        }
+    }
+    
+    .status-indicator {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: rgba(0, 255, 136, 0.8);
+        border-radius: 50%;
+        animation: status-pulse 2s ease-in-out infinite;
+        margin-right: 8px;
+    }
+    
+    /* Terminal cursor blink */
+    .terminal-cursor {
+        display: inline-block;
+        width: 2px;
+        height: 1em;
+        background: rgba(0, 255, 136, 0.8);
+        animation: blink-cursor 1s step-end infinite;
+        margin-left: 2px;
+        vertical-align: baseline;
+    }
+    
+    /* Text reveal animation */
+    @keyframes text-reveal {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+            filter: blur(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+    }
+    
+    .text-reveal {
+        opacity: 0;
+        animation: text-reveal 1.5s ease-out forwards;
+    }
+    
+    /* Fix width for landing page to prevent layout shift */
+    #terminal-prompt-container {
+        min-width: 100%;
+        will-change: transform, opacity;
+    }
+    
+    #terminal-prompt {
+        min-width: 100%;
+        display: block;
+    }
+    
+    #main-content {
+        min-width: 100%;
+        transform: translateY(25px);
+        opacity: 0;
+        will-change: opacity, transform;
     }
     
 }
