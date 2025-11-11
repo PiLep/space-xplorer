@@ -50,8 +50,11 @@ ls docs/prompts/       # Guides pour chaque action
 
 Pour comprendre le workflow, explorez :
 
-- **Issues** : `docs/issues/` - Exemples d'issues produit
-- **Tasks** : `docs/tasks/` - Exemples de plans de développement
+- **Issues actives** : `docs/issues/` - Issues produit en cours
+- **Issues terminées** : `docs/issues/closed/` - Issues produit terminées
+- **Tasks actives** : `docs/tasks/` - Plans de développement en cours
+- **Tasks terminées** : `docs/tasks/closed/` - Plans de développement terminés
+- **Reviews terminées** : `docs/reviews/closed/` - Reviews des fonctionnalités terminées
 - **Reports** : `docs/reports/` - Rapports de monitoring (si disponibles)
 
 ### 3. Comprendre les Documents Clés
@@ -71,7 +74,7 @@ Pour comprendre le workflow, explorez :
 
 **Fichier** : `docs/prompts/create-issue.md`
 
-**Résultat** : Une issue dans `docs/issues/ISSUE-XXX-titre.md`
+**Résultat** : Une issue dans `docs/issues/ISSUE-XXX-titre.md` (déplacée dans `docs/issues/closed/` une fois terminée)
 
 **Contenu requis** :
 - Description de la fonctionnalité
@@ -106,7 +109,7 @@ git checkout -b feature/ISSUE-001-explore-planets
 
 **Input** : Lire l'issue créée à l'étape 1
 
-**Résultat** : Un plan dans `docs/tasks/TASK-001-titre.md`
+**Résultat** : Un plan dans `docs/tasks/TASK-001-titre.md` (déplacé dans `docs/tasks/closed/` une fois terminé)
 
 **Contenu requis** :
 - Vue d'ensemble technique
@@ -260,11 +263,11 @@ Même après approbation, Alex effectue une dernière vérification complète de
 
 **Format** : Voir [update-tracking.md](./docs/prompts/update-tracking.md)
 
-**Issue** (`docs/issues/`) :
+**Issue** (`docs/issues/` ou `docs/issues/closed/` si terminée) :
 - Mise à jour par Alex (création, review fonctionnelle)
 - Mise à jour par Sam (création du plan, review du code, création de PR, merge final)
 
-**Task** (`docs/tasks/`) :
+**Task** (`docs/tasks/` ou `docs/tasks/closed/` si terminée) :
 - Mise à jour par Sam (création, merge final)
 - Mise à jour par Morgan (review architecturale)
 - Mise à jour par Jordan (implémentation)
@@ -480,8 +483,8 @@ space-xplorer/
 
 1. **Lire le WORKFLOW.md** pour comprendre le processus complet
 2. **Explorer les prompts** dans `docs/prompts/` pour voir les guides d'actions
-3. **Lire un exemple d'issue** dans `docs/issues/` (si disponible)
-4. **Lire un exemple de task** dans `docs/tasks/` (si disponible)
+3. **Lire un exemple d'issue** dans `docs/issues/` (actives) ou `docs/issues/closed/` (terminées)
+4. **Lire un exemple de task** dans `docs/tasks/` (actives) ou `docs/tasks/closed/` (terminées)
 5. **Commencer par créer une première issue** avec Alex
 
 ---

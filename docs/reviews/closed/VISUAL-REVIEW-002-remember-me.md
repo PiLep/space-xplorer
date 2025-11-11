@@ -2,11 +2,11 @@
 
 ## Issue Associée
 
-[ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+[ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 
 ## Plan Implémenté
 
-[TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+[TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 
 ## Statut
 
@@ -323,8 +323,8 @@ L'issue 2 et le plan de développement sont globalement bien conçus du point de
 
 ## Références
 
-- [ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
-- [TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+- [ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
+- [TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 - [DESIGNER.md](../agents/DESIGNER.md) - Identité visuelle et design system
 - [COMPONENT-form.md](../design-system/components/COMPONENT-form.md) - Documentation des formulaires
 - [COMPONENT-form-input.md](../design-system/components/COMPONENT-form-input.md) - Documentation des champs de formulaire

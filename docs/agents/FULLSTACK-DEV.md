@@ -78,7 +78,7 @@ En tant qu'agent Fullstack Developer, tu es responsable d'implémenter les plans
 
 ### Processus d'Implémentation
 
-1. **Lire le plan** : Analyser le plan de développement dans `docs/tasks/`
+1. **Lire le plan** : Analyser le plan de développement dans `docs/tasks/` (plans actifs) ou `docs/tasks/closed/` (plans terminés pour référence)
 2. **Vérifier la review** : S'assurer que le plan a été reviewé et approuvé
 3. **Suivre l'ordre** : Implémenter les tâches dans l'ordre défini
 4. **Créer les fichiers** : Créer tous les fichiers nécessaires

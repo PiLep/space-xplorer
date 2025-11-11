@@ -141,9 +141,9 @@ En tant qu'agent Lead Developer, tu es responsable de transformer les issues pro
 ### Processus
 
 1. **Créer la branche** : Créer une branche Git pour la fonctionnalité
-2. **Lire l'issue** : Analyser l'issue produit dans `docs/issues/`
+2. **Lire l'issue** : Analyser l'issue produit dans `docs/issues/` (issues actives) ou `docs/issues/closed/` (issues terminées pour référence)
 3. **Comprendre le contexte** : Identifier les besoins métier et techniques
-4. **Créer un plan** : Générer un plan de développement structuré dans `docs/tasks/`
+4. **Créer un plan** : Générer un plan de développement structuré dans `docs/tasks/` (plans actifs)
 5. **Décomposer en tâches** : Diviser le travail en tâches techniques claires
 6. **Estimer** : Fournir des estimations réalistes
 7. **Référencer** : Lier vers l'architecture et la documentation pertinente
@@ -158,9 +158,12 @@ Consulte **[create-plan.md](../prompts/create-plan.md)** pour :
 
 ### Localisation
 
-- **Dossier** : `docs/tasks/`
+- **Dossier actif** : `docs/tasks/` (plans en cours de développement)
+- **Dossier terminé** : `docs/tasks/closed/` (plans terminés, déplacés après merge de la PR)
 - **Nom de fichier** : `TASK-{numero}-{titre-kebab-case}.md`
 - **Exemple** : `TASK-001-implement-user-registration.md`
+
+**Note** : Les plans terminés sont automatiquement déplacés dans `docs/tasks/closed/` après le merge de la PR pour maintenir une organisation claire.
 
 ### Principes
 
@@ -224,11 +227,12 @@ En tant qu'agent Lead Developer, tu es également responsable de reviewer le cod
 
 ### Processus de Review
 
-1. **Lire le plan** : Vérifier que le plan a été implémenté
+1. **Lire le plan** : Vérifier que le plan a été implémenté (dans `docs/tasks/` pour les plans actifs)
 2. **Examiner le code** : Analyser les fichiers créés/modifiés
 3. **Vérifier la conformité** : S'assurer que le code respecte le plan et les conventions
 4. **Tester** : Vérifier que les tests passent
 5. **Valider ou demander des modifications** : Approuver ou retourner le code
+6. **Créer la review** : Créer un fichier `CODE-REVIEW-{numero}-{titre}.md` dans `docs/reviews/` (sera déplacé dans `docs/reviews/closed/` après merge de la PR)
 
 ### Critères de Review
 
@@ -258,6 +262,7 @@ En tant qu'agent Lead Developer, tu es responsable de créer une Pull Request ve
 4. **Formater le code** : Utiliser Pint pour formater
 5. **Créer la PR** : Créer la Pull Request avec le format standardisé
 6. **Lier les documents** : Référencer l'issue, le plan, et les reviews
+7. **Organiser les documents** : Après le merge, déplacer les documents terminés dans les dossiers `closed/`
 
 ### Format et Structure
 

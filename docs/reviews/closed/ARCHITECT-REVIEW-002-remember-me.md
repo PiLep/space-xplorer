@@ -2,11 +2,11 @@
 
 ## Plan Reviewé
 
-[TASK-002-implement-remember-me.md](../tasks/TASK-002-implement-remember-me.md)
+[TASK-002-implement-remember-me.md](../tasks/closed/TASK-002-implement-remember-me.md)
 
 ## Issue Associée
 
-[ISSUE-002-implement-remember-me.md](../issues/ISSUE-002-implement-remember-me.md)
+[ISSUE-002-implement-remember-me.md](../issues/closed/ISSUE-002-implement-remember-me.md)
 
 ## Statut
 

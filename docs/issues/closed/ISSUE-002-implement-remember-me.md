@@ -111,7 +111,7 @@ L'interface de connexion utilise un style terminal rétro-futuriste avec :
 
 ### Recommandations Design
 
-Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../reviews/VISUAL-REVIEW-002-remember-me.md)**
+Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../reviews/closed/VISUAL-REVIEW-002-remember-me.md)**
 
 **Recommandations principales** :
 
@@ -154,7 +154,7 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Authentification et sessions
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Parcours utilisateur
 - [Laravel Authentication - Remember Me](https://laravel.com/docs/authentication#remembering-users)
-- [VISUAL-REVIEW-002-remember-me.md](../reviews/VISUAL-REVIEW-002-remember-me.md) - Review visuelle complète
+- [VISUAL-REVIEW-002-remember-me.md](../reviews/closed/VISUAL-REVIEW-002-remember-me.md) - Review visuelle complète
 
 ## Suivi et Historique
 
@@ -187,8 +187,8 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 **Statut** : En cours
 **Détails** : Review visuelle complète effectuée pour valider l'intégration design de la fonctionnalité "Remember Me". L'interface actuelle a été analysée et des recommandations design ont été fournies.
 **Fichiers modifiés** : 
-- docs/reviews/VISUAL-REVIEW-002-remember-me.md (nouveau)
-- docs/issues/ISSUE-002-implement-remember-me.md (mis à jour avec section Review Visuelle)
+- docs/reviews/closed/VISUAL-REVIEW-002-remember-me.md (nouveau)
+- docs/issues/closed/ISSUE-002-implement-remember-me.md (mis à jour avec section Review Visuelle)
 **Notes** : 
 - ✅ L'issue et le plan sont bien conçus du point de vue design
 - ⚠️ Recommandations principales : utiliser le style terminal avec préfixe `[OPTION]`, ajouter les attributs ARIA, standardiser sur "Se souvenir de moi" (français)
@@ -199,9 +199,9 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 **Statut** : En cours
 **Détails** : Review architecturale complète effectuée sur le plan de développement TASK-002. Le plan a été approuvé avec recommandations pour améliorer la robustesse et la sécurité.
 **Fichiers modifiés** : 
-- docs/reviews/ARCHITECT-REVIEW-002-remember-me.md (nouveau)
-- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
-- docs/issues/ISSUE-002-implement-remember-me.md (mis à jour)
+- docs/reviews/closed/ARCHITECT-REVIEW-002-remember-me.md (nouveau)
+- docs/tasks/closed/TASK-002-implement-remember-me.md (mis à jour)
+- docs/issues/closed/ISSUE-002-implement-remember-me.md (mis à jour)
 **Notes** : 
 - ✅ Plan approuvé avec recommandations
 - ✅ Architecture respectée : API-first, services, FormRequests, structure cohérente
@@ -233,9 +233,9 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 **Statut** : ✅ Code Review approuvé avec modifications mineures
 **Détails** : Review complète du code implémenté. L'implémentation respecte parfaitement le plan, les conventions Laravel, et toutes les recommandations des reviews précédentes ont été prises en compte.
 **Fichiers modifiés** :
-- docs/reviews/CODE-REVIEW-002-remember-me.md (nouveau)
-- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
-- docs/issues/ISSUE-002-implement-remember-me.md (mis à jour)
+- docs/reviews/closed/CODE-REVIEW-002-remember-me.md (nouveau)
+- docs/tasks/closed/TASK-002-implement-remember-me.md (mis à jour)
+- docs/issues/closed/ISSUE-002-implement-remember-me.md (mis à jour)
 **Notes** :
 - ✅ Toutes les tâches du plan sont complétées
 - ✅ Code respecte les conventions Laravel et est formaté avec Pint
@@ -249,7 +249,7 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 **Statut** : ✅ Approuvé fonctionnellement
 **Détails** : Review fonctionnelle complète de la fonctionnalité "Remember Me" implémentée. Tous les critères d'acceptation de l'issue sont respectés. La fonctionnalité réduit efficacement la friction de reconnexion pour les utilisateurs réguliers. L'expérience utilisateur est fluide et agréable, et les fonctionnalités métier sont correctement implémentées.
 **Fichiers modifiés** :
-- docs/reviews/FUNCTIONAL-REVIEW-002-remember-me.md (nouveau)
+- docs/reviews/closed/FUNCTIONAL-REVIEW-002-remember-me.md (nouveau)
 - docs/issues/ISSUE-002-implement-remember-me.md (mis à jour)
 - docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
 **Notes** :
