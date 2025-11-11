@@ -12,7 +12,7 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 
 ### Statut
 
-À faire
+En cours
 
 ### Historique
 
@@ -21,6 +21,17 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 **Détails** : Plan de développement créé pour implémenter la fonctionnalité "Remember Me". Le plan décompose l'issue en 3 phases avec 8 tâches au total.
 **Fichiers modifiés** : docs/tasks/TASK-002-implement-remember-me.md
 **Notes** : Estimation totale : ~4h de développement. Le champ `remember_token` existe déjà dans la migration users.
+
+#### 2025-01-XX - Morgan (Architect) - Review architecturale
+**Statut** : En cours
+**Détails** : Plan reviewé et approuvé avec recommandations. Le plan respecte l'architecture définie et les choix techniques sont appropriés. Voir ARCHITECT-REVIEW-002-remember-me.md pour les détails complets.
+**Fichiers modifiés** : 
+- docs/reviews/ARCHITECT-REVIEW-002-remember-me.md (nouveau)
+- docs/tasks/TASK-002-implement-remember-me.md (mis à jour)
+**Notes** : 
+- ✅ Plan approuvé avec recommandations
+- ⚠️ Recommandations principales : vérification explicite de la configuration de sécurité des cookies (High), documentation API Sanctum (Medium), tests de sécurité du cookie (Medium)
+- 📝 Le plan peut être implémenté tel quel, en tenant compte des recommandations pour améliorer la robustesse et la sécurité
 
 ## Objectifs Techniques
 
