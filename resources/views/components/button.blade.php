@@ -35,6 +35,19 @@
     
     if ($href) {
         $attributes = $attributes->merge(['href' => $href]);
+        // Ajouter wire:navigate par défaut pour les liens internes (sauf si explicitement désactivé)
+        // Vérifier si wire:navigate est déjà présent dans les attributs
+        $hasWireNavigate = false;
+        foreach ($attributes->getAttributes() as $key => $value) {
+            if (str_starts_with($key, 'wire:navigate')) {
+                $hasWireNavigate = true;
+                break;
+            }
+        }
+        if (!$hasWireNavigate) {
+            // Ajouter wire:navigate comme attribut HTML directement
+            $attributes = $attributes->merge(['wire:navigate' => '']);
+        }
     } else {
         $attributes = $attributes->merge(['type' => $type]);
     }
@@ -52,7 +65,7 @@
     }
 @endphp
 
-<{{ $tag }} {{ $attributes }} @if($wireLoading) wire:loading.attr="aria-busy" @endif>
+<{{ $tag }} {{ $attributes }}@if($wireLoading) wire:loading.attr="aria-busy" @endif>
     @if($wireLoading)
         <span wire:loading.remove wire:target="{{ $wireLoading }}">
             {{ $slot }}
