@@ -271,3 +271,9 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 - Contexte métier enrichi avec justification de la priorité
 **Notes** : Issue maintenant complète et prête pour la création du plan de développement par Sam (Lead Developer)
 
+#### 2025-01-XX - Alex (Product) - Création de l'issue GitHub
+**Statut** : À faire
+**Détails** : Issue GitHub créée : [#6](https://github.com/PiLep/space-xplorer/issues/6)
+**Branche** : `issue/003-implement-password-reset`
+**Notes** : Issue synchronisée avec GitHub, prête pour le développement
+
