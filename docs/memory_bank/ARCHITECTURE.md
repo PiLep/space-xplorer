@@ -125,6 +125,27 @@ Planets
 - `POST /api/auth/logout` - Déconnexion
 - `GET /api/auth/user` - Informations du joueur connecté
 
+### Réinitialisation de mot de passe
+
+**Routes Web** :
+- `GET /forgot-password` - Formulaire de demande de réinitialisation (middleware `guest`)
+- `POST /forgot-password` - Envoi du lien de réinitialisation (middleware `guest`, rate limit: 3/heure)
+- `GET /reset-password/{token}` - Formulaire de réinitialisation (middleware `guest`)
+- `POST /reset-password` - Réinitialisation du mot de passe (middleware `guest`, rate limit: 5/heure)
+
+**Fonctionnement** :
+- Utilisation des fonctionnalités natives Laravel (`Password::sendResetLink()`, `Password::reset()`)
+- Tokens stockés dans la table `password_reset_tokens` (créée automatiquement par Laravel)
+- Tokens expirables (60 minutes par défaut, configurable dans `config/auth.php`)
+- Invalidation automatique des tokens après utilisation
+- Invalidation du Remember Me et des sessions web après réinitialisation réussie (sécurité)
+
+**Sécurité** :
+- Rate limiting : 3 demandes de réinitialisation par heure par IP
+- Rate limiting : 5 tentatives de réinitialisation par heure par IP
+- Ne révèle jamais si un email existe dans le système (message de succès générique)
+- Tokens uniques et sécurisés (gérés automatiquement par Laravel)
+
 ### Endpoints utilisateurs (MVP)
 
 - `GET /api/users/{id}` - Détails d'un utilisateur (authentification requise)
@@ -212,6 +233,24 @@ L'application utilise une architecture événementielle complète pour découple
 
 **Listeners** :
 - Aucun pour le moment (prévu pour : regénération d'avatar si nom changé, tracking, etc.)
+
+##### `PasswordResetRequested`
+
+**Déclencheur** : Lorsqu'un utilisateur demande une réinitialisation de mot de passe (`POST /forgot-password`)
+
+**Données** : Email de l'utilisateur
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : tracking, analytics, etc.)
+
+##### `PasswordResetCompleted`
+
+**Déclencheur** : Lorsqu'un utilisateur réinitialise son mot de passe avec succès (`POST /reset-password`)
+
+**Données** : Utilisateur, timestamp
+
+**Listeners** :
+- Aucun pour le moment (prévu pour : notifications, analytics, invalidation sessions, etc.)
 
 #### Cycle de vie planète
 
@@ -354,8 +393,19 @@ La fonctionnalité "Remember Me" permet aux utilisateurs de rester connectés m�
 - La durée de vie du cookie Remember Me est gérée par Laravel (30 jours par défaut)
 - Cette durée est différente de `SESSION_LIFETIME` (120 minutes pour les sessions normales)
 
-**Limitations connues** :
-- L'invalidation du cookie Remember Me lors du changement de mot de passe n'est pas encore implémentée (issue future)
+**Réinitialisation de mot de passe** :
+
+Lors de la réinitialisation de mot de passe réussie :
+- Tous les tokens Remember Me de l'utilisateur sont invalidés
+- Toutes les sessions web de l'utilisateur sont invalidées
+- Un email de confirmation est envoyé à l'utilisateur
+- L'événement `PasswordResetCompleted` est dispatché pour la traçabilité
+
+**Service** : `PasswordResetService` dans `app/Services/`
+- `sendResetLink(string $email)` : Envoie le lien de réinitialisation
+- `reset(array $credentials)` : Réinitialise le mot de passe et invalide les sessions
+- `invalidateRememberMe(User $user)` : Invalide tous les tokens Remember Me
+- `invalidateSessions(User $user)` : Invalide toutes les sessions web
 
 **Évolutions futures** :
 - Système de rôles (admin, modérateur, joueur)
@@ -428,7 +478,9 @@ La fonctionnalité "Remember Me" permet aux utilisateurs de rester connectés m�
 ### Composants Livewire (MVP)
 
 - **Register** : Formulaire d'inscription (`/register`)
-- **Login** : Formulaire de connexion (`/login`)
+- **LoginTerminal** : Formulaire de connexion avec style terminal (`/login`)
+- **ForgotPassword** : Formulaire de demande de réinitialisation de mot de passe (`/forgot-password`)
+- **ResetPassword** : Formulaire de réinitialisation de mot de passe avec indicateur de force (`/reset-password/{token}`)
 - **Dashboard** : Affichage de la planète d'origine (`/dashboard`)
 - **Profile** : Gestion du profil utilisateur (`/profile`)
 
@@ -436,6 +488,8 @@ La fonctionnalité "Remember Me" permet aux utilisateurs de rester connectés m�
 - `/` : Page d'accueil (publique)
 - `/register` : Inscription (guest)
 - `/login` : Connexion (guest)
+- `/forgot-password` : Demande de réinitialisation de mot de passe (guest)
+- `/reset-password/{token}` : Formulaire de réinitialisation (guest)
 - `/dashboard` : Tableau de bord (auth)
 - `/profile` : Profil utilisateur (auth)
 - `POST /logout` : Déconnexion (auth)
