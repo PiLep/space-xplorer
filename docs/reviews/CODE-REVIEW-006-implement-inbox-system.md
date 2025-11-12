@@ -115,7 +115,9 @@ L'implémentation est excellente et respecte très bien le plan ainsi que toutes
   - ✅ Middleware `auth` appliqué
 
 - [x] **Tâche 5.4** : Ajouter le lien vers l'inbox dans la navigation
-  - ⚠️ Non vérifié dans cette review (nécessite vérification visuelle)
+  - ✅ Lien présent dans `resources/views/layouts/app.blade.php`
+  - ✅ Indicateur visuel avec classe `text-pulse` si messages non lus
+  - ✅ Utilise `unreadMessagesCount()` pour déterminer l'affichage
 
 #### Phase 6 : Tests
 - [x] **Tâche 6.1** : Tests unitaires du modèle Message
@@ -143,7 +145,10 @@ L'implémentation est excellente et respecte très bien le plan ainsi que toutes
   - ✅ Tri chronologique testé
 
 - [x] **Tâche 6.5** : Tests fonctionnels du composant Livewire
-  - ⚠️ Tests fonctionnels non vérifiés dans cette review (nécessite vérification)
+  - ✅ Tests créés et passent (18 tests)
+  - ✅ Chargement, filtres, sélection, actions testés
+  - ✅ Sécurité testée (empêcher l'accès aux messages d'autres utilisateurs)
+  - ✅ Affichage du compteur de messages non lus testé
 
 ### ⚠️ Tâches Partiellement Complétées
 
@@ -377,9 +382,10 @@ Aucune tâche non complétée identifiée.
   - Tous les tests passent avec succès
   - Pagination, filtres, sécurité testés
 
-- **Tests fonctionnels** : ⚠️ Non vérifiés
-  - Tests fonctionnels du composant Livewire non vérifiés dans cette review
-  - Nécessite vérification manuelle ou tests automatisés
+- **Tests fonctionnels** : ✅ Tous passent
+  - 18 tests pour le composant Livewire Inbox
+  - Tous les tests passent avec succès
+  - Chargement, filtres, sélection, actions, sécurité testés
 
 ### Couverture
 
@@ -433,23 +439,18 @@ Aucune tâche non complétée identifiée.
 
 ### Amélioration 4 : Tests fonctionnels du composant Livewire
 
-**Problème** : Les tests fonctionnels du composant Livewire ne sont pas vérifiés dans cette review.
-
-**Impact** : Couverture de tests incomplète pour le composant Livewire.
-
-**Suggestion** : Vérifier que des tests fonctionnels existent pour le composant Livewire (chargement, filtres, sélection, actions).
-
-**Priorité** : Medium (nécessite vérification)
+**Statut** : ✅ **Résolu** - Les tests fonctionnels existent et passent tous (18 tests)
+- Tests complets pour le composant Livewire Inbox
+- Couverture complète : chargement, filtres, sélection, actions, sécurité
+- Tous les tests passent avec succès
 
 ### Amélioration 5 : Vérification du lien vers l'inbox dans la navigation
 
-**Problème** : La tâche 5.4 (ajouter le lien vers l'inbox dans la navigation) n'est pas vérifiée dans cette review.
-
-**Impact** : Accessibilité de l'inbox pour les utilisateurs.
-
-**Suggestion** : Vérifier que le lien vers l'inbox est présent dans la navigation principale ou le dashboard avec un badge pour les messages non lus.
-
-**Priorité** : Medium (nécessite vérification visuelle)
+**Statut** : ✅ **Résolu** - Le lien est présent dans la navigation avec indicateur visuel
+- Lien présent dans `resources/views/layouts/app.blade.php` (ligne 67)
+- Indicateur visuel avec classe `text-pulse` si `unreadMessagesCount() > 0`
+- Utilise la méthode `unreadMessagesCount()` pour déterminer l'affichage
+- **Note** : Un badge numérique pourrait être ajouté pour afficher le nombre exact, mais l'animation pulse est déjà fonctionnelle
 
 ## Corrections Demandées
 
@@ -461,10 +462,10 @@ Aucune correction majeure demandée. Le code peut être approuvé avec les amél
   - **Réponse attendue** : Clarification sur le choix du type
 
 - **Question 2** : Des tests fonctionnels existent-ils pour le composant Livewire Inbox ?
-  - **Réponse attendue** : Confirmation de l'existence des tests ou plan pour les créer
+  - **Réponse** : ✅ Oui, 18 tests fonctionnels existent et passent tous avec succès
 
 - **Question 3** : Le lien vers l'inbox est-il présent dans la navigation principale ou le dashboard ?
-  - **Réponse attendue** : Confirmation de la présence du lien avec badge pour les messages non lus
+  - **Réponse** : ✅ Oui, le lien est présent dans `resources/views/layouts/app.blade.php` avec un indicateur visuel (`text-pulse`) si des messages non lus existent
 
 ## Conclusion
 
@@ -472,10 +473,10 @@ L'implémentation est excellente et prête pour la production. Le code respecte 
 
 **Prochaines étapes** :
 1. ✅ Code approuvé
-2. ⚠️ Vérifier les tests fonctionnels du composant Livewire (si non présents, les créer)
-3. ⚠️ Vérifier le lien vers l'inbox dans la navigation (si non présent, l'ajouter)
-4. ⚠️ Clarifier le type de message dans `createWelcomeMessage()` (system vs welcome)
-5. ✅ Peut être mergé en production après vérifications mineures
+2. ✅ Tests fonctionnels vérifiés et passent (18 tests)
+3. ✅ Lien vers l'inbox vérifié et présent dans la navigation
+4. ⚠️ Clarifier le type de message dans `createWelcomeMessage()` (system vs welcome) - Optionnel
+5. ✅ Peut être mergé en production
 
 ## Références
 
