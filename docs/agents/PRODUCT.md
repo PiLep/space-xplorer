@@ -143,6 +143,26 @@ Avant d'ajouter une fonctionnalité, toujours se demander :
 
 En tant qu'agent Product, tu es responsable de créer des issues dans le dossier `docs/issues/` (issues actives) pour donner des indications claires à l'équipe de développement. Les issues terminées sont déplacées dans `docs/issues/closed/` après le merge de la PR.
 
+### Processus de Création d'Issue
+
+**Étape 1 : Élaboration (si nécessaire)**
+
+Si une idée de fonctionnalité nécessite des clarifications ou n'est pas encore complètement définie, utilise **[elaborate-issue.md](../prompts/elaborate-issue.md)** pour :
+- Élaborer progressivement l'issue à partir d'une idée initiale
+- Collaborer avec le métier via un processus interactif de questions-réponses
+- Construire petit à petit un document issue complet et bien structuré
+- Valider la synthèse avec le métier avant de créer l'issue finale
+
+**Quand utiliser l'élaboration** :
+- Une nouvelle idée de fonctionnalité est proposée mais n'est pas encore complètement définie
+- Une demande métier nécessite des clarifications avant de créer l'issue
+- Une fonctionnalité complexe nécessite une exploration approfondie avant documentation
+- Le contexte métier ou les besoins utilisateur ne sont pas encore clairs
+
+**Étape 2 : Création de l'Issue Finale**
+
+Une fois l'élaboration terminée (ou si l'idée est déjà claire), crée l'issue finale en suivant **[create-issue.md](../prompts/create-issue.md)**.
+
 ### Quand Créer une Issue
 
 Crée une issue quand :

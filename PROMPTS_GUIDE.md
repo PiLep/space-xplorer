@@ -2,6 +2,37 @@
 
 Ce guide contient des prompts prêts à l'emploi pour chaque étape du workflow, utilisant les références Cursor (`@file`, `@folder`) pour inclure automatiquement le contexte nécessaire.
 
+## 💬 Étape 0 : Élaborer une Issue (Alex - Product Manager)
+
+**Quand utiliser** : Quand vous avez une idée de fonctionnalité mais qu'elle n'est pas encore complètement définie, ou qu'elle nécessite des clarifications avant de créer l'issue.
+
+```
+Je suis Alex (Product Manager). J'ai une idée de fonctionnalité mais j'aimerais l'élaborer progressivement avec le métier avant de créer l'issue finale.
+
+Idée initiale : {Décrire l'idée initiale}
+
+Action demandée :
+1. Lire la documentation :
+   @file docs/agents/PRODUCT.md
+   @file docs/prompts/elaborate-issue.md
+   @file docs/memory_bank/PROJECT_BRIEF.md
+
+2. Suivre le processus d'élaboration défini dans elaborate-issue.md :
+   - Phase 1 : Compréhension Initiale (poser des questions d'ouverture)
+   - Phase 2 : Exploration des Besoins Utilisateur
+   - Phase 3 : Définition des Critères d'Acceptation
+   - Phase 4 : Contexte Métier et Priorisation
+   - Phase 5 : Synthèse et Validation
+
+3. Créer un document de travail dans docs/issues/draft/ si nécessaire pour suivre la progression
+
+4. Une fois l'élaboration terminée et validée, créer l'issue finale en suivant create-issue.md
+
+Processus : Poser 2-3 questions à la fois, attendre les réponses du métier, puis continuer progressivement jusqu'à avoir toutes les informations nécessaires pour créer l'issue.
+```
+
+---
+
 ## 🎯 Prompt de Démarrage (Créer la Première Issue)
 
 ```

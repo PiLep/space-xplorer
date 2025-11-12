@@ -37,7 +37,20 @@ class LoginTerminal extends Component
 
     public function mount()
     {
-        $this->startTerminalBoot();
+        // Vérifier si l'animation a déjà été vue dans cette session
+        $terminalBootSeen = session('terminal_boot_seen', false);
+
+        if ($terminalBootSeen) {
+            // Si déjà vue, passer directement au formulaire
+            $this->terminalBooted = true;
+            $this->bootStep = 0;
+            $this->bootMessages = [];
+        } else {
+            // Première visite, démarrer l'animation
+            $this->startTerminalBoot();
+            // Marquer comme vue après le démarrage
+            session(['terminal_boot_seen' => true]);
+        }
     }
 
     public function startTerminalBoot()
@@ -76,11 +89,19 @@ class LoginTerminal extends Component
         $this->validate();
 
         try {
-            $authService->loginFromCredentials($this->email, $this->password, $this->remember);
+            $user = $authService->loginFromCredentials($this->email, $this->password, $this->remember);
             $this->status = '[SUCCESS] Authentication successful. Redirecting...';
+
+            // Réinitialiser le flag pour que l'animation se joue sur le dashboard après login
+            session(['terminal_boot_seen' => false]);
 
             // Small delay to show success message
             sleep(1);
+
+            // Check if email is verified, redirect accordingly
+            if (! $user->hasVerifiedEmail()) {
+                return $this->redirect(route('email.verify'), navigate: true);
+            }
 
             // Redirect to dashboard
             return $this->redirect(route('dashboard'), navigate: true);

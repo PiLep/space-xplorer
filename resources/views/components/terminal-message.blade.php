@@ -11,9 +11,12 @@
     if (str_contains($message, '[OK]') || str_contains($message, '[SUCCESS]') || str_contains($message, '[READY]')) {
         $type = 'success';
         $colorClass = 'text-space-primary dark:text-space-primary';
-    } elseif (str_contains($message, '[ERROR]')) {
+    } elseif (str_contains($message, '[ERROR]') || str_contains($message, '[SECURITY]')) {
         $type = 'error';
         $colorClass = 'text-error dark:text-error';
+    } elseif (str_contains($message, '[WARNING]')) {
+        $type = 'warning';
+        $colorClass = 'text-warning dark:text-warning';
     } elseif (str_contains($message, '[INFO]')) {
         $type = 'info';
         $colorClass = 'text-space-secondary dark:text-space-secondary';

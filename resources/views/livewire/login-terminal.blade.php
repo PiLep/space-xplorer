@@ -44,7 +44,7 @@
                             name="email"
                             label="enter_email"
                             wireModel="email"
-                            placeholder="user@domain.com"
+                            placeholder="john.lambert@operations.wy"
                             variant="terminal"
                             autofocus
                             marginBottom="mb-6"
@@ -56,23 +56,25 @@
                             name="password"
                             label="enter_password"
                             wireModel="password"
-                            placeholder="••••••••"
+                            placeholder="CLASSIFIED"
                             variant="terminal"
                             marginBottom="mb-6"
                         />
 
                         <!-- Remember Me Checkbox -->
                         <div class="mb-6">
-                            <label class="flex items-center cursor-pointer group">
+                            <label class="group flex cursor-pointer items-center">
                                 <input
                                     type="checkbox"
                                     wire:model="remember"
                                     id="remember"
                                     name="remember"
                                     aria-label="Memorize identity pattern"
-                                    class="w-4 h-4 text-space-primary bg-surface-dark border-border-dark rounded focus:ring-space-primary focus:ring-2 cursor-pointer transition-colors duration-150"
+                                    class="text-space-primary bg-surface-dark border-border-dark focus:ring-space-primary h-4 w-4 cursor-pointer rounded transition-colors duration-150 focus:ring-2"
                                 >
-                                <span class="ml-2 text-gray-300 dark:text-gray-300 text-sm font-mono group-hover:text-space-primary transition-colors duration-150">
+                                <span
+                                    class="group-hover:text-space-primary ml-2 font-mono text-sm text-gray-300 transition-colors duration-150 dark:text-gray-300"
+                                >
                                     [OPTION] Memorize identity pattern
                                 </span>
                             </label>

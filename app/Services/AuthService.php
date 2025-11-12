@@ -30,6 +30,10 @@ class AuthService
         // Refresh user to get updated home_planet_id if planet was generated
         $user->refresh();
 
+        // Send email verification code
+        $emailVerificationService = app(EmailVerificationService::class);
+        $emailVerificationService->generateCode($user);
+
         // Authenticate user in session
         Auth::login($user);
 
@@ -62,6 +66,10 @@ class AuthService
 
         // Refresh user to get updated home_planet_id if planet was generated
         $user->refresh();
+
+        // Send email verification code
+        $emailVerificationService = app(EmailVerificationService::class);
+        $emailVerificationService->generateCode($user);
 
         // Authenticate user in session
         Auth::login($user);
@@ -122,10 +130,20 @@ class AuthService
     }
 
     /**
+     * Check if user's email is verified.
+     */
+    public function isEmailVerified(User $user): bool
+    {
+        return $user->hasVerifiedEmail();
+    }
+
+    /**
      * Logout current user.
      */
     public function logout(): void
     {
+        // Réinitialiser le flag d'animation terminal lors de la déconnexion
+        session()->forget('terminal_boot_seen');
         Auth::logout();
     }
 }

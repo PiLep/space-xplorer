@@ -29,7 +29,7 @@
                     name="email"
                     label="enter_email"
                     wireModel="email"
-                    placeholder="user@domain.com"
+                    placeholder="denis.parker@operations.wy"
                     variant="terminal"
                     autofocus
                     marginBottom="mb-6"
@@ -64,4 +64,3 @@
         </div>
     </div>
 </x-container>
-

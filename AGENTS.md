@@ -34,6 +34,7 @@ Agents disponibles pour guider l'IA dans différents rôles :
 
 Actions disponibles pour les agents :
 
+- **[elaborate-issue.md](./docs/prompts/elaborate-issue.md)** : Guide pour élaborer progressivement une issue à partir d'une idée (processus interactif Product - Métier)
 - **[create-issue.md](./docs/prompts/create-issue.md)** : Guide pour créer des issues produit dans `docs/issues/`
 - **[create-plan.md](./docs/prompts/create-plan.md)** : Guide pour créer des plans de développement dans `docs/tasks/`
 - **[review-task.md](./docs/prompts/review-task.md)** : Guide pour reviewer les plans de développement

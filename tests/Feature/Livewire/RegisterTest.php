@@ -3,7 +3,12 @@
 use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Livewire\Livewire;
+
+beforeEach(function () {
+    Mail::fake();
+});
 
 it('renders register component', function () {
     Livewire::test(\App\Livewire\Register::class)
@@ -49,7 +54,7 @@ it('validates password minimum length during registration', function () {
         ->assertHasErrors(['password']);
 });
 
-it('allows successful registration', function () {
+it('allows successful registration and redirects to email verification', function () {
     // Ensure mock is set up (should be done by tests/Feature/Pest.php, but explicit call ensures it)
     // The beforeEach in tests/Feature/Pest.php should handle this, but calling it explicitly
     // ensures the mock is ready before Livewire creates the user
@@ -59,8 +64,9 @@ it('allows successful registration', function () {
         ->set('email', 'john1@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('email.verify'));
 
     // Verify user is authenticated
     expect(Auth::check())->toBeTrue();
@@ -69,7 +75,8 @@ it('allows successful registration', function () {
     $user = Auth::user();
     expect($user)->not->toBeNull()
         ->and($user->name)->toBe('John Doe')
-        ->and($user->email)->toBe('john1@example.com');
+        ->and($user->email)->toBe('john1@example.com')
+        ->and($user->email_verified_at)->toBeNull();
 });
 
 it('handles duplicate email during registration', function () {
@@ -91,8 +98,9 @@ it('creates user with home planet during registration', function () {
         ->set('email', 'jane@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
-        ->assertRedirect(route('dashboard'));
+        ->assertRedirect(route('email.verify'));
 
     // Verify user was created with home planet
     $user = Auth::user();
@@ -122,9 +130,10 @@ it('handles ValidationException from AuthService', function () {
         ->set('email', 'validation@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('Custom validation error');
+        ->assertSet('status', '[ERROR] Validation failed.');
 });
 
 it('handles generic Exception from AuthService', function () {
@@ -141,9 +150,10 @@ it('handles generic Exception from AuthService', function () {
         ->set('email', 'error@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('Database connection failed');
+        ->assertSet('status', '[ERROR] Registration failed.');
 });
 
 it('handles generic Exception with empty message', function () {
@@ -160,9 +170,10 @@ it('handles generic Exception with empty message', function () {
         ->set('email', 'empty@example.com')
         ->set('password', 'password123')
         ->set('password_confirmation', 'password123')
+        ->set('terms_accepted', true)
         ->call('register')
         ->assertHasErrors(['email'])
-        ->assertSee('An error occurred during registration. Please try again.');
+        ->assertSet('status', '[ERROR] Registration failed.');
 });
 
 afterEach(function () {
