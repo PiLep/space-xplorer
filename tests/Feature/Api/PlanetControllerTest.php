@@ -57,12 +57,6 @@ it('returns 404 for non-existent planet', function () {
 });
 
 it('returns all required planet fields', function () {
-    if (true) {
-        $this->markTestSkipped('Skipped until migration to remove old columns is applied');
-
-        return;
-    }
-
     $user = User::factory()->create();
     $token = $user->createToken('test-token')->plainTextToken;
     $planet = Planet::factory()->create([

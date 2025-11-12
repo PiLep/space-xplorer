@@ -84,14 +84,6 @@ class PlanetFactory extends Factory
             'name' => fake()->unique()->word().'-'.rand(100, 999).fake()->randomElement(['Alpha', 'Beta', 'Gamma', 'Delta']),
             'image_generating' => false,
             'video_generating' => false,
-            // Old columns (to be removed after data migration)
-            'type' => $type,
-            'size' => $sizeFr,
-            'temperature' => $temperatureFr,
-            'atmosphere' => $atmosphereFr,
-            'terrain' => $terrainFr,
-            'resources' => $resourcesFr,
-            'description' => fake()->sentence(20),
         ];
     }
 

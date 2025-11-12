@@ -101,17 +101,9 @@ class PlanetGeneratorService
         $name = $this->generateName();
         $description = $this->generateDescription($type, $characteristics);
 
-        // Create planet (with old columns for backward compatibility)
+        // Create planet
         $planet = Planet::create([
             'name' => $name,
-            // Old columns (to be removed after data migration)
-            'type' => $type,
-            'size' => $characteristics['size'],
-            'temperature' => $characteristics['temperature'],
-            'atmosphere' => $characteristics['atmosphere'],
-            'terrain' => $characteristics['terrain'],
-            'resources' => $characteristics['resources'],
-            'description' => $description,
         ]);
 
         // Translate French values to English and create properties
