@@ -113,6 +113,9 @@
 
     @livewireScripts
     @stack('scripts')
+    
+    <!-- Screen Size Error Check -->
+    <x-screen-size-error />
 </body>
 </html>
 
