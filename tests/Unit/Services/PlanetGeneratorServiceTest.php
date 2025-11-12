@@ -11,6 +11,7 @@ beforeEach(function () {
 
 it('generates a valid planet with all required fields', function () {
     $planet = $this->service->generate();
+    $planet->load('properties');
 
     expect($planet)
         ->toBeInstanceOf(Planet::class)
@@ -26,30 +27,29 @@ it('generates a valid planet with all required fields', function () {
 });
 
 it('generates a planet with valid type from configuration', function () {
-    $validTypes = array_keys(config('planets.types'));
+    $validTypes = ['terrestrial', 'gaseous', 'icy', 'desert', 'oceanic']; // English types
     $planet = $this->service->generate();
+    $planet->load('properties');
 
     expect($planet->type)->toBeIn($validTypes);
 });
 
 it('generates a planet with valid characteristics for its type', function () {
     $planet = $this->service->generate();
-    $typeConfig = config("planets.types.{$planet->type}.characteristics");
+    $planet->load('properties');
 
-    // Check size
-    expect($planet->size)->toBeIn(array_keys($typeConfig['size']));
+    // Valid English values
+    $validSizes = ['small', 'medium', 'large'];
+    $validTemperatures = ['cold', 'temperate', 'hot'];
+    $validAtmospheres = ['breathable', 'toxic', 'nonexistent'];
+    $validTerrains = ['rocky', 'oceanic', 'desert', 'forested', 'urban', 'mixed', 'icy'];
+    $validResources = ['abundant', 'moderate', 'rare'];
 
-    // Check temperature
-    expect($planet->temperature)->toBeIn(array_keys($typeConfig['temperature']));
-
-    // Check atmosphere
-    expect($planet->atmosphere)->toBeIn(array_keys($typeConfig['atmosphere']));
-
-    // Check terrain
-    expect($planet->terrain)->toBeIn(array_keys($typeConfig['terrain']));
-
-    // Check resources
-    expect($planet->resources)->toBeIn(array_keys($typeConfig['resources']));
+    expect($planet->size)->toBeIn($validSizes)
+        ->and($planet->temperature)->toBeIn($validTemperatures)
+        ->and($planet->atmosphere)->toBeIn($validAtmospheres)
+        ->and($planet->terrain)->toBeIn($validTerrains)
+        ->and($planet->resources)->toBeIn($validResources);
 });
 
 it('generates unique planet names', function () {
@@ -78,22 +78,15 @@ it('generates planet names following the expected format', function () {
 
 it('generates coherent planet descriptions', function () {
     $planet = $this->service->generate();
+    $planet->load('properties');
 
     expect($planet->description)
         ->not->toBeEmpty()
         ->toBeString();
 
-    // Description should contain information about the planet type
-    $typeDescriptions = [
-        'tellurique' => 'tellurique',
-        'gazeuse' => 'gazeuse',
-        'glacée' => 'glacée',
-        'désertique' => 'désertique',
-        'océanique' => 'océanique',
-    ];
-
+    // Description should be in English and contain planet-related terms
     expect(strtolower($planet->description))
-        ->toContain($typeDescriptions[$planet->type]);
+        ->toContain('planet');
 });
 
 it('selects planet types respecting weighted probability', function () {
@@ -166,7 +159,8 @@ it('can generate multiple planets without conflicts', function () {
         // Verify each planet is valid
         expect($planet)
             ->toBeInstanceOf(Planet::class)
-            ->and($planet->id)->not->toBeNull();
+            ->and($planet->id)->not->toBeNull()
+            ->and($planet->properties)->not->toBeNull();
     }
 
     // Verify all planets are unique

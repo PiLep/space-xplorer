@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Events\PlanetCreated;
 use App\Models\Planet;
+use App\Models\PlanetProperty;
 
 /**
  * Service for procedural planet generation.
@@ -19,6 +20,78 @@ class PlanetGeneratorService
     private const MAX_NAME_ATTEMPTS = 10;
 
     /**
+     * Mapping of French planet types to English planet types.
+     *
+     * @var array<string, string>
+     */
+    private const TYPE_TRANSLATIONS = [
+        'tellurique' => 'terrestrial',
+        'gazeuse' => 'gaseous',
+        'glacée' => 'icy',
+        'désertique' => 'desert',
+        'océanique' => 'oceanic',
+    ];
+
+    /**
+     * Mapping of French sizes to English sizes.
+     *
+     * @var array<string, string>
+     */
+    private const SIZE_TRANSLATIONS = [
+        'petite' => 'small',
+        'moyenne' => 'medium',
+        'grande' => 'large',
+    ];
+
+    /**
+     * Mapping of French temperatures to English temperatures.
+     *
+     * @var array<string, string>
+     */
+    private const TEMPERATURE_TRANSLATIONS = [
+        'froide' => 'cold',
+        'tempérée' => 'temperate',
+        'chaude' => 'hot',
+    ];
+
+    /**
+     * Mapping of French atmospheres to English atmospheres.
+     *
+     * @var array<string, string>
+     */
+    private const ATMOSPHERE_TRANSLATIONS = [
+        'respirable' => 'breathable',
+        'toxique' => 'toxic',
+        'inexistante' => 'nonexistent',
+    ];
+
+    /**
+     * Mapping of French terrains to English terrains.
+     *
+     * @var array<string, string>
+     */
+    private const TERRAIN_TRANSLATIONS = [
+        'rocheux' => 'rocky',
+        'océanique' => 'oceanic',
+        'désertique' => 'desert',
+        'forestier' => 'forested',
+        'urbain' => 'urban',
+        'mixte' => 'mixed',
+        'glacé' => 'icy',
+    ];
+
+    /**
+     * Mapping of French resources to English resources.
+     *
+     * @var array<string, string>
+     */
+    private const RESOURCES_TRANSLATIONS = [
+        'abondantes' => 'abundant',
+        'modérées' => 'moderate',
+        'rares' => 'rare',
+    ];
+
+    /**
      * Generate a complete planet with all characteristics.
      */
     public function generate(): Planet
@@ -28,8 +101,10 @@ class PlanetGeneratorService
         $name = $this->generateName();
         $description = $this->generateDescription($type, $characteristics);
 
+        // Create planet (with old columns for backward compatibility)
         $planet = Planet::create([
             'name' => $name,
+            // Old columns (to be removed after data migration)
             'type' => $type,
             'size' => $characteristics['size'],
             'temperature' => $characteristics['temperature'],
@@ -39,10 +114,87 @@ class PlanetGeneratorService
             'description' => $description,
         ]);
 
+        // Translate French values to English and create properties
+        $typeEn = self::TYPE_TRANSLATIONS[$type] ?? $type;
+        $sizeEn = self::SIZE_TRANSLATIONS[$characteristics['size']] ?? $characteristics['size'];
+        $temperatureEn = self::TEMPERATURE_TRANSLATIONS[$characteristics['temperature']] ?? $characteristics['temperature'];
+        $atmosphereEn = self::ATMOSPHERE_TRANSLATIONS[$characteristics['atmosphere']] ?? $characteristics['atmosphere'];
+        $terrainEn = self::TERRAIN_TRANSLATIONS[$characteristics['terrain']] ?? $characteristics['terrain'];
+        $resourcesEn = self::RESOURCES_TRANSLATIONS[$characteristics['resources']] ?? $characteristics['resources'];
+        $descriptionEn = $this->translateDescription($description);
+
+        // Create planet properties in English
+        PlanetProperty::create([
+            'planet_id' => $planet->id,
+            'type' => $typeEn,
+            'size' => $sizeEn,
+            'temperature' => $temperatureEn,
+            'atmosphere' => $atmosphereEn,
+            'terrain' => $terrainEn,
+            'resources' => $resourcesEn,
+            'description' => $descriptionEn,
+        ]);
+
         // Dispatch event to generate planet image
         event(new PlanetCreated($planet));
 
         return $planet;
+    }
+
+    /**
+     * Translate a French description to English.
+     */
+    private function translateDescription(string $description): string
+    {
+        $translations = [
+            // Type descriptions
+            'planète tellurique' => 'terrestrial planet',
+            'planète géante gazeuse' => 'gas giant planet',
+            'planète glacée' => 'icy planet',
+            'planète désertique' => 'desert planet',
+            'planète océanique' => 'oceanic planet',
+            'Cette planète tellurique' => 'This terrestrial planet',
+            'Cette planète géante gazeuse' => 'This gas giant planet',
+            'Cette planète glacée' => 'This icy planet',
+            'Cette planète désertique' => 'This desert planet',
+            'Cette planète océanique' => 'This oceanic planet',
+
+            // Size descriptions
+            'de petite taille' => 'small in size',
+            'de taille moyenne' => 'medium-sized',
+            'de grande taille' => 'large in size',
+
+            // Temperature descriptions
+            'avec un climat froid' => 'with a cold climate',
+            'avec un climat tempéré' => 'with a temperate climate',
+            'avec un climat chaud' => 'with a hot climate',
+
+            // Atmosphere descriptions
+            'possédant une atmosphère respirable' => 'with a breathable atmosphere',
+            'possédant une atmosphère toxique' => 'with a toxic atmosphere',
+            'possédant aucune atmosphère' => 'with no atmosphere',
+
+            // Terrain descriptions
+            'un terrain rocheux' => 'rocky terrain',
+            'un terrain océanique' => 'oceanic terrain',
+            'un terrain désertique' => 'desert terrain',
+            'un terrain forestier' => 'forested terrain',
+            'un terrain urbain' => 'urban terrain',
+            'un terrain mixte' => 'mixed terrain',
+            'un terrain glacé' => 'icy terrain',
+
+            // Resources descriptions
+            'et des ressources abondantes' => 'and abundant resources',
+            'et des ressources modérées' => 'and moderate resources',
+            'et des ressources rares' => 'and rare resources',
+        ];
+
+        $translated = $description;
+        foreach ($translations as $french => $english) {
+            $translated = str_ireplace($french, $english, $translated);
+        }
+
+        return $translated;
     }
 
     /**

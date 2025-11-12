@@ -89,8 +89,8 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
         }
 
         try {
-            // Reload planet to ensure we have the latest data
-            $planet = $event->planet->fresh();
+            // Reload planet to ensure we have the latest data and load properties
+            $planet = $event->planet->fresh(['properties']);
 
             // Prevent duplicate video generation - if planet already has a video, skip
             $existingVideo = $planet->getAttributes()['video_url'] ?? null;
@@ -290,41 +290,41 @@ class GeneratePlanetVideo implements ShouldQueue, ShouldQueueAfterCommit
      */
     private function generatePlanetVideoPrompt(\App\Models\Planet $planet): string
     {
-        // Map planet characteristics to visual descriptions
+        // Map planet characteristics to visual descriptions (using English values)
         $sizeDescriptions = [
-            'petite' => 'small, compact planet',
-            'moyenne' => 'medium-sized planet',
-            'grande' => 'massive, imposing planet',
+            'small' => 'small, compact planet',
+            'medium' => 'medium-sized planet',
+            'large' => 'massive, imposing planet',
         ];
 
         $temperatureDescriptions = [
-            'froide' => 'icy, frozen surface with crystalline formations glinting in starlight',
-            'tempérée' => 'temperate climate with varied landscapes and visible weather patterns',
-            'chaude' => 'scorching surface with volcanic activity, heat distortion, and glowing lava flows',
+            'cold' => 'icy, frozen surface with crystalline formations glinting in starlight',
+            'temperate' => 'temperate climate with varied landscapes and visible weather patterns',
+            'hot' => 'scorching surface with volcanic activity, heat distortion, and glowing lava flows',
         ];
 
         $atmosphereDescriptions = [
-            'respirable' => 'clear, breathable atmosphere with visible cloud formations drifting slowly',
-            'toxique' => 'toxic, swirling atmosphere with ominous colored clouds and chemical haze',
-            'inexistante' => 'airless void, stark and desolate with sharp shadows and no atmospheric glow',
+            'breathable' => 'clear, breathable atmosphere with visible cloud formations drifting slowly',
+            'toxic' => 'toxic, swirling atmosphere with ominous colored clouds and chemical haze',
+            'nonexistent' => 'airless void, stark and desolate with sharp shadows and no atmospheric glow',
         ];
 
         $terrainDescriptions = [
-            'rocheux' => 'rugged, rocky terrain with sharp formations and deep canyons',
-            'océanique' => 'vast oceans with turbulent waves and swirling currents visible from space',
-            'désertique' => 'endless desert dunes creating flowing patterns under harsh light',
-            'forestier' => 'alien forests with strange, twisted vegetation creating dark patches',
-            'urbain' => 'abandoned industrial structures and ruins creating geometric patterns',
-            'mixte' => 'diverse, mixed terrain with multiple biomes creating a patchwork surface',
-            'glacé' => 'frozen wasteland with ice formations and glaciers reflecting light',
+            'rocky' => 'rugged, rocky terrain with sharp formations and deep canyons',
+            'oceanic' => 'vast oceans with turbulent waves and swirling currents visible from space',
+            'desert' => 'endless desert dunes creating flowing patterns under harsh light',
+            'forested' => 'alien forests with strange, twisted vegetation creating dark patches',
+            'urban' => 'abandoned industrial structures and ruins creating geometric patterns',
+            'mixed' => 'diverse, mixed terrain with multiple biomes creating a patchwork surface',
+            'icy' => 'frozen wasteland with ice formations and glaciers reflecting light',
         ];
 
         $typeDescriptions = [
-            'tellurique' => 'rocky terrestrial planet',
-            'gazeuse' => 'gas giant with swirling atmospheric bands and storms',
-            'glacée' => 'ice planet covered in frozen layers',
-            'désertique' => 'barren desert planet',
-            'océanique' => 'ocean world with minimal landmass',
+            'terrestrial' => 'rocky terrestrial planet',
+            'gaseous' => 'gas giant with swirling atmospheric bands and storms',
+            'icy' => 'ice planet covered in frozen layers',
+            'desert' => 'barren desert planet',
+            'oceanic' => 'ocean world with minimal landmass',
         ];
 
         // Build the visual description based on planet characteristics

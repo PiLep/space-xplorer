@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Concerns\HasUlids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToCheckFileExistence;
@@ -23,6 +25,19 @@ class Planet extends Model
      */
     protected $fillable = [
         'name',
+        'image_url',
+        'video_url',
+        'image_generating',
+        'video_generating',
+        // Coordonnées spatiales
+        'x',
+        'y',
+        'z',
+        'star_system_id',
+        'orbital_distance',
+        'orbital_angle',
+        'orbital_inclination',
+        // Old columns (to be removed after data migration)
         'type',
         'size',
         'temperature',
@@ -30,10 +45,20 @@ class Planet extends Model
         'terrain',
         'resources',
         'description',
-        'image_url',
-        'video_url',
-        'image_generating',
-        'video_generating',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'x' => 'decimal:2',
+        'y' => 'decimal:2',
+        'z' => 'decimal:2',
+        'orbital_distance' => 'decimal:2',
+        'orbital_angle' => 'decimal:4',
+        'orbital_inclination' => 'decimal:2',
     ];
 
     /**
@@ -42,6 +67,92 @@ class Planet extends Model
     public function users(): HasMany
     {
         return $this->hasMany(User::class, 'home_planet_id');
+    }
+
+    /**
+     * Get the star system this planet belongs to.
+     */
+    public function starSystem(): BelongsTo
+    {
+        return $this->belongsTo(StarSystem::class);
+    }
+
+    /**
+     * Get the planet properties.
+     */
+    public function properties(): HasOne
+    {
+        return $this->hasOne(PlanetProperty::class);
+    }
+
+    /**
+     * Get planet type from properties.
+     */
+    protected function type(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->type
+        );
+    }
+
+    /**
+     * Get planet size from properties.
+     */
+    protected function size(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->size
+        );
+    }
+
+    /**
+     * Get planet temperature from properties.
+     */
+    protected function temperature(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->temperature
+        );
+    }
+
+    /**
+     * Get planet atmosphere from properties.
+     */
+    protected function atmosphere(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->atmosphere
+        );
+    }
+
+    /**
+     * Get planet terrain from properties.
+     */
+    protected function terrain(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->terrain
+        );
+    }
+
+    /**
+     * Get planet resources from properties.
+     */
+    protected function resources(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->resources
+        );
+    }
+
+    /**
+     * Get planet description from properties.
+     */
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->properties?->description
+        );
     }
 
     /**
@@ -252,5 +363,55 @@ class Planet extends Model
     public function isVideoGenerating(): bool
     {
         return $this->video_generating === true;
+    }
+
+    /**
+     * Calculate distance to another planet.
+     */
+    public function distanceTo(Planet $other): float
+    {
+        if (! $this->x || ! $other->x) {
+            throw new \RuntimeException('Planets must have coordinates to calculate distance');
+        }
+
+        return sqrt(
+            pow($this->x - $other->x, 2) +
+            pow($this->y - $other->y, 2) +
+            pow($this->z - $other->z, 2)
+        );
+    }
+
+    /**
+     * Calculate travel time to another planet (in hours).
+     * Assumes a constant speed - you can adjust this formula based on your game mechanics.
+     */
+    public function travelTimeTo(Planet $other, float $speed = 1.0): float
+    {
+        $distance = $this->distanceTo($other);
+
+        return $distance / $speed; // Ajustez selon vos mécaniques de jeu
+    }
+
+    /**
+     * Find nearby planets within a given radius.
+     */
+    public static function nearby(float $x, float $y, float $z, float $radius): \Illuminate\Database\Eloquent\Collection
+    {
+        return self::whereBetween('x', [$x - $radius, $x + $radius])
+            ->whereBetween('y', [$y - $radius, $y + $radius])
+            ->whereBetween('z', [$z - $radius, $z + $radius])
+            ->get()
+            ->filter(function ($planet) use ($x, $y, $z, $radius) {
+                if (! $planet->x) {
+                    return false;
+                }
+                $distance = sqrt(
+                    pow($planet->x - $x, 2) +
+                    pow($planet->y - $y, 2) +
+                    pow($planet->z - $z, 2)
+                );
+
+                return $distance <= $radius;
+            });
     }
 }
