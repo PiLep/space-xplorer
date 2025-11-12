@@ -26,6 +26,7 @@ class Resource extends Model
         'type',
         'status',
         'file_path',
+        'file_url_cached',
         'prompt',
         'tags',
         'description',
@@ -67,11 +68,12 @@ class Resource extends Model
     }
 
     /**
-     * Get the file URL, reconstructing it from the stored path if needed.
+     * Get the file URL, using cached value if available, otherwise reconstructing from path.
      *
      * This accessor handles both:
+     * - Cached URL: Uses file_url_cached if available (fast, no S3 calls)
      * - Old format: Full URL stored (for backward compatibility)
-     * - New format: Path stored (reconstructed dynamically)
+     * - New format: Path stored (reconstructed dynamically, with fallback to S3)
      *
      * Returns null if the file doesn't exist in storage or if there's an error accessing storage.
      */
@@ -79,18 +81,25 @@ class Resource extends Model
     {
         return Attribute::make(
             get: function ($value) {
+                // Priority 1: Use cached URL if available (fastest, no S3 calls)
+                if ($this->file_url_cached) {
+                    return $this->file_url_cached;
+                }
+
                 $filePath = $this->file_path;
 
                 if (! $filePath) {
                     return null;
                 }
 
-                // If it's already a full URL (old format), return as is
+                // Priority 2: If it's already a full URL (old format), return as is
                 if (filter_var($filePath, FILTER_VALIDATE_URL)) {
                     return $filePath;
                 }
 
-                // Determine storage disk based on resource type
+                // Priority 3: Fallback to dynamic reconstruction (slow, makes S3 calls)
+                // This should rarely happen if observer is working correctly
+                // But provides backward compatibility and handles edge cases
                 $disk = match ($this->type) {
                     'avatar_image', 'planet_image' => config('image-generation.storage.disk', 's3'),
                     'planet_video' => config('video-generation.storage.disk', 's3'),
@@ -103,7 +112,21 @@ class Resource extends Model
                         return null;
                     }
 
-                    return Storage::disk($disk)->url($filePath);
+                    $url = Storage::disk($disk)->url($filePath);
+
+                    // Try to cache the URL for next time (non-blocking)
+                    // Use updateQuietly to avoid triggering observer again
+                    try {
+                        $this->updateQuietly(['file_url_cached' => $url]);
+                    } catch (\Exception $e) {
+                        // Ignore cache update errors, just return the URL
+                        Log::debug('Failed to cache file URL for resource', [
+                            'resource_id' => $this->id,
+                            'error' => $e->getMessage(),
+                        ]);
+                    }
+
+                    return $url;
                 } catch (UnableToCheckFileExistence $flysystemException) {
                     $previous = $flysystemException->getPrevious();
                     if ($previous instanceof S3Exception) {
