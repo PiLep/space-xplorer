@@ -73,12 +73,6 @@ it('generates planet image successfully when job is processed', function () {
 });
 
 it('includes planet name and characteristics in prompt', function () {
-    if (true) {
-        $this->markTestSkipped('Skipped until migration to remove old columns is applied');
-
-        return;
-    }
-
     $planet = Planet::factory()->create([
         'name' => 'Kepler-452b',
     ]);
@@ -214,12 +208,6 @@ it('skips generation if planet already has an image', function () {
 });
 
 it('generates different prompts for different planet types', function () {
-    if (true) {
-        $this->markTestSkipped('Skipped until migration to remove old columns is applied');
-
-        return;
-    }
-
     $telluriquePlanet = Planet::factory()->create();
     $telluriquePlanet->properties->update([
         'type' => 'terrestrial',

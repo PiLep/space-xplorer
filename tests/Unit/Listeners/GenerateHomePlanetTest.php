@@ -65,12 +65,6 @@ it('handles errors gracefully without blocking registration', function () {
 });
 
 it('completes successfully without errors', function () {
-    if (true) {
-        $this->markTestSkipped('Skipped until migration to remove old columns is applied');
-
-        return;
-    }
-
     $user = User::factory()->create([
         'home_planet_id' => null,
     ]);
@@ -113,12 +107,6 @@ it('assigns a planet with all required characteristics', function () {
 });
 
 it('assigns different home planets to multiple users', function () {
-    if (true) {
-        $this->markTestSkipped('Skipped until migration to remove old columns is applied');
-
-        return;
-    }
-
     $user1 = User::factory()->create(['home_planet_id' => null]);
     $user2 = User::factory()->create(['home_planet_id' => null]);
 

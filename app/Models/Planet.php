@@ -37,14 +37,6 @@ class Planet extends Model
         'orbital_distance',
         'orbital_angle',
         'orbital_inclination',
-        // Old columns (to be removed after data migration)
-        'type',
-        'size',
-        'temperature',
-        'atmosphere',
-        'terrain',
-        'resources',
-        'description',
     ];
 
     /**
