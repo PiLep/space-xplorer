@@ -1,0 +1,7 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "single_blank_line_at_eof": false
+    }
+}
+

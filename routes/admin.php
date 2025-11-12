@@ -25,7 +25,7 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Users management (only index and show)
+    // Users management
     Route::resource('users', UserController::class)->only(['index', 'show']);
 
     // Resources management

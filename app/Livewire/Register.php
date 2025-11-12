@@ -4,35 +4,33 @@ namespace App\Livewire;
 
 use App\Services\AuthService;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class Register extends Component
 {
-    public $name = '';
+    #[Validate('required|string|max:255')]
+    public string $name = '';
 
-    public $email = '';
+    #[Validate('required|email|max:255|unique:users')]
+    public string $email = '';
 
-    public $password = '';
+    #[Validate('required|string|min:8|confirmed')]
+    public string $password = '';
 
-    public $password_confirmation = '';
+    public string $password_confirmation = '';
 
-    public $terms_accepted = false;
+    #[Validate('required|accepted')]
+    public bool $terms_accepted = false;
 
-    public $status = '';
+    public string $status = '';
 
-    public $terminalBooted = false;
+    public bool $terminalBooted = false;
 
-    public $bootStep = 0;
+    public int $bootStep = 0;
 
-    public $bootMessages = [];
-
-    protected $rules = [
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|max:255|unique:users',
-        'password' => 'required|string|min:8|confirmed',
-        'terms_accepted' => 'required|accepted',
-    ];
+    public array $bootMessages = [];
 
     protected $messages = [
         'name.required' => 'Name required.',

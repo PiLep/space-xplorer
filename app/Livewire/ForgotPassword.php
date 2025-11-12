@@ -4,18 +4,16 @@ namespace App\Livewire;
 
 use App\Services\PasswordResetService;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class ForgotPassword extends Component
 {
-    public $email = '';
+    #[Validate('required|email')]
+    public string $email = '';
 
-    public $status = '';
-
-    protected $rules = [
-        'email' => 'required|email',
-    ];
+    public string $status = '';
 
     protected $messages = [
         'email.required' => 'L\'adresse email est requise.',

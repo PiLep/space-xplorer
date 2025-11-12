@@ -325,6 +325,201 @@ Lors de l'ajout de nouveaux paramètres optionnels à l'authentification :
 - ✅ **Paramètres optionnels** : Utiliser `sometimes` dans les validations FormRequest
 - ✅ **Tests de rétrocompatibilité** : Vérifier que les clients existants continuent de fonctionner
 
+## Meilleures Pratiques Livewire 3.6
+
+En tant qu'Architecte, tu dois veiller à ce que les composants Livewire suivent les meilleures pratiques de Livewire 3.6 pour Laravel 12.
+
+### Version et Compatibilité
+
+**Version installée** : Livewire 3.6 (`^3.6` dans `composer.json`)  
+**Compatibilité** : Laravel 12, PHP 8.2+
+
+### Attributs PHP 8
+
+Livewire 3.6 utilise les attributs PHP 8 pour une syntaxe moderne et déclarative :
+
+- **`#[Layout('layouts.app')]`** : Définit le layout Blade pour le composant (déjà utilisé dans le projet)
+- **`#[Validate('rules')]`** : Définit les règles de validation directement sur les propriétés (à privilégier au lieu de `protected $rules`)
+- **`#[Computed]`** : Marque une méthode comme propriété calculée (cache automatique)
+- **`#[On('event')]`** : Écoute un événement Livewire ou Laravel
+- **`#[Locked]`** : Empêche la modification d'une propriété depuis le frontend
+
+### Validation Moderne
+
+**Préférer les attributs `#[Validate]`** sur les propriétés plutôt que `protected $rules` :
+
+**Bon exemple** :
+```php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.app')]
+class Register extends Component
+{
+    #[Validate('required|string|max:255')]
+    public string $name = '';
+
+    #[Validate('required|email|max:255|unique:users')]
+    public string $email = '';
+
+    #[Validate('required|string|min:8|confirmed')]
+    public string $password = '';
+}
+```
+
+**Mauvais exemple** :
+```php
+protected $rules = [
+    'name' => 'required|string|max:255',
+    'email' => 'required|email|max:255|unique:users',
+];
+```
+
+### Propriétés Calculées
+
+Utiliser `#[Computed]` pour les propriétés dérivées qui nécessitent un calcul :
+
+**Bon exemple** :
+```php
+use Livewire\Attributes\Computed;
+
+#[Computed]
+public function fullName(): string
+{
+    return "{$this->firstName} {$this->lastName}";
+}
+
+#[Computed]
+public function planetCount(): int
+{
+    return $this->user->planets()->count();
+}
+```
+
+**Avantages** :
+- Cache automatique : la valeur est calculée une seule fois par requête
+- Performance améliorée pour les calculs coûteux
+- Syntaxe claire et déclarative
+
+### Performance
+
+#### Utilisation de `wire:key`
+
+Toujours utiliser `wire:key` pour les listes dans les vues Livewire :
+
+**Bon exemple** :
+```blade
+@foreach($planets as $planet)
+    <div wire:key="planet-{{ $planet->id }}">
+        {{ $planet->name }}
+    </div>
+@endforeach
+```
+
+**Avantages** :
+- Aide Livewire à identifier les éléments lors des mises à jour
+- Optimise les re-renders en ne mettant à jour que les éléments modifiés
+- Évite les bugs de synchronisation du DOM
+
+#### Debounce pour les champs de saisie
+
+Utiliser `wire:model.debounce` pour les champs où l'utilisateur tape fréquemment :
+
+**Bon exemple** :
+```blade
+<input type="text" wire:model.debounce.500ms="searchQuery" placeholder="Search...">
+```
+
+**Avantages** :
+- Réduit le nombre de requêtes serveur
+- Améliore les performances et l'expérience utilisateur
+- Évite les requêtes inutiles pendant la saisie
+
+#### Lazy Loading
+
+Utiliser `wire:model.lazy` pour les champs qui n'ont pas besoin de validation en temps réel :
+
+**Bon exemple** :
+```blade
+<input type="text" wire:model.lazy="description" placeholder="Description">
+```
+
+### Structure des Composants
+
+**Séparation des responsabilités** :
+
+- **Composants Livewire** : Gèrent uniquement l'état de l'interface et les interactions utilisateur
+- **Services** : Contiennent toute la logique métier (déjà en place dans le projet)
+- **Modèles** : Gèrent les relations et les requêtes Eloquent
+
+**Bon exemple** :
+```php
+class Dashboard extends Component
+{
+    public $planet = null;
+    public $loading = true;
+
+    public function mount()
+    {
+        $this->loadPlanet();
+    }
+
+    public function loadPlanet()
+    {
+        // Appel direct au service, pas d'API interne
+        $this->planet = app(PlanetService::class)->getHomePlanet(Auth::user());
+    }
+}
+```
+
+**Mauvais exemple** :
+```php
+class Dashboard extends Component
+{
+    public function loadPlanet()
+    {
+        // ❌ Ne pas mettre la logique métier dans le composant
+        $this->planet = Planet::where('user_id', Auth::id())
+            ->with('resources')
+            ->with('discoveries')
+            ->first();
+    }
+}
+```
+
+### Tests
+
+**Bonnes pratiques pour tester les composants Livewire** :
+
+- Utiliser `Livewire::test()` pour tester les composants
+- Vérifier les interactions utilisateur (clics, saisie)
+- Tester les validations et les erreurs
+- Vérifier les redirections et les événements
+
+**Exemple** :
+```php
+use Livewire\Livewire;
+
+it('validates email on registration', function () {
+    Livewire::test(Register::class)
+        ->set('email', 'invalid-email')
+        ->call('register')
+        ->assertHasErrors(['email']);
+});
+```
+
+### Points de Review Architecturale
+
+Lors de la review de composants Livewire, vérifier :
+
+- ✅ Utilisation des attributs PHP 8 (`#[Validate]`, `#[Computed]`, `#[Layout]`)
+- ✅ Séparation claire entre logique métier (services) et présentation (composants)
+- ✅ Utilisation de `wire:key` pour les listes
+- ✅ Utilisation de `wire:model.debounce` pour les champs de recherche/saisie fréquents
+- ✅ Utilisation de `#[Computed]` pour les propriétés calculées coûteuses
+- ✅ Tests unitaires pour les composants complexes
+- ✅ Pas d'appels API internes depuis Livewire (utilisation directe des services)
+
 ## Références
 
 Pour approfondir ta connaissance architecturale :
@@ -334,6 +529,9 @@ Pour approfondir ta connaissance architecturale :
 
 Pour reviewer les plans :
 - **[review-task.md](../prompts/review-task.md)** : Guide complet pour reviewer les plans
+
+Documentation Livewire :
+- **[Livewire 3 Documentation](https://livewire.laravel.com/docs)** : Documentation officielle Livewire 3
 
 ## Amélioration Continue
 

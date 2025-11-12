@@ -54,8 +54,8 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
     public function handle(PlanetCreated $event): void
     {
         try {
-            // Reload planet to ensure we have the latest data
-            $planet = $event->planet->fresh();
+            // Reload planet to ensure we have the latest data and load properties
+            $planet = $event->planet->fresh(['properties']);
 
             // Prevent duplicate image generation - if planet already has an image, skip
             $existingImage = $planet->getAttributes()['image_url'] ?? null;
@@ -324,41 +324,41 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
      */
     private function generatePlanetPrompt(\App\Models\Planet $planet): string
     {
-        // Map planet characteristics to visual descriptions
+        // Map planet characteristics to visual descriptions (using English values)
         $sizeDescriptions = [
-            'petite' => 'small, compact planet',
-            'moyenne' => 'medium-sized planet',
-            'grande' => 'massive, imposing planet',
+            'small' => 'small, compact planet',
+            'medium' => 'medium-sized planet',
+            'large' => 'massive, imposing planet',
         ];
 
         $temperatureDescriptions = [
-            'froide' => 'icy, frozen surface covered in ice and snow, crystalline formations, polar ice caps visible',
-            'tempérée' => 'temperate climate with varied landscapes, green and blue tones, visible continents and oceans',
-            'chaude' => 'scorching hot surface, reddish-orange tones, volcanic activity, heat distortion visible in atmosphere',
+            'cold' => 'icy, frozen surface covered in ice and snow, crystalline formations, polar ice caps visible',
+            'temperate' => 'temperate climate with varied landscapes, green and blue tones, visible continents and oceans',
+            'hot' => 'scorching hot surface, reddish-orange tones, volcanic activity, heat distortion visible in atmosphere',
         ];
 
         $atmosphereDescriptions = [
-            'respirable' => 'clear, breathable atmosphere with white cloud formations, blue atmospheric glow at the edges',
-            'toxique' => 'toxic, swirling atmosphere with yellow, green, or purple colored clouds, chemical haze visible',
-            'inexistante' => 'airless void, no atmospheric glow, stark shadows, cratered surface clearly visible',
+            'breathable' => 'clear, breathable atmosphere with white cloud formations, blue atmospheric glow at the edges',
+            'toxic' => 'toxic, swirling atmosphere with yellow, green, or purple colored clouds, chemical haze visible',
+            'nonexistent' => 'airless void, no atmospheric glow, stark shadows, cratered surface clearly visible',
         ];
 
         $terrainDescriptions = [
-            'rocheux' => 'rugged, rocky terrain with sharp mountain ranges, deep canyons, gray and brown rocky surface',
-            'océanique' => 'vast blue oceans covering most of the surface, minimal landmasses, white ocean foam visible',
-            'désertique' => 'endless sand dunes creating flowing patterns, orange and beige tones, dry cracked surface, no vegetation',
-            'forestier' => 'dense alien forests covering the surface, dark green patches, strange vegetation patterns',
-            'urbain' => 'abandoned industrial structures and ruins, geometric patterns, metallic gray surfaces, urban sprawl',
-            'mixte' => 'diverse, mixed terrain with multiple biomes creating a patchwork surface of different colors',
-            'glacé' => 'frozen wasteland covered in ice and snow, white and blue tones, glaciers and ice sheets visible',
+            'rocky' => 'rugged, rocky terrain with sharp mountain ranges, deep canyons, gray and brown rocky surface',
+            'oceanic' => 'vast blue oceans covering most of the surface, minimal landmasses, white ocean foam visible',
+            'desert' => 'endless sand dunes creating flowing patterns, orange and beige tones, dry cracked surface, no vegetation',
+            'forested' => 'dense alien forests covering the surface, dark green patches, strange vegetation patterns',
+            'urban' => 'abandoned industrial structures and ruins, geometric patterns, metallic gray surfaces, urban sprawl',
+            'mixed' => 'diverse, mixed terrain with multiple biomes creating a patchwork surface of different colors',
+            'icy' => 'frozen wasteland covered in ice and snow, white and blue tones, glaciers and ice sheets visible',
         ];
 
         $typeDescriptions = [
-            'tellurique' => 'rocky terrestrial planet with solid surface',
-            'gazeuse' => 'gas giant with swirling atmospheric bands in various colors',
-            'glacée' => 'ice planet completely covered in frozen layers',
-            'désertique' => 'barren desert planet with sand and rock',
-            'océanique' => 'ocean world with water covering most of the surface',
+            'terrestrial' => 'rocky terrestrial planet with solid surface',
+            'gaseous' => 'gas giant with swirling atmospheric bands in various colors',
+            'icy' => 'ice planet completely covered in frozen layers',
+            'desert' => 'barren desert planet with sand and rock',
+            'oceanic' => 'ocean world with water covering most of the surface',
         ];
 
         // Build the visual description based on planet characteristics
@@ -370,15 +370,15 @@ class GeneratePlanetImage implements ShouldQueue, ShouldQueueAfterCommit
 
         // Build color palette based on planet characteristics
         $colorPalette = 'deep blues, dark grays';
-        if ($planet->terrain === 'désertique' || $planet->type === 'désertique') {
+        if ($planet->terrain === 'desert' || $planet->type === 'desert') {
             $colorPalette = 'sandy beige, orange, reddish-brown, tan';
-        } elseif ($planet->temperature === 'chaude') {
+        } elseif ($planet->temperature === 'hot') {
             $colorPalette = 'reddish-orange, deep reds, dark browns';
-        } elseif ($planet->temperature === 'froide' || $planet->terrain === 'glacé' || $planet->type === 'glacée') {
+        } elseif ($planet->temperature === 'cold' || $planet->terrain === 'icy' || $planet->type === 'icy') {
             $colorPalette = 'icy whites, pale blues, silver';
-        } elseif ($planet->terrain === 'océanique' || $planet->type === 'océanique') {
+        } elseif ($planet->terrain === 'oceanic' || $planet->type === 'oceanic') {
             $colorPalette = 'deep blues, turquoise, white';
-        } elseif ($planet->atmosphere === 'toxique') {
+        } elseif ($planet->atmosphere === 'toxic') {
             $colorPalette = 'yellow-green, purple, toxic colors';
         }
 

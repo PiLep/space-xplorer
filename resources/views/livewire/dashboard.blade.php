@@ -1,4 +1,7 @@
-<x-container variant="standard" class="py-8">
+<x-container
+    variant="standard"
+    class="py-8"
+>
     <!-- Terminal Boot Messages (always visible at top) -->
     <x-terminal-boot
         :bootMessages="$bootMessages"
@@ -17,8 +20,14 @@
             <div class="mb-8 font-mono">
                 <x-terminal-prompt command="load_user_session" />
                 @if ($user)
+                    @php
+                        $sessionMessage = '[OK] Session loaded for user: ' . ($user->name ?? 'UNKNOWN');
+                        if ($user->matricule) {
+                            $sessionMessage .= '[' . $user->matricule . ']';
+                        }
+                    @endphp
                     <x-terminal-message
-                        message="[OK] Session loaded for user: {{ $user->name ?? 'UNKNOWN' }}@if($user)[{{ $user->matricule }}]@endif"
+                        :message="$sessionMessage"
                         marginBottom="mb-4"
                     />
                 @endif

@@ -68,7 +68,7 @@
                                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">Tags</dt>
                                 <dd class="flex flex-wrap gap-2">
                                     @foreach($currentResource->tags as $tag)
-                                        <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
+                                        <span wire:key="tag-{{ $tag }}" class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                             {{ $tag }}
                                         </span>
                                     @endforeach

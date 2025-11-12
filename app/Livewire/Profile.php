@@ -10,21 +10,21 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class Profile extends Component
 {
-    public $user = null;
+    public ?array $user = null;
 
-    public $loading = true;
+    public bool $loading = true;
 
-    public $error = null;
+    public ?string $error = null;
 
-    public $showAvatarModal = false;
+    public bool $showAvatarModal = false;
 
-    public $availableAvatars = [];
+    public array $availableAvatars = [];
 
-    public $loadingAvatars = false;
+    public bool $loadingAvatars = false;
 
-    public $selectingAvatar = false;
+    public bool $selectingAvatar = false;
 
-    public $avatarMessage = null;
+    public ?string $avatarMessage = null;
 
     public function mount()
     {

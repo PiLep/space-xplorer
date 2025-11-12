@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Planet;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -9,19 +11,19 @@ use Livewire\Component;
 #[Layout('layouts.app')]
 class Dashboard extends Component
 {
-    public $planet = null;
+    public ?Planet $planet = null;
 
-    public $user = null;
+    public ?User $user = null;
 
-    public $loading = true;
+    public bool $loading = true;
 
-    public $error = null;
+    public ?string $error = null;
 
-    public $terminalBooted = false;
+    public bool $terminalBooted = false;
 
-    public $bootStep = 0;
+    public int $bootStep = 0;
 
-    public $bootMessages = [];
+    public array $bootMessages = [];
 
     public function mount()
     {

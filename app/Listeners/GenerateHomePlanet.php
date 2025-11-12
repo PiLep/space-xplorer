@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\UserRegistered;
 use App\Services\PlanetGeneratorService;
+use App\Services\StarSystemGeneratorService;
 use Illuminate\Support\Facades\Log;
 
 class GenerateHomePlanet
@@ -12,7 +13,8 @@ class GenerateHomePlanet
      * Create the event listener.
      */
     public function __construct(
-        private PlanetGeneratorService $planetGenerator
+        private PlanetGeneratorService $planetGenerator,
+        private StarSystemGeneratorService $starSystemGenerator
     ) {
         //
     }
@@ -34,13 +36,26 @@ class GenerateHomePlanet
         }
 
         try {
-            $planet = $this->planetGenerator->generate();
-            $user->update(['home_planet_id' => $planet->id]);
+            // Générer un système stellaire complet pour la planète d'origine
+            // Chaque joueur démarre dans son propre système (pas de partage entre joueurs)
+            // Le système peut contenir plusieurs planètes, mais appartient uniquement à ce joueur
+            $system = $this->starSystemGenerator->generateSystem();
+
+            // Prendre la première planète du système comme planète d'origine
+            $homePlanet = $system->planets->first();
+
+            if (! $homePlanet) {
+                throw new \RuntimeException('No planet generated in star system');
+            }
+
+            $user->update(['home_planet_id' => $homePlanet->id]);
 
             Log::info('Home planet generated successfully', [
                 'user_id' => $user->id,
-                'planet_id' => $planet->id,
-                'planet_name' => $planet->name,
+                'planet_id' => $homePlanet->id,
+                'planet_name' => $homePlanet->name,
+                'star_system_id' => $system->id,
+                'star_system_name' => $system->name,
             ]);
         } catch (\Exception $e) {
             // Log the error but don't block user registration

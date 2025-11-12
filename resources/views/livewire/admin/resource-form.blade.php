@@ -34,6 +34,7 @@ use Illuminate\Support\Str;
                 <div class="space-y-2 mb-4">
                     @foreach($this->suggestions as $index => $suggestion)
                         <button
+                            wire:key="suggestion-{{ $index }}"
                             type="button"
                             wire:click="useSuggestion({{ $index }})"
                             class="w-full text-left p-3 bg-gray-50 dark:bg-surface-dark border border-gray-200 dark:border-border-dark rounded hover:bg-gray-50 dark:hover:bg-surface-medium transition-colors group"

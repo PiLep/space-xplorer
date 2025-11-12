@@ -4,36 +4,34 @@ namespace App\Livewire;
 
 use App\Services\AuthService;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class LoginTerminal extends Component
 {
-    public $email = '';
+    #[Validate('required|email')]
+    public string $email = '';
 
-    public $password = '';
+    #[Validate('required|string')]
+    public string $password = '';
 
-    public $remember = false;
-
-    public $status = '';
-
-    public $terminalBooted = false;
-
-    public $bootStep = 0;
-
-    public $bootMessages = [];
-
-    protected $rules = [
-        'email' => 'required|email',
-        'password' => 'required|string',
-        'remember' => 'sometimes|boolean',
-    ];
+    #[Validate('sometimes|boolean')]
+    public mixed $remember = false;
 
     protected $messages = [
         'email.required' => 'Email required.',
         'email.email' => 'Invalid email format.',
         'password.required' => 'Password required.',
     ];
+
+    public string $status = '';
+
+    public bool $terminalBooted = false;
+
+    public int $bootStep = 0;
+
+    public array $bootMessages = [];
 
     public function mount()
     {
