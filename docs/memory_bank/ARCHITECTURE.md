@@ -54,9 +54,9 @@ tests/               # Tests unitaires et fonctionnels
 ### Entités principales
 
 - **Users** : Gestion des utilisateurs/joueurs
-- **Planets** : Planètes explorables
-
-*Note : Le modèle de données sera étendu progressivement (systèmes stellaires, objets célestes, etc.)*
+- **StarSystems** : Systèmes stellaires contenant des étoiles et planètes
+- **Planets** : Planètes explorables appartenant à un système stellaire
+- **PlanetProperties** : Propriétés détaillées des planètes (type, taille, température, etc.)
 
 ### Relations
 
@@ -64,7 +64,15 @@ tests/               # Tests unitaires et fonctionnels
   - Un joueur a une planète d'origine (générée aléatoirement à l'inscription)
   - Une planète peut être la planète d'origine de plusieurs joueurs
   - Relation : `user.home_planet_id` → `planets.id`
-  - *Note : Les fonctionnalités d'exploration seront ajoutées progressivement*
+
+- **StarSystems → Planets** : Relation "système contient planètes"
+  - Un système stellaire contient plusieurs planètes (1 à 7 planètes)
+  - Une planète appartient à un système stellaire
+  - Relation : `planets.star_system_id` → `star_systems.id`
+
+- **Planets → PlanetProperties** : Relation "propriétés planétaires"
+  - Une planète a des propriétés détaillées (type, taille, température, etc.)
+  - Relation : `planet_properties.planet_id` → `planets.id`
 
 ### Structure simplifiée
 
@@ -76,10 +84,28 @@ Users
 ├── home_planet_id (ULID - foreign key → planets.id)
 └── [autres champs standards Laravel]
 
+StarSystems
+├── id (ULID - 26 caractères)
+├── name (ex: "Alpha Centauri-42")
+├── x, y, z (coordonnées 3D dans la galaxie)
+├── star_type (yellow_dwarf, red_dwarf, etc.)
+├── planet_count (nombre de planètes)
+├── discovered (boolean)
+└── created_at / updated_at
+
 Planets
 ├── id (ULID - 26 caractères)
 ├── name (généré aléatoirement)
-├── type (type de planète : tellurique, gazeuse, etc.)
+├── star_system_id (ULID - foreign key → star_systems.id)
+├── x, y, z (coordonnées absolues 3D)
+├── orbital_distance, orbital_angle, orbital_inclination (coordonnées orbitales)
+├── image_url, video_url (médias générés)
+└── created_at / updated_at
+
+PlanetProperties
+├── id (ULID - 26 caractères)
+├── planet_id (ULID - foreign key → planets.id)
+├── type (tellurique, gazeuse, glacée, désertique, océanique)
 ├── size (petite, moyenne, grande)
 ├── temperature (froide, tempérée, chaude)
 ├── atmosphere (respirable, toxique, inexistante)
@@ -111,6 +137,290 @@ Planets
 - Utilisation du trait `Illuminate\Database\Eloquent\Concerns\HasUlids` dans les modèles
 - Migration avec `$table->ulid('id')->primary()` au lieu de `$table->id()`
 - Les relations Eloquent fonctionnent automatiquement avec les ULIDs
+
+## Organisation spatiale : Systèmes stellaires et planètes
+
+### Architecture spatiale
+
+L'univers de Space Xplorer est organisé en **systèmes stellaires** contenant des **planètes**. Chaque système stellaire possède une étoile centrale autour de laquelle orbitent plusieurs planètes.
+
+### Hiérarchie spatiale
+
+```
+Galaxie (espace 3D)
+  └── Systèmes stellaires (StarSystem)
+        ├── Étoile centrale (star_type)
+        └── Planètes (Planet)
+              └── Propriétés planétaires (PlanetProperty)
+```
+
+### Systèmes stellaires (StarSystem)
+
+**Modèle** : `App\Models\StarSystem`
+
+**Structure de la table `star_systems`** :
+
+```sql
+star_systems
+├── id (ULID) - Identifiant unique
+├── name (string) - Nom du système (ex: "Alpha Centauri-42")
+├── x (decimal 15,2) - Position X dans la galaxie
+├── y (decimal 15,2) - Position Y dans la galaxie
+├── z (decimal 15,2) - Position Z dans la galaxie
+├── star_type (string, nullable) - Type d'étoile
+├── planet_count (integer) - Nombre de planètes dans le système
+├── discovered (boolean) - Système découvert ou non
+└── timestamps
+```
+
+**Types d'étoiles** (probabilités définies dans `StarSystemGeneratorService`) :
+- `yellow_dwarf` : 35% (comme le Soleil)
+- `red_dwarf` : 40% (très commun)
+- `orange_dwarf` : 15% (type K)
+- `red_giant` : 5% (étoiles évoluées)
+- `blue_giant` : 3% (rare)
+- `white_dwarf` : 2% (très rare)
+
+**Distribution du nombre de planètes par système** :
+- 1 planète : 10%
+- 2 planètes : 15%
+- 3 planètes : 25%
+- 4 planètes : 25%
+- 5 planètes : 15%
+- 6 planètes : 8%
+- 7 planètes : 2%
+
+**Coordonnées spatiales** :
+- Les systèmes stellaires sont positionnés dans un espace 3D avec des coordonnées `(x, y, z)`
+- Distance minimale entre systèmes : 50 unités (configurable dans `config/star-systems.php`)
+- Rayon d'exploration par défaut : 200 unités
+- Coordonnées générées aléatoirement dans une sphère (distance minimale depuis l'origine : 100 unités)
+
+**Relations** :
+- `planets()` : HasMany → Toutes les planètes du système
+
+**Méthodes utilitaires** :
+- `distanceTo(StarSystem $other): float` - Calcule la distance à un autre système
+- `nearby(float $x, float $y, float $z, float $radius): Collection` - Trouve les systèmes proches
+
+### Planètes (Planet)
+
+**Modèle** : `App\Models\Planet`
+
+**Structure de la table `planets`** :
+
+```sql
+planets
+├── id (ULID) - Identifiant unique
+├── name (string) - Nom de la planète (généré aléatoirement)
+├── image_url (string, nullable) - URL de l'image générée
+├── video_url (string, nullable) - URL de la vidéo générée
+├── image_generating (boolean) - Image en cours de génération
+├── video_generating (boolean) - Vidéo en cours de génération
+├── star_system_id (ULID, nullable) - Système stellaire parent (FK)
+├── x (decimal 15,2, nullable) - Position X absolue dans la galaxie
+├── y (decimal 15,2, nullable) - Position Y absolue dans la galaxie
+├── z (decimal 15,2, nullable) - Position Z absolue dans la galaxie
+├── orbital_distance (decimal 10,2, nullable) - Distance à l'étoile (unités arbitraires)
+├── orbital_angle (decimal 8,4, nullable) - Angle orbital (0-360°)
+├── orbital_inclination (decimal 6,2, nullable) - Inclinaison orbitale (-90 à +90°)
+└── timestamps
+```
+
+**Propriétés planétaires** (table séparée `planet_properties`) :
+- `type` : Type de planète (tellurique, gazeuse, glacée, désertique, océanique)
+- `size` : Taille (petite, moyenne, grande)
+- `temperature` : Température (froide, tempérée, chaude)
+- `atmosphere` : Atmosphère (respirable, toxique, inexistante)
+- `terrain` : Terrain (rocheux, océanique, désertique, forestier, urbain, mixte, glacé)
+- `resources` : Ressources (abondantes, modérées, rares)
+- `description` : Description textuelle générée
+
+**Coordonnées spatiales** :
+
+Les planètes utilisent un système de coordonnées à deux niveaux :
+
+1. **Coordonnées orbitales** (relatives au système) :
+   - `orbital_distance` : Distance à l'étoile centrale (5.0 à 50.0 unités)
+   - `orbital_angle` : Angle dans le plan orbital (0-360°)
+   - `orbital_inclination` : Inclinaison du plan orbital (-15° à +15°)
+
+2. **Coordonnées absolues** (dans la galaxie) :
+   - `x`, `y`, `z` : Position 3D absolue calculée depuis les coordonnées orbitales et la position du système
+   - Calcul : `position_absolue = position_système + conversion_orbitales_vers_3D(orbital_distance, orbital_angle, orbital_inclination)`
+
+**Conversion orbitales → absolues** :
+
+```php
+// Formule de conversion (dans StarSystemGeneratorService)
+$x = $orbitalDistance * cos($angleRad);
+$y = $orbitalDistance * sin($angleRad) * cos($inclinationRad);
+$z = $orbitalDistance * sin($angleRad) * sin($inclinationRad);
+
+// Position absolue
+$absoluteX = $systemX + $x;
+$absoluteY = $systemY + $y;
+$absoluteZ = $systemZ + $z;
+```
+
+**Relations** :
+- `starSystem()` : BelongsTo → Système stellaire parent
+- `users()` : HasMany → Utilisateurs ayant cette planète comme planète d'origine
+- `properties()` : HasOne → Propriétés planétaires détaillées
+
+**Méthodes utilitaires** :
+- `distanceTo(Planet $other): float` - Calcule la distance à une autre planète
+- `travelTimeTo(Planet $other, float $speed = 1.0): float` - Calcule le temps de voyage (en heures)
+- `nearby(float $x, float $y, float $z, float $radius): Collection` - Trouve les planètes proches
+- `hasImage(): bool` - Vérifie si l'image est disponible
+- `hasVideo(): bool` - Vérifie si la vidéo est disponible
+
+**Attributs calculés** (via `PlanetProperty`) :
+- `type`, `size`, `temperature`, `atmosphere`, `terrain`, `resources`, `description`
+
+### Génération des systèmes stellaires
+
+**Service** : `App\Services\StarSystemGeneratorService`
+
+**Méthode principale** : `generateSystem(?float $x = null, ?float $y = null, ?float $z = null, float $minDistance = 100): StarSystem`
+
+**Processus de génération** :
+
+1. **Génération des coordonnées** :
+   - Si non fournies, génère des coordonnées aléatoires dans une sphère
+   - Distance minimale depuis l'origine : 100 unités (par défaut)
+
+2. **Sélection du type d'étoile** :
+   - Sélection pondérée selon les probabilités définies
+
+3. **Génération du nom** :
+   - Format : `"{prefix} {suffix}-{number}"`
+   - Exemples : "Alpha Centauri-42", "Beta Orionis-789"
+
+4. **Création du système** :
+   - Création de l'entité `StarSystem` avec `discovered = false` et `planet_count = 0`
+
+5. **Génération des planètes** :
+   - Sélection du nombre de planètes selon la distribution
+   - Pour chaque planète :
+     - Génération via `PlanetGeneratorService`
+     - Calcul des coordonnées orbitales (distance, angle, inclinaison)
+     - Conversion en coordonnées absolues
+     - Assignation au système
+
+6. **Mise à jour du compteur** :
+   - Mise à jour de `planet_count` avec le nombre réel de planètes
+
+**Génération de systèmes proches** :
+
+`generateNearbySystem(float $x, float $y, float $z, float $minDistance = 50, float $maxDistance = 200): StarSystem`
+
+- Génère un système dans un rayon autour d'une position donnée
+- Utilisé pour l'exploration (génération de systèmes découverts)
+
+### Planètes d'origine (Home Planets)
+
+**Principe** : Chaque joueur possède une planète d'origine unique générée à l'inscription.
+
+**Organisation** :
+- Chaque planète d'origine obtient son **propre système stellaire dédié**
+- Un système = une planète d'origine (pas de partage entre joueurs)
+- Le système est créé automatiquement lors de la génération de la planète d'origine
+
+**Flux** :
+1. Inscription utilisateur → Événement `UserRegistered`
+2. Listener `GenerateHomePlanet` :
+   - Génère un système stellaire complet
+   - Supprime les planètes générées automatiquement
+   - Génère une planète d'origine unique
+   - Assigne la planète au système (position orbitale : distance 10.0, angle 0°, inclinaison 0°)
+   - Met à jour `planet_count = 1`
+   - Assigne la planète au joueur (`home_planet_id`)
+
+**Migration des planètes existantes** :
+
+Commande Artisan : `php artisan planets:migrate-coordinates`
+
+**Options** :
+- `--force` : Force la migration même si les planètes ont déjà des coordonnées
+- `--planets-per-system=N` : Nombre de planètes par système lors du regroupement (défaut: 3)
+- `--assign-existing` : Assigner les planètes aux systèmes existants
+- `--isolate` : Créer un système par planète (mode isolé)
+
+**Modes de migration** :
+
+1. **Mode par défaut** (regroupement) :
+   - Regroupe les planètes en systèmes de N planètes
+   - Ne regroupe PAS dans les systèmes des planètes d'origine (évite le partage entre joueurs)
+
+2. **Mode assignation** (`--assign-existing`) :
+   - Assigner les planètes aux systèmes existants (max 7 planètes par système)
+   - Crée de nouveaux systèmes si nécessaire
+
+3. **Mode isolé** (`--isolate`) :
+   - Crée un système par planète (une planète = un système)
+
+### Recherches spatiales
+
+**Recherche de systèmes proches** :
+
+```php
+StarSystem::nearby($x, $y, $z, $radius);
+```
+
+- Utilise un index spatial sur `(x, y, z)`
+- Filtre avec `whereBetween` puis calcule la distance réelle
+- Retourne les systèmes dans le rayon spécifié
+
+**Recherche de planètes proches** :
+
+```php
+Planet::nearby($x, $y, $z, $radius);
+```
+
+- Même principe que pour les systèmes
+- Utilise l'index spatial sur `(x, y, z)`
+
+**Calcul de distance** :
+
+- Formule euclidienne 3D : `sqrt((x1-x2)² + (y1-y2)² + (z1-z2)²)`
+- Implémentée dans les méthodes `distanceTo()` des modèles
+
+### Configuration
+
+**Fichiers de configuration** :
+
+- `config/star-systems.php` :
+  - `generation.min_distance_between_systems` : 50.0
+  - `generation.exploration_radius` : 200.0
+  - `generation.max_nearby_systems` : 10
+  - `travel.base_speed` : 1.0 (unités par heure)
+  - `travel.speed_multiplier` : Multiplicateurs selon le type d'étoile
+
+- `config/planets.php` :
+  - Types de planètes avec probabilités et caractéristiques
+  - Préfixes et suffixes pour la génération de noms
+
+### Index de performance
+
+**Index spatiaux** :
+- `star_systems` : Index sur `(x, y, z)` et `discovered`
+- `planets` : Index sur `(x, y, z)` et `star_system_id`
+
+**Optimisations** :
+- Les recherches spatiales utilisent `whereBetween` pour filtrer rapidement
+- Le calcul de distance exacte se fait ensuite en mémoire sur le résultat filtré
+- Le compteur `planet_count` évite de compter les planètes à chaque requête
+
+### Évolutions futures
+
+**Fonctionnalités prévues** :
+- Exploration de systèmes stellaires (découverte progressive)
+- Voyage entre planètes (calcul de temps de trajet basé sur la distance)
+- Systèmes multi-étoiles (binaires, ternaires)
+- Objets célestes additionnels (astéroïdes, lunes, stations spatiales)
+- Animation orbitale (mouvement des planètes autour de l'étoile)
+- Zones d'influence des systèmes stellaires
 
 ## API endpoints
 
@@ -485,22 +795,45 @@ Lors de la réinitialisation de mot de passe réussie :
 
 ### Architecture de génération
 
-**Principe** : Système de génération procédurale avec pool de types pondérés
+**Principe** : Système de génération procédurale avec pool de types pondérés, intégré dans le système de systèmes stellaires.
 
 **Composants** :
-- **Service de génération** : `PlanetGeneratorService` dans `app/Services/`
+- **Service de génération de planètes** : `PlanetGeneratorService` dans `app/Services/`
+- **Service de génération de systèmes** : `StarSystemGeneratorService` dans `app/Services/`
 - **Configuration des types** : Pool de types de planètes avec poids de probabilité dans `config/planets.php`
 - **Randomisation** : Sélection aléatoire pondérée du type, puis génération des caractéristiques selon les poids du type
 - **Gestion d'unicité** : Mécanisme de vérification d'unicité du nom avec gestion des collisions (max 10 tentatives, puis ajout d'un identifiant unique)
 
-**Flux technique** :
-1. Listener `GenerateHomePlanet` appelle `PlanetGeneratorService::generate()`
-2. Service sélectionne un type selon les poids définis dans `config/planets.php`
-3. Service génère les caractéristiques selon les distributions du type
-4. Service génère un nom unique (avec gestion des collisions si nécessaire)
-5. Service génère une description textuelle à partir des caractéristiques combinées
-6. Service crée l'entité `Planet` en base de données
-7. Planète assignée au joueur (`home_planet_id`)
+**Flux technique pour planète d'origine** :
+1. Listener `GenerateHomePlanet` appelle `StarSystemGeneratorService::generateSystem()`
+2. Service génère un système stellaire complet avec ses planètes
+3. Service supprime les planètes générées automatiquement
+4. Service génère une planète d'origine unique via `PlanetGeneratorService::generate()`
+5. Service calcule les coordonnées orbitales (distance 10.0, angle 0°, inclinaison 0°)
+6. Service convertit les coordonnées orbitales en coordonnées absolues 3D
+7. Service assigne la planète au système (`star_system_id`, coordonnées)
+8. Service met à jour `planet_count = 1` du système
+9. Planète assignée au joueur (`home_planet_id`)
+
+**Flux technique pour planètes dans un système** :
+1. `StarSystemGeneratorService::generateSystem()` sélectionne le nombre de planètes (1-7)
+2. Pour chaque planète :
+   - Appel de `PlanetGeneratorService::generate()`
+   - Sélection d'un type selon les poids définis dans `config/planets.php`
+   - Génération des caractéristiques selon les distributions du type
+   - Génération d'un nom unique (avec gestion des collisions si nécessaire)
+   - Génération d'une description textuelle à partir des caractéristiques combinées
+   - Calcul des coordonnées orbitales (distance, angle, inclinaison)
+   - Conversion en coordonnées absolues 3D
+   - Création de l'entité `Planet` avec assignation au système
+
+**Génération de planète isolée** (`PlanetGeneratorService::generate()`) :
+1. Service sélectionne un type selon les poids définis dans `config/planets.php`
+2. Service génère les caractéristiques selon les distributions du type
+3. Service génère un nom unique (avec gestion des collisions si nécessaire)
+4. Service génère une description textuelle à partir des caractéristiques combinées
+5. Service crée l'entité `Planet` en base de données (sans coordonnées ni système)
+6. Les coordonnées et l'assignation au système sont gérées séparément
 
 **Gestion d'erreurs** :
 - Le listener `GenerateHomePlanet` utilise un try-catch pour gérer les erreurs
@@ -508,6 +841,11 @@ Lors de la réinitialisation de mot de passe réussie :
 - `home_planet_id` reste null en cas d'erreur (peut être géré plus tard)
 
 **Stockage** : Configuration des types et poids dans `config/planets.php` (fichier de configuration Laravel standard)
+
+**Intégration avec systèmes stellaires** :
+- Les planètes sont toujours générées dans le contexte d'un système stellaire
+- Les coordonnées spatiales (orbitales et absolues) sont calculées automatiquement
+- Voir la section "Organisation spatiale" pour plus de détails sur les systèmes stellaires
 
 *Note : Les détails métier (types de planètes, caractéristiques) sont documentés dans PROJECT_BRIEF.md*
 
