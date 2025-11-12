@@ -153,36 +153,125 @@ class TranslatePlanets extends Command
                 }
 
                 try {
-                    // Translate French values to English
-                    $typeEn = self::TYPE_TRANSLATIONS[$planet->type] ?? $planet->type;
-                    $sizeEn = self::SIZE_TRANSLATIONS[$planet->size] ?? $planet->size;
-                    $temperatureEn = self::TEMPERATURE_TRANSLATIONS[$planet->temperature] ?? $planet->temperature;
-                    $atmosphereEn = self::ATMOSPHERE_TRANSLATIONS[$planet->atmosphere] ?? $planet->atmosphere;
-                    $terrainEn = self::TERRAIN_TRANSLATIONS[$planet->terrain] ?? $planet->terrain;
-                    $resourcesEn = self::RESOURCES_TRANSLATIONS[$planet->resources] ?? $planet->resources;
-                    $descriptionEn = $planet->description ? $this->translateDescription($planet->description) : null;
+                    // Get raw values from database columns (not from accessors that read from PlanetProperty)
+                    $typeFr = trim($planet->getRawOriginal('type') ?? '');
+                    $sizeFr = trim($planet->getRawOriginal('size') ?? '');
+                    $temperatureFr = trim($planet->getRawOriginal('temperature') ?? '');
+                    $atmosphereFr = trim($planet->getRawOriginal('atmosphere') ?? '');
+                    $terrainFr = trim($planet->getRawOriginal('terrain') ?? '');
+                    $resourcesFr = trim($planet->getRawOriginal('resources') ?? '');
+                    $descriptionFr = $planet->getRawOriginal('description');
+
+                    // Check if required fields are null or empty
+                    $missingFields = [];
+                    if (empty($typeFr)) {
+                        $missingFields[] = 'type';
+                    }
+                    if (empty($sizeFr)) {
+                        $missingFields[] = 'size';
+                    }
+                    if (empty($temperatureFr)) {
+                        $missingFields[] = 'temperature';
+                    }
+                    if (empty($atmosphereFr)) {
+                        $missingFields[] = 'atmosphere';
+                    }
+                    if (empty($terrainFr)) {
+                        $missingFields[] = 'terrain';
+                    }
+                    if (empty($resourcesFr)) {
+                        $missingFields[] = 'resources';
+                    }
+
+                    if (! empty($missingFields)) {
+                        $failed++;
+                        $this->newLine();
+                        $this->warn("Skipping planet {$planet->id} ({$planet->name}): Missing required fields: ".implode(', ', $missingFields));
+                        $bar->advance();
+
+                        continue;
+                    }
+
+                    // Translate French values to English (or keep if already in English)
+                    $typeEn = self::TYPE_TRANSLATIONS[$typeFr] ?? $typeFr;
+                    $sizeEn = self::SIZE_TRANSLATIONS[$sizeFr] ?? $sizeFr;
+                    $temperatureEn = self::TEMPERATURE_TRANSLATIONS[$temperatureFr] ?? $temperatureFr;
+                    $atmosphereEn = self::ATMOSPHERE_TRANSLATIONS[$atmosphereFr] ?? $atmosphereFr;
+                    $terrainEn = self::TERRAIN_TRANSLATIONS[$terrainFr] ?? $terrainFr;
+                    $resourcesEn = self::RESOURCES_TRANSLATIONS[$resourcesFr] ?? $resourcesFr;
+                    $descriptionEn = $descriptionFr ? $this->translateDescription($descriptionFr) : null;
+
+                    // Normalize translated values
+                    $typeEn = trim($typeEn);
+                    $sizeEn = trim($sizeEn);
+                    $temperatureEn = trim($temperatureEn);
+                    $atmosphereEn = trim($atmosphereEn);
+                    $terrainEn = trim($terrainEn);
+                    $resourcesEn = trim($resourcesEn);
+
+                    // Validate that translated values are not null or empty
+                    $invalidFields = [];
+                    if (empty($typeEn)) {
+                        $invalidFields[] = "type (original: '{$typeFr}')";
+                    }
+                    if (empty($sizeEn)) {
+                        $invalidFields[] = "size (original: '{$sizeFr}')";
+                    }
+                    if (empty($temperatureEn)) {
+                        $invalidFields[] = "temperature (original: '{$temperatureFr}')";
+                    }
+                    if (empty($atmosphereEn)) {
+                        $invalidFields[] = "atmosphere (original: '{$atmosphereFr}')";
+                    }
+                    if (empty($terrainEn)) {
+                        $invalidFields[] = "terrain (original: '{$terrainFr}')";
+                    }
+                    if (empty($resourcesEn)) {
+                        $invalidFields[] = "resources (original: '{$resourcesFr}')";
+                    }
+
+                    if (! empty($invalidFields)) {
+                        $failed++;
+                        $this->newLine();
+                        $this->warn("Skipping planet {$planet->id} ({$planet->name}): Invalid or untranslatable values: ".implode(', ', $invalidFields));
+                        $bar->advance();
+
+                        continue;
+                    }
 
                     if (! $dryRun) {
                         // Create or update properties
-                        PlanetProperty::updateOrCreate(
-                            ['planet_id' => $planet->id],
-                            [
-                                'type' => $typeEn,
-                                'size' => $sizeEn,
-                                'temperature' => $temperatureEn,
-                                'atmosphere' => $atmosphereEn,
-                                'terrain' => $terrainEn,
-                                'resources' => $resourcesEn,
-                                'description' => $descriptionEn,
-                            ]
-                        );
+                        try {
+                            PlanetProperty::updateOrCreate(
+                                ['planet_id' => $planet->id],
+                                [
+                                    'type' => $typeEn,
+                                    'size' => $sizeEn,
+                                    'temperature' => $temperatureEn,
+                                    'atmosphere' => $atmosphereEn,
+                                    'terrain' => $terrainEn,
+                                    'resources' => $resourcesEn,
+                                    'description' => $descriptionEn,
+                                ]
+                            );
+                        } catch (\Exception $e) {
+                            $failed++;
+                            $this->newLine();
+                            $this->error("Failed to create properties for planet {$planet->id} ({$planet->name}): {$e->getMessage()}");
+                            $this->line("  Original values: type='{$typeFr}', size='{$sizeFr}', temperature='{$temperatureFr}', atmosphere='{$atmosphereFr}', terrain='{$terrainFr}', resources='{$resourcesFr}'");
+                            $this->line("  Translated values: type='{$typeEn}', size='{$sizeEn}', temperature='{$temperatureEn}', atmosphere='{$atmosphereEn}', terrain='{$terrainEn}', resources='{$resourcesEn}'");
+                            $bar->advance();
+
+                            continue;
+                        }
                     }
 
                     $created++;
                 } catch (\Exception $e) {
                     $failed++;
                     $this->newLine();
-                    $this->warn("Failed to create properties for planet {$planet->id} ({$planet->name}): {$e->getMessage()}");
+                    $this->error("Unexpected error processing planet {$planet->id} ({$planet->name}): {$e->getMessage()}");
+                    $this->line("  Stack trace: {$e->getTraceAsString()}");
                 }
 
                 $bar->advance();
