@@ -18,7 +18,7 @@
                 <x-terminal-prompt command="load_user_session" />
                 @if ($user)
                     <x-terminal-message
-                        message="[OK] Session loaded for user: {{ $user->name ?? 'UNKNOWN' }}"
+                        message="[OK] Session loaded for user: {{ $user->name ?? 'UNKNOWN' }}@if($user)[{{ $user->matricule }}]@endif"
                         marginBottom="mb-4"
                     />
                 @endif
@@ -35,31 +35,6 @@
             @elseif ($planet)
                 <!-- Planet Card -->
                 <x-planet-card :planet="$planet" />
-
-                <!-- Action Commands -->
-                <div class="mt-8 font-mono">
-                    <x-terminal-message
-                        message="[READY] System ready for commands"
-                        marginBottom="mb-4"
-                    />
-                    <x-button-group>
-                        <x-button
-                            variant="primary"
-                            size="lg"
-                            terminal
-                        >
-                            > EXPLORE_PLANETS
-                        </x-button>
-                        <x-button
-                            href="{{ route('profile') }}"
-                            variant="ghost"
-                            size="lg"
-                            terminal
-                        >
-                            > VIEW_PROFILE
-                        </x-button>
-                    </x-button-group>
-                </div>
             @endif
         </div>
     @endif

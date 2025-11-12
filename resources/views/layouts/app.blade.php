@@ -37,7 +37,7 @@
         <!-- Terminal Command Bar -->
         @unless(request()->routeIs('home'))
         <div class="fixed bottom-0 left-0 right-0 bg-surface-dark dark:bg-surface-dark border-t border-border-dark dark:border-border-dark font-mono z-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+            <div class="w-full px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex items-center justify-between gap-2">
                     <div class="flex items-center gap-3">
                         <a href="{{ route('home') }}" class="flex-shrink-0">
@@ -45,16 +45,16 @@
                         </a>
                         <span class="text-gray-500 dark:text-gray-500 text-sm">
                             @auth
-                                @php
-                                    $user = auth()->user();
-                                    if (!$user->relationLoaded('homePlanet')) {
-                                        $user->load('homePlanet');
-                                    }
-                                    $planetName = $user->homePlanet?->name ?? 'STELLAR';
-                                    $userName = str_replace(' ', '_', strtoupper($user->name));
-                                    $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
-                                @endphp
-                                <span class="text-warning dark:text-warning">{{ $userName }}</span><span class="text-gray-500 dark:text-gray-500">@</span><span class="text-space-secondary dark:text-space-secondary">{{ $planetNameUpper }}</span><span class="text-gray-500 dark:text-gray-500">:~$</span>
+                            @php
+                                $user = auth()->user();
+                                if (!$user->relationLoaded('homePlanet')) {
+                                    $user->load('homePlanet');
+                                }
+                                $planetName = $user->homePlanet?->name ?? 'STELLAR';
+                                $userName = str_replace(' ', '_', strtoupper($user->name));
+                                $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
+                            @endphp
+                            <span class="text-warning dark:text-warning">{{ $userName }}</span><span class="text-gray-400 dark:text-gray-400">[{{ $user->matricule }}]</span><span class="text-gray-500 dark:text-gray-500">@</span><span class="text-space-secondary dark:text-space-secondary">{{ $planetNameUpper }}</span><span class="text-gray-500 dark:text-gray-500">:~$</span>
                             @else
                                 SYSTEM@STELLAR:~$
                             @endauth
@@ -65,7 +65,7 @@
                                     > DASHBOARD
                                 </a>
                                 <a href="{{ route('profile') }}" wire:navigate class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
-                                    > PROFILE
+                                    > EMPLOYEE_STATUS
                                 </a>
                             @else
                                 <a href="{{ route('login') }}" wire:navigate class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
@@ -82,6 +82,11 @@
                             {{ $bottomBarActions }}
                         @else
                             @auth
+                                @if(auth()->user()->is_super_admin)
+                                    <a href="{{ route('admin.access') }}" class="text-space-secondary dark:text-space-secondary hover:text-space-secondary-light dark:hover:text-space-secondary-light transition-colors cursor-pointer px-2 py-1">
+                                        > ADMIN
+                                    </a>
+                                @endif
                                 <form method="POST" action="{{ route('logout') }}" class="inline relative z-50">
                                     @csrf
                                     <button type="submit" class="text-error dark:text-error hover:text-error-light dark:hover:text-error-light transition-colors cursor-pointer relative z-50 px-2 py-1">

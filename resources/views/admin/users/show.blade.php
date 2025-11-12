@@ -22,7 +22,7 @@
                 </div>
                 <div>
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Name</dt>
-                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ $user->name }}</dd>
+                    <dd class="mt-1 text-sm text-gray-900 dark:text-white">{{ $user->name }}<span class="text-gray-400 dark:text-gray-400 ml-2">[{{ $user->matricule }}]</span></dd>
                 </div>
                 <div>
                     <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Email</dt>
@@ -64,7 +64,7 @@
                     <div class="sm:col-span-2">
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Avatar</dt>
                         <dd class="mt-1">
-                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }}" class="h-24 w-24 rounded-full object-cover">
+                            <img src="{{ $user->avatar_url }}" alt="{{ $user->name }} [{{ $user->matricule }}]" class="h-24 w-24 rounded-full object-cover">
                         </dd>
                     </div>
                 @endif

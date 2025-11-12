@@ -93,10 +93,10 @@
                         <!-- User Info -->
                         <div class="flex-1">
                             <h2
-                                class="dark:text-glow-subtle mb-2 font-mono text-3xl font-bold text-gray-900 dark:text-white">
-                                {{ strtoupper($user['name']) }}</h2>
+                                class="dark:text-glow-subtle mb-2 font-mono text-3xl font-bold text-gray-900 dark:text-white flex items-center justify-between">
+                                <span>{{ strtoupper($user['name']) }}</span><span class="text-gray-400 dark:text-gray-400">{{ $user['matricule'] }}</span></h2>
                             <p class="font-mono text-lg uppercase tracking-wider text-gray-600 dark:text-gray-400">
-                                USER_PROFILE</p>
+                                EMPLOYEE_STATUS</p>
                         </div>
                     </div>
                 </div>
@@ -118,27 +118,26 @@
                         class="dark:text-glow-subtle mb-6 font-mono text-xl font-semibold text-gray-900 dark:text-white">
                         SYSTEM_DATA</h3>
                     <div class="space-y-3 font-mono">
-                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                        <div class="flex items-baseline pb-2">
                             <span
                                 class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >NAME</span>
                             <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['name'] }}</span>
                         </div>
-                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                        <div class="flex items-baseline pb-2">
+                            <span
+                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                            >MATRICULE</span>
+                            <span class="text-space-primary dark:text-space-primary flex-1 font-mono">{{ $user['matricule'] }}</span>
+                        </div>
+                        <div class="flex items-baseline pb-2">
                             <span
                                 class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >EMAIL</span>
                             <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['email'] }}</span>
                         </div>
-                        <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
-                            <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
-                            >USER_ID</span>
-                            <span
-                                class="text-space-primary dark:text-space-primary flex-1 font-mono text-sm">{{ $user['id'] }}</span>
-                        </div>
                         @if ($user['home_planet_id'])
-                            <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                            <div class="flex items-baseline pb-2">
                                 <span
                                     class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                                 >HOME_PLANET</span>

@@ -13,7 +13,7 @@
             $planetName = $user->homePlanet?->name ?? 'STELLAR';
             $userName = str_replace(' ', '_', strtoupper($user->name));
             $planetNameUpper = str_replace(' ', '_', strtoupper($planetName));
-            $prompt = $userName . '@' . $planetNameUpper . ':~$';
+            $prompt = $userName . '[' . $user->matricule . ']@' . $planetNameUpper . ':~$';
         } else {
             $prompt = 'SYSTEM@STELLAR:~$';
         }
