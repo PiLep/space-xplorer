@@ -13,6 +13,11 @@ Route::middleware('guest:admin')->prefix('admin')->group(function () {
         ->middleware('throttle:5,1'); // 5 login attempts per minute
 });
 
+// Access admin from web guard (for super admins)
+Route::middleware('auth:web')->prefix('admin')->group(function () {
+    Route::get('/access', [AuthController::class, 'accessFromWeb'])->name('admin.access');
+});
+
 // Protected admin routes
 Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard

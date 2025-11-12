@@ -50,6 +50,38 @@ class AdminAuthService
     }
 
     /**
+     * Authenticate a web user with admin guard if they are super admin.
+     * This allows super admins logged in via web guard to access admin panel.
+     */
+    public function authenticateFromWeb(): ?User
+    {
+        $user = Auth::guard('web')->user();
+
+        if (! $user) {
+            return null;
+        }
+
+        // Check if user has super admin flag
+        if (! $user->is_super_admin) {
+            return null;
+        }
+
+        // Check if user email is in whitelist
+        $whitelist = config('admin.email_whitelist', '');
+        $allowedEmails = array_map('trim', explode(',', $whitelist));
+        $allowedEmails = array_filter($allowedEmails); // Remove empty values
+
+        if (! empty($allowedEmails) && ! in_array($user->email, $allowedEmails)) {
+            return null;
+        }
+
+        // Authenticate user with admin guard
+        Auth::guard('admin')->login($user);
+
+        return $user;
+    }
+
+    /**
      * Logout admin user.
      */
     public function logout(): void

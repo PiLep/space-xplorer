@@ -28,7 +28,7 @@
                     {{ $user->id }}
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
-                    {{ $user->name }}
+                    {{ $user->name }}<span class="text-gray-400 dark:text-gray-400 ml-2">[{{ $user->matricule }}]</span>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                     {{ $user->email }}

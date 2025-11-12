@@ -165,6 +165,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's matricule (first 5 characters of ID in uppercase).
+     *
+     * @return string The matricule code
+     */
+    protected function matricule(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => strtoupper(substr((string) $this->id, 0, 5))
+        );
+    }
+
+    /**
      * Check if user avatar is available (not generating and URL exists).
      */
     public function hasAvatar(): bool

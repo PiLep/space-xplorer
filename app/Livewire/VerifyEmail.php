@@ -81,7 +81,7 @@ class VerifyEmail extends Component
             // Check if email is already verified
             if ($user->hasVerifiedEmail()) {
                 $this->isVerifying = false;
-                session()->flash('success', 'Security clearance already active. Welcome back, '.$user->name.'!');
+                session()->flash('success', 'Security clearance already active. Welcome back, ' . $user->name . ' [' . $user->matricule . ']!');
 
                 return $this->redirect(route('dashboard'), navigate: true);
             }
@@ -110,7 +110,7 @@ class VerifyEmail extends Component
             if (! $isValid) {
                 $this->isVerifying = false;
                 $attemptsRemaining = $this->getAttemptsRemainingProperty();
-                $this->status = '[AUTH_FAILURE] Invalid security clearance code. Authentication rejected by STELLAR_CORP_MEGA_INC security systems. '.$attemptsRemaining.' attempts remaining before lockout.';
+                $this->status = '[AUTH_FAILURE] Invalid security clearance code. Authentication rejected by STELLAR_CORP_MEGA_INC security systems. ' . $attemptsRemaining . ' attempts remaining before lockout.';
                 $this->addError('code', 'Clearance code invalid. Verify and retry.');
                 $this->code = '';
 
@@ -118,7 +118,7 @@ class VerifyEmail extends Component
             }
 
             // Success - email verified
-            session()->flash('success', 'Security clearance granted. Account activated. Welcome to STELLAR_CORP_MEGA_INC, '.$user->name.'!');
+            session()->flash('success', 'Security clearance granted. Account activated. Welcome to STELLAR_CORP_MEGA_INC, ' . $user->name . ' [' . $user->matricule . ']!');
             $this->code = '';
 
             // Redirect to dashboard
@@ -140,7 +140,7 @@ class VerifyEmail extends Component
             // Check if user can resend
             if (! $user->canResendVerificationCode()) {
                 $cooldown = $this->getResendCooldownProperty();
-                $this->status = '[RATE_LIMIT] Anti-fraud protocol active. New token request available in '.$cooldown.' seconds.';
+                $this->status = '[RATE_LIMIT] Anti-fraud protocol active. New token request available in ' . $cooldown . ' seconds.';
 
                 return;
             }
@@ -150,7 +150,7 @@ class VerifyEmail extends Component
             $this->status = '[SUCCESS] New security clearance token dispatched to corporate email address. Check your inbox.';
             $this->code = '';
         } catch (EmailVerificationException $e) {
-            $this->status = '[ERROR] '.$e->getMessage();
+            $this->status = '[ERROR] ' . $e->getMessage();
             $this->addError('code', $e->getMessage());
         } catch (\Exception $e) {
             $this->status = '[SYSTEM_ERROR] Failed to dispatch security token. STELLAR_CORP_MEGA_INC communication systems unavailable. Retry later.';
@@ -200,9 +200,9 @@ class VerifyEmail extends Component
         $domain = $parts[1];
 
         // Mask local part: show first character, mask the rest
-        $maskedLocal = substr($local, 0, 1).str_repeat('*', max(1, strlen($local) - 1));
+        $maskedLocal = substr($local, 0, 1) . str_repeat('*', max(1, strlen($local) - 1));
 
-        return $maskedLocal.'@'.$domain;
+        return $maskedLocal . '@' . $domain;
     }
 
     public function updateCooldown()

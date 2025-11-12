@@ -48,6 +48,22 @@ class AuthController extends Controller
     }
 
     /**
+     * Handle admin access from web guard.
+     * Authenticates super admin users logged in via web guard with admin guard.
+     */
+    public function accessFromWeb(): RedirectResponse
+    {
+        $user = $this->adminAuthService->authenticateFromWeb();
+
+        if (! $user) {
+            return redirect()->route('home')
+                ->withErrors(['admin' => 'You do not have admin privileges.']);
+        }
+
+        return redirect()->route('admin.dashboard');
+    }
+
+    /**
      * Handle admin logout.
      */
     public function logout(): RedirectResponse
