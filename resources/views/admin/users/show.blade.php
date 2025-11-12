@@ -70,6 +70,9 @@
                 @endif
             </dl>
         </div>
+        <div class="px-4 py-4 sm:px-6 border-t border-border-dark dark:border-border-dark flex justify-end gap-4">
+            <livewire:admin.user-delete-button :user="$user" />
+        </div>
     </div>
 @endsection
 

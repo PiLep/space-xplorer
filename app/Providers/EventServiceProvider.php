@@ -8,9 +8,11 @@ use App\Events\PlanetCreated;
 use App\Events\PlanetExplored;
 use App\Events\PlanetImageGenerated;
 use App\Events\PlanetVideoGenerated;
+use App\Events\UserDeleted;
 use App\Events\UserLoggedIn;
 use App\Events\UserProfileUpdated;
 use App\Events\UserRegistered;
+use App\Listeners\CleanupUserData;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
 use App\Listeners\GeneratePlanetImage;
@@ -36,6 +38,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserProfileUpdated::class => [
             // Future listeners: RegenerateAvatarIfNameChanged, TrackProfileUpdate, etc.
+        ],
+        UserDeleted::class => [
+            CleanupUserData::class,
         ],
 
         // Planet lifecycle events
