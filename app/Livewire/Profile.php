@@ -61,7 +61,7 @@ class Profile extends Component
                 'matricule' => $authUser->matricule,
             ];
         } catch (\Exception $e) {
-            $this->error = 'Failed to load user data: ' . $e->getMessage();
+            $this->error = 'Failed to load user data: '.$e->getMessage();
         } finally {
             $this->loading = false;
         }
@@ -102,7 +102,7 @@ class Profile extends Component
                 $user->tokens()->where('name', 'avatar-change')->delete();
             }
         } catch (\Exception $e) {
-            $this->avatarMessage = '[ERROR] Failed to load bio-profiles: ' . $e->getMessage();
+            $this->avatarMessage = '[ERROR] Failed to load bio-profiles: '.$e->getMessage();
         } finally {
             $this->loadingAvatars = false;
         }
@@ -144,14 +144,14 @@ class Profile extends Component
                     $this->closeAvatarModal();
                 } else {
                     $errorData = $response->json();
-                    $this->avatarMessage = '[ERROR] ' . ($errorData['message'] ?? 'Bio-profile regeneration failed. Please try again.');
+                    $this->avatarMessage = '[ERROR] '.($errorData['message'] ?? 'Bio-profile regeneration failed. Please try again.');
                 }
             } finally {
                 // Clean up token after use
                 $user->tokens()->where('name', 'avatar-change')->delete();
             }
         } catch (\Exception $e) {
-            $this->avatarMessage = '[ERROR] Bio-profile regeneration failed: ' . $e->getMessage();
+            $this->avatarMessage = '[ERROR] Bio-profile regeneration failed: '.$e->getMessage();
         } finally {
             $this->selectingAvatar = false;
         }
