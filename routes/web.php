@@ -14,71 +14,47 @@ Route::get('/', function () {
 })->name('home');
 
 // Legacy landing route (redirect to home)
-Route::get('/landing', function () {
-    return redirect()->route('home');
-})->name('landing');
+Route::get('/landing', fn () => redirect()->route('home'))->name('landing');
 
 // Design System pages
 Route::prefix('design-system')->name('design-system.')->group(function () {
-    Route::get('/', function () {
-        return view('design-system.overview');
-    })->name('index');
+    // Overview (index and overview point to same view)
+    Route::get('/', fn () => view('design-system.overview'))->name('index');
+    Route::get('/overview', fn () => view('design-system.overview'))->name('overview');
 
-    Route::get('/overview', function () {
-        return view('design-system.overview');
-    })->name('overview');
+    // Documentation pages
+    $designSystemPages = [
+        'colors' => 'design-system.colors',
+        'typography' => 'design-system.typography',
+        'spacing' => 'design-system.spacing',
+        'effects' => 'design-system.effects',
+    ];
 
-    Route::get('/colors', function () {
-        return view('design-system.colors');
-    })->name('colors');
+    foreach ($designSystemPages as $route => $view) {
+        Route::get("/{$route}", fn () => view($view))->name($route);
+    }
 
-    Route::get('/typography', function () {
-        return view('design-system.typography');
-    })->name('typography');
-
-    Route::get('/spacing', function () {
-        return view('design-system.spacing');
-    })->name('spacing');
-
-    Route::get('/components', function () {
-        return view('design-system.components-index');
-    })->name('components');
+    // Components section
+    Route::get('/components', fn () => view('design-system.components-index'))->name('components');
 
     Route::prefix('components')->name('components.')->group(function () {
-        Route::get('/base', function () {
-            return view('design-system.components-base');
-        })->name('base');
+        $componentPages = [
+            'base' => 'design-system.components-base',
+            'terminal' => 'design-system.components-terminal',
+            'specialized' => 'design-system.components-specialized',
+            'utilities' => 'design-system.components-utilities',
+            'emails' => 'design-system.components-emails',
+            'logo' => 'design-system.logo-preview',
+        ];
 
-        Route::get('/terminal', function () {
-            return view('design-system.components-terminal');
-        })->name('terminal');
-
-        Route::get('/specialized', function () {
-            return view('design-system.components-specialized');
-        })->name('specialized');
-
-        Route::get('/utilities', function () {
-            return view('design-system.components-utilities');
-        })->name('utilities');
-
-        Route::get('/emails', function () {
-            return view('design-system.components-emails');
-        })->name('emails');
-
-        Route::get('/logo', function () {
-            return view('design-system.logo-preview');
-        })->name('logo');
+        foreach ($componentPages as $route => $view) {
+            Route::get("/{$route}", fn () => view($view))->name($route);
+        }
     });
-
-    Route::get('/effects', function () {
-        return view('design-system.effects');
-    })->name('effects');
 });
 
 // Legacy route for backward compatibility
-Route::get('/design-system', function () {
-    return redirect()->route('design-system.overview');
-})->name('design-system');
+Route::get('/design-system', fn () => redirect()->route('design-system.overview'))->name('design-system');
 
 // Public routes
 Route::middleware('guest')->group(function () {
@@ -114,3 +90,6 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('login');
     })->name('logout');
 });
+
+// Fallback for web routes - redirect to landing page if route not found
+Route::fallback(fn () => redirect()->route('home'));
