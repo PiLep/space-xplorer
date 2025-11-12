@@ -214,6 +214,7 @@
                             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                                 @foreach ($availableAvatars as $avatar)
                                     <button
+                                        wire:key="avatar-{{ $avatar['id'] }}"
                                         wire:click="selectAvatar('{{ $avatar['id'] }}')"
                                         wire:loading.attr="disabled"
                                         class="group relative w-24 h-24 rounded-lg overflow-hidden border-2 border-gray-600 dark:border-gray-700 hover:border-space-primary dark:hover:border-space-primary transition-all focus:outline-none focus:ring-2 focus:ring-space-primary focus:ring-offset-2 focus:ring-offset-space-black {{ $selectingAvatar ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer' }}"

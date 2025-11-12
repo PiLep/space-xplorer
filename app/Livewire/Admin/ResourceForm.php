@@ -3,21 +3,22 @@
 namespace App\Livewire\Admin;
 
 use App\Services\ResourceGenerationService;
+use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class ResourceForm extends Component
 {
-    public $type = '';
+    public string $type = '';
 
-    public $prompt = '';
+    public string $prompt = '';
 
-    public $tags = '';
+    public string $tags = '';
 
-    public $description = '';
+    public string $description = '';
 
-    public $autoExtractedTags = '';
+    public string $autoExtractedTags = '';
 
-    public $promptSuggestions = [
+    public array $promptSuggestions = [
         'avatar_image' => [
             'Close-up professional portrait headshot of a space technician, weathered and experienced, in the style of Alien (1979) movie aesthetic. Industrial sci-fi setting, realistic lighting, cinematic composition. Single person only, no other people in frame, square format (1:1 aspect ratio), highly detailed, photorealistic style with sharp focus on the face.',
             'Professional headshot of a ship captain, determined expression, wearing a technical jumpsuit with patches and insignia. Atmospheric lighting with blue and orange tones, photorealistic style. Single person only, square format (1:1 aspect ratio), highly detailed facial features.',
@@ -112,7 +113,8 @@ class ResourceForm extends Component
         }
     }
 
-    public function getSuggestionsProperty()
+    #[Computed]
+    public function suggestions(): array
     {
         if (empty($this->type) || ! isset($this->promptSuggestions[$this->type])) {
             return [];

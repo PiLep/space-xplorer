@@ -39,13 +39,37 @@
 
 ## Livewire
 
-**Version** : Livewire 3 (version actuelle, compatible avec Laravel 12)
+**Version** : Livewire 3.6 (`^3.6` dans `composer.json`, compatible avec Laravel 12, PHP 8.2+)
 **Rôle** : Framework pour créer des interfaces interactives sans JavaScript
 **Utilisation** :
 - **Interface complète** : Toute l'interface utilisateur sera construite avec Livewire (dans un premier temps)
 - Composants interactifs côté serveur
 - Mise à jour dynamique de l'interface
-- [À compléter]
+- Utilisation des attributs PHP 8 pour une syntaxe moderne et déclarative
+
+### Attributs PHP 8
+
+Livewire 3.6 utilise les attributs PHP 8 pour une syntaxe moderne :
+
+- **`#[Layout('layouts.app')]`** : Définit le layout Blade pour le composant
+- **`#[Validate('rules')]`** : Définit les règles de validation directement sur les propriétés
+- **`#[Computed]`** : Marque une méthode comme propriété calculée avec cache automatique
+- **`#[On('event')]`** : Écoute un événement Livewire ou Laravel
+- **`#[Locked]`** : Empêche la modification d'une propriété depuis le frontend
+
+### Performance
+
+- Utilisation de `wire:key` pour les listes (optimisation des re-renders)
+- Utilisation de `wire:model.debounce` pour les champs de recherche/saisie fréquents
+- Utilisation de `wire:model.lazy` pour les champs sans validation en temps réel
+- Propriétés calculées avec `#[Computed]` pour cache automatique
+
+### Architecture
+
+- Composants dans `app/Livewire/` (classes PHP)
+- Vues dans `resources/views/livewire/` (templates Blade)
+- Les composants Livewire appellent directement les services Laravel (pas d'API interne)
+- Séparation claire : logique métier dans les services, présentation dans les composants
 
 ## MySQL
 

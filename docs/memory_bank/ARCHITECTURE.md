@@ -515,9 +515,56 @@ Lors de la réinitialisation de mot de passe réussie :
 
 ### Architecture Frontend
 
+**Version** : Livewire 3.6 (compatible Laravel 12, PHP 8.2+)
+
 **Approche hybride** :
 - **Livewire** : Utilise directement les services Laravel (`AuthService`, etc.) sans passer par l'API. Les composants Livewire appellent les services directement pour une meilleure performance et simplicité.
 - **API REST** : Disponible pour les clients externes (applications mobiles, SPAs distants, etc.) via Sanctum tokens.
+
+### Attributs PHP 8 de Livewire 3.6
+
+Livewire 3.6 utilise les attributs PHP 8 pour une syntaxe moderne et déclarative :
+
+- **`#[Layout('layouts.app')]`** : Définit le layout Blade pour le composant (utilisé dans tous les composants)
+- **`#[Validate('rules')]`** : Définit les règles de validation directement sur les propriétés (à privilégier au lieu de `protected $rules`)
+- **`#[Computed]`** : Marque une méthode comme propriété calculée avec cache automatique
+- **`#[On('event')]`** : Écoute un événement Livewire ou Laravel
+- **`#[Locked]`** : Empêche la modification d'une propriété depuis le frontend
+
+**Exemple de validation moderne** :
+```php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\Layout;
+
+#[Layout('layouts.app')]
+class Register extends Component
+{
+    #[Validate('required|string|max:255')]
+    public string $name = '';
+
+    #[Validate('required|email|max:255|unique:users')]
+    public string $email = '';
+}
+```
+
+### Performance et Optimisation
+
+**Utilisation de `wire:key`** :
+- Toujours utiliser `wire:key` pour les listes dans les vues Livewire
+- Format : `wire:key="item-{{ $item->id }}"`
+- Optimise les re-renders en identifiant les éléments modifiés
+
+**Debounce pour les champs de saisie** :
+- Utiliser `wire:model.debounce.500ms` pour les champs de recherche/saisie fréquents
+- Réduit le nombre de requêtes serveur et améliore les performances
+
+**Lazy Loading** :
+- Utiliser `wire:model.lazy` pour les champs qui n'ont pas besoin de validation en temps réel
+- La validation se déclenche uniquement lors du blur du champ
+
+**Propriétés calculées** :
+- Utiliser `#[Computed]` pour les propriétés dérivées coûteuses
+- Cache automatique : la valeur est calculée une seule fois par requête
 
 ### Authentification
 
@@ -542,6 +589,20 @@ Lors de la réinitialisation de mot de passe réussie :
 - `AuthService::login()` / `AuthService::loginFromCredentials()` : Connexion
 - `AuthService::logout()` : Déconnexion
 - `Auth::user()` : Récupération de l'utilisateur authentifié
+
+### Structure des Composants
+
+**Séparation des responsabilités** :
+- **Composants Livewire** : Gèrent uniquement l'état de l'interface et les interactions utilisateur
+- **Services** : Contiennent toute la logique métier (appelés directement depuis les composants)
+- **Modèles** : Gèrent les relations et les requêtes Eloquent
+
+**Organisation** :
+- Composants dans `app/Livewire/` (classes PHP)
+- Vues dans `resources/views/livewire/` (templates Blade)
+- Services dans `app/Services/` (logique métier)
+
+**Principe** : Les composants Livewire sont minces et délèguent la logique métier aux services.
 
 ### Composants Livewire (MVP)
 

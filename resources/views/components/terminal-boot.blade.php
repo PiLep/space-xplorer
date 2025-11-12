@@ -19,6 +19,7 @@
                 $shouldFadeOut = $terminalBooted && $index < max(0, count($bootMessages) - 4);
             @endphp
             <div
+                wire:key="boot-message-{{ $index }}"
                 class="{{ str_contains($message, '[OK]') ? 'text-space-primary dark:text-space-primary' : (str_contains($message, '[ERROR]') ? 'text-error dark:text-error' : 'text-gray-500 dark:text-gray-500') }} {{ $shouldFadeOut ? 'fade-out-boot-message' : '' }} text-sm"
                 style="animation-delay: {{ $index * 0.1 }}s;"
             >

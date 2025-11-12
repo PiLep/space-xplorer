@@ -6,29 +6,26 @@ use App\Exceptions\EmailVerificationException;
 use App\Models\User;
 use App\Services\EmailVerificationService;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class VerifyEmail extends Component
 {
-    public $code = '';
+    #[Validate('required|string|size:6|regex:/^[0-9]+$/', message: [
+        'required' => 'Security clearance code required.',
+        'size' => 'Security clearance code must be 6 digits (STELLAR_CORP_MEGA_INC protocol).',
+        'regex' => 'Security clearance code must contain only numeric characters.',
+    ])]
+    public string $code = '';
 
-    public $status = '';
+    public string $status = '';
 
-    protected $isVerifying = false;
+    protected bool $isVerifying = false;
 
-    protected $autoVerifying = false;
-
-    protected $rules = [
-        'code' => 'required|string|size:6|regex:/^[0-9]+$/',
-    ];
-
-    protected $messages = [
-        'code.required' => 'Security clearance code required.',
-        'code.size' => 'Security clearance code must be 6 digits (STELLAR_CORP_MEGA_INC protocol).',
-        'code.regex' => 'Security clearance code must contain only numeric characters.',
-    ];
+    protected bool $autoVerifying = false;
 
     public function mount()
     {
@@ -109,7 +106,7 @@ class VerifyEmail extends Component
 
             if (! $isValid) {
                 $this->isVerifying = false;
-                $attemptsRemaining = $this->getAttemptsRemainingProperty();
+                $attemptsRemaining = $this->attemptsRemaining;
                 $this->status = '[AUTH_FAILURE] Invalid security clearance code. Authentication rejected by STELLAR_CORP_MEGA_INC security systems. '.$attemptsRemaining.' attempts remaining before lockout.';
                 $this->addError('code', 'Clearance code invalid. Verify and retry.');
                 $this->code = '';
@@ -139,7 +136,7 @@ class VerifyEmail extends Component
         try {
             // Check if user can resend
             if (! $user->canResendVerificationCode()) {
-                $cooldown = $this->getResendCooldownProperty();
+                $cooldown = $this->resendCooldown;
                 $this->status = '[RATE_LIMIT] Anti-fraud protocol active. New token request available in '.$cooldown.' seconds.';
 
                 return;
@@ -158,21 +155,24 @@ class VerifyEmail extends Component
         }
     }
 
-    public function getAttemptsRemainingProperty(): int
+    #[Computed]
+    public function attemptsRemaining(): int
     {
         $user = Auth::user();
 
         return max(0, User::MAX_VERIFICATION_ATTEMPTS - $user->email_verification_attempts);
     }
 
-    public function getCanResendProperty(): bool
+    #[Computed]
+    public function canResend(): bool
     {
         $user = Auth::user();
 
         return $user->canResendVerificationCode();
     }
 
-    public function getResendCooldownProperty(): int
+    #[Computed]
+    public function resendCooldown(): int
     {
         $user = Auth::user();
 
@@ -186,7 +186,8 @@ class VerifyEmail extends Component
         return max(0, $secondsRemaining);
     }
 
-    public function getMaskedEmailProperty(): string
+    #[Computed]
+    public function maskedEmail(): string
     {
         $user = Auth::user();
         $email = $user->email;

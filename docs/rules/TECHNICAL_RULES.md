@@ -168,6 +168,330 @@ class ResetPassword extends Component
 - Lors de la vérification visuelle avec Chrome DevTools MCP, vérifier que le CSS est chargé (inspecter les éléments et vérifier les styles appliqués)
 - Si une page s'affiche sans styles, vérifier immédiatement si le layout est utilisé
 
+### Règle 4 : Utilisation des attributs PHP 8 de Livewire 3 pour la validation
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Morgan (Architect)  
+**Validée par** : À valider
+
+**Description** : Utiliser les attributs PHP 8 `#[Validate]` de Livewire 3.6 pour définir les règles de validation directement sur les propriétés, plutôt que d'utiliser `protected $rules`.
+
+**Quand appliquer** :
+- Lors de la création d'un nouveau composant Livewire
+- Lors de la modification d'un composant Livewire existant
+- Lors de la migration de composants Livewire 2 vers Livewire 3
+
+**Exemples** :
+
+**Bon exemple** :
+```php
+use Livewire\Attributes\Validate;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+
+#[Layout('layouts.app')]
+class Register extends Component
+{
+    #[Validate('required|string|max:255')]
+    public string $name = '';
+
+    #[Validate('required|email|max:255|unique:users')]
+    public string $email = '';
+
+    #[Validate('required|string|min:8|confirmed')]
+    public string $password = '';
+
+    public function register()
+    {
+        $this->validate();
+        // ...
+    }
+}
+```
+
+**Mauvais exemple** :
+```php
+class Register extends Component
+{
+    public string $name = '';
+    public string $email = '';
+    public string $password = '';
+
+    protected $rules = [
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ];
+}
+```
+
+**Justification** : 
+- Syntaxe moderne et déclarative avec les attributs PHP 8
+- Code plus lisible : les règles de validation sont directement sur les propriétés
+- Cohérence avec les standards Livewire 3.6
+- Meilleure intégration avec l'IDE pour l'autocomplétion et la validation
+- Réduction de la duplication de code
+
+**Exceptions** :
+- Les règles de validation complexes avec logique conditionnelle peuvent toujours utiliser `protected $rules` avec des méthodes dynamiques
+- Les règles de validation qui dépendent d'autres propriétés peuvent nécessiter une validation manuelle dans les méthodes
+
+### Règle 5 : Utilisation de `wire:key` pour les listes dans les vues Livewire
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Morgan (Architect)  
+**Validée par** : À valider
+
+**Description** : Toujours utiliser l'attribut `wire:key` pour les éléments dans les boucles (`@foreach`) dans les vues Livewire pour optimiser les performances et éviter les bugs de synchronisation du DOM.
+
+**Quand appliquer** :
+- Lors du rendu de listes dans les vues Livewire
+- Lors de l'utilisation de `@foreach` avec des données dynamiques
+- Lors de la création de composants Livewire qui affichent des collections
+
+**Exemples** :
+
+**Bon exemple** :
+```blade
+@foreach($planets as $planet)
+    <div wire:key="planet-{{ $planet->id }}">
+        <h3>{{ $planet->name }}</h3>
+        <p>{{ $planet->description }}</p>
+    </div>
+@endforeach
+```
+
+```blade
+@foreach($users as $index => $user)
+    <div wire:key="user-{{ $user->id }}-{{ $index }}">
+        {{ $user->name }}
+    </div>
+@endforeach
+```
+
+**Mauvais exemple** :
+```blade
+@foreach($planets as $planet)
+    <div>
+        <h3>{{ $planet->name }}</h3>
+        <p>{{ $planet->description }}</p>
+    </div>
+@endforeach
+```
+
+**Justification** : 
+- Aide Livewire à identifier les éléments lors des mises à jour du DOM
+- Optimise les re-renders en ne mettant à jour que les éléments modifiés
+- Évite les bugs de synchronisation du DOM (éléments mal associés après mise à jour)
+- Améliore les performances en réduisant les manipulations DOM inutiles
+- Standard recommandé par la documentation officielle Livewire
+
+**Format recommandé** :
+- Utiliser un identifiant unique : `wire:key="type-{{ $item->id }}"`
+- Pour les listes sans ID, utiliser l'index : `wire:key="item-{{ $index }}"`
+- Combiner ID et index si nécessaire : `wire:key="item-{{ $item->id }}-{{ $index }}"`
+
+### Règle 6 : Utilisation de `wire:model.debounce` pour les champs de saisie fréquents
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Morgan (Architect)  
+**Validée par** : À valider
+
+**Description** : Utiliser `wire:model.debounce` pour les champs de saisie où l'utilisateur tape fréquemment (recherche, filtres, etc.) pour réduire le nombre de requêtes serveur et améliorer les performances.
+
+**Quand appliquer** :
+- Pour les champs de recherche
+- Pour les filtres en temps réel
+- Pour les champs de saisie qui déclenchent des requêtes serveur
+- Pour les champs qui n'ont pas besoin de validation immédiate
+
+**Exemples** :
+
+**Bon exemple** :
+```blade
+<input type="text" wire:model.debounce.500ms="searchQuery" placeholder="Search planets...">
+```
+
+```blade
+<input type="text" wire:model.debounce.300ms="filterName" placeholder="Filter by name...">
+```
+
+**Mauvais exemple** :
+```blade
+<input type="text" wire:model="searchQuery" placeholder="Search planets...">
+```
+
+**Justification** : 
+- Réduit significativement le nombre de requêtes serveur (une requête toutes les 500ms au lieu de chaque frappe)
+- Améliore les performances de l'application en réduisant la charge serveur
+- Améliore l'expérience utilisateur en évitant les lag pendant la saisie
+- Évite les requêtes inutiles pendant que l'utilisateur tape encore
+- Standard recommandé pour les champs de recherche dans Livewire
+
+**Délais recommandés** :
+- Recherche : `debounce.500ms` (500 millisecondes)
+- Filtres : `debounce.300ms` (300 millisecondes)
+- Validation en temps réel : utiliser `wire:model` sans debounce
+
+**Exceptions** :
+- Les champs qui nécessitent une validation immédiate (ex: vérification de disponibilité d'email) doivent utiliser `wire:model` sans debounce
+- Les champs de formulaire simples peuvent utiliser `wire:model.lazy` pour validation au blur
+
+### Règle 7 : Utilisation de `#[Computed]` pour les propriétés calculées
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Morgan (Architect)  
+**Validée par** : À valider
+
+**Description** : Utiliser l'attribut `#[Computed]` pour les propriétés calculées qui nécessitent un calcul coûteux ou qui sont utilisées plusieurs fois dans le composant. Livewire met automatiquement en cache la valeur calculée pour la durée de la requête.
+
+**Quand appliquer** :
+- Pour les propriétés dérivées qui nécessitent un calcul (ex: concaténation, comptage, agrégation)
+- Pour les propriétés qui sont utilisées plusieurs fois dans le composant ou la vue
+- Pour les propriétés qui font des requêtes à la base de données
+- Pour les propriétés qui effectuent des calculs coûteux
+
+**Exemples** :
+
+**Bon exemple** :
+```php
+use Livewire\Attributes\Computed;
+
+class Dashboard extends Component
+{
+    public User $user;
+
+    #[Computed]
+    public function fullName(): string
+    {
+        return "{$this->user->first_name} {$this->user->last_name}";
+    }
+
+    #[Computed]
+    public function planetCount(): int
+    {
+        return $this->user->planets()->count();
+    }
+
+    #[Computed]
+    public function recentDiscoveries(): Collection
+    {
+        return $this->user->discoveries()
+            ->latest()
+            ->take(5)
+            ->get();
+    }
+}
+```
+
+**Mauvais exemple** :
+```php
+class Dashboard extends Component
+{
+    public User $user;
+
+    public function getFullNameProperty(): string
+    {
+        return "{$this->user->first_name} {$this->user->last_name}";
+    }
+
+    public function getPlanetCountProperty(): int
+    {
+        return $this->user->planets()->count();
+    }
+}
+```
+
+**Justification** : 
+- Cache automatique : la valeur est calculée une seule fois par requête, même si utilisée plusieurs fois
+- Performance améliorée pour les calculs coûteux (requêtes DB, agrégations)
+- Syntaxe moderne et déclarative avec les attributs PHP 8
+- Réduction de la charge serveur en évitant les recalculs inutiles
+- Cohérence avec les standards Livewire 3.6
+
+**Utilisation dans les vues** :
+```blade
+<div>
+    <h1>{{ $this->fullName }}</h1>
+    <p>Planets discovered: {{ $this->planetCount }}</p>
+</div>
+```
+
+**Note** : Utiliser `$this->propertyName` dans les vues pour accéder aux propriétés calculées.
+
+### Règle 8 : Séparation des responsabilités : logique métier dans les services, pas dans les composants Livewire
+
+**Date d'ajout** : 2025-01-27  
+**Proposée par** : Morgan (Architect)  
+**Validée par** : À valider
+
+**Description** : Les composants Livewire doivent être minces et se concentrer uniquement sur la gestion de l'état de l'interface et des interactions utilisateur. Toute la logique métier doit être déléguée aux services Laravel.
+
+**Quand appliquer** :
+- Lors de la création d'un nouveau composant Livewire
+- Lors de la modification d'un composant Livewire existant
+- Lors de la review de code de composants Livewire
+
+**Exemples** :
+
+**Bon exemple** :
+```php
+use App\Services\PlanetService;
+use Illuminate\Support\Facades\Auth;
+
+class Dashboard extends Component
+{
+    public $planet = null;
+    public $loading = true;
+
+    public function mount(PlanetService $planetService)
+    {
+        $this->loadPlanet($planetService);
+    }
+
+    public function loadPlanet(PlanetService $planetService)
+    {
+        $this->planet = $planetService->getHomePlanet(Auth::user());
+        $this->loading = false;
+    }
+}
+```
+
+**Mauvais exemple** :
+```php
+class Dashboard extends Component
+{
+    public $planet = null;
+
+    public function mount()
+    {
+        // ❌ Logique métier directement dans le composant
+        $this->planet = Planet::where('user_id', Auth::id())
+            ->with('resources')
+            ->with('discoveries')
+            ->with('explorations')
+            ->first();
+    }
+}
+```
+
+**Justification** : 
+- Séparation claire des responsabilités : présentation vs logique métier
+- Réutilisabilité : la logique métier peut être réutilisée dans d'autres contextes (API, commandes, etc.)
+- Testabilité : les services sont plus faciles à tester unitairement
+- Maintenabilité : modifications de la logique métier sans toucher aux composants
+- Cohérence avec l'architecture API-first du projet
+- Les composants Livewire appellent directement les services (pas d'API interne)
+
+**Structure recommandée** :
+- **Composants Livewire** : Gèrent l'état de l'interface (`$loading`, `$error`, etc.) et les interactions utilisateur
+- **Services** : Contiennent toute la logique métier (requêtes DB, calculs, validations métier)
+- **Modèles** : Gèrent les relations Eloquent et les scopes
+
+**Injection de dépendances** :
+- Utiliser l'injection de dépendances dans les méthodes (`mount()`, méthodes publiques)
+- Les services sont automatiquement résolus par le conteneur Laravel
+
 ---
 
 ## Format d'une Règle

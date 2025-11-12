@@ -5,28 +5,26 @@ namespace App\Livewire;
 use App\Services\PasswordResetService;
 use Illuminate\Support\Facades\Password;
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 #[Layout('layouts.app')]
 class ResetPassword extends Component
 {
-    public $token = '';
+    #[Validate('required|string')]
+    public string $token = '';
 
-    public $email = '';
+    #[Validate('required|email')]
+    public string $email = '';
 
-    public $password = '';
+    #[Validate('required|string|min:8|confirmed')]
+    public string $password = '';
 
-    public $password_confirmation = '';
+    public string $password_confirmation = '';
 
-    public $status = '';
+    public string $status = '';
 
-    public $passwordStrength = '';
-
-    protected $rules = [
-        'token' => 'required|string',
-        'email' => 'required|email',
-        'password' => 'required|string|min:8|confirmed',
-    ];
+    public string $passwordStrength = '';
 
     protected $messages = [
         'token.required' => 'Le token de réinitialisation est requis.',
