@@ -8,7 +8,7 @@ Bienvenue sur Stellar ! Pour compléter votre inscription, veuillez vérifier vo
 [ACTION REQUIRED] Utilisez le code de vérification ci-dessous :
 
 ┌─────────────┐
-│   {{ $code }}   │
+│ {{ $code }} │
 └─────────────┘
 
 Entrez ce code sur la page de vérification pour compléter votre inscription.
@@ -21,6 +21,3 @@ Page de vérification : {{ $verificationUrl }}
 
 SYSTEM@STELLAR:~$
 Stellar - Exploration Spatiale Interactive
-
-
-

@@ -716,4 +716,3 @@ describe('extractAvatarTagsFromPrompt', function () {
 afterEach(function () {
     Mockery::close();
 });
-

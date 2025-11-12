@@ -61,4 +61,3 @@ JS;
     $planet = Planet::find($user->home_planet_id);
     expect($planet)->not->toBeNull();
 });
-
