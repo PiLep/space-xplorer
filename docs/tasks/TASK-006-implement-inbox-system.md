@@ -10,6 +10,25 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 
 **MVP** : Messages système uniquement (pas de messagerie entre joueurs). Types de messages : bienvenue, découvertes, missions, alertes système.
 
+## Recommandations Architecturales Intégrées
+
+Ce plan intègre toutes les recommandations de la review architecturale ([ARCHITECT-REVIEW-006](../reviews/ARCHITECT-REVIEW-006-implement-inbox-system.md)). Les recommandations suivantes sont explicitement intégrées dans les tâches :
+
+### 🔴 High Priority
+- **Index explicites en base de données** (Tâche 1.1) : Index sur `recipient_id`, `is_read`, `type`, index composite `(recipient_id, is_read)`, et `created_at` pour optimiser les performances
+- **Scope `forUser()` pour sécurité** (Tâche 1.2, 4.2) : Scope Eloquent pour garantir que les utilisateurs ne peuvent accéder qu'à leurs propres messages
+- **Tests de sécurité** (Tâche 6.4) : Tests pour vérifier qu'un utilisateur ne peut pas accéder aux messages d'un autre utilisateur
+
+### 🟡 Medium Priority
+- **Gestion d'erreurs dans les listeners** (Tâches 3.1-3.4) : Try-catch pour gérer les erreurs de génération de messages sans bloquer les événements métier
+- **Injection de dépendances dans Livewire** (Tâche 5.1) : Utiliser l'injection de dépendances dans les méthodes pour injecter `MessageService`
+- **Attributs PHP 8 de Livewire 3.6** (Tâche 5.1) : Utiliser `#[Layout]` et `#[Computed]` pour une syntaxe moderne
+- **Optimisation du compteur de messages non lus** (Tâche 5.4) : Utiliser `unreadMessagesCount()` et `#[Computed]` pour le cache automatique
+- **Tests de pagination et filtres** (Tâche 6.4) : Tests complets pour la pagination et les filtres
+
+### 🟢 Low Priority
+- **Templates intégrés dans MessageService** (Tâche 2.2) : Intégrer les templates directement dans `MessageService` pour le MVP (simplicité)
+
 ## Suivi et Historique
 
 ### Statut
@@ -17,6 +36,12 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 À faire
 
 ### Historique
+
+#### 2025-01-27 - Sam (Lead Dev) - Mise à jour du plan avec recommandations architecturales
+**Statut** : À faire
+**Détails** : Plan mis à jour pour intégrer explicitement toutes les recommandations de la review architecturale. Modifications apportées : index explicites en base de données (Tâche 1.1), scope `forUser()` pour sécurité (Tâche 1.2), gestion d'erreurs dans les listeners (Tâches 3.1-3.4), injection de dépendances et attributs PHP 8 dans Livewire (Tâche 5.1), optimisation du compteur de messages non lus (Tâche 5.4), tests de sécurité et pagination (Tâche 6.4), templates intégrés dans MessageService (Tâche 2.2). Le plan est maintenant prêt pour l'implémentation avec toutes les recommandations intégrées.
+**Fichiers modifiés** : `docs/tasks/TASK-006-implement-inbox-system.md`
+**Review** : [ARCHITECT-REVIEW-006-implement-inbox-system.md](../reviews/ARCHITECT-REVIEW-006-implement-inbox-system.md)
 
 #### 2025-01-27 - Morgan (Architect) - Review architecturale
 **Statut** : À faire
@@ -53,18 +78,32 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 ### Phase 1 : Modèle de Données et Migrations
 
 #### Tâche 1.1 : Créer la migration pour la table messages
-- **Description** : Créer la migration avec tous les champs nécessaires (id ULID, sender_id nullable, recipient_id, type, subject, content, is_read, read_at, is_important, metadata JSON, timestamps). Ajouter les foreign keys et index appropriés.
+- **Description** : Créer la migration avec tous les champs nécessaires (id ULID, sender_id nullable, recipient_id, type, subject, content, is_read, read_at, is_important, metadata JSON, timestamps). Ajouter les foreign keys et **index explicites** pour optimiser les performances :
+  - Index sur `recipient_id` (pour les requêtes par destinataire)
+  - Index sur `is_read` (pour les filtres unread/read)
+  - Index sur `type` (pour les filtres par type)
+  - Index composite sur `(recipient_id, is_read)` (pour les requêtes combinées fréquentes)
+  - Index sur `created_at` (pour le tri chronologique)
 - **Fichiers concernés** : `database/migrations/YYYY_MM_DD_HHMMSS_create_messages_table.php`
 - **Estimation** : 45 min
 - **Dépendances** : Aucune
 - **Tests** : Vérifier la structure de la table, les foreign keys, et les index
+- **Note** : Recommandation architecturale (High Priority) - Index explicites pour performance
 
 #### Tâche 1.2 : Créer le modèle Message
-- **Description** : Créer le modèle Eloquent Message avec HasUlids, relations (sender, recipient), casts (metadata en array), scopes (unread, read, important, byType), et méthodes helper (markAsRead, markAsUnread).
+- **Description** : Créer le modèle Eloquent Message avec HasUlids, relations (sender, recipient), casts (metadata en array), scopes (unread, read, important, byType, **forUser**), et méthodes helper (markAsRead, markAsUnread).
+  - **Scope `forUser(User $user)`** : Scope de sécurité pour filtrer les messages par destinataire. Utiliser ce scope dans le contrôleur API pour garantir la sécurité.
+  ```php
+  public function scopeForUser($query, User $user)
+  {
+      return $query->where('recipient_id', $user->id);
+  }
+  ```
 - **Fichiers concernés** : `app/Models/Message.php`
 - **Estimation** : 1h
 - **Dépendances** : Tâche 1.1
-- **Tests** : Tests unitaires du modèle, relations, scopes, et méthodes helper
+- **Tests** : Tests unitaires du modèle, relations, scopes (incluant forUser), et méthodes helper
+- **Note** : Recommandation architecturale (High Priority) - Scope pour sécurité et maintenabilité
 
 #### Tâche 1.3 : Ajouter les relations dans le modèle User
 - **Description** : Ajouter les relations `sentMessages()` et `receivedMessages()` dans le modèle User. Ajouter une méthode helper `unreadMessagesCount()` pour obtenir le nombre de messages non lus.
@@ -83,41 +122,46 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 - **Tests** : Tests unitaires du service avec tous les types de messages
 
 #### Tâche 2.2 : Créer les templates de messages
-- **Description** : Créer une classe ou un système simple pour gérer les templates de messages selon le type. Templates pour messages de bienvenue, découvertes, missions, alertes. Support pour variables dynamiques (nom du joueur, nom de planète, etc.).
-- **Fichiers concernés** : `app/Services/MessageTemplateService.php` ou intégré dans `MessageService`
+- **Description** : Intégrer les templates de messages directement dans `MessageService` pour le MVP (simplicité). Créer une méthode privée `getTemplate(string $type, array $variables): string` dans `MessageService` pour gérer les templates. Templates pour messages de bienvenue, découvertes, missions, alertes. Support pour variables dynamiques (nom du joueur, nom de planète, etc.). Possibilité d'extraire vers un service dédié plus tard si nécessaire.
+- **Fichiers concernés** : `app/Services/MessageService.php` (méthode privée `getTemplate()`)
 - **Estimation** : 1h30
 - **Dépendances** : Tâche 2.1
 - **Tests** : Tests des templates avec différentes variables
+- **Note** : Recommandation architecturale (Low Priority) - Intégration dans MessageService pour MVP
 
 ### Phase 3 : Intégration Événementielle
 
 #### Tâche 3.1 : Créer le listener SendWelcomeMessage
-- **Description** : Listener pour l'événement `UserRegistered` qui génère un message de bienvenue de Stellar. Appelle `MessageService::createWelcomeMessage()`.
+- **Description** : Listener pour l'événement `UserRegistered` qui génère un message de bienvenue de Stellar. Appelle `MessageService::createWelcomeMessage()`. **Gestion d'erreurs** : Utiliser un try-catch pour gérer les erreurs de génération de messages (logger l'erreur mais ne pas bloquer l'événement métier).
 - **Fichiers concernés** : `app/Listeners/SendWelcomeMessage.php`
 - **Estimation** : 45 min
 - **Dépendances** : Tâche 2.1
-- **Tests** : Tests du listener avec événement UserRegistered
+- **Tests** : Tests du listener avec événement UserRegistered, tests de gestion d'erreurs
+- **Note** : Recommandation architecturale (Medium Priority) - Gestion d'erreurs pour robustesse
 
 #### Tâche 3.2 : Créer le listener SendPlanetDiscoveryMessage
-- **Description** : Listener pour l'événement `PlanetExplored` qui génère un message de découverte de planète. Appelle `MessageService::createDiscoveryMessage()` avec les détails de la planète.
+- **Description** : Listener pour l'événement `PlanetExplored` qui génère un message de découverte de planète. Appelle `MessageService::createDiscoveryMessage()` avec les détails de la planète. **Gestion d'erreurs** : Utiliser un try-catch pour gérer les erreurs de génération de messages (logger l'erreur mais ne pas bloquer l'événement métier).
 - **Fichiers concernés** : `app/Listeners/SendPlanetDiscoveryMessage.php`
 - **Estimation** : 45 min
 - **Dépendances** : Tâche 2.1
-- **Tests** : Tests du listener avec événement PlanetExplored
+- **Tests** : Tests du listener avec événement PlanetExplored, tests de gestion d'erreurs
+- **Note** : Recommandation architecturale (Medium Priority) - Gestion d'erreurs pour robustesse
 
 #### Tâche 3.3 : Créer le listener SendSpecialDiscoveryMessage
-- **Description** : Listener pour l'événement `DiscoveryMade` qui génère un message de découverte spéciale. Appelle `MessageService::createDiscoveryMessage()` avec les détails de la découverte.
+- **Description** : Listener pour l'événement `DiscoveryMade` qui génère un message de découverte spéciale. Appelle `MessageService::createDiscoveryMessage()` avec les détails de la découverte. **Gestion d'erreurs** : Utiliser un try-catch pour gérer les erreurs de génération de messages (logger l'erreur mais ne pas bloquer l'événement métier).
 - **Fichiers concernés** : `app/Listeners/SendSpecialDiscoveryMessage.php`
 - **Estimation** : 45 min
 - **Dépendances** : Tâche 2.1
-- **Tests** : Tests du listener avec événement DiscoveryMade
+- **Tests** : Tests du listener avec événement DiscoveryMade, tests de gestion d'erreurs
+- **Note** : Recommandation architecturale (Medium Priority) - Gestion d'erreurs pour robustesse
 
 #### Tâche 3.4 : Créer le listener SendHomePlanetMessage (optionnel)
-- **Description** : Listener pour l'événement `PlanetCreated` qui génère un message de présentation de la planète d'origine si c'est une planète d'origine (vérifier via `home_planet_id`). Appelle `MessageService::createDiscoveryMessage()`.
+- **Description** : Listener pour l'événement `PlanetCreated` qui génère un message de présentation de la planète d'origine si c'est une planète d'origine (vérifier via `home_planet_id`). Appelle `MessageService::createDiscoveryMessage()`. **Gestion d'erreurs** : Utiliser un try-catch pour gérer les erreurs de génération de messages (logger l'erreur mais ne pas bloquer l'événement métier).
 - **Fichiers concernés** : `app/Listeners/SendHomePlanetMessage.php`
 - **Estimation** : 45 min
 - **Dépendances** : Tâche 2.1
-- **Tests** : Tests du listener avec événement PlanetCreated (uniquement pour planètes d'origine)
+- **Tests** : Tests du listener avec événement PlanetCreated (uniquement pour planètes d'origine), tests de gestion d'erreurs
+- **Note** : Recommandation architecturale (Medium Priority) - Gestion d'erreurs pour robustesse
 
 #### Tâche 3.5 : Enregistrer les listeners dans EventServiceProvider
 - **Description** : Enregistrer tous les nouveaux listeners dans `app/Providers/EventServiceProvider.php` pour les événements correspondants.
@@ -136,11 +180,15 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 - **Tests** : Tests de validation
 
 #### Tâche 4.2 : Créer MessageController API
-- **Description** : Créer le contrôleur API avec les méthodes : `index()` (liste paginée avec filtres), `show()` (détails d'un message, marque comme lu), `markAsRead()` (marquer comme lu), `markAsUnread()` (marquer comme non lu), `destroy()` (supprimer un message). Toutes les méthodes doivent vérifier que l'utilisateur est le destinataire du message.
+- **Description** : Créer le contrôleur API avec les méthodes : `index()` (liste paginée avec filtres), `show()` (détails d'un message, marque comme lu), `markAsRead()` (marquer comme lu), `markAsUnread()` (marquer comme non lu), `destroy()` (supprimer un message). **Sécurité** : Utiliser le scope `forUser()` du modèle Message pour garantir que l'utilisateur ne peut accéder qu'à ses propres messages :
+  ```php
+  $message = Message::forUser(auth()->user())->findOrFail($id);
+  ```
 - **Fichiers concernés** : `app/Http/Controllers/Api/MessageController.php`
 - **Estimation** : 2h
 - **Dépendances** : Tâche 1.2, Tâche 4.1
-- **Tests** : Tests d'intégration de tous les endpoints
+- **Tests** : Tests d'intégration de tous les endpoints, tests de sécurité (vérifier qu'un utilisateur ne peut pas accéder aux messages d'un autre utilisateur)
+- **Note** : Recommandation architecturale (High Priority) - Scope forUser() pour sécurité
 
 #### Tâche 4.3 : Ajouter les routes API
 - **Description** : Ajouter les routes API dans `routes/api.php` avec middleware `auth:sanctum` : `GET /api/messages`, `GET /api/messages/{id}`, `PATCH /api/messages/{id}/read`, `PATCH /api/messages/{id}/unread`, `DELETE /api/messages/{id}`.
@@ -152,11 +200,40 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 ### Phase 5 : Composant Livewire
 
 #### Tâche 5.1 : Créer le composant Livewire Inbox
-- **Description** : Créer le composant Livewire avec gestion de l'état (messages, filtres, pagination, message sélectionné). Méthodes : `loadMessages()`, `filterMessages()`, `selectMessage()`, `markAsRead()`, `markAsUnread()`, `deleteMessage()`. Utiliser les services directement (pas d'appels API depuis Livewire).
+- **Description** : Créer le composant Livewire avec gestion de l'état (messages, filtres, pagination, message sélectionné). Méthodes : `loadMessages()`, `filterMessages()`, `selectMessage()`, `markAsRead()`, `markAsUnread()`, `deleteMessage()`. 
+  - **Injection de dépendances** : Utiliser l'injection de dépendances dans les méthodes (`mount()`, méthodes publiques) pour injecter `MessageService` :
+    ```php
+    public function mount(MessageService $messageService)
+    {
+        $this->messageService = $messageService;
+        $this->loadMessages();
+    }
+    
+    public function loadMessages(MessageService $messageService)
+    {
+        $this->messages = $messageService->getMessagesForUser(auth()->user(), $this->filter);
+    }
+    ```
+  - **Attributs PHP 8** : Utiliser `#[Layout('layouts.app')]` et considérer `#[Computed]` pour les propriétés calculées (comme le compteur de messages non lus) :
+    ```php
+    use Livewire\Attributes\Layout;
+    use Livewire\Attributes\Computed;
+    
+    #[Layout('layouts.app')]
+    class Inbox extends Component
+    {
+        #[Computed]
+        public function unreadCount(): int
+        {
+            return auth()->user()->unreadMessagesCount();
+        }
+    }
+    ```
 - **Fichiers concernés** : `app/Livewire/Inbox.php`
 - **Estimation** : 2h30
 - **Dépendances** : Tâche 1.2, Tâche 2.1
 - **Tests** : Tests du composant avec différentes actions
+- **Note** : Recommandations architecturales (Medium Priority) - Injection de dépendances et attributs PHP 8
 
 #### Tâche 5.2 : Créer la vue Blade pour Inbox
 - **Description** : Créer la vue avec style terminal immersif cohérent avec le reste du jeu. Liste des messages avec indicateurs visuels (non lus, importants), filtres (tous, non lus, lus), affichage du message sélectionné, actions (marquer comme lu/non lu, supprimer). Utiliser Tailwind CSS et le design system existant.
@@ -173,11 +250,12 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 - **Tests** : Vérifier la route et l'authentification
 
 #### Tâche 5.4 : Ajouter le lien vers l'inbox dans le dashboard/navigation
-- **Description** : Ajouter un lien ou une icône vers l'inbox dans la navigation principale ou le dashboard. Afficher un badge avec le nombre de messages non lus si disponible.
+- **Description** : Ajouter un lien ou une icône vers l'inbox dans la navigation principale ou le dashboard. Afficher un badge avec le nombre de messages non lus. **Optimisation** : Utiliser la méthode helper `unreadMessagesCount()` du modèle User (déjà prévue dans la tâche 1.3) et considérer `#[Computed]` dans le composant Livewire pour le cache automatique si le compteur est utilisé dans le composant.
 - **Fichiers concernés** : `resources/views/layouts/app.blade.php` ou `resources/views/livewire/dashboard.blade.php`
 - **Estimation** : 30 min
 - **Dépendances** : Tâche 5.3
 - **Tests** : Vérification visuelle et fonctionnelle
+- **Note** : Recommandation architecturale (Medium Priority) - Optimisation du compteur de messages non lus
 
 ### Phase 6 : Tests
 
@@ -203,11 +281,12 @@ Implémenter un système d'inbox permettant aux joueurs de recevoir et consulter
 - **Tests** : Exécuter les tests unitaires
 
 #### Tâche 6.4 : Tests d'intégration des endpoints API
-- **Description** : Tests pour tous les endpoints API avec différents scénarios (authentification, autorisation, validation, erreurs).
+- **Description** : Tests pour tous les endpoints API avec différents scénarios (authentification, autorisation, validation, erreurs). **Tests de sécurité** : Ajouter des tests pour vérifier qu'un utilisateur ne peut pas accéder aux messages d'un autre utilisateur (retourne 403 ou 404). **Tests de pagination et filtres** : Tester la pagination (20 par page) et les différents filtres (unread, read, type).
 - **Fichiers concernés** : `tests/Feature/MessageApiTest.php`
 - **Estimation** : 2h
 - **Dépendances** : Tâche 4.2
 - **Tests** : Exécuter les tests d'intégration
+- **Note** : Recommandations architecturales (High/Medium Priority) - Tests de sécurité et pagination
 
 #### Tâche 6.5 : Tests fonctionnels du composant Livewire
 - **Description** : Tests pour le composant Livewire avec différentes actions utilisateur (chargement, filtres, sélection, marquer comme lu, supprimer).

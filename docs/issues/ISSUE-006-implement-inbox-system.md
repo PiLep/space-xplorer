@@ -222,6 +222,12 @@ En cours
 
 ### Historique
 
+#### 2025-01-27 - Sam (Lead Dev) - Mise à jour du plan avec recommandations architecturales
+**Statut** : En cours
+**Détails** : Plan de développement TASK-006 mis à jour pour intégrer explicitement toutes les recommandations de la review architecturale. Modifications apportées : index explicites en base de données (Tâche 1.1), scope `forUser()` pour sécurité (Tâche 1.2), gestion d'erreurs dans les listeners (Tâches 3.1-3.4), injection de dépendances et attributs PHP 8 dans Livewire (Tâche 5.1), optimisation du compteur de messages non lus (Tâche 5.4), tests de sécurité et pagination (Tâche 6.4), templates intégrés dans MessageService (Tâche 2.2). Le plan est maintenant prêt pour l'implémentation avec toutes les recommandations intégrées.
+**Fichiers modifiés** : `docs/tasks/TASK-006-implement-inbox-system.md`
+**Plan** : [TASK-006-implement-inbox-system.md](../tasks/TASK-006-implement-inbox-system.md)
+
 #### 2025-01-27 - Morgan (Architect) - Review architecturale
 **Statut** : En cours
 **Détails** : Review architecturale complète effectuée sur le plan de développement TASK-006. Plan approuvé avec recommandations. Points principaux : ajout d'index explicites en base de données, scope Eloquent pour la sécurité, injection de dépendances dans Livewire, utilisation des attributs PHP 8 de Livewire 3.6, optimisation du compteur de messages non lus. Aucune modification majeure demandée, le plan peut être implémenté en tenant compte des recommandations.
