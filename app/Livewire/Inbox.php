@@ -79,9 +79,7 @@ class Inbox extends Component
         $this->selectedMessage = null;
         // Clear computed cache to reload messages
         unset($this->messages);
-        // Select first message after filter change
-        $this->dispatch('$refresh');
-        $this->selectFirstMessage();
+        // hydrate() will automatically select the first message after this method completes
     }
 
     /**
@@ -94,9 +92,7 @@ class Inbox extends Component
         $this->selectedMessage = null;
         // Clear computed cache to reload messages
         unset($this->messages);
-        // Select first message after filter change
-        $this->dispatch('$refresh');
-        $this->selectFirstMessage();
+        // hydrate() will automatically select the first message after this method completes
     }
 
     /**
