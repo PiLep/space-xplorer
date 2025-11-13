@@ -120,6 +120,10 @@ class Inbox extends Component
 
     /**
      * Mark a message as read.
+     *
+     * Note: This method does not use withTrashed() because trashed (deleted) messages
+     * should not be markable as read. If a trashed message ID is provided, findOrFail
+     * will throw a ModelNotFoundException, which is the correct behavior.
      */
     public function markAsRead(string $id): void
     {
@@ -137,6 +141,10 @@ class Inbox extends Component
 
     /**
      * Mark a message as unread.
+     *
+     * Note: This method does not use withTrashed() because trashed (deleted) messages
+     * should not be markable as unread. If a trashed message ID is provided, findOrFail
+     * will throw a ModelNotFoundException, which is the correct behavior.
      */
     public function markAsUnread(string $id): void
     {
