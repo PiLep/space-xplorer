@@ -125,11 +125,6 @@ class Inbox extends Component
     {
         $message = Message::forUser(Auth::user())->findOrFail($id);
 
-        // Don't mark trashed messages as read
-        if ($message->trashed()) {
-            return;
-        }
-
         $message->markAsRead();
 
         // Clear computed cache to reload messages
@@ -146,11 +141,6 @@ class Inbox extends Component
     public function markAsUnread(string $id): void
     {
         $message = Message::forUser(Auth::user())->findOrFail($id);
-
-        // Don't mark trashed messages as unread
-        if ($message->trashed()) {
-            return;
-        }
 
         $message->markAsUnread();
 
