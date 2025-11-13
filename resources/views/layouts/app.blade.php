@@ -64,6 +64,9 @@
                                 <a href="{{ route('dashboard') }}" wire:navigate class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                     > DASHBOARD
                                 </a>
+                                <a href="{{ route('inbox') }}" wire:navigate class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer {{ auth()->user()->unreadMessagesCount() > 0 ? 'text-pulse inline-block' : '' }}">
+                                    > INBOX
+                                </a>
                                 <a href="{{ route('profile') }}" wire:navigate class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light transition-colors cursor-pointer">
                                     > EMPLOYEE_STATUS
                                 </a>

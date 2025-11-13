@@ -30,6 +30,13 @@
     
     $classes = $baseClasses . ' ' . $variantClasses[$variant] . ' ' . $sizeClasses[$size] . ' ' . $terminalClasses;
     
+    // Merge custom classes if provided
+    $customClass = $attributes->get('class', '');
+    if ($customClass) {
+        $classes = $classes . ' ' . $customClass;
+        $attributes = $attributes->except('class');
+    }
+    
     $tag = $href ? 'a' : 'button';
     $attributes = $attributes->merge(['class' => $classes]);
     

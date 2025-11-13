@@ -335,6 +335,21 @@
         animation: pulse-glow 3s ease-in-out infinite;
     }
     
+    /* Text pulse animation for inbox notification */
+    @keyframes text-pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.85;
+        }
+    }
+    
+    .text-pulse {
+        animation: text-pulse 2s ease-in-out infinite;
+        display: inline-block;
+    }
+    
     /* Hologram effect */
     @keyframes hologram-flicker {
         0%, 100% {
