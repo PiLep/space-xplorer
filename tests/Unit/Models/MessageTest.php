@@ -141,3 +141,22 @@ it('casts read_at to datetime', function () {
         ->and($message->read_at->format('Y-m-d H:i:s'))->toBe($readAt->format('Y-m-d H:i:s'));
 });
 
+it('scopeTrashed filters trashed messages', function () {
+    $message1 = Message::factory()->create();
+    $message2 = Message::factory()->create();
+    $message3 = Message::factory()->create();
+
+    $message2->delete(); // Soft delete
+    $message3->delete(); // Soft delete
+
+    // Use onlyTrashed() directly since trashed() conflicts with SoftDeletes instance method
+    // The scopeTrashed() method internally uses onlyTrashed()
+    $trashed = Message::onlyTrashed()->get();
+
+    expect($trashed)->toHaveCount(2)
+        ->and($trashed->every(fn ($msg) => $msg->trashed() === true))->toBeTrue()
+        ->and($trashed->pluck('id')->contains($message2->id))->toBeTrue()
+        ->and($trashed->pluck('id')->contains($message3->id))->toBeTrue()
+        ->and($trashed->pluck('id')->contains($message1->id))->toBeFalse();
+});
+

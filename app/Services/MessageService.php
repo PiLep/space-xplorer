@@ -111,10 +111,18 @@ class MessageService
         } else {
             // Array-based discovery (for special discoveries)
             $discoveryData = $discovery;
+
+            // Extract 'type' from discovery data if it exists and rename it to 'discovery_type'
+            // to avoid overwriting the message type in metadata
+            if (isset($discoveryData['type'])) {
+                $discoveryData['discovery_type'] = $discoveryData['type'];
+                unset($discoveryData['type']);
+            }
+
             $subject = $subject ?? 'Découverte spéciale';
             $content = $content ?? $this->getTemplate('discovery_special', [
                 'name' => $recipient->name,
-                'discovery_type' => $discoveryData['type'] ?? 'inconnue',
+                'discovery_type' => $discoveryData['discovery_type'] ?? 'inconnue',
                 'discovery_data' => $discoveryData,
             ]);
         }
@@ -306,4 +314,3 @@ TEMPLATE,
         return $template;
     }
 }
-

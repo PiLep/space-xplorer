@@ -181,3 +181,20 @@ it('only returns messages for specified user', function () {
         ->and($messages->every(fn ($msg) => $msg->recipient_id === $this->user->id))->toBeTrue();
 });
 
+it('filters messages by trash status', function () {
+    $message1 = Message::factory()->to($this->user)->create();
+    $message2 = Message::factory()->to($this->user)->create();
+    $message3 = Message::factory()->to($this->user)->create();
+
+    $message2->delete(); // Soft delete
+    $message3->delete(); // Soft delete
+
+    $messages = $this->service->getMessagesForUser($this->user, 'trash');
+
+    expect($messages->total())->toBe(2)
+        ->and($messages->every(fn ($msg) => $msg->trashed() === true))->toBeTrue()
+        ->and($messages->pluck('id')->contains($message2->id))->toBeTrue()
+        ->and($messages->pluck('id')->contains($message3->id))->toBeTrue()
+        ->and($messages->pluck('id')->contains($message1->id))->toBeFalse();
+});
+

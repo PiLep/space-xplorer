@@ -24,7 +24,8 @@ it('sends discovery message when special discovery is made', function () {
 
     expect($message)->not->toBeNull()
         ->and($message->subject)->toBe('Découverte spéciale')
-        ->and($message->metadata['type'])->toBe('ancient_artifact');
+        ->and($message->metadata['type'])->toBe('discovery')
+        ->and($message->metadata['discovery_type'])->toBe('ancient_artifact');
 });
 
 it('logs success when special discovery message is sent', function () {

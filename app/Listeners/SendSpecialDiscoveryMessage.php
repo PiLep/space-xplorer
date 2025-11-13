@@ -27,7 +27,7 @@ class SendSpecialDiscoveryMessage
     {
         try {
             $discoveryData = array_merge([
-                'type' => $event->discoveryType,
+                'discovery_type' => $event->discoveryType,
             ], $event->discoveryData);
 
             $this->messageService->createDiscoveryMessage(

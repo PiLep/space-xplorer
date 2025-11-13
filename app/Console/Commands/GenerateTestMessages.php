@@ -135,7 +135,7 @@ class GenerateTestMessages extends Command
         return $messageService->createDiscoveryMessage(
             $user,
             [
-                'type' => 'anomalie_spatiale',
+                'discovery_type' => 'anomalie_spatiale',
                 'name' => "Anomalie Alpha-{$index}",
                 'description' => 'Une anomalie spatiale intéressante a été détectée.',
             ],
