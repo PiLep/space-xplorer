@@ -161,6 +161,32 @@ it('marks message as unread', function () {
         ->and($message->fresh()->read_at)->toBeNull();
 });
 
+it('returns read_at as ISO8601 string when marking as read', function () {
+    Sanctum::actingAs($this->user);
+    $message = Message::factory()->to($this->user)->unread()->create();
+
+    $response = $this->patchJson("/api/messages/{$message->id}/read");
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.message.is_read', true);
+
+    $readAt = $response->json('data.message.read_at');
+    expect($readAt)->not->toBeNull()
+        ->and($readAt)->toBeString()
+        ->and(preg_match('/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}[\+\-]\d{2}:\d{2}$/', $readAt))->toBe(1);
+});
+
+it('returns read_at as null when marking as unread', function () {
+    Sanctum::actingAs($this->user);
+    $message = Message::factory()->to($this->user)->read()->create();
+
+    $response = $this->patchJson("/api/messages/{$message->id}/unread");
+
+    $response->assertStatus(200)
+        ->assertJsonPath('data.message.is_read', false)
+        ->assertJsonPath('data.message.read_at', null);
+});
+
 it('prevents user from marking other users messages as read', function () {
     Sanctum::actingAs($this->user);
     $otherMessage = Message::factory()->to($this->otherUser)->create();

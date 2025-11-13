@@ -122,7 +122,7 @@ class MessageController extends Controller
                 'message' => [
                     'id' => $message->id,
                     'is_read' => $message->is_read,
-                    'read_at' => $message->read_at,
+                    'read_at' => $message->read_at?->toIso8601String(),
                 ],
             ],
             'message' => 'Message marked as unread',
