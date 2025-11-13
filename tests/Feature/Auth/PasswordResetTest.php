@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\PasswordChanged;
 use App\Events\PasswordResetCompleted;
 use App\Events\PasswordResetRequested;
 use App\Models\User;
@@ -140,6 +141,10 @@ it('resets password successfully', function () {
     ]);
 
     Event::assertDispatched(PasswordResetCompleted::class, function ($event) use ($user) {
+        return $event->user->id === $user->id;
+    });
+
+    Event::assertDispatched(PasswordChanged::class, function ($event) use ($user) {
         return $event->user->id === $user->id;
     });
 });

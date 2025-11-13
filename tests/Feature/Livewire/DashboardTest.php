@@ -1,11 +1,15 @@
 <?php
 
+use App\Events\DashboardAccessed;
 use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 
 it('renders dashboard component successfully', function () {
+    Event::fake([DashboardAccessed::class]);
+
     $user = User::factory()->create();
     $planet = Planet::factory()->create();
     $user->update(['home_planet_id' => $planet->id]);
@@ -19,6 +23,10 @@ it('renders dashboard component successfully', function () {
         ->assertSet('planet.id', $planet->id)
         ->assertSet('loading', false)
         ->assertSet('error', null);
+
+    Event::assertDispatched(DashboardAccessed::class, function ($event) use ($user) {
+        return $event->user->id === $user->id;
+    });
 });
 
 it('loads user and planet data on mount', function () {

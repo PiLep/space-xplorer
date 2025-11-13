@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\EmailVerified;
 use App\Exceptions\EmailVerificationException;
 use App\Mail\EmailVerificationNotification;
 use App\Models\User;
@@ -103,6 +104,9 @@ class EmailVerificationService
             'email_verification_attempts' => 0,
             'email_verification_code_sent_at' => null,
         ]);
+
+        // Dispatch event to track email verification
+        event(new EmailVerified($user));
 
         return true;
     }

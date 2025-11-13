@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\InboxAccessed;
 use App\Models\Message;
 use App\Services\MessageService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -40,6 +41,12 @@ class Inbox extends Component
      */
     public function mount(): void
     {
+        $user = Auth::user();
+        if ($user) {
+            // Dispatch event to track inbox access
+            event(new InboxAccessed($user));
+        }
+
         // Component initialized - messages will be loaded via computed property
         // Select first message will be called after render via wire:init
     }
