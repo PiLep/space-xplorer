@@ -34,6 +34,11 @@ module.exports = {
       name: 'chromium',
       use: {
         ...require('@playwright/test').devices['Desktop Chrome'],
+        // Override viewport to meet minimum screen size requirements (1024x768)
+        viewport: {
+          width: 1280,
+          height: 800, // Minimum required: 768px, using 800px for safety margin
+        },
       },
     },
   ],
