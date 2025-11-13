@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard;
+use App\Livewire\Inbox;
 use App\Livewire\LoginTerminal;
 use App\Livewire\Profile;
 use App\Livewire\Register;
@@ -77,6 +78,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
+    Route::get('/inbox', Inbox::class)->name('inbox');
 
     // Email Verification Route
     Route::get('/email/verify', VerifyEmail::class)->name('email.verify');

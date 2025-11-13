@@ -112,63 +112,152 @@
                     <h2 class="dark:text-glow-subtle mb-2 font-mono text-3xl font-bold text-gray-900 dark:text-white">
                         {{ strtoupper($planet->name) }}</h2>
                     <p class="font-mono text-lg uppercase tracking-wider text-gray-600 dark:text-gray-400">
-                        {{ $planet->type }}</p>
+                        {{ $planet->starSystem ? $planet->starSystem->name : $planet->type }}</p>
                 </div>
 
-                <!-- Planet Description -->
-                <div class="dark:border-border-dark flex-1 border-b border-gray-200 px-8 py-6 font-mono">
-                    <div class="mb-3 text-sm text-gray-500 dark:text-gray-500">
-                        [INFO] Planetary description retrieved
+                <!-- Star System Information -->
+                @if ($planet->starSystem)
+                    <div class="dark:border-border-dark border-b border-gray-200 px-8 py-6 font-mono">
+                        <div class="mb-3 text-sm text-gray-500 dark:text-gray-500">
+                            [INFO] Star system retrieved
+                        </div>
+                        <h3
+                            class="dark:text-glow-subtle mb-6 font-mono text-xl font-semibold text-gray-900 dark:text-white">
+                            STAR_SYSTEM</h3>
+                        <div class="space-y-3 font-mono">
+                            <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                <span
+                                    class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                >SYSTEM</span>
+                                <span
+                                    class="text-space-primary dark:text-space-primary flex-1 font-semibold">{{ $planet->starSystem->name }}</span>
+                            </div>
+                            @if ($planet->starSystem->star_type)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >STAR_TYPE</span>
+                                    <span
+                                        class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ str_replace('_', ' ', $planet->starSystem->star_type) }}</span>
+                                </div>
+                            @endif
+                            @if ($planet->starSystem->planet_count)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >PLANETS</span>
+                                    <span
+                                        class="text-space-primary dark:text-space-primary flex-1">{{ $planet->starSystem->planet_count }}</span>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                    <p class="text-base leading-relaxed text-gray-700 dark:text-white">
-                        {{ $planet->description }}
-                    </p>
-                </div>
+                @endif
+
+                <!-- Planet Coordinates -->
+                @if (
+                    ($planet->x !== null && $planet->y !== null && $planet->z !== null) ||
+                        $planet->orbital_distance !== null ||
+                        $planet->orbital_angle !== null ||
+                        $planet->orbital_inclination !== null)
+                    <div class="dark:border-border-dark border-b border-gray-200 px-8 py-6 font-mono">
+                        <div class="mb-3 text-sm text-gray-500 dark:text-gray-500">
+                            [INFO] Planet coordinates retrieved
+                        </div>
+                        <h3
+                            class="dark:text-glow-subtle mb-6 font-mono text-xl font-semibold text-gray-900 dark:text-white">
+                            PLANET_COORDINATES</h3>
+                        <div class="space-y-3 font-mono">
+                            @if ($planet->x !== null && $planet->y !== null && $planet->z !== null)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >COORDS</span>
+                                    <span class="text-space-primary dark:text-space-primary flex-1 font-mono">
+                                        {{ number_format($planet->x, 2) }}, {{ number_format($planet->y, 2) }},
+                                        {{ number_format($planet->z, 2) }}
+                                    </span>
+                                </div>
+                            @endif
+                            @if ($planet->orbital_distance !== null)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >ORB_DIST</span>
+                                    <span
+                                        class="text-space-primary dark:text-space-primary flex-1 font-mono">{{ number_format($planet->orbital_distance, 2) }}
+                                        AU</span>
+                                </div>
+                            @endif
+                            @if ($planet->orbital_angle !== null)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >ORB_ANGLE</span>
+                                    <span
+                                        class="text-space-primary dark:text-space-primary flex-1 font-mono">{{ number_format($planet->orbital_angle, 2) }}°</span>
+                                </div>
+                            @endif
+                            @if ($planet->orbital_inclination !== null)
+                                <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
+                                    <span
+                                        class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                    >ORB_INCL</span>
+                                    <span
+                                        class="text-space-primary dark:text-space-primary flex-1 font-mono">{{ number_format($planet->orbital_inclination, 2) }}°</span>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                @endif
 
                 <!-- Planet Characteristics -->
                 <div class="dark:border-border-dark border-t border-gray-200 px-8 py-6">
+                    <div class="mb-3 font-mono text-sm text-gray-500 dark:text-gray-500">
+                        [INFO] Planet properties retrieved
+                    </div>
                     <h3
                         class="dark:text-glow-subtle mb-6 font-mono text-xl font-semibold text-gray-900 dark:text-white">
-                        PLANET_DATA</h3>
+                        PLANET_PROPERTIES</h3>
                     <div class="space-y-3 font-mono">
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >SIZE</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->size }}</span>
                         </div>
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >TEMP</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->temperature }}</span>
                         </div>
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >ATMOS</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->atmosphere }}</span>
                         </div>
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >TERRAIN</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->terrain }}</span>
                         </div>
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >RESOURCES</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->resources }}</span>
                         </div>
                         <div class="dark:border-border-dark flex items-baseline border-b border-gray-300 pb-2">
                             <span
-                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                                class="w-40 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
                             >TYPE</span>
                             <span
                                 class="text-space-primary dark:text-space-primary flex-1 capitalize">{{ $planet->type }}</span>

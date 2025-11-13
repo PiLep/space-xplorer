@@ -93,8 +93,11 @@ class Dashboard extends Component
                 return;
             }
 
-            // Load user with home planet relationship
-            $this->user->load('homePlanet');
+            // Load user with home planet relationship and its relations
+            $this->user->load([
+                'homePlanet.starSystem',
+                'homePlanet.properties',
+            ]);
 
             if (! $this->user->home_planet_id) {
                 $this->error = '[ERROR] No home planet found. Please contact support.';

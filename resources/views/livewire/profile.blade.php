@@ -136,6 +136,12 @@
                             >EMAIL</span>
                             <span class="text-space-primary dark:text-space-primary flex-1">{{ $user['email'] }}</span>
                         </div>
+                        <div class="flex items-baseline pb-2">
+                            <span
+                                class="w-32 flex-shrink-0 text-sm uppercase tracking-wider text-gray-500 dark:text-gray-500"
+                            >HIRE_DATE</span>
+                            <span class="text-space-primary dark:text-space-primary flex-1 font-mono">{{ $user['created_at'] ?? 'N/A' }}</span>
+                        </div>
                         @if ($user['home_planet_id'])
                             <div class="flex items-baseline pb-2">
                                 <span
