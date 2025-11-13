@@ -161,12 +161,12 @@ class Inbox extends Component
     }
 
     /**
-     * Delete a message (permanent delete).
+     * Delete a message (soft delete - moves to trash).
      */
     public function deleteMessage(string $id): void
     {
         $message = Message::forUser(Auth::user())->findOrFail($id);
-        $message->forceDelete(); // Permanent delete
+        $message->delete(); // Soft delete - moves to trash
 
         // Clear selection if deleted message was selected
         if ($this->selectedMessageId === $id) {
@@ -177,7 +177,7 @@ class Inbox extends Component
         // Clear computed cache to reload messages
         unset($this->messages);
 
-        session()->flash('success', 'Message deleted successfully');
+        session()->flash('success', 'Message moved to trash');
     }
 
     /**

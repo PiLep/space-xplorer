@@ -91,13 +91,20 @@ it('marks message as unread', function () {
         ->and($message->fresh()->read_at)->toBeNull();
 });
 
-it('deletes a message', function () {
+it('deletes a message (soft delete - moves to trash)', function () {
     $message = Message::factory()->to($this->user)->create();
 
     Livewire::test(\App\Livewire\Inbox::class)
         ->call('deleteMessage', $message->id);
 
-    $this->assertDatabaseMissing('messages', ['id' => $message->id]);
+    // Verify the message is soft-deleted (exists in database but has deleted_at set)
+    $this->assertDatabaseHas('messages', ['id' => $message->id]);
+    // Should not be found in normal queries (without withTrashed())
+    expect(Message::find($message->id))->toBeNull();
+    // Should be found with withTrashed() and be trashed
+    $trashedMessage = Message::withTrashed()->find($message->id);
+    expect($trashedMessage)->not->toBeNull()
+        ->and($trashedMessage->trashed())->toBeTrue();
 });
 
 it('clears selection when deleted message was selected', function () {
@@ -173,8 +180,14 @@ it('shows flash message on successful deletion', function () {
     Livewire::test(\App\Livewire\Inbox::class)
         ->call('deleteMessage', $message->id);
 
-    // Verify the message was deleted
-    $this->assertDatabaseMissing('messages', ['id' => $message->id]);
+    // Verify the message is soft-deleted (exists in database but has deleted_at set)
+    $this->assertDatabaseHas('messages', ['id' => $message->id]);
+    // Should not be found in normal queries (without withTrashed())
+    expect(Message::find($message->id))->toBeNull();
+    // Should be found with withTrashed() and be trashed
+    $trashedMessage = Message::withTrashed()->find($message->id);
+    expect($trashedMessage)->not->toBeNull()
+        ->and($trashedMessage->trashed())->toBeTrue();
 
     // Note: Flash messages in Livewire are handled internally and may not be directly testable
     // The important part is that the deletion succeeds, which is verified above

@@ -131,17 +131,17 @@ class MessageController extends Controller
     }
 
     /**
-     * Delete a message.
+     * Delete a message (soft delete - moves to trash).
      */
     public function destroy(DeleteMessageRequest $request, string $id): JsonResponse
     {
         // Use scope forUser() to ensure security
         $message = Message::forUser(Auth::user())->findOrFail($id);
 
-        $message->forceDelete();
+        $message->delete(); // Soft delete - moves to trash
 
         return response()->json([
-            'message' => 'Message deleted successfully',
+            'message' => 'Message moved to trash',
             'status' => 'success',
         ]);
     }

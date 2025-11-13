@@ -196,16 +196,23 @@ it('prevents user from marking other users messages as read', function () {
     $response->assertStatus(404);
 });
 
-it('deletes message', function () {
+it('deletes message (soft delete - moves to trash)', function () {
     Sanctum::actingAs($this->user);
     $message = Message::factory()->to($this->user)->create();
 
     $response = $this->deleteJson("/api/messages/{$message->id}");
 
     $response->assertStatus(200)
-        ->assertJsonPath('message', 'Message deleted successfully');
+        ->assertJsonPath('message', 'Message moved to trash');
 
-    $this->assertDatabaseMissing('messages', ['id' => $message->id]);
+    // Verify the message is soft-deleted (exists in database but has deleted_at set)
+    $this->assertDatabaseHas('messages', ['id' => $message->id]);
+    // Should not be found in normal queries (without withTrashed())
+    expect(Message::find($message->id))->toBeNull();
+    // Should be found with withTrashed() and be trashed
+    $trashedMessage = Message::withTrashed()->find($message->id);
+    expect($trashedMessage)->not->toBeNull()
+        ->and($trashedMessage->trashed())->toBeTrue();
 });
 
 it('prevents user from deleting other users messages', function () {
