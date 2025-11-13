@@ -219,8 +219,14 @@ Approuvé
 
 - **Issue GitHub** : [#12](https://github.com/PiLep/space-xplorer/issues/12)
 - **Branche** : `feature/ISSUE-006-implement-inbox-system`
+- **Pull Request** : [#13](https://github.com/PiLep/space-xplorer/pull/13)
 
 ### Historique
+
+#### 2025-01-27 - Sam (Lead Dev) - Création de la Pull Request
+**Statut** : En review
+**Détails** : Pull Request créée vers `develop`. PR #13 créée avec toutes les améliorations (correction des types de messages, intégration des FormRequests). Tous les tests passent (90 tests, 246 assertions). Code prêt pour review et merge.
+**Pull Request** : [#13](https://github.com/PiLep/space-xplorer/pull/13)
 
 #### 2025-01-27 - Sam (Lead Dev) - Review de code
 **Statut** : Approuvé

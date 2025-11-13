@@ -33,9 +33,14 @@ Ce plan intègre toutes les recommandations de la review architecturale ([ARCHIT
 
 ### Statut
 
-Approuvé
+Approuvé - En review (PR créée)
 
 ### Historique
+
+#### 2025-01-27 - Sam (Lead Dev) - Création de la Pull Request
+**Statut** : En review
+**Détails** : Pull Request #13 créée vers `develop`. Améliorations finales apportées : correction des types de messages (welcome/discovery), intégration des FormRequests, mise à jour des tests. Tous les tests passent (90 tests, 246 assertions). Code prêt pour review et merge.
+**Pull Request** : [#13](https://github.com/PiLep/space-xplorer/pull/13)
 
 #### 2025-01-27 - Sam (Lead Dev) - Review de code
 **Statut** : Approuvé
