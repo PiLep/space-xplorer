@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PlanetController;
 use App\Http\Controllers\Api\ResourceController;
 use App\Http\Controllers\Api\UserController;
@@ -34,4 +35,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Resource routes
     Route::get('/resources/avatars', [ResourceController::class, 'getAvatars']);
+
+    // Message routes
+    Route::prefix('messages')->group(function () {
+        Route::get('/', [MessageController::class, 'index']);
+        Route::get('/{id}', [MessageController::class, 'show']);
+        Route::patch('/{id}/read', [MessageController::class, 'markAsRead']);
+        Route::patch('/{id}/unread', [MessageController::class, 'markAsUnread']);
+        Route::delete('/{id}', [MessageController::class, 'destroy']);
+    });
 });

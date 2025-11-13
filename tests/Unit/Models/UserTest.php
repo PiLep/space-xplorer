@@ -231,6 +231,45 @@ it('handles direct S3Exception when checking avatar existence', function () {
     expect($user->avatar_url)->toBeNull();
 });
 
+it('has sentMessages relationship', function () {
+    $sender = User::factory()->create();
+    $recipient = User::factory()->create();
+    $message = \App\Models\Message::factory()->create([
+        'sender_id' => $sender->id,
+        'recipient_id' => $recipient->id,
+    ]);
+
+    expect($sender->sentMessages)->toHaveCount(1)
+        ->and($sender->sentMessages->first()->id)->toBe($message->id);
+});
+
+it('has receivedMessages relationship', function () {
+    $sender = User::factory()->create();
+    $recipient = User::factory()->create();
+    $message = \App\Models\Message::factory()->create([
+        'sender_id' => $sender->id,
+        'recipient_id' => $recipient->id,
+    ]);
+
+    expect($recipient->receivedMessages)->toHaveCount(1)
+        ->and($recipient->receivedMessages->first()->id)->toBe($message->id);
+});
+
+it('returns correct unread messages count', function () {
+    $user = User::factory()->create();
+    \App\Models\Message::factory()->to($user)->unread()->count(5)->create();
+    \App\Models\Message::factory()->to($user)->read()->count(3)->create();
+
+    expect($user->unreadMessagesCount())->toBe(5);
+});
+
+it('returns zero when user has no unread messages', function () {
+    $user = User::factory()->create();
+    \App\Models\Message::factory()->to($user)->read()->count(3)->create();
+
+    expect($user->unreadMessagesCount())->toBe(0);
+});
+
 afterEach(function () {
     \Mockery::close();
 });

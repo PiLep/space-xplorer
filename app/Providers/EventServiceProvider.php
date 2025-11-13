@@ -17,6 +17,10 @@ use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
 use App\Listeners\GeneratePlanetImage;
 use App\Listeners\GeneratePlanetVideo;
+use App\Listeners\SendHomePlanetMessage;
+use App\Listeners\SendPlanetDiscoveryMessage;
+use App\Listeners\SendSpecialDiscoveryMessage;
+use App\Listeners\SendWelcomeMessage;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
 
@@ -32,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
         UserRegistered::class => [
             GenerateHomePlanet::class,
             GenerateAvatar::class,
+            SendWelcomeMessage::class,
         ],
         UserLoggedIn::class => [
             // Future listeners: TrackUserLogin, SendWelcomeNotification, etc.
@@ -47,6 +52,7 @@ class EventServiceProvider extends ServiceProvider
         PlanetCreated::class => [
             GeneratePlanetImage::class,
             GeneratePlanetVideo::class,
+            SendHomePlanetMessage::class,
         ],
         PlanetImageGenerated::class => [
             // Future listeners: NotifyUserPlanetImageReady, TrackPlanetImageGeneration, etc.
@@ -60,11 +66,13 @@ class EventServiceProvider extends ServiceProvider
             // Future listeners: NotifyUserAvatarReady, TrackAvatarGeneration, etc.
         ],
 
-        // Exploration events (future features)
+        // Exploration events
         PlanetExplored::class => [
+            SendPlanetDiscoveryMessage::class,
             // Future listeners: TrackExploration, AwardExplorationPoints, etc.
         ],
         DiscoveryMade::class => [
+            SendSpecialDiscoveryMessage::class,
             // Future listeners: TrackDiscovery, AwardDiscoveryAchievement, etc.
         ],
     ];
