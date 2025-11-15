@@ -288,13 +288,13 @@ Minigame (parent)
 
 - **Système de ressources** : Pour le MVP, on utilise simplement `scientific_data` dans la table `users`. Plus tard, on pourra créer un système de ressources plus complexe.
 
-- **Référence** : Le draft de conception des mini-jeux existe dans `docs/game-design/drafts/DRAFT-03-mini-games-system.md` mais n'est pas encore validé. Cette issue implémente le système de base qui permettra d'implémenter les mini-jeux décrits dans le draft.
+- **Référence** : Le système de mini-jeux est documenté dans `docs/game-design/mini-games-system.md`. Cette issue implémente le système de base qui permettra d'implémenter les mini-jeux décrits dans la documentation.
 
 ## Références
 
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Architecture technique générale
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Vision métier
-- [DRAFT-03-mini-games-system.md](../game-design/drafts/DRAFT-03-mini-games-system.md) - Draft de conception des mini-jeux (non validé)
+- [mini-games-system.md](../game-design/mini-games-system.md) - Documentation du système de mini-jeux
 
 ## Suivi et Historique
 

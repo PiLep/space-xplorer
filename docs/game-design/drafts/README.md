@@ -48,7 +48,7 @@ Ces drafts ont été créés à partir des documents de brainstorming dans `docs
 
 ### 3. Système de Mini-Jeux Quotidiens
 
-**Fichier** : `DRAFT-03-mini-games-system.md`
+**Fichier** : `../mini-games-system.md` (document consolidé)
 
 **Description** : Interactions courtes (10-90 secondes) jouées une fois par jour pour ajouter de l'interactivité à la boucle quotidienne.
 
@@ -59,7 +59,7 @@ Ces drafts ont été créés à partir des documents de brainstorming dans `docs
 - Intégration avec le système de gestion
 - Possibilité d'indices du Parallaxe
 
-**Source** : `mini-games.md`
+**Note** : Ce document a été consolidé depuis les drafts initiaux et la documentation de brainstorming.
 
 ---
 
