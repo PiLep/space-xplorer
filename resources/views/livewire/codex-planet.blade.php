@@ -15,13 +15,13 @@
             <!-- Back Button -->
             <div class="mb-6">
                 <a
-                    href="{{ route('codex.planets') }}"
+                    href="{{ route('codex.index') }}"
                     class="inline-flex items-center text-space-secondary hover:text-space-secondary-light transition-colors"
                 >
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Retour au catalogue
+                    Retour à l'index
                 </a>
             </div>
 
@@ -63,7 +63,7 @@
             <!-- Planet Characteristics -->
             @if ($entry->planet && $entry->planet->properties)
                 <div class="mb-8 rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Spécifications techniques</h2>
+                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Caractéristiques</h2>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
                             <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Type</div>
@@ -80,25 +80,41 @@
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
                             <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Température</div>
                             <div class="text-lg font-semibold text-white">
-                                {{ ucfirst($entry->planet->properties->temperature ?? 'Inconnue') }}
+                                @php
+                                    $temp = $entry->planet->properties->temperature ?? 'Unknown';
+                                    $tempMap = ['temperate' => 'Temperate', 'cold' => 'Cold', 'hot' => 'Hot'];
+                                    echo $tempMap[$temp] ?? ucfirst($temp);
+                                @endphp
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
                             <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Atmosphère</div>
                             <div class="text-lg font-semibold text-white">
-                                {{ ucfirst($entry->planet->properties->atmosphere ?? 'Inconnue') }}
+                                @php
+                                    $atmo = $entry->planet->properties->atmosphere ?? 'Unknown';
+                                    $atmoMap = ['breathable' => 'Breathable', 'toxic' => 'Toxic', 'nonexistent' => 'Nonexistent'];
+                                    echo $atmoMap[$atmo] ?? ucfirst($atmo);
+                                @endphp
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
                             <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Terrain</div>
                             <div class="text-lg font-semibold text-white">
-                                {{ ucfirst($entry->planet->properties->terrain ?? 'Inconnu') }}
+                                @php
+                                    $terrain = $entry->planet->properties->terrain ?? 'Unknown';
+                                    $terrainMap = ['rocky' => 'Rocky', 'oceanic' => 'Oceanic', 'desert' => 'Desert', 'forested' => 'Forested', 'urban' => 'Urban', 'mixed' => 'Mixed', 'icy' => 'Icy'];
+                                    echo $terrainMap[$terrain] ?? ucfirst($terrain);
+                                @endphp
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
                             <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Ressources</div>
                             <div class="text-lg font-semibold text-white">
-                                {{ ucfirst($entry->planet->properties->resources ?? 'Inconnues') }}
+                                @php
+                                    $resources = $entry->planet->properties->resources ?? 'Unknown';
+                                    $resourcesMap = ['abundant' => 'Abundant', 'moderate' => 'Moderate', 'rare' => 'Rare'];
+                                    echo $resourcesMap[$resources] ?? ucfirst($resources);
+                                @endphp
                             </div>
                         </div>
                     </div>
@@ -108,7 +124,7 @@
             <!-- Description -->
             @if ($entry->description)
                 <div class="mb-8 rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Rapport d'exploration</h2>
+                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Description</h2>
                     <p class="text-gray-300 leading-relaxed">{{ $entry->description }}</p>
                 </div>
             @endif
@@ -121,7 +137,7 @@
                             wire:click="openNameModal"
                             class="rounded-lg bg-space-primary px-6 py-3 font-semibold text-space-black hover:bg-space-primary-dark transition-colors glow-primary"
                         >
-                            Classifier cette planète
+                            Nommer cette planète
                         </button>
                     @endif
 
@@ -130,7 +146,7 @@
                             wire:click="openContributeModal"
                             class="rounded-lg border border-space-secondary px-6 py-3 font-semibold text-space-secondary hover:bg-space-secondary hover:text-space-black transition-colors"
                         >
-                            Soumettre un rapport
+                            Contribuer
                         </button>
                     @endif
                 </div>

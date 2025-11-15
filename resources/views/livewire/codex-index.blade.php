@@ -13,35 +13,35 @@
                 <div class="mb-8">
                     <h1 class="mb-2 text-4xl font-bold text-space-primary text-glow-primary dark:text-white">Codex Stellaris</h1>
                     <p class="text-gray-400 dark:text-gray-400">
-                        Base de données corporative - Archives Stellar
+                        encyclopédie collaborative
                     </p>
                 </div>
 
                 <!-- Statistics Cards -->
                 <div class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Entrées</div>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Articles</div>
                         <div class="mt-1 text-2xl font-bold text-space-primary text-glow-primary">{{ $stats['total_articles'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Planètes classifiées</div>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Planètes nommées</div>
                         <div class="mt-1 text-2xl font-bold text-space-primary text-glow-primary">{{ $stats['named'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Agents</div>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Contributeurs</div>
                         <div class="mt-1 text-2xl font-bold text-space-secondary text-glow-secondary">{{ $stats['contributors'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Rapports</div>
+                        <div class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Contributions</div>
                         <div class="mt-1 text-2xl font-bold text-space-secondary text-glow-secondary">{{ $stats['contributions'] ?? 0 }}</div>
                     </div>
                 </div>
 
                 <!-- Recent Discoveries -->
-                @if ($recentDiscoveries->isNotEmpty())
+                @if ($recentDiscoveries->isNotEmpty() && empty($search))
                     <div class="mb-8">
                         <div class="mb-4 flex items-center justify-between">
-                            <h2 class="text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Dernières acquisitions</h2>
+                            <h2 class="text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Découvertes récentes</h2>
                             <a href="{{ route('codex.planets') }}" class="text-sm text-space-secondary hover:text-space-secondary-light transition-colors">
                                 Accéder au catalogue complet →
                             </a>
@@ -62,7 +62,7 @@
                                             @if ($recent->is_named)
                                                 <div class="absolute top-2 right-2">
                                                     <span class="rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
-                                                        Classifiée
+                                                        Nommée
                                                     </span>
                                                 </div>
                                             @endif
@@ -96,6 +96,92 @@
                                     </div>
                                 </a>
                             @endforeach
+                        </div>
+                    </div>
+                @endif
+
+                <!-- Search -->
+                <div class="mb-8">
+                    <div class="relative">
+                        <input
+                            type="text"
+                            wire:model.live.debounce.300ms="search"
+                            wire:keyup="performSearch"
+                            placeholder="Rechercher une planète..."
+                            class="w-full rounded-lg border border-border-dark bg-surface-dark px-4 py-3 pl-10 text-white placeholder-gray-400 focus:border-space-primary focus:outline-none focus:ring-2 focus:ring-space-primary"
+                        />
+                        @if (!empty($search))
+                            <button
+                                wire:click="clearSearch"
+                                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white"
+                            >
+                                ✕
+                            </button>
+                        @endif
+                    </div>
+                    @if ($showSearchResults && !empty($searchResults))
+                        <div class="mt-2 rounded-lg border border-border-dark bg-surface-dark p-2">
+                            @foreach ($searchResults as $result)
+                                <button
+                                    wire:click="selectResult('{{ $result['id'] }}')"
+                                    class="block w-full px-4 py-2 text-left text-white hover:bg-surface-medium transition-colors"
+                                >
+                                    {{ $result['name'] }}
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                    @if (!empty($search))
+                        <p class="mt-2 text-sm text-gray-400">
+                            {{ $entries->total() }} résultat{{ $entries->total() > 1 ? 's' : '' }}
+                        </p>
+                    @endif
+                </div>
+
+                <!-- All Planets -->
+                @if ($entries->isNotEmpty())
+                    <div class="mb-8">
+                        <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Toutes les planètes</h2>
+                        <div class="space-y-4">
+                            @foreach ($entries as $entry)
+                                <a
+                                    href="{{ route('codex.planet', $entry->id) }}"
+                                    class="group block rounded-lg border border-border-dark bg-surface-dark p-4 transition-all hover:border-space-primary hover:glow-primary"
+                                >
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-2">
+                                                <h3 class="text-lg font-semibold text-white group-hover:text-space-primary transition-colors">
+                                                    {{ $entry->display_name }}
+                                                </h3>
+                                                @if ($entry->is_named)
+                                                    <span class="rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
+                                                        Nommée
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            @if ($entry->planet && $entry->planet->properties)
+                                                <div class="mt-2 flex flex-wrap gap-2">
+                                                    <span class="rounded-full border border-border-dark bg-surface-medium px-2 py-1 text-xs text-gray-300">
+                                                        {{ ucfirst($entry->planet->properties->type ?? 'Inconnu') }}
+                                                    </span>
+                                                    <span class="rounded-full border border-border-dark bg-surface-medium px-2 py-1 text-xs text-gray-300">
+                                                        {{ ucfirst($entry->planet->properties->size ?? 'Inconnue') }}
+                                                    </span>
+                                                </div>
+                                            @endif
+                                            @if ($entry->discoveredBy)
+                                                <p class="mt-2 text-sm text-gray-400">
+                                                    Agent {{ $entry->discoveredBy->name }} - {{ $entry->created_at->format('d/m/Y') }}
+                                                </p>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </a>
+                            @endforeach
+                        </div>
+                        <div class="mt-4">
+                            {{ $entries->links() }}
                         </div>
                     </div>
                 @endif

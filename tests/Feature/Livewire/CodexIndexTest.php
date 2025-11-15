@@ -57,15 +57,18 @@ it('filters entries by search query', function () {
     CodexEntry::factory()->public()->create([
         'name' => 'Alpha Centauri',
         'fallback_name' => 'Planète Tellurique #1234',
+        'created_at' => now()->subDays(10),
     ]);
     CodexEntry::factory()->public()->create([
         'name' => 'Beta Orionis',
         'fallback_name' => 'Planète Gazeuse #5678',
+        'created_at' => now()->subDays(10),
     ]);
 
     Livewire::test(\App\Livewire\CodexIndex::class)
         ->set('search', 'Alpha')
         ->assertSee('Alpha Centauri')
+        ->assertSee('Toutes les planètes')
         ->assertDontSee('Beta Orionis');
 });
 
@@ -91,22 +94,25 @@ it('displays named badge for named planets', function () {
 
 it('displays planet type and size badges', function () {
     $planet = Planet::factory()->create();
-    $planet->properties()->create([
-        'type' => 'tellurique',
-        'size' => 'moyenne',
-        'temperature' => 'temperee',
-        'atmosphere' => 'oxygene',
-        'terrain' => 'montagneux',
-        'resources' => 'mineraux',
-    ]);
+    $planet->properties()->updateOrCreate(
+        ['planet_id' => $planet->id],
+        [
+            'type' => 'terrestrial',
+            'size' => 'medium',
+            'temperature' => 'temperate',
+            'atmosphere' => 'breathable',
+            'terrain' => 'rocky',
+            'resources' => 'abundant',
+        ]
+    );
 
     CodexEntry::factory()->public()->create([
         'planet_id' => $planet->id,
     ]);
 
     Livewire::test(\App\Livewire\CodexIndex::class)
-        ->assertSee('Tellurique')
-        ->assertSee('Moyenne');
+        ->assertSee('Terrestrial')
+        ->assertSee('Medium');
 });
 
 it('displays discoverer name and date', function () {

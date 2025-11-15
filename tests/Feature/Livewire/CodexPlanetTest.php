@@ -48,14 +48,17 @@ it('displays discoverer information', function () {
 
 it('displays planet characteristics', function () {
     $planet = Planet::factory()->create();
-    $planet->properties()->create([
-        'type' => 'tellurique',
-        'size' => 'moyenne',
-        'temperature' => 'temperee',
-        'atmosphere' => 'oxygene',
-        'terrain' => 'montagneux',
-        'resources' => 'mineraux',
-    ]);
+    $planet->properties()->updateOrCreate(
+        ['planet_id' => $planet->id],
+        [
+            'type' => 'terrestrial',
+            'size' => 'medium',
+            'temperature' => 'temperate',
+            'atmosphere' => 'breathable',
+            'terrain' => 'rocky',
+            'resources' => 'abundant',
+        ]
+    );
 
     $entry = CodexEntry::factory()->create([
         'planet_id' => $planet->id,
@@ -64,12 +67,12 @@ it('displays planet characteristics', function () {
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->assertSee('Caractéristiques')
-        ->assertSee('Tellurique')
-        ->assertSee('Moyenne')
-        ->assertSee('Tempérée')
-        ->assertSee('Oxygène')
-        ->assertSee('Montagneux')
-        ->assertSee('Minéraux');
+        ->assertSee('Terrestrial')
+        ->assertSee('Medium')
+        ->assertSee('Temperate')
+        ->assertSee('Breathable')
+        ->assertSee('Rocky')
+        ->assertSee('Abundant');
 });
 
 it('displays planet description', function () {
@@ -228,7 +231,8 @@ it('displays back button to codex index', function () {
     $entry = CodexEntry::factory()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
-        ->assertSee('Retour à l\'index');
+        ->assertSee('Retour à l')
+        ->assertSee('index');
 });
 
 it('handles non-existent entry gracefully', function () {

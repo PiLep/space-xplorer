@@ -9,13 +9,91 @@ use App\Models\StarSystem;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 #[Layout('layouts.app')]
 class CodexIndex extends Component
 {
+    use WithPagination;
+
+    public string $search = '';
+
+    public bool $showSearchResults = false;
+
+    public array $searchResults = [];
+
     public function mount(): void
     {
         // Component initialized
+    }
+
+    /**
+     * Perform search with autocompletion.
+     */
+    public function performSearch(): void
+    {
+        if (empty($this->search)) {
+            $this->showSearchResults = false;
+            $this->searchResults = [];
+
+            return;
+        }
+
+        $this->searchResults = CodexEntry::public()
+            ->where(function ($query) {
+                $query->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('fallback_name', 'like', '%'.$this->search.'%');
+            })
+            ->limit(10)
+            ->get()
+            ->map(function ($entry) {
+                return [
+                    'id' => $entry->id,
+                    'name' => $entry->display_name,
+                ];
+            })
+            ->toArray();
+
+        $this->showSearchResults = true;
+    }
+
+    /**
+     * Clear search.
+     */
+    public function clearSearch(): void
+    {
+        $this->search = '';
+        $this->showSearchResults = false;
+        $this->searchResults = [];
+        $this->resetPage();
+    }
+
+    /**
+     * Select a search result and redirect.
+     */
+    public function selectResult(string $entryId): void
+    {
+        $this->redirect(route('codex.planet', $entryId));
+    }
+
+    /**
+     * Get paginated codex entries.
+     */
+    #[Computed]
+    public function entries()
+    {
+        $query = CodexEntry::with(['planet.properties', 'discoveredBy'])
+            ->public();
+
+        if (! empty($this->search)) {
+            $query->where(function ($q) {
+                $q->where('name', 'like', '%'.$this->search.'%')
+                    ->orWhere('fallback_name', 'like', '%'.$this->search.'%');
+            });
+        }
+
+        return $query->orderBy('created_at', 'desc')
+            ->paginate(20);
     }
 
     /**
@@ -56,6 +134,7 @@ class CodexIndex extends Component
         return view('livewire.codex-index', [
             'stats' => $this->stats,
             'recentDiscoveries' => $this->recentDiscoveries,
+            'entries' => $this->entries,
         ]);
     }
 }
