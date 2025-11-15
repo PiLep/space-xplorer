@@ -300,7 +300,7 @@ Minigame (parent)
 
 ### Statut
 
-À faire
+En cours
 
 ### Historique
 
@@ -308,4 +308,9 @@ Minigame (parent)
 **Statut** : À faire
 **Détails** : Issue créée pour implémenter le système de base des mini-jeux avec un seul mini-jeu (Scanning) pour valider l'architecture. Le système doit être extensible et permettre l'ajout de nouveaux types depuis l'admin.
 **GitHub** : [#15](https://github.com/PiLep/space-xplorer/issues/15)
+
+#### 2025-01-XX - Sam (Lead Dev) - Création du plan de développement
+**Statut** : En cours
+**Détails** : Plan de développement créé (TASK-007). Le plan décompose l'implémentation en 6 phases : Modèle de données, Services métier, Composants Livewire Frontend, Interface Admin, Sécurité, et Mise à jour du modèle User. Branche Git créée : `feature/ISSUE-007-implement-minigame-base-system`.
+**Fichiers modifiés** : `docs/tasks/TASK-007-implement-minigame-base-system.md`
 
