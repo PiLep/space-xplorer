@@ -174,6 +174,7 @@ Créer une migration pour la table `wiki_entries` avec tous les champs nécessai
 - **[DRAFT-04-stellarpedia-system.md](../game-design/drafts/DRAFT-04-stellarpedia-system.md)** : Version complète du système (futur)
 - **[ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md)** : Architecture technique
 - **[EVENTS.md](../EVENTS.md)** : Documentation des événements (PlanetCreated, PlanetExplored)
+- **Issue GitHub** : [#16](https://github.com/PiLep/space-xplorer/issues/16)
 
 ## Suivi et Historique
 
@@ -199,4 +200,11 @@ En cours
 **Détails** : Review architecturale complète effectuée sur le plan de développement TASK-008.
 **Fichiers modifiés** : docs/reviews/ARCHITECT-REVIEW-008-implement-public-wiki-stellarpedia.md, docs/tasks/TASK-008-implement-public-wiki-stellarpedia.md
 **Notes** : ⚠️ Approuvé avec recommandations. Le plan respecte l'architecture définie. Principales recommandations : clarification de l'utilisation des services par Livewire (High), utilisation explicite des ULIDs dans les migrations (High), génération IA asynchrone (High pour évolution future), rate limiting (Medium), index de performance (Medium). Le plan peut être implémenté en tenant compte des recommandations.
+
+#### 2025-01-XX - Morgan (Architect) - Création de la branche et de l'issue GitHub
+**Statut** : En cours
+**Détails** : Branche Git créée (`issue/008-implement-public-wiki-stellarpedia`) et issue GitHub créée (#16).
+**Fichiers modifiés** : docs/issues/ISSUE-008-implement-public-wiki-stellarpedia.md
+**Notes** : Issue GitHub synchronisée avec la documentation locale. Commentaire de review architecturale ajouté sur l'issue GitHub.
+**GitHub** : [#16](https://github.com/PiLep/space-xplorer/issues/16)
 
