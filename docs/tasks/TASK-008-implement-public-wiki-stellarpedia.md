@@ -19,7 +19,7 @@ Implémenter un wiki public basique accessible à tous (joueurs et non-joueurs) 
 
 ### Statut
 
-À faire
+✅ Terminé - Toutes les phases implémentées
 
 ### Historique
 
@@ -34,6 +34,58 @@ Implémenter un wiki public basique accessible à tous (joueurs et non-joueurs) 
 **Détails** : Review architecturale complète effectuée. Le plan est approuvé avec recommandations.
 **Fichiers modifiés** : docs/reviews/ARCHITECT-REVIEW-008-implement-public-wiki-stellarpedia.md
 **Notes** : ⚠️ Approuvé avec recommandations. Principales recommandations : clarification de l'utilisation des services par Livewire (High), utilisation explicite des ULIDs dans les migrations (High), génération IA asynchrone (High pour évolution future), rate limiting (Medium), index de performance (Medium). Le plan peut être implémenté en tenant compte des recommandations.
+
+#### 2025-01-20 - Jordan (Fullstack Dev) - Implémentation complète
+**Statut** : ✅ Terminé
+**Détails** : Toutes les phases terminées. Toutes les recommandations de l'architecte ont été prises en compte :
+- ✅ Migrations créées avec ULIDs explicites (`$table->ulid('id')->primary()`)
+- ✅ Foreign keys utilisent des ULIDs
+- ✅ Index de performance ajoutés (discovered_by_user_id, name, fallback_name, created_at)
+- ✅ Configuration wiki.php créée avec validation des mots interdits
+- ✅ WikiService créé avec validation complète des noms
+- ✅ AIDescriptionService créé avec cache et retry logic
+- ✅ Listeners créés pour PlanetCreated et PlanetExplored
+- ✅ API endpoints créés avec rate limiting (60 req/min pour publics, 5 req/min pour nommage)
+- ✅ FormRequests créés pour validation
+- ✅ Composants Livewire créés utilisant directement les services (pas l'API)
+- ✅ Routes web créées avec préfixe `/codex` (au lieu de `/wiki`)
+- ✅ Tests unitaires et d'intégration créés
+- ✅ ARCHITECTURE.md mis à jour avec documentation complète
+**Fichiers créés** :
+- database/migrations/2025_01_20_100000_create_wiki_entries_table.php
+- database/migrations/2025_01_20_100001_create_wiki_contributions_table.php
+- app/Models/WikiEntry.php
+- app/Models/WikiContribution.php
+- config/text-generation.php
+- config/wiki.php
+- app/Services/AIDescriptionService.php
+- app/Services/WikiService.php
+- app/Listeners/CreateWikiEntryOnPlanetCreated.php
+- app/Listeners/CreateWikiEntryOnPlanetExplored.php
+- app/Http/Requests/NamePlanetRequest.php
+- app/Http/Requests/ContributeToWikiRequest.php
+- app/Http/Controllers/Api/WikiController.php
+- app/Livewire/WikiIndex.php
+- app/Livewire/WikiPlanet.php
+- app/Livewire/NamePlanet.php
+- app/Livewire/ContributeToWiki.php
+- resources/views/livewire/wiki-index.blade.php
+- resources/views/livewire/wiki-planet.blade.php
+- resources/views/livewire/name-planet.blade.php
+- resources/views/livewire/contribute-to-wiki.blade.php
+- database/factories/WikiEntryFactory.php
+- database/factories/WikiContributionFactory.php
+- tests/Unit/Services/WikiServiceTest.php
+- tests/Unit/Services/AIDescriptionServiceTest.php
+- tests/Feature/Listeners/CreateWikiEntryOnPlanetCreatedTest.php
+- tests/Feature/Listeners/CreateWikiEntryOnPlanetExploredTest.php
+- tests/Feature/Api/WikiControllerTest.php
+**Fichiers modifiés** :
+- app/Providers/EventServiceProvider.php (ajout des listeners)
+- routes/api.php (ajout des routes codex avec rate limiting)
+- routes/web.php (ajout des routes codex publiques)
+- docs/memory_bank/ARCHITECTURE.md (documentation complète du système Codex)
+**Notes** : Toutes les recommandations High Priority de l'architecte ont été implémentées. Le système utilise le préfixe `/codex` pour les routes publiques comme demandé. Les composants Livewire utilisent directement les services Laravel plutôt que l'API, conformément à l'architecture hybride.
 
 ## Objectifs Techniques
 

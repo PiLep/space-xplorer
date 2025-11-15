@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\CodexController;
 use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PlanetController;
 use App\Http\Controllers\Api\ResourceController;
@@ -18,6 +19,13 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::get('/user', [AuthController::class, 'user']);
     });
+});
+
+// Public Codex routes (with rate limiting)
+Route::prefix('codex')->middleware('throttle:60,1')->group(function () {
+    Route::get('/planets', [CodexController::class, 'index']);
+    Route::get('/planets/{id}', [CodexController::class, 'show']);
+    Route::get('/search', [CodexController::class, 'search']);
 });
 
 // Protected API routes
@@ -43,5 +51,11 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/{id}/read', [MessageController::class, 'markAsRead']);
         Route::patch('/{id}/unread', [MessageController::class, 'markAsUnread']);
         Route::delete('/{id}', [MessageController::class, 'destroy']);
+    });
+
+    // Protected Codex routes (with rate limiting)
+    Route::prefix('codex/planets/{id}')->middleware('throttle:5,1')->group(function () {
+        Route::post('/name', [CodexController::class, 'namePlanet']);
+        Route::post('/contribute', [CodexController::class, 'contribute']);
     });
 });

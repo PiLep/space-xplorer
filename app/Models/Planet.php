@@ -78,6 +78,14 @@ class Planet extends Model
     }
 
     /**
+     * Get the codex entry for this planet.
+     */
+    public function codexEntry(): HasOne
+    {
+        return $this->hasOne(CodexEntry::class);
+    }
+
+    /**
      * Get planet type from properties.
      */
     protected function type(): Attribute

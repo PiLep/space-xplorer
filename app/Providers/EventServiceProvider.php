@@ -13,6 +13,8 @@ use App\Events\UserLoggedIn;
 use App\Events\UserProfileUpdated;
 use App\Events\UserRegistered;
 use App\Listeners\CleanupUserData;
+use App\Listeners\CreateCodexEntryOnPlanetCreated;
+use App\Listeners\CreateCodexEntryOnPlanetExplored;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
 use App\Listeners\GeneratePlanetImage;
@@ -54,6 +56,7 @@ class EventServiceProvider extends ServiceProvider
             GeneratePlanetImage::class,
             GeneratePlanetVideo::class,
             SendHomePlanetMessage::class,
+            CreateCodexEntryOnPlanetCreated::class,
         ],
         PlanetImageGenerated::class => [
             // Future listeners: NotifyUserPlanetImageReady, TrackPlanetImageGeneration, etc.
@@ -70,6 +73,7 @@ class EventServiceProvider extends ServiceProvider
         // Exploration events
         PlanetExplored::class => [
             SendPlanetDiscoveryMessage::class,
+            CreateCodexEntryOnPlanetExplored::class,
             // Future listeners: TrackExploration, AwardExplorationPoints, etc.
         ],
         DiscoveryMade::class => [

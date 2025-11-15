@@ -103,5 +103,9 @@ class DatabaseSeeder extends Seeder
         $this->command->line("   • Default password for all users: <fg=yellow>{$defaultPassword}</>");
         $this->command->newLine();
         $this->command->info('✨ Database seeded successfully!');
+        $this->command->newLine();
+
+        // Seed codex data
+        $this->call(CodexSeeder::class);
     }
 }

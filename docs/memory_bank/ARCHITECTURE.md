@@ -57,6 +57,8 @@ tests/               # Tests unitaires et fonctionnels
 - **StarSystems** : Systèmes stellaires contenant des étoiles et planètes
 - **Planets** : Planètes explorables appartenant à un système stellaire
 - **PlanetProperties** : Propriétés détaillées des planètes (type, taille, température, etc.)
+- **WikiEntry** : Articles du Codex (encyclopédie spatiale) pour les planètes découvertes
+- **WikiContribution** : Contributions des joueurs aux articles du Codex
 
 ### Relations
 
@@ -73,6 +75,19 @@ tests/               # Tests unitaires et fonctionnels
 - **Planets → PlanetProperties** : Relation "propriétés planétaires"
   - Une planète a des propriétés détaillées (type, taille, température, etc.)
   - Relation : `planet_properties.planet_id` → `planets.id`
+
+- **Planets → WikiEntry** : Relation "article Codex"
+  - Une planète a un article dans le Codex (encyclopédie spatiale)
+  - Relation : `wiki_entries.planet_id` → `planets.id` (unique)
+  - Un article peut être nommé par le découvreur
+
+- **Users → WikiEntry** : Relation "découvreur"
+  - Un utilisateur peut découvrir des planètes
+  - Relation : `wiki_entries.discovered_by_user_id` → `users.id`
+
+- **WikiEntry → WikiContribution** : Relation "contributions"
+  - Un article peut avoir plusieurs contributions de joueurs
+  - Relation : `wiki_contributions.wiki_entry_id` → `wiki_entries.id`
 
 ### Structure simplifiée
 
@@ -113,6 +128,26 @@ PlanetProperties
 ├── resources (abondantes, modérées, rares)
 ├── description (générée à partir des caractéristiques)
 └── created_at / updated_at
+
+WikiEntry
+├── id (ULID - 26 caractères)
+├── planet_id (ULID - foreign key → planets.id, unique)
+├── name (nullable, nom donné par le joueur)
+├── fallback_name (nom technique auto-généré)
+├── description (text, description générée par IA)
+├── discovered_by_user_id (ULID - foreign key → users.id, nullable)
+├── is_named (boolean, si la planète a été nommée)
+├── is_public (boolean, visibilité publique)
+└── created_at / updated_at
+
+WikiContribution
+├── id (ULID - 26 caractères)
+├── wiki_entry_id (ULID - foreign key → wiki_entries.id)
+├── contributor_user_id (ULID - foreign key → users.id)
+├── content_type (string, type de contribution)
+├── content (text, contenu de la contribution)
+├── status (enum: pending, approved, rejected)
+└── created_at / updated_at
 ```
 
 ### Identifiants (ULIDs)
@@ -131,6 +166,8 @@ PlanetProperties
 **Tables concernées** :
 - `users` : ID en ULID
 - `planets` : ID en ULID
+- `wiki_entries` : ID en ULID
+- `wiki_contributions` : ID en ULID
 - Toutes les futures tables métier utiliseront des ULIDs
 
 **Implémentation Laravel** :
@@ -541,6 +578,31 @@ Planet::nearby($x, $y, $z, $radius);
 - `GET /api/planets` - Liste des planètes (avec pagination) - À implémenter selon les besoins
 - `POST /api/planets/{id}/explore` - Explorer une planète (action du joueur) - À implémenter selon les besoins
 
+### Endpoints Codex (Stellarpedia) - Public
+
+- `GET /api/codex/planets` - Liste paginée des planètes du Codex (public, rate limit: 60/min)
+  - Query params : `page`, `per_page`, `type`, `size`, `temperature`, `search`
+  - Retourne les articles wiki avec pagination
+
+- `GET /api/codex/planets/{id}` - Détails d'un article Codex (public, rate limit: 60/min)
+  - Retourne les détails complets d'une planète avec caractéristiques et description
+
+- `GET /api/codex/search` - Recherche avec autocomplétion (public, rate limit: 60/min)
+  - Query params : `q` (query string, min 2 caractères)
+  - Retourne les résultats de recherche par nom/fallback_name
+
+### Endpoints Codex (Stellarpedia) - Authentifiés
+
+- `POST /api/codex/planets/{id}/name` - Nommer une planète (authentification requise, rate limit: 5/min)
+  - Request body : `{ "name": "string" }`
+  - Validation : longueur 3-50 caractères, caractères autorisés, unicité, mots interdits
+  - Seul le découvreur peut nommer sa planète
+
+- `POST /api/codex/planets/{id}/contribute` - Contribuer à un article (authentification requise, rate limit: 5/min)
+  - Request body : `{ "content": "string" }`
+  - Validation : longueur 10-5000 caractères
+  - Crée une contribution en statut "pending" (modération requise)
+
 ### Format de réponse
 
 Toutes les réponses API suivent un format JSON standardisé :
@@ -643,11 +705,16 @@ L'application utilise une architecture événementielle complète pour découple
 **Listeners** :
 - `GeneratePlanetImage` : Génère automatiquement une image de la planète (en queue)
 - `GeneratePlanetVideo` : Génère automatiquement une vidéo de la planète (en queue)
+- `CreateWikiEntryOnPlanetCreated` : Crée automatiquement un article Codex pour la planète
+  - Génère un nom de fallback basé sur le type de planète
+  - Génère une description via IA (AIDescriptionService)
+  - Assigne le découvreur si c'est une planète d'origine (via home_planet_id)
 
 **Flux** :
 1. `PlanetGeneratorService` crée la planète
 2. Événement `PlanetCreated` est dispatché
 3. Listeners génèrent les médias (asynchrone) et dispatchent les événements de complétion
+4. Listener crée l'article Codex avec description IA
 
 ##### `PlanetImageGenerated`
 
@@ -682,12 +749,16 @@ L'application utilise une architecture événementielle complète pour découple
 
 ##### `PlanetExplored`
 
-**Déclencheur** : Lorsqu'un joueur explore une planète (à implémenter)
+**Déclencheur** : Lorsqu'un joueur explore une planète
 
 **Données** : Utilisateur, planète explorée
 
 **Listeners** :
-- Aucun pour le moment (prévu pour : tracking, attribution de points, achievements, etc.)
+- `CreateWikiEntryOnPlanetExplored` : Crée un article Codex si inexistant
+  - Vérifie l'existence d'un article avant de créer
+  - Génère une description via IA si nécessaire
+  - Assigne le découvreur (utilisateur qui explore)
+- `SendPlanetDiscoveryMessage` : Envoie un message de découverte au joueur
 
 ##### `DiscoveryMade`
 
@@ -853,6 +924,87 @@ Lors de la réinitialisation de mot de passe réussie :
 
 *Note : Les détails métier (types de planètes, caractéristiques) sont documentés dans PROJECT_BRIEF.md*
 
+## Codex (Stellarpedia) - Système Wiki
+
+### Architecture du Codex
+
+**Principe** : Encyclopédie spatiale publique accessible à tous (joueurs et non-joueurs) pour afficher toutes les planètes découvertes dans l'univers Stellar.
+
+**Composants** :
+- **Service Wiki** : `WikiService` dans `app/Services/` - Gestion des articles Codex
+- **Service Génération IA** : `AIDescriptionService` dans `app/Services/` - Génération de descriptions via IA
+- **Configuration** : `config/wiki.php` - Règles de validation des noms et contributions
+- **Configuration IA** : `config/text-generation.php` - Configuration pour la génération de texte IA
+
+### Services
+
+#### WikiService
+
+**Méthodes principales** :
+- `createEntryForPlanet(Planet $planet, ?User $discoverer = null)` : Crée un article Codex avec génération de description IA
+- `generateFallbackName(Planet $planet)` : Génère un nom de fallback technique (ex: "Planète Tellurique #1234")
+- `validateName(string $name)` : Valide un nom selon les règles (unicité, longueur, caractères, mots interdits)
+- `namePlanet(WikiEntry $entry, User $user, string $name)` : Nomme une planète avec validation complète
+- `canUserNamePlanet(WikiEntry $entry, User $user)` : Vérifie si l'utilisateur peut nommer (découvreur uniquement)
+- `canUserContribute(WikiEntry $entry, User $user)` : Vérifie si l'utilisateur peut contribuer
+- `getEntries(array $filters = [], int $perPage = 20)` : Liste paginée avec filtres (type, size, temperature, search)
+- `searchEntries(string $query, int $limit = 10)` : Recherche avec autocomplétion
+
+**Validation des noms** :
+- Longueur : 3-50 caractères
+- Caractères autorisés : Lettres (a-z, A-Z, accents), chiffres (0-9), espaces, tirets (-), apostrophes (')
+- Unicité : Vérification que le nom n'est pas déjà utilisé
+- Mots interdits : Liste dans `config/wiki.php` (validation case-insensitive)
+
+#### AIDescriptionService
+
+**Méthodes principales** :
+- `generatePlanetDescription(Planet $planet, ?string $provider = null)` : Génère une description basée sur les caractéristiques
+- `buildPrompt(Planet $planet)` : Construit le prompt pour l'IA à partir des caractéristiques
+- `isProviderConfigured(string $provider)` : Vérifie si un provider est configuré
+- `getAvailableProviders()` : Liste des providers disponibles
+
+**Fonctionnalités** :
+- Cache des descriptions générées (TTL configurable)
+- Retry logic avec exponential backoff
+- Fallback vers template pré-écrit en cas d'échec IA
+- Support de multiples providers (OpenAI GPT par défaut)
+
+**Configuration** :
+- Provider par défaut : OpenAI GPT (`gpt-4o-mini`)
+- Cache : Activé par défaut (TTL 24h)
+- Retry : 3 tentatives avec délai exponentiel
+
+### Création automatique d'articles
+
+**Listeners** :
+- `CreateWikiEntryOnPlanetCreated` : Crée un article lors de la création d'une planète
+  - Vérifie si c'est une planète d'origine (via `home_planet_id`)
+  - Assigne le découvreur si disponible
+- `CreateWikiEntryOnPlanetExplored` : Crée un article lors de l'exploration d'une planète
+  - Vérifie l'existence d'un article avant de créer
+  - Assigne le découvreur (utilisateur qui explore)
+
+**Flux** :
+1. Planète créée/explorée → Événement `PlanetCreated`/`PlanetExplored`
+2. Listener crée l'article Codex via `WikiService::createEntryForPlanet()`
+3. Service génère le nom de fallback
+4. Service génère la description via IA (avec fallback si échec)
+5. Article créé avec `is_public = true` par défaut
+
+### Routes Web
+
+- `/codex` : Page d'accueil du Codex (public)
+- `/codex/planets/{id}` : Détails d'une planète dans le Codex (public)
+
+**Composants Livewire** :
+- `WikiIndex` : Liste des planètes avec recherche et filtres
+- `WikiPlanet` : Détails d'une planète avec caractéristiques et description
+- `NamePlanet` : Modal pour nommer une planète (authentifié)
+- `ContributeToWiki` : Modal pour contribuer (authentifié)
+
+**Note** : Les composants Livewire utilisent directement `WikiService` plutôt que les endpoints API pour une meilleure performance.
+
 ## Frontend - Livewire Components
 
 ### Architecture Frontend
@@ -931,6 +1083,11 @@ class Register extends Component
 - `AuthService::login()` / `AuthService::loginFromCredentials()` : Connexion
 - `AuthService::logout()` : Déconnexion
 - `Auth::user()` : Récupération de l'utilisateur authentifié
+- `WikiService::getEntries()` : Liste paginée des articles Codex
+- `WikiService::searchEntries()` : Recherche d'articles Codex
+- `WikiService::namePlanet()` : Nommer une planète
+- `WikiService::canUserNamePlanet()` : Vérifier les permissions de nommage
+- `WikiService::canUserContribute()` : Vérifier les permissions de contribution
 
 ### Structure des Composants
 
@@ -955,6 +1112,10 @@ class Register extends Component
 - **VerifyEmail** : Page de vérification d'email avec code à 6 chiffres (`/email/verify`)
 - **Dashboard** : Affichage de la planète d'origine (`/dashboard`)
 - **Profile** : Gestion du profil utilisateur (`/profile`)
+- **WikiIndex** : Page d'accueil du Codex avec liste des planètes (`/codex`)
+- **WikiPlanet** : Page détail d'une planète dans le Codex (`/codex/planets/{id}`)
+- **NamePlanet** : Modal pour nommer une planète (composant enfant)
+- **ContributeToWiki** : Modal pour contribuer à un article (composant enfant)
 
 **Routes Web** :
 - `/` : Page d'accueil (publique)
@@ -965,6 +1126,8 @@ class Register extends Component
 - `/email/verify` : Vérification d'email (auth)
 - `/dashboard` : Tableau de bord (auth)
 - `/profile` : Profil utilisateur (auth)
+- `/codex` : Codex - Encyclopédie spatiale (public)
+- `/codex/planets/{id}` : Détails d'une planète dans le Codex (public)
 - `POST /logout` : Déconnexion (auth)
 
 ## Aspects techniques standards

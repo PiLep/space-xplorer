@@ -74,6 +74,21 @@ Route::middleware('guest')->group(function () {
         ->name('password.update');
 });
 
+// Public Codex routes
+Route::prefix('codex')->name('codex.')->group(function () {
+    Route::get('/', \App\Livewire\CodexIndex::class)->name('index');
+    Route::get('/planets', \App\Livewire\CodexPlanets::class)->name('planets');
+    Route::get('/planets/{id}', \App\Livewire\CodexPlanet::class)->name('planet');
+
+    Route::get('/star-systems', \App\Livewire\CodexStarSystems::class)->name('star-systems');
+    Route::get('/star-systems/{id}', \App\Livewire\CodexStarSystem::class)->name('star-system');
+
+    Route::get('/contributors', \App\Livewire\CodexContributors::class)->name('contributors');
+    Route::get('/contributors/{id}', \App\Livewire\CodexContributor::class)->name('contributor');
+
+    Route::get('/hall-of-fame', \App\Livewire\CodexHallOfFame::class)->name('hall-of-fame');
+});
+
 // Protected routes (require authentication)
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
