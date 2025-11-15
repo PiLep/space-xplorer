@@ -119,7 +119,7 @@ Cette review analyse l'issue 2 et le plan de développement du point de vue desi
 
 ### Points Positifs
 
-- Le formulaire de connexion utilise déjà le style terminal avec des prompts système (`SYSTEM@SPACE-XPLORER:~$`)
+- Le formulaire de connexion utilise déjà le style terminal avec des prompts système (`SYSTEM@STELLAR-GAME:~$`)
 - Les messages utilisent des préfixes entre crochets (`[INFO]`, `[ERROR]`, etc.)
 - La checkbox s'intégrera naturellement dans ce style
 

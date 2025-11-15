@@ -1,6 +1,6 @@
-# Cursor Rules - Space Xplorer
+# Cursor Rules - Stellar Game
 
-This directory contains Cursor rules in MDC format (Markdown with metadata) for the Space Xplorer project.
+This directory contains Cursor rules in MDC format (Markdown with metadata) for the Stellar Game project.
 
 ## Design Philosophy
 

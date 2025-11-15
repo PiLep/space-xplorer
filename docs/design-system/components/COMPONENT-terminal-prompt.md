@@ -82,13 +82,13 @@ SYSTEM@STELLAR:~$ load_user_session
 ```blade
 <x-terminal-prompt 
     command="authenticate" 
-    prompt="SECURITY@SPACE-XPLORER:~$" 
+    prompt="SECURITY@STELLAR-GAME:~$" 
 />
 ```
 
 **Résultat** :
 ```
-SECURITY@SPACE-XPLORER:~$ authenticate
+SECURITY@STELLAR-GAME:~$ authenticate
 ```
 
 ### Exemple 3 : Prompt Seul (sans commande)

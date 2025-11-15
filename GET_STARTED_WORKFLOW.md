@@ -431,7 +431,7 @@ Même après approbation, effectuer une vérification finale perfectionniste ava
 ## Structure des Dossiers
 
 ```
-space-xplorer/
+stellar-game/
 ├── docs/
 │   ├── agents/              # Documentation des agents
 │   │   ├── PRODUCT.md       # Alex

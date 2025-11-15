@@ -31,8 +31,8 @@ docker compose version
 ### 1. Cloner le Repository
 
 ```bash
-git clone https://github.com/your-username/space-xplorer.git
-cd space-xplorer
+git clone https://github.com/your-username/stellar-game.git
+cd stellar-game
 ```
 
 ### 2. Installer les Dépendances PHP
@@ -272,7 +272,7 @@ HORIZON_ENABLED=true
 ## Structure du Projet
 
 ```
-space-xplorer/
+stellar-game/
 ├── app/                    # Code source Laravel
 │   ├── Console/            # Commandes Artisan
 │   ├── Events/             # Événements métier

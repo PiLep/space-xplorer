@@ -351,7 +351,7 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    WORKFLOW SPACE XPLORER                        │
+│                    WORKFLOW STELLAR GAME                         │
 └─────────────────────────────────────────────────────────────────┘
 
 1. 📝 ALEX (Product)

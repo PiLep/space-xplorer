@@ -1,10 +1,10 @@
 ---
-description: Project knowledge base and context for Space Xplorer
+description: Project knowledge base and context for Stellar Game
 globs: ["**/*"]
 alwaysApply: true
 ---
 
-# Space Xplorer - Memory Bank
+# Stellar Game - Memory Bank
 
 **Always consult these documents for project context before making decisions:**
 
