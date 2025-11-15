@@ -32,6 +32,9 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
     Route::resource('resources', ResourceController::class)->except(['edit', 'update', 'destroy']);
     Route::get('/resources/review', [ResourceController::class, 'review'])->name('resources.review');
     Route::post('/resources/{resource}/approve', [ResourceController::class, 'approve'])->name('resources.approve');
+
+    // Minigame test
+    Route::get('/minigame/test', fn () => view('admin.minigame-test'))->name('minigame.test');
 });
 
 // Fallback for admin routes - redirect to admin login if route not found
