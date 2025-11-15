@@ -1,4 +1,4 @@
-# Résumé des Sessions - Space Xplorer
+# Résumé des Sessions - Stellar
 
 Ce document fournit un résumé rapide des sessions de développement récentes.
 

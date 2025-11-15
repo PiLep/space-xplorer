@@ -142,7 +142,7 @@ PlanetProperties
 
 ### Architecture spatiale
 
-L'univers de Space Xplorer est organisé en **systèmes stellaires** contenant des **planètes**. Chaque système stellaire possède une étoile centrale autour de laquelle orbitent plusieurs planètes.
+L'univers de Stellar est organisé en **systèmes stellaires** contenant des **planètes**. Chaque système stellaire possède une étoile centrale autour de laquelle orbitent plusieurs planètes.
 
 ### Hiérarchie spatiale
 

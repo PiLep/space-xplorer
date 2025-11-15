@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MessageDeleted;
+use App\Events\MessageRead;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\DeleteMessageRequest;
 use App\Http\Requests\MarkMessageReadRequest;
@@ -62,6 +64,7 @@ class MessageController extends Controller
         // Mark as read when opened
         if (! $message->is_read) {
             $message->markAsRead();
+            event(new MessageRead($message, Auth::user()));
         }
 
         return response()->json([
@@ -93,6 +96,9 @@ class MessageController extends Controller
         $message = Message::forUser(Auth::user())->findOrFail($id);
 
         $message->markAsRead();
+
+        // Dispatch event
+        event(new MessageRead($message, Auth::user()));
 
         return response()->json([
             'data' => [
@@ -139,6 +145,9 @@ class MessageController extends Controller
         $message = Message::forUser(Auth::user())->findOrFail($id);
 
         $message->delete(); // Soft delete - moves to trash
+
+        // Dispatch event
+        event(new MessageDeleted($message, Auth::user()));
 
         return response()->json([
             'message' => 'Message moved to trash',

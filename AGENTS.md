@@ -28,6 +28,7 @@ Agents disponibles pour guider l'IA dans différents rôles :
 - **[ARCHITECT.md](./docs/agents/ARCHITECT.md)** : **Morgan** - Agent Architecte - Review architecturale, cohérence technique, qualité du code
 - **[FULLSTACK-DEV.md](./docs/agents/FULLSTACK-DEV.md)** : **Jordan** - Agent Fullstack Developer - Implémentation des plans de développement en code fonctionnel
 - **[DESIGNER.md](./docs/agents/DESIGNER.md)** : **Riley** - Agent Designer - Identité visuelle, expérience utilisateur, cohérence du design
+- **[GAME-DESIGNER.md](./docs/agents/GAME-DESIGNER.md)** : **Casey** - Agent Game Designer - Conception des mécaniques de jeu, équilibrage, progression du joueur
 - **[MANAGER.md](./docs/agents/MANAGER.md)** : **Taylor** - Agent Workflow Manager - Surveillance du workflow, analyse des processus, rapports d'amélioration
 
 ## Prompts

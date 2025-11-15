@@ -1,4 +1,4 @@
-# TASK-001 : Implémenter le MVP complet de Space Xplorer
+# TASK-001 : Implémenter le MVP complet de Stellar
 
 ## Issue Associée
 
@@ -6,7 +6,7 @@
 
 ## Vue d'Ensemble
 
-Implémenter le MVP complet de Space Xplorer incluant le système d'authentification complet (inscription, connexion, déconnexion), la génération automatique de planète d'origine via architecture événementielle, la visualisation de la planète sur le tableau de bord, et la gestion du profil utilisateur. L'approche est API-first : toute la logique métier est exposée via des endpoints REST API, et Livewire consomme ces APIs en interne pour l'interface utilisateur.
+Implémenter le MVP complet de Stellar incluant le système d'authentification complet (inscription, connexion, déconnexion), la génération automatique de planète d'origine via architecture événementielle, la visualisation de la planète sur le tableau de bord, et la gestion du profil utilisateur. L'approche est API-first : toute la logique métier est exposée via des endpoints REST API, et Livewire consomme ces APIs en interne pour l'interface utilisateur.
 
 ## Objectifs Techniques
 

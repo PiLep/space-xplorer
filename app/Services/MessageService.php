@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\MessageReceived;
 use App\Models\Message;
 use App\Models\Planet;
 use App\Models\User;
@@ -32,7 +33,7 @@ class MessageService
         string $content,
         array $metadata = []
     ): Message {
-        return Message::create([
+        $message = Message::create([
             'sender_id' => null, // System messages have no sender
             'recipient_id' => $recipient->id,
             'type' => 'system',
@@ -40,6 +41,10 @@ class MessageService
             'content' => $content,
             'metadata' => $metadata,
         ]);
+
+        event(new MessageReceived($message, $recipient));
+
+        return $message;
     }
 
     /**
@@ -55,7 +60,7 @@ class MessageService
             'matricule' => $recipient->matricule,
         ]);
 
-        return Message::create([
+        $message = Message::create([
             'sender_id' => null,
             'recipient_id' => $recipient->id,
             'type' => 'welcome',
@@ -66,6 +71,10 @@ class MessageService
                 'user_id' => $recipient->id,
             ],
         ]);
+
+        event(new MessageReceived($message, $recipient));
+
+        return $message;
     }
 
     /**
@@ -127,7 +136,7 @@ class MessageService
             ]);
         }
 
-        return Message::create([
+        $message = Message::create([
             'sender_id' => null,
             'recipient_id' => $recipient->id,
             'type' => 'discovery',
@@ -137,6 +146,10 @@ class MessageService
                 'type' => 'discovery',
             ], $discoveryData),
         ]);
+
+        event(new MessageReceived($message, $recipient));
+
+        return $message;
     }
 
     /**
@@ -154,7 +167,7 @@ class MessageService
         string $content,
         array $metadata = []
     ): Message {
-        return Message::create([
+        $message = Message::create([
             'sender_id' => null,
             'recipient_id' => $recipient->id,
             'type' => 'mission',
@@ -164,6 +177,10 @@ class MessageService
                 'type' => 'mission',
             ], $metadata),
         ]);
+
+        event(new MessageReceived($message, $recipient));
+
+        return $message;
     }
 
     /**
@@ -181,7 +198,7 @@ class MessageService
         string $content,
         array $metadata = []
     ): Message {
-        return Message::create([
+        $message = Message::create([
             'sender_id' => null,
             'recipient_id' => $recipient->id,
             'type' => 'alert',
@@ -192,6 +209,10 @@ class MessageService
                 'type' => 'alert',
             ], $metadata),
         ]);
+
+        event(new MessageReceived($message, $recipient));
+
+        return $message;
     }
 
     /**

@@ -36,6 +36,7 @@ class User extends Authenticatable
         'avatar_generating',
         'is_super_admin',
         'email_verified_at',
+        'first_login_at',
         'email_verification_code',
         'email_verification_code_expires_at',
         'email_verification_attempts',
@@ -61,6 +62,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'first_login_at' => 'datetime',
             'password' => 'hashed',
             'is_super_admin' => 'boolean',
             'email_verification_code_expires_at' => 'datetime',

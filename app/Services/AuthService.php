@@ -106,10 +106,9 @@ class AuthService
         // Get remember value from request (defaults to false if not provided)
         $remember = $request->filled('remember') ? (bool) $request->remember : false;
 
-        // Check if this is the first login BEFORE authenticating
-        // First login is when user logs in for the first time after registration
-        // We check if user has verified email and has no previous login sessions
-        $isFirstLogin = $user->hasVerifiedEmail() && ! $this->hasPreviousLogin($user);
+        // Check if this is the first login
+        // First login is when user logs in for the first time after email verification
+        $isFirstLogin = $user->hasVerifiedEmail() && $user->first_login_at === null;
 
         // Authenticate user in session with remember me option
         Auth::login($user, $remember);
@@ -117,8 +116,9 @@ class AuthService
         // Dispatch event to track user login
         event(new UserLoggedIn($user));
 
-        // Dispatch first login event if applicable
+        // Dispatch first login event if applicable and mark first login
         if ($isFirstLogin) {
+            $user->update(['first_login_at' => now()]);
             event(new FirstLogin($user));
         }
 
@@ -147,10 +147,9 @@ class AuthService
             ]);
         }
 
-        // Check if this is the first login BEFORE authenticating
-        // First login is when user logs in for the first time after registration
-        // We check if user has verified email and has no previous login sessions
-        $isFirstLogin = $user->hasVerifiedEmail() && ! $this->hasPreviousLogin($user);
+        // Check if this is the first login
+        // First login is when user logs in for the first time after email verification
+        $isFirstLogin = $user->hasVerifiedEmail() && $user->first_login_at === null;
 
         // Authenticate user in session with remember me option
         Auth::login($user, $remember);
@@ -158,8 +157,9 @@ class AuthService
         // Dispatch event to track user login
         event(new UserLoggedIn($user));
 
-        // Dispatch first login event if applicable
+        // Dispatch first login event if applicable and mark first login
         if ($isFirstLogin) {
+            $user->update(['first_login_at' => now()]);
             event(new FirstLogin($user));
         }
 
@@ -189,21 +189,5 @@ class AuthService
         if ($user) {
             event(new UserLoggedOut($user));
         }
-    }
-
-    /**
-     * Check if user has had a previous login session.
-     * This is used to determine if this is the first login.
-     *
-     * @return bool True if user has previous login sessions, false otherwise
-     */
-    private function hasPreviousLogin(User $user): bool
-    {
-        // Check if there are any sessions for this user in the sessions table
-        // We check if there's at least one session record for this user
-        // This is checked BEFORE login, so we don't need to exclude current session
-        return \Illuminate\Support\Facades\DB::table('sessions')
-            ->where('user_id', $user->id)
-            ->exists();
     }
 }

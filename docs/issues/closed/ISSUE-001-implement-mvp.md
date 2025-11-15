@@ -1,4 +1,4 @@
-# ISSUE-001 : Implémenter le MVP complet de Space Xplorer
+# ISSUE-001 : Implémenter le MVP complet de Stellar
 
 ## Type
 Feature
@@ -8,11 +8,11 @@ High
 
 ## Description
 
-Implémenter le MVP complet de Space Xplorer, incluant le système d'authentification, la génération automatique de planète d'origine, la visualisation de la planète sur le tableau de bord, et la gestion du profil utilisateur. Ce MVP constitue la base de l'expérience de jeu et doit offrir une première interaction mémorable et engageante pour les joueurs.
+Implémenter le MVP complet de Stellar, incluant le système d'authentification, la génération automatique de planète d'origine, la visualisation de la planète sur le tableau de bord, et la gestion du profil utilisateur. Ce MVP constitue la base de l'expérience de jeu et doit offrir une première interaction mémorable et engageante pour les joueurs.
 
 ## Contexte Métier
 
-Le MVP est la première version fonctionnelle du jeu qui permet aux joueurs de découvrir Space Xplorer. C'est un moment critique dans l'expérience utilisateur car :
+Le MVP est la première version fonctionnelle du jeu qui permet aux joueurs de découvrir Stellar. C'est un moment critique dans l'expérience utilisateur car :
 
 - **Première impression** : L'inscription et la découverte de la planète d'origine créent la première impression du joueur. Cette expérience doit être fluide, rapide et magique.
 
@@ -147,7 +147,7 @@ Toutes les réponses API suivent le format JSON standardisé :
 
 ### Vue d'Ensemble
 
-L'implémentation du MVP de Space Xplorer est **excellente** et répond parfaitement aux besoins métier définis dans cette issue. Tous les critères d'acceptation sont respectés, l'expérience utilisateur est fluide et agréable, et les fonctionnalités métier sont correctement implémentées. Le parcours d'inscription jusqu'à la découverte de la planète d'origine crée bien ce moment magique attendu pour les joueurs.
+L'implémentation du MVP de Stellar est **excellente** et répond parfaitement aux besoins métier définis dans cette issue. Tous les critères d'acceptation sont respectés, l'expérience utilisateur est fluide et agréable, et les fonctionnalités métier sont correctement implémentées. Le parcours d'inscription jusqu'à la découverte de la planète d'origine crée bien ce moment magique attendu pour les joueurs.
 
 **Points forts** :
 - Tous les critères d'acceptation respectés ✅
@@ -464,7 +464,7 @@ Aucune question critique. L'implémentation est claire et complète.
 
 ### Conclusion
 
-L'implémentation fonctionnelle du MVP de Space Xplorer est **excellente** et répond parfaitement aux besoins métier. Tous les critères d'acceptation sont respectés, l'expérience utilisateur est fluide et agréable, et les fonctionnalités métier sont correctement implémentées. Le parcours d'inscription jusqu'à la découverte de la planète d'origine crée bien ce moment magique attendu pour les joueurs.
+L'implémentation fonctionnelle du MVP de Stellar est **excellente** et répond parfaitement aux besoins métier. Tous les critères d'acceptation sont respectés, l'expérience utilisateur est fluide et agréable, et les fonctionnalités métier sont correctement implémentées. Le parcours d'inscription jusqu'à la découverte de la planète d'origine crée bien ce moment magique attendu pour les joueurs.
 
 **Points forts** :
 - ✅ Tous les critères d'acceptation respectés
@@ -494,7 +494,7 @@ L'implémentation fonctionnelle du MVP de Space Xplorer est **excellente** et r�
 
 #### 2025-01-27 - Alex (Product Manager) - Création de l'issue
 **Statut** : À faire
-**Détails** : Issue créée pour définir le MVP complet de Space Xplorer. Cette issue couvre toutes les fonctionnalités essentielles pour permettre aux joueurs de découvrir leur planète d'origine et de commencer leur aventure spatiale.
+**Détails** : Issue créée pour définir le MVP complet de Stellar. Cette issue couvre toutes les fonctionnalités essentielles pour permettre aux joueurs de découvrir leur planète d'origine et de commencer leur aventure spatiale.
 **Notes** : Cette issue est la priorité absolue car elle constitue la base du jeu. Une fois ce MVP implémenté et validé, nous pourrons ajouter les fonctionnalités d'exploration progressivement.
 
 #### 2025-01-27 - Sam (Lead Developer) - Création du plan technique

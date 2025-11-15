@@ -1,6 +1,6 @@
 # Documentation des Événements - Audit Trail
 
-Cette documentation décrit tous les événements disponibles dans l'application Space Xplorer pour le suivi complet des activités utilisateur (audit trail).
+Cette documentation décrit tous les événements disponibles dans l'application Stellar pour le suivi complet des activités utilisateur (audit trail).
 
 ## Vue d'ensemble
 
@@ -603,42 +603,109 @@ Pour un audit trail complet, tous les événements suivants doivent être écout
 - Tous les événements ont `$shouldBroadcast = false` par défaut (pas de broadcasting)
 - Les événements utilisent `SerializesModels` pour éviter les problèmes de sérialisation
 - Les événements peuvent être dispatchés de manière synchrone ou asynchrone selon la configuration
-- Pour un audit trail complet, créer un listener global qui enregistre tous les événements dans une table de logs
+- **Tous les événements sont automatiquement enregistrés** dans la table `event_logs` de manière asynchrone via le listener `LogEvent`
 
 ---
 
-## Exemple de Listener d'Audit Trail
+## Système d'Enregistrement des Événements (Event Logging)
+
+### Vue d'ensemble
+
+L'application dispose d'un système automatique d'enregistrement de tous les événements dans la base de données pour un audit trail complet. Ce système est **optimisé pour les performances** car il fonctionne de manière **asynchrone** via les queues Laravel.
+
+### Architecture
+
+**Table de base de données** : `event_logs`
+- `id` (ULID) - Identifiant unique
+- `event_type` (string) - Nom de la classe d'événement (ex: `App\Events\UserLoggedIn`)
+- `user_id` (ULID, nullable) - ID de l'utilisateur concerné
+- `event_data` (JSON) - Données sérialisées de l'événement
+- `ip_address` (string, nullable) - Adresse IP de la requête
+- `user_agent` (text, nullable) - User agent de la requête
+- `session_id` (string, nullable) - ID de session pour traçabilité
+- `created_at` / `updated_at` - Timestamps
+
+**Indexes pour performance** :
+- `event_type` - Pour filtrer par type d'événement
+- `user_id` - Pour filtrer par utilisateur
+- `created_at` - Pour trier chronologiquement
+- `[user_id, created_at]` - Composite pour requêtes utilisateur + date
+- `[event_type, created_at]` - Composite pour requêtes type + date
+
+### Listener Global : `LogEvent`
+
+Le listener `App\Listeners\LogEvent` écoute **tous les événements** de manière automatique et les enregistre dans la base de données.
+
+**Caractéristiques** :
+- ✅ **Asynchrone** : Implémente `ShouldQueue` et `ShouldQueueAfterCommit` pour ne pas bloquer l'application
+- ✅ **Robuste** : 3 tentatives avec backoff de 10 secondes en cas d'échec
+- ✅ **Intelligent** : Extrait automatiquement l'ID utilisateur de différents types d'événements
+- ✅ **Sécurisé** : Sérialise les données de manière sécurisée, évite les références circulaires
+- ✅ **Non-bloquant** : Les erreurs sont loggées mais n'interrompent jamais l'application
+
+**Extraction automatique de l'utilisateur** :
+Le listener tente d'extraire l'ID utilisateur dans cet ordre :
+1. Propriété publique `$user` de l'événement
+2. Propriété publique `user_id` de l'événement
+3. Méthode `getUser()` de l'événement
+4. Utilisation de la réflexion pour trouver une propriété `user`
+5. Fallback : utilisateur authentifié actuel (`Auth::id()`)
+
+### Configuration
+
+Le listener est automatiquement enregistré dans `EventServiceProvider` :
 
 ```php
-// app/Listeners/LogAuditTrail.php
-namespace App\Listeners;
-
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-
-class LogAuditTrail
+// app/Providers/EventServiceProvider.php
+public function boot(): void
 {
-    public function handle($event): void
-    {
-        // Enregistrer dans la base de données
-        DB::table('audit_logs')->insert([
-            'event' => get_class($event),
-            'user_id' => $event->user->id ?? null,
-            'data' => json_encode($event),
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'created_at' => now(),
-        ]);
-
-        // Ou simplement logger
-        Log::info('Audit trail', [
-            'event' => get_class($event),
-            'user_id' => $event->user->id ?? null,
-            'data' => $event,
-        ]);
-    }
+    parent::boot();
+    
+    // Register global event logger - listens to ALL events asynchronously
+    Event::listen('*', LogEvent::class);
 }
 ```
+
+### Utilisation
+
+**Aucune action requise** : Tous les événements sont automatiquement enregistrés dès qu'ils sont dispatchés.
+
+**Consulter les logs** :
+
+```php
+use App\Models\EventLog;
+
+// Tous les événements d'un utilisateur
+$userEvents = EventLog::where('user_id', $userId)
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+// Tous les événements d'un type spécifique
+$loginEvents = EventLog::where('event_type', UserLoggedIn::class)
+    ->orderBy('created_at', 'desc')
+    ->get();
+
+// Événements récents
+$recentEvents = EventLog::orderBy('created_at', 'desc')
+    ->limit(100)
+    ->get();
+```
+
+### Performance
+
+**Impact sur l'application** : **Aucun** - Les événements sont traités de manière asynchrone via les queues.
+
+**Recommandations** :
+- Utiliser Redis pour les queues (plus rapide que database) : `QUEUE_CONNECTION=redis` dans `.env`
+- S'assurer que le worker de queue est actif : `./vendor/bin/sail artisan queue:work`
+- Pour la production, utiliser un supervisor pour gérer les workers automatiquement
+
+### Optimisations Futures (si nécessaire)
+
+Si le volume d'événements devient très élevé, on peut implémenter :
+- **Batch insertion** : Regrouper plusieurs événements et les insérer en une seule requête
+- **Archivage automatique** : Déplacer les anciens événements vers une table d'archive
+- **Compression** : Compresser les données JSON pour les événements volumineux
+
+Pour l'instant, la solution asynchrone actuelle est largement suffisante pour gérer des milliers d'événements par jour sans impact sur les performances.
 

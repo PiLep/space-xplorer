@@ -32,3 +32,6 @@ Thumbs.db
 /playwright-report/
 /playwright/.cache/
 playwright-report/
+
+# local database data
+/local-brainstorming-data
