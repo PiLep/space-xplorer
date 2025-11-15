@@ -44,6 +44,8 @@ Actions disponibles pour les agents :
 - **[review-functional.md](./docs/prompts/review-functional.md)** : Guide pour reviewer fonctionnellement une implémentation
 - **[review-visual.md](./docs/prompts/review-visual.md)** : Guide pour reviewer visuellement une implémentation (Riley)
 - **[manage-design-system.md](./docs/prompts/manage-design-system.md)** : Guide pour créer, reviewer le design system et gérer les composants (Riley)
+- **[design-game-mechanic.md](./docs/prompts/design-game-mechanic.md)** : Guide pour concevoir de nouvelles mécaniques de jeu (Casey)
+- **[balance-gameplay.md](./docs/prompts/balance-gameplay.md)** : Guide pour équilibrer le gameplay et analyser les métriques (Casey)
 - **[create-pr.md](./docs/prompts/create-pr.md)** : Guide pour créer une Pull Request vers develop
 - **[update-tracking.md](./docs/prompts/update-tracking.md)** : Guide pour mettre à jour et suivre les issues et tasks
 - **[monitor-workflow.md](./docs/prompts/monitor-workflow.md)** : Guide pour surveiller le workflow et créer des rapports d'amélioration
