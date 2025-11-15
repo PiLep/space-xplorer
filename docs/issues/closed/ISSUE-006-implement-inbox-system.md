@@ -204,16 +204,16 @@ Lors de l'inscription ou de la complétion de l'onboarding, générer automatiqu
 
 ## Références
 
-- [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Vision métier et personas
-- [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Architecture technique, modèle de données, système d'événements
-- [STACK.md](../memory_bank/STACK.md) - Stack technique (Laravel, Livewire)
-- [ISSUE-005-implement-onboarding-mvp.md](./ISSUE-005-implement-onboarding-mvp.md) - Issue liée mentionnant l'inbox
+- [PROJECT_BRIEF.md](../../memory_bank/PROJECT_BRIEF.md) - Vision métier et personas
+- [ARCHITECTURE.md](../../memory_bank/ARCHITECTURE.md) - Architecture technique, modèle de données, système d'événements
+- [STACK.md](../../memory_bank/STACK.md) - Stack technique (Laravel, Livewire)
+- [ISSUE-005-implement-onboarding-mvp.md](../ISSUE-005-implement-onboarding-mvp.md) - Issue liée mentionnant l'inbox
 
 ## Suivi et Historique
 
 ### Statut
 
-Approuvé
+Terminé
 
 ### GitHub
 
@@ -222,6 +222,12 @@ Approuvé
 - **Pull Request** : [#13](https://github.com/PiLep/space-xplorer/pull/13)
 
 ### Historique
+
+#### 2025-11-13 - Alex (Product) - Merge de la Pull Request
+**Statut** : Terminé
+**Détails** : Pull Request #13 mergée dans `develop` le 2025-11-13. L'implémentation complète du système d'inbox est maintenant en production. Tous les tests passent (90 tests, 246 assertions). Système de messages système fonctionnel avec génération automatique via événements Laravel, interface Livewire immersive, et API complète.
+**Pull Request** : [#13](https://github.com/PiLep/space-xplorer/pull/13)
+**Merge commit** : `58ef1486eff68b73e5b89f3a6636574177ad84ca`
 
 #### 2025-01-27 - Sam (Lead Dev) - Création de la Pull Request
 **Statut** : En review
