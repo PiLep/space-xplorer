@@ -262,8 +262,6 @@ Voir **[DESIGN-SYSTEM-COMPONENTS.md](./DESIGN-SYSTEM-COMPONENTS.md)** pour la do
 
 **Version actuelle** : 1.0.0 (MVP)
 
-**Dernière mise à jour** : 2025-01-XX
-
 ## Références
 
 - **[DESIGNER.md](../agents/DESIGNER.md)** : Description complète de l'agent Designer

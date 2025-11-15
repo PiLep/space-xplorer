@@ -6,7 +6,7 @@ Ce document décrit les améliorations d'accessibilité apportées aux composant
 
 ## Date de Mise à Jour
 
-**2025-01-XX** - Améliorations d'accessibilité majeures
+Améliorations d'accessibilité majeures
 
 ## Composants Améliorés
 
@@ -217,6 +217,5 @@ Ce document décrit les améliorations d'accessibilité apportées aux composant
 
 ---
 
-**Dernière mise à jour** : 2025-01-XX
 **Statut** : ✅ Améliorations implémentées et documentées
 

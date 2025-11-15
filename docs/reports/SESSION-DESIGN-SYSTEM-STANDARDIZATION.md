@@ -1,6 +1,5 @@
 # Rapport de Session - Standardisation du Design System
 
-**Date** : 2025-01-XX  
 **Objectif** : Standardiser les composants réutilisables et améliorer le design system
 
 ---

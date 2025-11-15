@@ -202,7 +202,6 @@ Voir **[DESIGN-SYSTEM-COLORS.md](./DESIGN-SYSTEM-COLORS.md)** pour la palette co
 ## Notes
 
 - **Version** : 1.0.0 (MVP)
-- **Dernière mise à jour** : 2025-01-XX
 - **Maintenu par** : Agent Designer (Riley)
 
 ---

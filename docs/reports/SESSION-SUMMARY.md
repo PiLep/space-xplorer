@@ -6,7 +6,6 @@ Ce document fournit un résumé rapide des sessions de développement récentes.
 
 ### Session : Standardisation du Design System
 
-**Date** : 2025-01-XX  
 **Rapport complet** : [SESSION-DESIGN-SYSTEM-STANDARDIZATION.md](./SESSION-DESIGN-SYSTEM-STANDARDIZATION.md)
 
 #### Objectif
@@ -32,6 +31,4 @@ Standardiser les composants réutilisables et améliorer l'accessibilité du des
 3. **Composants Manquants** : Badge, Empty State
 
 ---
-
-**Dernière mise à jour** : 2025-01-XX
 
