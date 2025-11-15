@@ -65,11 +65,20 @@ Ces drafts ont été créés à partir des documents de brainstorming dans `docs
 
 ### 4. Système Stellarpedia (Codex Communautaire)
 
-**Fichier** : `DRAFT-04-stellarpedia-system.md`
+**Fichier** : `DRAFT-04-stellarpedia-system.md` (version complète)  
+**Fichier MVP** : `DRAFT-04-stellarpedia-system-MVP.md` (version MVP validée)
 
 **Description** : Système centralisé d'archives knowledge-base regroupant toutes les découvertes des explorateurs.
 
-**Points Clés** :
+**Version MVP (Validée)** :
+- Wiki public basique accessible à tous (joueurs et non-joueurs)
+- Affichage de toutes les planètes découvertes
+- Nommage des planètes par les découvreurs
+- Descriptions générées automatiquement via IA
+- Design superbe, style encyclopédie spatiale
+- **Issue** : [ISSUE-008](../../issues/ISSUE-008-implement-public-wiki-stellarpedia.md)
+
+**Version Complète (Futur)** :
 - 9 types d'éléments archivés (planètes, systèmes, artefacts, faune, flore, etc.)
 - Contributions communautaires (1/jour maximum)
 - Système de votes et canonisation
