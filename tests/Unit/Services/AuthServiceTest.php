@@ -195,6 +195,7 @@ it('does not dispatch FirstLogin event if user has previous sessions', function 
         'email' => 'john@example.com',
         'password' => Hash::make($this->password),
         'email_verified_at' => now(),
+        'first_login_at' => now()->subDay(), // User has already logged in before
     ]);
 
     // Create a previous session

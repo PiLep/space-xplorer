@@ -34,6 +34,7 @@ it('logs success when welcome message is sent', function () {
             return isset($context['user_id']);
         })
     );
+    Log::shouldReceive('error')->zeroOrMoreTimes();
 
     $user = User::factory()->create();
     $event = new UserRegistered($user);

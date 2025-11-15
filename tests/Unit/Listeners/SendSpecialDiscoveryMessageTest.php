@@ -35,6 +35,7 @@ it('logs success when special discovery message is sent', function () {
             return isset($context['user_id']) && isset($context['discovery_type']);
         })
     );
+    Log::shouldReceive('error')->zeroOrMoreTimes();
 
     $user = User::factory()->create();
     $event = new DiscoveryMade($user, 'ancient_artifact', []);

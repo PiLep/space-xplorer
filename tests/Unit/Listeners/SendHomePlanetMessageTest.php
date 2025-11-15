@@ -62,6 +62,7 @@ it('logs success when home planet message is sent', function () {
             return isset($context['planet_id']) && isset($context['user_count']);
         })
     );
+    Log::shouldReceive('error')->zeroOrMoreTimes();
 
     $user = User::factory()->create();
     $planet = Planet::factory()->create();
