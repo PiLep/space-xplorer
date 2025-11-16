@@ -23,7 +23,7 @@ class MapController extends Controller
                     'z' => (float) $system->z,
                     'star_type' => $system->star_type,
                     'planet_count' => $system->planet_count,
-                    'discovered' => $system->discovered,
+                    'discovered' => (bool) $system->discovered, // Ensure boolean type
                 ];
             });
 
@@ -32,4 +32,3 @@ class MapController extends Controller
         ]);
     }
 }
-

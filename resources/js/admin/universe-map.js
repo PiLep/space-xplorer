@@ -371,7 +371,7 @@ class ConnectionsRenderer {
         this.clipper = clipper;
     }
 
-    drawConnections(systems, selectedSystemId, showConnections, maxConnectionDistance) {
+    drawConnections(systems, selectedSystemId, showConnections, maxConnectionDistance, showDistances = false, showOnlyDiscovered = false, godMode = false) {
         if (!showConnections) {
             if (!selectedSystemId) {
                 return;
@@ -382,7 +382,16 @@ class ConnectionsRenderer {
                 return;
             }
 
-            const nearbySystems = DistanceFormatter.findNearbySystems(systems, selectedSystem, 5, this.projector);
+            // Filter systems if showOnlyDiscovered is enabled (unless god mode)
+            let systemsToSearch = systems;
+            if (showOnlyDiscovered && !godMode) {
+                systemsToSearch = systems.filter(s => {
+                    const isDiscovered = s.discovered === true || s.discovered === 'true' || s.discovered === 1;
+                    return isDiscovered;
+                });
+            }
+
+            const nearbySystems = DistanceFormatter.findNearbySystems(systemsToSearch, selectedSystem, 5, this.projector);
 
             if (nearbySystems.length === 0) {
                 return;
@@ -391,11 +400,33 @@ class ConnectionsRenderer {
             const selectedPos2d = this.projector.projectTo2D(selectedSystem);
             const selectedScreen = this.transformer.worldToScreen(selectedPos2d.x, selectedPos2d.y);
 
-            this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)';
-            this.ctx.lineWidth = 1.5;
-            this.ctx.setLineDash([5, 5]);
+            // For undiscovered systems, only show connections to discovered systems (unless god mode)
+            const isSelectedDiscovered = selectedSystem.discovered === true || selectedSystem.discovered === 'true' || selectedSystem.discovered === 1;
+            const filteredNearbySystems = nearbySystems.filter(({ system: nearbySystem }) => {
+                // Ensure discovered is a boolean
+                const nearbyDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
+                
+                // In god mode, show all connections
+                if (godMode) {
+                    return true;
+                }
+                
+                // If selected system is undiscovered, only show connections to discovered systems
+                if (!isSelectedDiscovered) {
+                    return nearbyDiscovered;
+                }
+                // If selected system is discovered, show all connections (unless filtering)
+                if (showOnlyDiscovered) {
+                    return nearbyDiscovered;
+                }
+                return true;
+            });
 
-            nearbySystems.forEach(({ system: nearbySystem }) => {
+            if (filteredNearbySystems.length === 0) {
+                return;
+            }
+
+            filteredNearbySystems.forEach(({ system: nearbySystem, distance }) => {
                 const nearbyPos2d = this.projector.projectTo2D(nearbySystem);
                 const nearbyScreen = this.transformer.worldToScreen(nearbyPos2d.x, nearbyPos2d.y);
 
@@ -405,10 +436,41 @@ class ConnectionsRenderer {
                 );
 
                 if (visibleSegment) {
+                    // Check if destination system is discovered
+                    const nearbyDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
+                    const showAsDiscovered = godMode || nearbyDiscovered;
+                    
+                    // Apply gray discrete style for links to undiscovered systems (unless god mode)
+                    let connectionStyle;
+                    if (!showAsDiscovered) {
+                        // Gray discrete style for links to undiscovered systems
+                        connectionStyle = { color: 'rgba(140, 140, 140, 0.4)', width: 1.0, dash: [3, 3] };
+                    } else if (!isSelectedDiscovered && !godMode) {
+                        // Mysterious style for connections from undiscovered systems
+                        connectionStyle = { color: 'rgba(150, 150, 200, 0.3)', width: 1, dash: [3, 3] };
+                    } else {
+                        // Normal style for connections between discovered systems (or god mode)
+                        connectionStyle = { color: 'rgba(0, 255, 255, 0.5)', width: 1.5, dash: [5, 5] };
+                    }
+
+                    this.ctx.strokeStyle = connectionStyle.color;
+                    this.ctx.lineWidth = connectionStyle.width;
+                    this.ctx.setLineDash(connectionStyle.dash);
+
                     this.ctx.beginPath();
                     this.ctx.moveTo(visibleSegment.x1, visibleSegment.y1);
                     this.ctx.lineTo(visibleSegment.x2, visibleSegment.y2);
                     this.ctx.stroke();
+
+                    // Draw distance label only if enabled and both systems are discovered (or god mode)
+                    if (showDistances && (godMode || (isSelectedDiscovered && nearbyDiscovered))) {
+                        this._drawDistanceLabel(
+                            visibleSegment.x1, visibleSegment.y1,
+                            visibleSegment.x2, visibleSegment.y2,
+                            distance,
+                            'rgba(0, 255, 255, 0.9)'
+                        );
+                    }
                 }
             });
 
@@ -423,12 +485,45 @@ class ConnectionsRenderer {
         const drawnConnections = new Set();
 
         systems.forEach((system1, index1) => {
+            // Ensure discovered is a boolean
+            const system1Discovered = system1.discovered === true || system1.discovered === 'true' || system1.discovered === 1;
+            
+            // Filter systems if showOnlyDiscovered is enabled (unless god mode)
+            if (showOnlyDiscovered && !godMode && !system1Discovered) {
+                return;
+            }
+
             systems.forEach((system2, index2) => {
                 if (index1 >= index2) return;
+
+                // Ensure discovered is a boolean
+                const system2Discovered = system2.discovered === true || system2.discovered === 'true' || system2.discovered === 1;
+                
+                // Filter systems if showOnlyDiscovered is enabled (unless god mode)
+                if (showOnlyDiscovered && !godMode && !system2Discovered) {
+                    return;
+                }
 
                 const distance = this.projector.calculateDistance3D(system1, system2);
                 if (distance > maxConnectionDistance) {
                     return;
+                }
+
+                // For undiscovered systems, only show connections to discovered systems (unless god mode)
+                
+                // Skip connection if both systems are undiscovered (unless god mode)
+                if (!godMode && !system1Discovered && !system2Discovered) {
+                    return;
+                }
+
+                // Skip connection if one is undiscovered and the other is not discovered
+                // (we only show connections FROM undiscovered TO discovered)
+                if (!system1Discovered && system2Discovered) {
+                    // This is OK - undiscovered to discovered
+                } else if (system1Discovered && !system2Discovered) {
+                    // This is OK - discovered to undiscovered
+                } else {
+                    // Both discovered - always show
                 }
 
                 const connectionKey = [system1.id, system2.id].sort().join('-');
@@ -448,23 +543,125 @@ class ConnectionsRenderer {
                 );
 
                 if (visibleSegment) {
-                    if (system1.id === selectedSystemId || system2.id === selectedSystemId) {
-                        this.ctx.strokeStyle = 'rgba(0, 255, 255, 0.5)';
-                        this.ctx.lineWidth = 1.5;
+                    const isSelected = system1.id === selectedSystemId || system2.id === selectedSystemId;
+                    
+                    // Determine connection style based on discovery status
+                    // Priority: links to undiscovered systems get gray discrete style (unless god mode)
+                    const showAsDiscovered1 = godMode || system1Discovered;
+                    const showAsDiscovered2 = godMode || system2Discovered;
+                    let connectionColor, connectionWidth;
+                    if (!showAsDiscovered1 && !showAsDiscovered2) {
+                        // Both undiscovered - gray discrete style
+                        connectionColor = 'rgba(140, 140, 140, 0.3)';
+                        connectionWidth = 0.8;
+                    } else if (!showAsDiscovered1 || !showAsDiscovered2) {
+                        // One undiscovered - gray discrete style for links to undiscovered systems
+                        connectionColor = isSelected 
+                            ? 'rgba(140, 140, 140, 0.45)' 
+                            : 'rgba(140, 140, 140, 0.35)';
+                        connectionWidth = isSelected ? 1.0 : 0.9;
                     } else {
-                        this.ctx.strokeStyle = 'rgba(100, 150, 255, 0.2)';
-                        this.ctx.lineWidth = 1;
+                        // Both discovered (or god mode) - normal style
+                        connectionColor = isSelected 
+                            ? 'rgba(0, 255, 255, 0.5)' 
+                            : 'rgba(100, 150, 255, 0.2)';
+                        connectionWidth = isSelected ? 1.5 : 1;
                     }
+
+                    this.ctx.strokeStyle = connectionColor;
+                    this.ctx.lineWidth = connectionWidth;
 
                     this.ctx.beginPath();
                     this.ctx.moveTo(visibleSegment.x1, visibleSegment.y1);
                     this.ctx.lineTo(visibleSegment.x2, visibleSegment.y2);
                     this.ctx.stroke();
+
+                    // Draw distance label only for selected connections between discovered systems (or god mode) and if enabled
+                    if (isSelected && showDistances && (godMode || (system1Discovered && system2Discovered))) {
+                        this._drawDistanceLabel(
+                            visibleSegment.x1, visibleSegment.y1,
+                            visibleSegment.x2, visibleSegment.y2,
+                            distance,
+                            'rgba(0, 255, 255, 0.9)'
+                        );
+                    }
                 }
             });
         });
 
         this.ctx.setLineDash([]);
+    }
+
+    _drawDistanceLabel(x1, y1, x2, y2, distance, textColor) {
+        // Calculate midpoint
+        const midX = (x1 + x2) / 2;
+        const midY = (y1 + y2) / 2;
+
+        // Calculate angle of the line
+        const dx = x2 - x1;
+        const dy = y2 - y1;
+        let angle = Math.atan2(dy, dx);
+
+        // Format distance
+        const distanceText = DistanceFormatter.formatDistance(distance);
+
+        // Calculate text dimensions
+        this.ctx.save();
+        this.ctx.font = '11px monospace';
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+        const textMetrics = this.ctx.measureText(distanceText);
+        const textWidth = textMetrics.width;
+        const textHeight = 14; // Approximate height for 11px font
+        const padding = 4;
+
+        // Adjust angle for readability: normalize to -90 to 90 degrees range
+        // This ensures text is always readable from left to right
+        let normalizedAngle = angle;
+        const angleDegrees = (angle * 180) / Math.PI;
+        let needsFlip = false;
+        
+        // Normalize angle to [-90, 90] range for readability
+        if (angleDegrees > 90 || angleDegrees < -90) {
+            normalizedAngle = angle + Math.PI;
+            needsFlip = true;
+        }
+
+        // Calculate label position (above the line)
+        // Offset perpendicular to the line direction
+        const offsetDistance = 12; // pixels above the line
+        const perpAngle = angle + Math.PI / 2; // Perpendicular angle
+        
+        // If we flipped the angle, also flip the offset position
+        const finalPerpAngle = needsFlip ? perpAngle + Math.PI : perpAngle;
+        const offsetX = Math.cos(finalPerpAngle) * offsetDistance;
+        const offsetY = Math.sin(finalPerpAngle) * offsetDistance;
+
+        const labelX = midX + offsetX;
+        const labelY = midY + offsetY;
+
+        // Draw background rectangle
+        const boxWidth = textWidth + padding * 2;
+        const boxHeight = textHeight + padding * 2;
+
+        // Rotate context to match normalized line angle
+        this.ctx.translate(labelX, labelY);
+        this.ctx.rotate(normalizedAngle);
+
+        // Draw background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+        this.ctx.fillRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight);
+
+        // Draw border
+        this.ctx.strokeStyle = textColor;
+        this.ctx.lineWidth = 1;
+        this.ctx.strokeRect(-boxWidth / 2, -boxHeight / 2, boxWidth, boxHeight);
+
+        // Draw text
+        this.ctx.fillStyle = textColor;
+        this.ctx.fillText(distanceText, 0, 0);
+
+        this.ctx.restore();
     }
 }
 
@@ -479,8 +676,17 @@ class SystemsRenderer {
         this.projector = projector;
     }
 
-    drawSystems(systems, selectedSystemId, linkedSystemIds) {
+    drawSystems(systems, selectedSystemId, linkedSystemIds, showOnlyDiscovered = false, godMode = false) {
         systems.forEach(system => {
+            // Ensure discovered is a boolean (handle string "true"/"false" from JSON)
+            const isDiscovered = system.discovered === true || system.discovered === 'true' || system.discovered === 1;
+            const showAsDiscovered = godMode || isDiscovered;
+            
+            // Filter out undiscovered systems if showOnlyDiscovered is enabled (unless god mode)
+            if (showOnlyDiscovered && !showAsDiscovered) {
+                return;
+            }
+
             const pos2d = this.projector.projectTo2D(system);
             const screen = this.transformer.worldToScreen(pos2d.x, pos2d.y);
 
@@ -491,6 +697,14 @@ class SystemsRenderer {
 
             const isSelected = system.id === selectedSystemId;
             const isLinked = linkedSystemIds.has(system.id);
+
+            // Mysterious style for undiscovered systems (unless god mode)
+            if (!showAsDiscovered) {
+                this._drawMysteriousSystem(system, screen, isSelected, isLinked);
+                return;
+            }
+
+            // Normal style for discovered systems
             const color = STAR_COLORS[system.star_type] || '#FFFFFF';
             const size = isSelected ? 6 : 4;
 
@@ -505,6 +719,29 @@ class SystemsRenderer {
                 this._drawLinkedSystem(system, screen, size);
             }
         });
+    }
+
+    _drawMysteriousSystem(system, screen, isSelected, isLinked) {
+        // Draw a simple gray point for undiscovered systems
+        const size = isSelected ? 4 : 2;
+        const grayColor = '#808080'; // Simple gray color
+
+        // Draw the gray point
+        this.ctx.fillStyle = grayColor;
+        this.ctx.beginPath();
+        this.ctx.arc(screen.x, screen.y, size, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Draw a border for selected systems
+        if (isSelected) {
+            this.ctx.strokeStyle = '#CCCCCC';
+            this.ctx.lineWidth = 1;
+            this.ctx.setLineDash([2, 2]);
+            this.ctx.beginPath();
+            this.ctx.arc(screen.x, screen.y, size + 2, 0, Math.PI * 2);
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+        }
     }
 
     _drawSelectedSystem(system, screen, size) {
@@ -680,7 +917,7 @@ class SystemInfoManager {
         this.nearbyList = document.getElementById('nearby-systems-list');
     }
 
-    showSystemInfo(system, systems, projector, onSystemClick) {
+    showSystemInfo(system, systems, projector, onSystemClick, godMode = false) {
         this.infoElement.classList.remove('hidden');
         this.nameElement.textContent = system.name.toUpperCase();
         this.starTypeElement.textContent = system.star_type ?
@@ -698,6 +935,9 @@ class SystemInfoManager {
             this.nearbyList.innerHTML = '';
 
             nearbySystems.forEach(({ system: nearbySystem, distance }) => {
+                const isDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
+                const showInfo = godMode || isDiscovered;
+                
                 const item = document.createElement('div');
                 item.className =
                     'flex items-center justify-between p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition cursor-pointer';
@@ -705,13 +945,23 @@ class SystemInfoManager {
 
                 const nameDiv = document.createElement('div');
                 nameDiv.className = 'flex items-center gap-2';
-                nameDiv.innerHTML = `
-                    <span class="text-gray-900 dark:text-white font-medium">${nearbySystem.name}</span>
-                    <span class="text-xs text-gray-500 dark:text-gray-400">(${nearbySystem.planet_count} planets)</span>
-                `;
+                
+                if (showInfo) {
+                    // Show full information (god mode or discovered systems)
+                    nameDiv.innerHTML = `
+                        <span class="text-gray-900 dark:text-white font-medium">${nearbySystem.name}</span>
+                        <span class="text-xs text-gray-500 dark:text-gray-400">(${nearbySystem.planet_count} planets)</span>
+                    `;
+                } else {
+                    // Hide information for undiscovered systems
+                    nameDiv.innerHTML = `
+                        <span class="text-gray-500 dark:text-gray-500 font-medium italic">Unknown System</span>
+                        <span class="text-xs text-gray-400 dark:text-gray-600">(?)</span>
+                    `;
+                }
 
                 const distanceDiv = document.createElement('div');
-                distanceDiv.className = 'text-gray-600 dark:text-gray-400';
+                distanceDiv.className = showInfo ? 'text-gray-600 dark:text-gray-400' : 'text-gray-400 dark:text-gray-600';
                 distanceDiv.textContent = DistanceFormatter.formatDistance(distance);
 
                 item.appendChild(nameDiv);
@@ -739,6 +989,9 @@ class UniverseMap {
         this.lastMouseX = 0;
         this.lastMouseY = 0;
         this.showConnections = false;
+        this.showDistances = false; // Disabled by default
+        this.showOnlyDiscovered = false; // Show all systems by default
+        this.godMode = false; // God mode disabled by default
         this.maxConnectionDistance = DEFAULT_CONFIG.maxConnectionDistance;
         this.lastClickTime = 0;
         this.lastClickSystem = null;
@@ -800,6 +1053,8 @@ class UniverseMap {
         window.zoomOut = () => this.zoomOut();
         window.resetView = () => this.resetView();
         window.toggleConnections = () => this.toggleConnections();
+        window.toggleDistances = () => this.toggleDistances();
+        window.toggleShowOnlyDiscovered = () => this.toggleShowOnlyDiscovered();
         window.updateMaxDistance = (value) => this.updateMaxDistance(value);
     }
 
@@ -821,6 +1076,11 @@ class UniverseMap {
         let minDistance = Infinity;
 
         this.systems.forEach(system => {
+            // Filter out undiscovered systems if showOnlyDiscovered is enabled
+            if (this.showOnlyDiscovered && !system.discovered) {
+                return;
+            }
+
             const pos2d = this.projector.projectTo2D(system);
             const screen = this.transformer.worldToScreen(pos2d.x, pos2d.y);
             const distance = Math.sqrt(
@@ -855,9 +1115,9 @@ class UniverseMap {
                     this.transformer.centerY = pos2d.y;
                     this.selectedSystemId = system.id;
                     this._invalidateCache();
-                    this.infoManager.showSystemInfo(system, this.systems, this.projector, () => {});
+                    this.infoManager.showSystemInfo(system, this.systems, this.projector, () => {}, this.godMode);
                     this.render();
-                });
+                }, this.godMode);
                 this.render();
                 
                 // Store click info for double-click detection
@@ -1078,9 +1338,9 @@ class UniverseMap {
             this.transformer.centerY = pos2d.y;
             this.selectedSystemId = clickedSystem.id;
             this._invalidateCache();
-            this.infoManager.showSystemInfo(clickedSystem, this.systems, this.projector, () => {});
+            this.infoManager.showSystemInfo(clickedSystem, this.systems, this.projector, () => {}, this.godMode);
             this.render();
-        });
+        }, this.godMode);
 
         // Animate to target view
         this._animateZoom(startCenterX, startCenterY, startZoom, targetCenterX, targetCenterY, targetZoom);
@@ -1160,12 +1420,17 @@ class UniverseMap {
                 this.systems,
                 this.selectedSystemId,
                 this.showConnections,
-                this.maxConnectionDistance
+                this.maxConnectionDistance,
+                this.showDistances,
+                this.showOnlyDiscovered,
+                this.godMode
             );
             this.systemsRenderer.drawSystems(
                 this.systems,
                 this.selectedSystemId,
-                this._getLinkedSystemIds()
+                this._getLinkedSystemIds(),
+                this.showOnlyDiscovered,
+                this.godMode
             );
             this.scaleRenderer.drawScale();
             this.cacheInvalidated = false;
@@ -1248,6 +1513,22 @@ class UniverseMap {
         this.render();
     }
 
+    toggleDistances() {
+        this.showDistances = document.getElementById('show-distances').checked;
+        this._invalidateCache();
+        this.render();
+    }
+
+    toggleShowOnlyDiscovered() {
+        const checkbox = document.getElementById('show-only-discovered');
+        if (!checkbox) {
+            return;
+        }
+        this.showOnlyDiscovered = checkbox.checked;
+        this._invalidateCache();
+        this.render();
+    }
+
     updateMaxDistance(value) {
         this.maxConnectionDistance = parseFloat(value);
         this._invalidateCache();
@@ -1258,6 +1539,21 @@ class UniverseMap {
         if (this.showConnections) {
             this.render();
         }
+    }
+
+    setGodMode(enabled) {
+        this.godMode = enabled;
+        this._invalidateCache();
+        // Update info display if a system is selected
+        if (this.selectedSystemId) {
+            const selectedSystem = this.systems.find(s => s.id === this.selectedSystemId);
+            if (selectedSystem) {
+                this.infoManager.showSystemInfo(selectedSystem, this.systems, this.projector, (system) => {
+                    this.selectSystem(system.id);
+                }, this.godMode);
+            }
+        }
+        this.render();
     }
 }
 

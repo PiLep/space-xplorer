@@ -3,7 +3,10 @@
 ])
 
 <div class="mb-6 flex flex-wrap items-center gap-4 font-mono">
-    <div class="flex items-center gap-2">
+    <div
+        id="view-plane-controls"
+        class="flex items-center gap-2"
+    >
         <span class="text-sm uppercase text-gray-500 dark:text-gray-400">View Plane:</span>
         <button
             id="view-xy"
@@ -64,6 +67,33 @@
             >
             <span>Show Connections</span>
         </label>
+        <label class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <input
+                type="checkbox"
+                id="show-distances"
+                onchange="toggleDistances()"
+                class="rounded"
+            >
+            <span>Show Distances</span>
+        </label>
+        <label class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+            <input
+                type="checkbox"
+                id="show-only-discovered"
+                onchange="toggleShowOnlyDiscovered()"
+                class="rounded"
+            >
+            <span>Show Only Discovered</span>
+        </label>
+        <label class="flex items-center gap-2 text-sm font-semibold text-yellow-500 dark:text-yellow-400">
+            <input
+                type="checkbox"
+                id="god-mode"
+                onchange="toggleGodMode()"
+                class="rounded"
+            >
+            <span>🔮 God Mode</span>
+        </label>
         <div class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
             <label for="max-distance">Max Distance:</label>
             <input
@@ -87,4 +117,3 @@
         Systems: {{ $systemCount }}
     </div>
 </div>
-
