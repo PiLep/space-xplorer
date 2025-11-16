@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\PasswordChanged;
 use App\Events\PasswordResetCompleted;
 use App\Events\PasswordResetRequested;
 use App\Models\User;
@@ -47,8 +48,9 @@ class PasswordResetService
                 // Invalidate all web sessions for security
                 $this->invalidateSessions($user);
 
-                // Dispatch event for tracking
+                // Dispatch events for tracking
                 event(new PasswordResetCompleted($user));
+                event(new PasswordChanged($user));
             }
         );
 

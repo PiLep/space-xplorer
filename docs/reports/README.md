@@ -1,4 +1,4 @@
-# Rapports - Space Xplorer
+# Rapports - Stellar
 
 Ce dossier contient les rapports générés par **Taylor** (Workflow Manager) pour surveiller et améliorer le workflow de développement, ainsi que les rapports de session pour documenter les travaux effectués.
 

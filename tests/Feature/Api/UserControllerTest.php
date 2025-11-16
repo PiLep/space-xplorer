@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\AvatarChanged;
+use App\Events\EmailChanged;
 use App\Events\UserProfileUpdated;
 use App\Models\Planet;
 use App\Models\Resource;
@@ -156,7 +158,9 @@ it('can update only name', function () {
 });
 
 it('can update only email', function () {
-    $user = User::factory()->create(['name' => 'Original Name']);
+    Event::fake([EmailChanged::class, UserProfileUpdated::class]);
+
+    $user = User::factory()->create(['name' => 'Original Name', 'email' => 'old@example.com']);
     $token = $user->createToken('test-token')->plainTextToken;
 
     $response = $this->withHeader('Authorization', 'Bearer '.$token)
@@ -169,6 +173,12 @@ it('can update only email', function () {
     $user->refresh();
     expect($user->name)->toBe('Original Name')
         ->and($user->email)->toBe('newemail@example.com');
+
+    Event::assertDispatched(EmailChanged::class, function ($event) use ($user) {
+        return $event->user->id === $user->id
+            && $event->oldEmail === 'old@example.com'
+            && $event->newEmail === 'newemail@example.com';
+    });
 });
 
 it('returns user home planet', function () {
@@ -274,6 +284,12 @@ it('updates user avatar successfully', function () {
     // Check raw attribute value since accessor checks file existence
     expect($user->getAttributes()['avatar_url'])->toBe('new/avatar/path.jpg')
         ->and((bool) $user->avatar_generating)->toBeFalse();
+
+    Event::assertDispatched(AvatarChanged::class, function ($event) use ($user) {
+        return $event->user->id === $user->id
+            && $event->oldAvatarPath === Storage::disk('s3')->url('old/avatar/path.jpg')
+            && $event->newAvatarPath === 'new/avatar/path.jpg';
+    });
 
     Event::assertDispatched(UserProfileUpdated::class, function ($event) use ($user) {
         return $event->user->id === $user->id

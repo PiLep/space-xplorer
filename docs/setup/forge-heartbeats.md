@@ -1,10 +1,10 @@
-# Configuration des Heartbeats Laravel Forge - Space Xplorer
+# Configuration des Heartbeats Laravel Forge - Stellar
 
 Les heartbeats Laravel Forge permettent de surveiller les tâches planifiées pour s'assurer qu'elles s'exécutent avec succès et à temps. Cette fonctionnalité vous alerte si une tâche ne s'exécute pas ou échoue.
 
 ## Vue d'ensemble
 
-Le projet Space Xplorer utilise deux tâches planifiées quotidiennes :
+Le projet Stellar utilise deux tâches planifiées quotidiennes :
 
 1. **Génération de ressources planètes** - Tous les jours à 2h00
 2. **Génération de ressources avatars** - Tous les jours à 2h30

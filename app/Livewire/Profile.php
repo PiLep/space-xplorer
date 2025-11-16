@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\ProfileAccessed;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Livewire\Attributes\Layout;
@@ -28,6 +29,11 @@ class Profile extends Component
 
     public function mount()
     {
+        $user = Auth::user();
+        if ($user) {
+            // Dispatch event to track profile access
+            event(new ProfileAccessed($user));
+        }
         $this->loadUser();
     }
 
@@ -60,6 +66,7 @@ class Profile extends Component
                 'home_planet_name' => $authUser->homePlanet?->name ?? null,
                 'matricule' => $authUser->matricule,
                 'created_at' => $authUser->created_at?->format('Y-m-d'),
+                'seniority' => $authUser->seniorityUniverseFormattedEn(),
             ];
         } catch (\Exception $e) {
             $this->error = 'Failed to load user data: '.$e->getMessage();

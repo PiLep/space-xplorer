@@ -243,7 +243,6 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 
 ### Review Design Pré-Implémentation
 
-**Date** : 2025-01-XX  
 **Designer** : Riley  
 **Statut** : ⚠️ Review Design - Prêt pour planification avec recommandations design
 
@@ -274,12 +273,12 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 
 ### Historique
 
-#### 2025-01-XX - Alex (Product) - Création de l'issue
+#### Alex (Product) - Création de l'issue
 **Statut** : À faire
 **Détails** : Issue créée pour permettre aux utilisateurs de récupérer leur compte en cas d'oubli de mot de passe
 **Notes** : Priorité haute car fonctionnalité essentielle pour l'expérience utilisateur
 
-#### 2025-01-XX - Alex (Product) - Amélioration de l'issue
+#### Alex (Product) - Amélioration de l'issue
 **Statut** : À faire
 **Détails** : Amélioration complète de l'issue avec :
 - Critères d'acceptation détaillés et organisés par catégories (Flux Utilisateur, Validation et Sécurité, Gestion des Erreurs, Intégration Livewire, API)
@@ -292,13 +291,13 @@ Implémenter le système de réinitialisation de mot de passe pour permettre aux
 - Contexte métier enrichi avec justification de la priorité
 **Notes** : Issue maintenant complète et prête pour la création du plan de développement par Sam (Lead Developer)
 
-#### 2025-01-XX - Alex (Product) - Création de l'issue GitHub
+#### Alex (Product) - Création de l'issue GitHub
 **Statut** : À faire
 **Détails** : Issue GitHub créée : [#6](https://github.com/PiLep/space-xplorer/issues/6)
 **Branche** : `issue/003-implement-password-reset`
 **Notes** : Issue synchronisée avec GitHub, prête pour le développement
 
-#### 2025-01-XX - Riley (Designer) - Review visuelle pré-implémentation
+#### Riley (Designer) - Review visuelle pré-implémentation
 **Statut** : À faire
 **Détails** : Review visuelle pré-implémentation effectuée pour valider les aspects design et UX avant la création du plan de développement
 **Recommandations** :

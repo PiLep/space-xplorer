@@ -2,6 +2,11 @@
 
 namespace App\Livewire;
 
+use App\Events\InboxAccessed;
+use App\Events\MessageDeleted;
+use App\Events\MessagePermanentlyDeleted;
+use App\Events\MessageRead;
+use App\Events\MessageRestored;
 use App\Models\Message;
 use App\Services\MessageService;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -40,6 +45,12 @@ class Inbox extends Component
      */
     public function mount(): void
     {
+        $user = Auth::user();
+        if ($user) {
+            // Dispatch event to track inbox access
+            event(new InboxAccessed($user));
+        }
+
         // Component initialized - messages will be loaded via computed property
         // Select first message will be called after render via wire:init
     }
@@ -131,6 +142,9 @@ class Inbox extends Component
 
         $message->markAsRead();
 
+        // Dispatch event
+        event(new MessageRead($message, Auth::user()));
+
         // Clear computed cache to reload messages
         unset($this->messages);
 
@@ -168,6 +182,9 @@ class Inbox extends Component
         $message = Message::forUser(Auth::user())->findOrFail($id);
         $message->delete(); // Soft delete - moves to trash
 
+        // Dispatch event
+        event(new MessageDeleted($message, Auth::user()));
+
         // Clear selection if deleted message was selected
         if ($this->selectedMessageId === $id) {
             $this->selectedMessageId = null;
@@ -188,6 +205,9 @@ class Inbox extends Component
         $message = Message::forUser(Auth::user())->withTrashed()->findOrFail($id);
         $message->restore();
 
+        // Dispatch event
+        event(new MessageRestored($message, Auth::user()));
+
         // Clear computed cache to reload messages
         unset($this->messages);
 
@@ -206,6 +226,9 @@ class Inbox extends Component
     {
         $message = Message::forUser(Auth::user())->withTrashed()->findOrFail($id);
         $message->forceDelete();
+
+        // Dispatch event
+        event(new MessagePermanentlyDeleted($message, Auth::user()));
 
         // Clear selection if deleted message was selected
         if ($this->selectedMessageId === $id) {

@@ -1,10 +1,10 @@
 ---
-description: Workflow and agent system for Space Xplorer project
+description: Workflow and agent system for Stellar Game project
 globs: ["**/*"]
 alwaysApply: true
 ---
 
-# Space Xplorer - Workflow and Agent System
+# Stellar Game - Workflow and Agent System
 
 This project uses a structured workflow with specialized AI agents. **Always refer to the documentation before taking actions.**
 

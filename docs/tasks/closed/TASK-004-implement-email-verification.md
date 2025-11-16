@@ -16,7 +16,7 @@ Implémenter un système de vérification d'email par code à 6 chiffres pour va
 
 ### Historique
 
-#### 2025-01-XX - Sam (Lead Developer) - Création du plan
+#### Sam (Lead Developer) - Création du plan
 **Statut** : À faire
 **Détails** : Plan de développement créé pour implémenter la vérification d'email par code à 6 chiffres
 **Notes** : Le plan décompose la fonctionnalité en phases logiques avec toutes les tâches nécessaires

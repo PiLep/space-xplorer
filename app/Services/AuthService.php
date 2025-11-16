@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Events\FailedLoginAttempt;
+use App\Events\FirstLogin;
 use App\Events\UserLoggedIn;
+use App\Events\UserLoggedOut;
 use App\Events\UserRegistered;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
@@ -88,6 +91,13 @@ class AuthService
         $user = User::where('email', $request->email)->first();
 
         if (! $user || ! Hash::check($request->password, $user->password)) {
+            // Dispatch event for failed login attempt
+            event(new FailedLoginAttempt(
+                $request->email,
+                $request->ip(),
+                $request->userAgent()
+            ));
+
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
@@ -96,11 +106,21 @@ class AuthService
         // Get remember value from request (defaults to false if not provided)
         $remember = $request->filled('remember') ? (bool) $request->remember : false;
 
+        // Check if this is the first login
+        // First login is when user logs in for the first time after email verification
+        $isFirstLogin = $user->hasVerifiedEmail() && $user->first_login_at === null;
+
         // Authenticate user in session with remember me option
         Auth::login($user, $remember);
 
         // Dispatch event to track user login
         event(new UserLoggedIn($user));
+
+        // Dispatch first login event if applicable and mark first login
+        if ($isFirstLogin) {
+            $user->update(['first_login_at' => now()]);
+            event(new FirstLogin($user));
+        }
 
         return $user;
     }
@@ -115,16 +135,33 @@ class AuthService
         $user = User::where('email', $email)->first();
 
         if (! $user || ! Hash::check($password, $user->password)) {
+            // Dispatch event for failed login attempt
+            event(new FailedLoginAttempt(
+                $email,
+                request()->ip(),
+                request()->userAgent()
+            ));
+
             throw ValidationException::withMessages([
                 'email' => ['The provided credentials are incorrect.'],
             ]);
         }
+
+        // Check if this is the first login
+        // First login is when user logs in for the first time after email verification
+        $isFirstLogin = $user->hasVerifiedEmail() && $user->first_login_at === null;
 
         // Authenticate user in session with remember me option
         Auth::login($user, $remember);
 
         // Dispatch event to track user login
         event(new UserLoggedIn($user));
+
+        // Dispatch first login event if applicable and mark first login
+        if ($isFirstLogin) {
+            $user->update(['first_login_at' => now()]);
+            event(new FirstLogin($user));
+        }
 
         return $user;
     }
@@ -142,8 +179,15 @@ class AuthService
      */
     public function logout(): void
     {
+        $user = Auth::user();
+
         // Réinitialiser le flag d'animation terminal lors de la déconnexion
         session()->forget('terminal_boot_seen');
         Auth::logout();
+
+        // Dispatch event to track logout if user was authenticated
+        if ($user) {
+            event(new UserLoggedOut($user));
+        }
     }
 }

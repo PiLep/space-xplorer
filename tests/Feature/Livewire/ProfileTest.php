@@ -1,13 +1,17 @@
 <?php
 
+use App\Events\ProfileAccessed;
 use App\Models\Resource;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
 it('renders profile component successfully', function () {
+    Event::fake([ProfileAccessed::class]);
+
     $user = User::factory()->create();
 
     Auth::login($user);
@@ -16,6 +20,10 @@ it('renders profile component successfully', function () {
         ->assertStatus(200)
         ->assertSet('user.id', $user->id)
         ->assertSet('loading', false);
+
+    Event::assertDispatched(ProfileAccessed::class, function ($event) use ($user) {
+        return $event->user->id === $user->id;
+    });
 });
 
 it('loads user data on mount', function () {

@@ -1,4 +1,4 @@
-# Configuration des Queues - Space Xplorer
+# Configuration des Queues - Stellar
 
 Les queues Laravel sont utilisées pour exécuter des tâches asynchrones, notamment la génération d'avatars qui prend ~20-30 secondes.
 

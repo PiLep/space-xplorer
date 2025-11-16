@@ -48,7 +48,7 @@
                 <div class="mb-8 text-left">
                     <div class="text-sm text-gray-500 dark:text-gray-500 mb-4 space-y-2">
                         <div>
-                            <span class="text-space-primary dark:text-space-primary">SYSTEM@SPACE-XPLORER:~$</span> 
+                            <span class="text-space-primary dark:text-space-primary">SYSTEM@STELLAR-GAME:~$</span> 
                             <span class="text-space-secondary dark:text-space-secondary">system_status</span>
                         </div>
                         <div class="text-warning dark:text-warning ml-8">

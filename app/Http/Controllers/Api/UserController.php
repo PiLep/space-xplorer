@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\AvatarChanged;
+use App\Events\EmailChanged;
 use App\Events\UserProfileUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UpdateAvatarRequest;
@@ -57,8 +59,12 @@ class UserController extends Controller
             $user->name = $request->name;
         }
         if ($request->has('email') && $user->email !== $request->email) {
-            $changedAttributes['email'] = ['old' => $user->email, 'new' => $request->email];
+            $oldEmail = $user->email;
+            $changedAttributes['email'] = ['old' => $oldEmail, 'new' => $request->email];
             $user->email = $request->email;
+
+            // Dispatch event for email change
+            event(new EmailChanged($user, $oldEmail, $request->email));
         }
 
         $user->save();
@@ -118,7 +124,8 @@ class UserController extends Controller
             'avatar_generating' => false,
         ]);
 
-        // Dispatch event
+        // Dispatch events
+        event(new AvatarChanged($user, $oldAvatarUrl, $newAvatarPath));
         event(new UserProfileUpdated($user, [
             'avatar_url' => [
                 'old' => $oldAvatarUrl,

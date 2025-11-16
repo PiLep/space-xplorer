@@ -5,7 +5,7 @@
 
 ## Description
 
-Page de connexion principale avec une interface de type terminal/console, offrant une expérience utilisateur immersive dans le thème spatial du projet Space Xplorer. Cette version a remplacé le login v1 (interface classique) pour mieux s'intégrer avec l'identité visuelle du projet.
+Page de connexion principale avec une interface de type terminal/console, offrant une expérience utilisateur immersive dans le thème spatial du projet Stellar. Cette version a remplacé le login v1 (interface classique) pour mieux s'intégrer avec l'identité visuelle du projet.
 
 ## Fichiers implémentés
 

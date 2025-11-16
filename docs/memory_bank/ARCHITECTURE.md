@@ -142,7 +142,7 @@ PlanetProperties
 
 ### Architecture spatiale
 
-L'univers de Space Xplorer est organisé en **systèmes stellaires** contenant des **planètes**. Chaque système stellaire possède une étoile centrale autour de laquelle orbitent plusieurs planètes.
+L'univers de Stellar est organisé en **systèmes stellaires** contenant des **planètes**. Chaque système stellaire possède une étoile centrale autour de laquelle orbitent plusieurs planètes.
 
 ### Hiérarchie spatiale
 
@@ -579,6 +579,10 @@ Toutes les réponses API suivent un format JSON standardisé :
 ### Événements
 
 L'application utilise une architecture événementielle complète pour découpler les actions métier et permettre une traçabilité complète des événements importants.
+
+**📚 Documentation complète** : Voir [`docs/EVENTS.md`](../../EVENTS.md) pour la liste complète de tous les événements disponibles et leur utilisation.
+
+**Événements principaux** :
 
 #### Cycle de vie utilisateur
 

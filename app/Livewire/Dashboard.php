@@ -2,6 +2,7 @@
 
 namespace App\Livewire;
 
+use App\Events\DashboardAccessed;
 use App\Models\Planet;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,12 @@ class Dashboard extends Component
 
     public function mount()
     {
+        $user = Auth::user();
+        if ($user) {
+            // Dispatch event to track dashboard access
+            event(new DashboardAccessed($user));
+        }
+
         // Vérifier si l'animation a déjà été vue dans cette session
         $terminalBootSeen = session('terminal_boot_seen', false);
 

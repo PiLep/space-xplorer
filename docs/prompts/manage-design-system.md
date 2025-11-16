@@ -2,7 +2,7 @@
 
 ## Description
 
-Cette action permet à l'agent Designer (Riley) de créer, reviewer, et maintenir le design system de Space Xplorer, ainsi que de créer et modifier des composants visuels. Le design system garantit la cohérence visuelle et l'identité rétro-futuriste inspirée des films Alien à travers toute l'application.
+Cette action permet à l'agent Designer (Riley) de créer, reviewer, et maintenir le design system de Stellar, ainsi que de créer et modifier des composants visuels. Le design system garantit la cohérence visuelle et l'identité rétro-futuriste inspirée des films Alien à travers toute l'application.
 
 ## Quand Utiliser Cette Action
 
@@ -38,7 +38,7 @@ Les composants doivent être documentés dans `docs/design-system/components/` :
 ## Structure du Design System
 
 ```markdown
-# Design System - Space Xplorer
+# Design System - Stellar
 
 ## Vue d'Ensemble
 

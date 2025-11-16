@@ -53,7 +53,7 @@
                             </div>
 
                             <div style="word-break: break-all; font-size: 12px; color: #00ffff; margin-bottom: 20px;">
-                                https://space-xplorer.app/reset-password?token=example&email=user@example.com
+                                https://stellar-game.app/reset-password?token=example&email=user@example.com
                             </div>
 
                             <div style="color: #ffaa00; font-size: 12px; margin-top: 20px;">

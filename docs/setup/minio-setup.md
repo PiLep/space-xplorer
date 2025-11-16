@@ -20,7 +20,7 @@ MinIO est un service S3-compatible inclus dans Laravel Sail pour le développeme
 
 2. **Créer un bucket** :
    - Cliquez sur "Create Bucket"
-   - Nom du bucket : `space-xplorer` (ou celui configuré dans `.env`)
+   - Nom du bucket : `stellar-game` (ou celui configuré dans `.env`)
    - Région : `us-east-1` (ou celle configurée)
    - Cochez "Make this bucket public" si vous voulez que les images soient publiques
 
@@ -38,10 +38,10 @@ FILESYSTEM_DISK=s3
 AWS_ACCESS_KEY_ID=minioadmin
 AWS_SECRET_ACCESS_KEY=minioadmin
 AWS_DEFAULT_REGION=us-east-1
-AWS_BUCKET=space-xplorer
+AWS_BUCKET=stellar-game
 AWS_ENDPOINT=http://minio:9000
 AWS_USE_PATH_STYLE_ENDPOINT=true
-AWS_URL=http://localhost:9000/space-xplorer
+AWS_URL=http://localhost:9000/stellar-game
 
 # Image Generation Storage
 IMAGE_GENERATION_STORAGE_DISK=s3
@@ -59,7 +59,7 @@ IMAGE_GENERATION_STORAGE_VISIBILITY=public
 
 - **API MinIO** : http://localhost:9000
 - **Console MinIO** : http://localhost:9001
-- **Images générées** : http://localhost:9000/space-xplorer/images/generated/...
+- **Images générées** : http://localhost:9000/stellar-game/images/generated/...
 
 ## Production
 

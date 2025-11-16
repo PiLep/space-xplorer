@@ -162,7 +162,7 @@ class Login extends Component
 Le login v1 a été remplacé par le login v2 (terminal) pour :
 - Mieux s'intégrer avec le thème spatial du projet
 - Offrir une expérience utilisateur plus immersive
-- Aligner l'interface avec l'identité visuelle du projet Space Xplorer
+- Aligner l'interface avec l'identité visuelle du projet Stellar
 - Améliorer la cohérence du design system
 
 ## Notes

@@ -1,12 +1,8 @@
 <?php
 
-$providers = [
+return [
     App\Providers\AppServiceProvider::class,
+    App\Providers\EventLogServiceProvider::class,
     App\Providers\EventServiceProvider::class,
+    App\Providers\TestServiceProvider::class,
 ];
-
-// Register test service provider for E2E tests and when API key is not configured
-// This ensures image generation doesn't fail in CI/E2E environments
-$providers[] = App\Providers\TestServiceProvider::class;
-
-return $providers;

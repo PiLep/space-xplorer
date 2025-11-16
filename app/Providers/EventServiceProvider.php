@@ -23,6 +23,7 @@ use App\Listeners\SendSpecialDiscoveryMessage;
 use App\Listeners\SendWelcomeMessage;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -82,18 +83,56 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register LogEvent listener for all application events BEFORE parent::boot()
+        // We add it to each event in $listen array
+        $allEvents = [
+            \App\Events\AvatarChanged::class,
+            \App\Events\AvatarGenerated::class,
+            \App\Events\DashboardAccessed::class,
+            \App\Events\DiscoveryMade::class,
+            \App\Events\EmailChanged::class,
+            \App\Events\EmailVerified::class,
+            \App\Events\FailedLoginAttempt::class,
+            \App\Events\FirstLogin::class,
+            \App\Events\InboxAccessed::class,
+            \App\Events\MessageDeleted::class,
+            \App\Events\MessagePermanentlyDeleted::class,
+            \App\Events\MessageRead::class,
+            \App\Events\MessageReceived::class,
+            \App\Events\MessageRestored::class,
+            \App\Events\PasswordChanged::class,
+            \App\Events\PasswordResetCompleted::class,
+            \App\Events\PasswordResetRequested::class,
+            \App\Events\PlanetCreated::class,
+            \App\Events\PlanetExplored::class,
+            \App\Events\PlanetImageGenerated::class,
+            \App\Events\PlanetVideoGenerated::class,
+            \App\Events\ProfileAccessed::class,
+            \App\Events\ResourceApproved::class,
+            \App\Events\ResourceGenerated::class,
+            \App\Events\ResourceRejected::class,
+            \App\Events\SessionExpired::class,
+            \App\Events\UserDeleted::class,
+            \App\Events\UserDeleting::class,
+            \App\Events\UserLoggedIn::class,
+            \App\Events\UserLoggedOut::class,
+            \App\Events\UserProfileUpdated::class,
+            \App\Events\UserRegistered::class,
+        ];
+
+        $logEventClass = \App\Listeners\LogEvent::class;
+        foreach ($allEvents as $eventClass) {
+            if (! isset($this->listen[$eventClass])) {
+                $this->listen[$eventClass] = [];
+            }
+            // Add LogEvent if not already present
+            if (! in_array($logEventClass, $this->listen[$eventClass])) {
+                $this->listen[$eventClass][] = $logEventClass;
+            }
+        }
+
         parent::boot();
 
-        // Disable automatic event discovery to prevent duplicate listener registration
-        // Laravel was registering both the class and the @handle method
-        $this->disableEventDiscovery();
-    }
-
-    /**
-     * Determine if events and listeners should be automatically discovered.
-     */
-    public function shouldDiscoverEvents(): bool
-    {
-        return false;
+        Log::info('EventServiceProvider boot completed - LogEvent registered for all events');
     }
 }

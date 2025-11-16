@@ -164,6 +164,5 @@ Ce document présente l'audit d'accessibilité des composants du design system S
 
 ---
 
-**Dernière mise à jour** : 2025-01-XX
 **Prochaine révision** : Après implémentation des améliorations prioritaires
 

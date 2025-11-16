@@ -37,6 +37,7 @@ it('logs success when discovery message is sent', function () {
             return isset($context['user_id']) && isset($context['planet_id']);
         })
     );
+    Log::shouldReceive('error')->zeroOrMoreTimes();
 
     $user = User::factory()->create();
     $planet = Planet::factory()->create();

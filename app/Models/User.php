@@ -36,6 +36,7 @@ class User extends Authenticatable
         'avatar_generating',
         'is_super_admin',
         'email_verified_at',
+        'first_login_at',
         'email_verification_code',
         'email_verification_code_expires_at',
         'email_verification_attempts',
@@ -61,6 +62,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'first_login_at' => 'datetime',
             'password' => 'hashed',
             'is_super_admin' => 'boolean',
             'email_verification_code_expires_at' => 'datetime',
@@ -74,6 +76,178 @@ class User extends Authenticatable
     public function homePlanet(): BelongsTo
     {
         return $this->belongsTo(Planet::class, 'home_planet_id');
+    }
+
+    /**
+     * Get the user's hire date (uses created_at).
+     */
+    public function getHiredAtAttribute(): ?\Carbon\Carbon
+    {
+        return $this->created_at;
+    }
+
+    /**
+     * Get the user's hire date in universe time.
+     */
+    public function hiredAtUniverse(): \Carbon\Carbon
+    {
+        return app(\App\Services\UniverseTimeService::class)
+            ->timestampToUniverseTime($this->created_at);
+    }
+
+    /**
+     * Get formatted hire date in universe time.
+     * Format: "Semaine X, Année YYYY"
+     */
+    public function hiredAtUniverseFormatted(): string
+    {
+        $universeDate = $this->hiredAtUniverse();
+
+        $service = app(\App\Services\UniverseTimeService::class);
+        $year = (int) $universeDate->format('Y');
+        $yearStart = \Carbon\Carbon::create($year, 1, 1, 0, 0, 0);
+        $daysSinceYearStart = $yearStart->diffInDays($universeDate);
+        $week = (int) floor($daysSinceYearStart / 7) + 1;
+
+        if ($week > 52) {
+            $year++;
+            $week = 1;
+        }
+
+        return sprintf('Semaine %d, Année %d', $week, $year);
+    }
+
+    /**
+     * Calculate seniority (ancienneté) in universe time.
+     * Returns array with years, months, weeks, and days.
+     */
+    public function seniorityUniverse(): array
+    {
+        $service = app(\App\Services\UniverseTimeService::class);
+        $hiredAtUniverse = $this->hiredAtUniverse();
+        $currentUniverse = $service->now();
+
+        // Ensure current is after hired
+        if ($currentUniverse->lt($hiredAtUniverse)) {
+            return [
+                'years' => 0,
+                'months' => 0,
+                'weeks' => 0,
+                'days' => 0,
+                'total_days' => 0,
+            ];
+        }
+
+        // Calculate total days first (as integer, rounding down)
+        $totalDays = (int) $hiredAtUniverse->diffInDays($currentUniverse, false);
+
+        // Calculate breakdown
+        $years = (int) floor($totalDays / 365);
+        $remainingDays = $totalDays % 365;
+
+        $months = (int) floor($remainingDays / 30);
+        $remainingDays = $remainingDays % 30;
+
+        $weeks = (int) floor($remainingDays / 7);
+        $days = $remainingDays % 7;
+
+        return [
+            'years' => $years,
+            'months' => $months,
+            'weeks' => $weeks,
+            'days' => $days,
+            'total_days' => $totalDays,
+        ];
+    }
+
+    /**
+     * Get formatted seniority (ancienneté) in universe time.
+     * Format: "X années, Y mois" or "Y semaines" or "Z jours"
+     */
+    public function seniorityUniverseFormatted(): string
+    {
+        $seniority = $this->seniorityUniverse();
+
+        $parts = [];
+
+        if ($seniority['years'] > 0) {
+            $parts[] = $seniority['years'].' '.($seniority['years'] > 1 ? 'années' : 'année');
+        }
+
+        if ($seniority['months'] > 0) {
+            $parts[] = $seniority['months'].' '.($seniority['months'] > 1 ? 'mois' : 'mois');
+        }
+
+        if (empty($parts) && $seniority['weeks'] > 0) {
+            $parts[] = $seniority['weeks'].' '.($seniority['weeks'] > 1 ? 'semaines' : 'semaine');
+        }
+
+        if (empty($parts) && $seniority['days'] > 0) {
+            $parts[] = $seniority['days'].' '.($seniority['days'] > 1 ? 'jours' : 'jour');
+        }
+
+        if (empty($parts)) {
+            // Si moins d'un jour, afficher "moins d'un jour" ou "nouvellement embauché"
+            return 'moins d\'un jour';
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * Get formatted seniority (ancienneté) in universe time (English).
+     * Format: "X years, Y months" or "Y weeks" or "Z days"
+     */
+    public function seniorityUniverseFormattedEn(): string
+    {
+        $seniority = $this->seniorityUniverse();
+
+        $parts = [];
+
+        if ($seniority['years'] > 0) {
+            $parts[] = $seniority['years'].' '.($seniority['years'] > 1 ? 'years' : 'year');
+        }
+
+        if ($seniority['months'] > 0) {
+            $parts[] = $seniority['months'].' '.($seniority['months'] > 1 ? 'months' : 'month');
+        }
+
+        if (empty($parts) && $seniority['weeks'] > 0) {
+            $parts[] = $seniority['weeks'].' '.($seniority['weeks'] > 1 ? 'weeks' : 'week');
+        }
+
+        if (empty($parts) && $seniority['days'] > 0) {
+            $parts[] = $seniority['days'].' '.($seniority['days'] > 1 ? 'days' : 'day');
+        }
+
+        if (empty($parts)) {
+            return 'less than a day';
+        }
+
+        return implode(', ', $parts);
+    }
+
+    /**
+     * Get seniority in real time (for comparison).
+     * Returns array with years, months, weeks, and days in real time.
+     */
+    public function seniorityReal(): array
+    {
+        $hiredAt = $this->created_at;
+        $now = now();
+
+        $years = $hiredAt->diffInYears($now);
+        $months = $hiredAt->copy()->addYears($years)->diffInMonths($now);
+        $weeks = $hiredAt->copy()->addYears($years)->addMonths($months)->diffInWeeks($now);
+        $days = $hiredAt->copy()->addYears($years)->addMonths($months)->addWeeks($weeks)->diffInDays($now);
+
+        return [
+            'years' => $years,
+            'months' => $months,
+            'weeks' => $weeks,
+            'days' => $days,
+            'total_days' => $hiredAt->diffInDays($now),
+        ];
     }
 
     /**

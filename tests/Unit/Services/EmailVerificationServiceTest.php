@@ -1,8 +1,10 @@
 <?php
 
+use App\Events\EmailVerified;
 use App\Mail\EmailVerificationNotification;
 use App\Models\User;
 use App\Services\EmailVerificationService;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 
@@ -70,6 +72,8 @@ it('sends email notification when generating code', function () {
 });
 
 it('verifies correct code and marks email as verified', function () {
+    Event::fake([EmailVerified::class]);
+
     $user = User::factory()->unverified()->create();
     $code = $this->service->generateCode($user);
 
@@ -79,6 +83,10 @@ it('verifies correct code and marks email as verified', function () {
     expect($result)->toBeTrue()
         ->and($user->email_verified_at)->not->toBeNull()
         ->and($user->email_verification_code)->toBeNull();
+
+    Event::assertDispatched(EmailVerified::class, function ($event) use ($user) {
+        return $event->user->id === $user->id;
+    });
 });
 
 it('rejects incorrect code', function () {

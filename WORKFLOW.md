@@ -351,7 +351,7 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                    WORKFLOW SPACE XPLORER                        │
+│                    WORKFLOW STELLAR GAME                         │
 └─────────────────────────────────────────────────────────────────┘
 
 1. 📝 ALEX (Product)
@@ -440,6 +440,7 @@ git checkout -b feature/ISSUE-001-implement-user-registration
 | **Sam** | Lead Developer | Création de branche, création de plans, review du code, création de PR, merge de PR |
 | **Morgan** | Architect | Review architecturale, cohérence technique |
 | **Jordan** | Fullstack Developer | Implémentation du code, écriture des tests |
+| **Casey** | Game Designer | Conception des mécaniques de jeu, équilibrage, progression du joueur |
 | **Taylor** | Workflow Manager | Surveillance du workflow, analyse des processus, rapports d'amélioration |
 
 ## Principes de Qualité
@@ -630,7 +631,7 @@ Dans un plan :
 
 ## Résumé du Workflow
 
-Le workflow Space Xplorer suit un processus rigoureux en **9 étapes principales** :
+Le workflow Stellar suit un processus rigoureux en **9 étapes principales** :
 
 1. **Création d'Issue** (Alex) → Issue produit documentée
 2. **Création de Branche** (Sam) → Branche Git créée

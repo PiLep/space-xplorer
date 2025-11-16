@@ -16,17 +16,6 @@ use Illuminate\View\View;
 class PasswordResetController extends Controller
 {
     /**
-     * Show the forgot password form.
-     * Note: This is handled by the Livewire component route directly.
-     */
-    public function showForgotPasswordForm(): View
-    {
-        // This method is not used as the route uses Livewire component directly
-        // But kept for consistency
-        return view('auth.forgot-password');
-    }
-
-    /**
      * Send password reset link.
      */
     public function sendResetLink(ForgotPasswordRequest $request, PasswordResetService $passwordResetService): RedirectResponse

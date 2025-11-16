@@ -1,8 +1,10 @@
 <?php
 
+use App\Events\InboxAccessed;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
@@ -14,8 +16,14 @@ beforeEach(function () {
 });
 
 it('renders inbox component', function () {
+    Event::fake([InboxAccessed::class]);
+
     Livewire::test(\App\Livewire\Inbox::class)
         ->assertStatus(200);
+
+    Event::assertDispatched(InboxAccessed::class, function ($event) {
+        return $event->user->id === $this->user->id;
+    });
 });
 
 it('loads messages on mount', function () {

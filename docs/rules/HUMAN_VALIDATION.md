@@ -1,4 +1,4 @@
-# Points de Validation Humaine - Space Xplorer
+# Points de Validation Humaine - Stellar
 
 Ce document liste tous les points critiques du workflow qui nécessitent une validation humaine avant de continuer.
 

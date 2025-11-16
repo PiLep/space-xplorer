@@ -175,12 +175,12 @@ Implémenter le système de vérification d'email par code pour valider que les 
 
 ### Historique
 
-#### 2025-01-XX - Alex (Product) - Création de l'issue
+#### Alex (Product) - Création de l'issue
 **Statut** : À faire
 **Détails** : Issue créée pour améliorer la sécurité et la qualité des données avec la vérification d'email
 **Notes** : Priorité medium car non bloquant pour le MVP mais bonne pratique à implémenter tôt
 
-#### 2025-01-XX - Sam (Lead Developer) - Création de la branche et issue GitHub
+#### Sam (Lead Developer) - Création de la branche et issue GitHub
 **Statut** : En cours
 **Détails** : 
 - Branche `feature/ISSUE-004-implement-email-verification` créée depuis `develop`
@@ -188,7 +188,7 @@ Implémenter le système de vérification d'email par code pour valider que les 
 - Labels ajoutés : `enhancement`, `medium-priority`
 **Notes** : Prêt pour la création du plan de développement
 
-#### 2025-01-XX - Alex (Product) - Itération sur les spécifications
+#### Alex (Product) - Itération sur les spécifications
 **Statut** : En cours
 **Détails** : 
 - Changement de l'approche : vérification par code à 6 chiffres au lieu d'un lien
@@ -197,7 +197,7 @@ Implémenter le système de vérification d'email par code pour valider que les 
 - Mise à jour des critères d'acceptation et détails techniques
 **Notes** : L'approche par code offre une meilleure UX et est plus sécurisée pour le MVP
 
-#### 2025-01-XX - Sam (Lead Developer) - Création du plan de développement
+#### Sam (Lead Developer) - Création du plan de développement
 **Statut** : En cours
 **Détails** : 
 - Plan de développement créé : `TASK-004-implement-email-verification.md`
@@ -207,7 +207,7 @@ Implémenter le système de vérification d'email par code pour valider que les 
 - Tests prévus : unitaires, intégration, fonctionnels, Mailable
 **Notes** : Plan prêt pour l'implémentation par le Fullstack Developer
 
-#### 2025-01-XX - Riley (Designer) - Review design anticipée
+#### Riley (Designer) - Review design anticipée
 **Statut** : En cours
 **Détails** : 
 - Review design anticipée effectuée : `DESIGN-REVIEW-004-email-verification.md`

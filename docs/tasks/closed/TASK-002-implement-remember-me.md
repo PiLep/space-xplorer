@@ -16,13 +16,13 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 
 ### Historique
 
-#### 2025-01-XX - Sam (Lead Dev) - Création du plan
+#### Sam (Lead Dev) - Création du plan
 **Statut** : À faire
 **Détails** : Plan de développement créé pour implémenter la fonctionnalité "Remember Me". Le plan décompose l'issue en 3 phases avec 8 tâches au total.
 **Fichiers modifiés** : docs/tasks/TASK-002-implement-remember-me.md
 **Notes** : Estimation totale : ~4h de développement. Le champ `remember_token` existe déjà dans la migration users.
 
-#### 2025-01-XX - Morgan (Architect) - Review architecturale
+#### Morgan (Architect) - Review architecturale
 **Statut** : En cours
 **Détails** : Plan reviewé et approuvé avec recommandations. Le plan respecte l'architecture définie et les choix techniques sont appropriés. Voir [ARCHITECT-REVIEW-002-remember-me.md](../reviews/closed/ARCHITECT-REVIEW-002-remember-me.md) pour les détails complets.
 **Fichiers modifiés** : 

@@ -56,7 +56,7 @@ Aucune incohérence majeure identifiée. Le design est parfaitement cohérent av
 
 ### ✅ Hiérarchie Respectée
 
-- [x] **Prompts système bien visibles** : Les prompts système (`SYSTEM@SPACE-XPLORER:~$`) sont bien visibles et créent une hiérarchie claire
+- [x] **Prompts système bien visibles** : Les prompts système (`SYSTEM@STELLAR-GAME:~$`) sont bien visibles et créent une hiérarchie claire
 - [x] **Messages d'information bien positionnés** : Les messages `[INFO]` sont bien positionnés avant les formulaires
 - [x] **Champs de formulaire bien organisés** : Les champs sont bien organisés avec les labels terminal (`enter_email`, `enter_new_password`, etc.)
 - [x] **Boutons d'action clairement visibles** : Les boutons d'action sont clairement visibles avec le format terminal (`> SEND_RESET_LINK`, `> RESET_PASSWORD`)
@@ -123,7 +123,7 @@ Aucun problème d'interaction identifié.
 
 **Analyse** :
 - ✅ **Style terminal cohérent** : La page utilise parfaitement le style terminal avec les composants appropriés
-- ✅ **Prompt système visible** : Le prompt `SYSTEM@SPACE-XPLORER:~$ init_password_reset` est bien visible
+- ✅ **Prompt système visible** : Le prompt `SYSTEM@STELLAR-GAME:~$ init_password_reset` est bien visible
 - ✅ **Message informatif clair** : Le message `[INFO] Please provide your email address to receive a password reset link` est clair et informatif
 - ✅ **Formulaire bien structuré** : Le formulaire est bien structuré avec le champ email et le bouton d'action
 - ✅ **Champ terminal correct** : Le champ email utilise le variant `terminal` avec le label `enter_email`

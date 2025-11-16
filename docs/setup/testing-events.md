@@ -32,7 +32,7 @@ beforeEach(function () {
 
 ### Architecture des Événements
 
-Dans Space Xplorer, nous avons cette chaîne d'événements :
+Dans Stellar, nous avons cette chaîne d'événements :
 
 ```
 UserRegistered (Event)

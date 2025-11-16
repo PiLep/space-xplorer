@@ -98,7 +98,7 @@ Implémenter la fonctionnalité "Remember Me" pour permettre aux utilisateurs de
 L'interface de connexion utilise un style terminal rétro-futuriste avec :
 - **Fond** : Fond sombre avec effet de scanlines (style CRT)
 - **Messages de statut** : Messages avec préfixes (`[OK]`, `[INFO]`, `[LOAD]`, `[READY]`) en vert et blanc
-- **Prompts système** : `SYSTEM@SPACE-XPLORER:~$` en vert pour les commandes
+- **Prompts système** : `SYSTEM@STELLAR-GAME:~$` en vert pour les commandes
 - **Style monospace** : Police monospace pour une ambiance terminal authentique
 - **Formulaire** : Boîte avec bordure verte lumineuse et effet de glow
 - **Champs** : 
@@ -169,13 +169,13 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 
 ### Historique
 
-#### 2025-01-XX - Alex (Product) - Création de l'issue
+#### Alex (Product) - Création de l'issue
 **Statut** : À faire
 **Détails** : Issue créée pour améliorer l'expérience utilisateur avec la persistence de connexion
 **Notes** : Priorité haute car impact direct sur l'engagement utilisateur
 **GitHub** : Issue créée sur GitHub (#4) et branche dédiée créée (`issue/002-remember-me`)
 
-#### 2025-01-XX - Sam (Lead Dev) - Création du plan de développement
+#### Sam (Lead Dev) - Création du plan de développement
 **Statut** : En cours
 **Détails** : Plan de développement créé (TASK-002). Le plan décompose l'issue en 3 phases avec 8 tâches au total. Estimation totale : ~4h de développement.
 **Fichiers modifiés** : 
@@ -183,7 +183,7 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 - docs/issues/ISSUE-002-implement-remember-me.md (mis à jour)
 **Notes** : Le champ `remember_token` existe déjà dans la migration users. L'implémentation nécessite des modifications dans AuthService, LoginRequest, LoginTerminal et AuthController.
 
-#### 2025-01-XX - Riley (Designer) - Review visuelle de l'issue
+#### Riley (Designer) - Review visuelle de l'issue
 **Statut** : En cours
 **Détails** : Review visuelle complète effectuée pour valider l'intégration design de la fonctionnalité "Remember Me". L'interface actuelle a été analysée et des recommandations design ont été fournies.
 **Fichiers modifiés** : 
@@ -195,7 +195,7 @@ Voir la review visuelle complète : **[VISUAL-REVIEW-002-remember-me.md](../revi
 - 📸 Screenshot de l'interface actuelle documenté dans la review visuelle
 - ✅ Code d'implémentation proposé fourni avec style terminal cohérent
 
-#### 2025-01-XX - Morgan (Architect) - Review architecturale du plan
+#### Morgan (Architect) - Review architecturale du plan
 **Statut** : En cours
 **Détails** : Review architecturale complète effectuée sur le plan de développement TASK-002. Le plan a été approuvé avec recommandations pour améliorer la robustesse et la sécurité.
 **Fichiers modifiés** : 

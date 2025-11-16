@@ -1,10 +1,10 @@
 ---
-description: Code standards and technical rules for Space Xplorer
+description: Code standards and technical rules for Stellar Game
 globs: ["**/*.php", "**/*.js", "**/*.ts", "**/*.vue", "**/*.blade.php"]
 alwaysApply: true
 ---
 
-# Space Xplorer - Code Standards
+# Stellar Game - Code Standards
 
 ## Quick Reference
 

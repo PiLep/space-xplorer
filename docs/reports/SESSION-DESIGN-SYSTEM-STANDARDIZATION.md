@@ -1,13 +1,12 @@
 # Rapport de Session - Standardisation du Design System
 
-**Date** : 2025-01-XX  
 **Objectif** : Standardiser les composants réutilisables et améliorer le design system
 
 ---
 
 ## Résumé Exécutif
 
-Cette session a permis de standardiser complètement les composants réutilisables du design system Space Xplorer, d'améliorer l'accessibilité selon les standards WCAG 2.1 niveau AA, et de créer une documentation complète pour tous les composants.
+Cette session a permis de standardiser complètement les composants réutilisables du design system Stellar, d'améliorer l'accessibilité selon les standards WCAG 2.1 niveau AA, et de créer une documentation complète pour tous les composants.
 
 ### Résultats Clés
 
@@ -305,7 +304,7 @@ Cette session a permis de standardiser complètement les composants réutilisabl
 
 ## Conclusion
 
-Cette session a permis de **standardiser complètement** les composants réutilisables du design system Space Xplorer. Tous les formulaires utilisent maintenant des composants standardisés, l'accessibilité a été considérablement améliorée, et une documentation complète a été créée.
+Cette session a permis de **standardiser complètement** les composants réutilisables du design system Stellar. Tous les formulaires utilisent maintenant des composants standardisés, l'accessibilité a été considérablement améliorée, et une documentation complète a été créée.
 
 Le design system est maintenant **cohérent, maintenable, et accessible**, prêt pour la production et les futures évolutions.
 

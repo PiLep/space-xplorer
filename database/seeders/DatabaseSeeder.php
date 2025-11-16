@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🌌 Seeding Stellar database...');
         $this->command->newLine();
 
+        // Seed universe time configuration first
+        $this->call(UniverseTimeConfigSeeder::class);
+        $this->command->newLine();
+
         // Password par défaut pour tous les utilisateurs de test
         $defaultPassword = 'password';
 
@@ -25,23 +29,23 @@ class DatabaseSeeder extends Seeder
         $users = [
             [
                 'name' => 'Alex Explorer',
-                'email' => 'alex@space-xplorer.test',
+                'email' => 'alex@stellar-game.test',
             ],
             [
                 'name' => 'Sam Navigator',
-                'email' => 'sam@space-xplorer.test',
+                'email' => 'sam@stellar-game.test',
             ],
             [
                 'name' => 'Morgan Pilot',
-                'email' => 'morgan@space-xplorer.test',
+                'email' => 'morgan@stellar-game.test',
             ],
             [
                 'name' => 'Jordan Commander',
-                'email' => 'jordan@space-xplorer.test',
+                'email' => 'jordan@stellar-game.test',
             ],
             [
                 'name' => 'Riley Explorer',
-                'email' => 'riley@space-xplorer.test',
+                'email' => 'riley@stellar-game.test',
             ],
         ];
 
