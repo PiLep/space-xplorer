@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
         $this->command->info('🌌 Seeding Stellar database...');
         $this->command->newLine();
 
+        // Seed universe time configuration first
+        $this->call(UniverseTimeConfigSeeder::class);
+        $this->command->newLine();
+
         // Password par défaut pour tous les utilisateurs de test
         $defaultPassword = 'password';
 
