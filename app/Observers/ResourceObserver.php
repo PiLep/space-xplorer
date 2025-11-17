@@ -79,8 +79,8 @@ class ResourceObserver
 
         // Determine storage disk based on resource type
         $disk = match ($resource->type) {
-            'avatar_image', 'planet_image' => config('image-generation.storage.disk', 's3'),
-            'planet_video' => config('video-generation.storage.disk', 's3'),
+            'avatar_image', 'planet_image' => config('image-generation.storage.disk') ?? 's3',
+            'planet_video' => config('video-generation.storage.disk') ?? 's3',
             default => 's3',
         };
 

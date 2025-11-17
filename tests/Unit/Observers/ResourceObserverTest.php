@@ -310,17 +310,22 @@ it('uses correct disk based on resource type', function () {
 
 it('uses default s3 disk for unknown resource types', function () {
     // Note: The type enum only allows 'avatar_image', 'planet_image', 'planet_video'
-    // So we'll test with a valid type but verify the observer uses default 's3' disk
-    // when the type doesn't match the specific cases
+    // Since all current types have specific disks, we test the default behavior
+    // by ensuring the file exists in s3 and the observer correctly uses s3 disk
+
+    // Remove config keys to ensure default 's3' is used (setting to null doesn't work with config default)
+    config()->offsetUnset('image-generation.storage.disk');
+    config()->offsetUnset('video-generation.storage.disk');
+
     $filePath = 'files/test.png';
+
+    // Ensure file exists in s3 disk
     Storage::disk('s3')->put($filePath, 'content');
 
-    // Since we can't use 'unknown_type' (not in enum), we'll test the default behavior
-    // by using a type that exists but checking the observer logic handles defaults
-    // Actually, all current types have specific disks, so let's test with planet_video
-    // which uses video-generation disk config, but if config is missing, defaults to s3
-    config(['video-generation.storage.disk' => null]); // Force default
+    // Verify file exists before creating resource
+    expect(Storage::disk('s3')->exists($filePath))->toBeTrue();
 
+    // Create resource with planet_video type (uses video-generation config, defaults to s3)
     $resource = Resource::factory()->create([
         'type' => 'planet_video', // Valid enum value
         'file_path' => $filePath,
@@ -374,5 +379,8 @@ it('clears cache when file_path is changed to empty string', function () {
 
 afterEach(function () {
     \Mockery::close();
-});
 
+    // Remove config keys to ensure test isolation (setting to null doesn't work with config default)
+    config()->offsetUnset('image-generation.storage.disk');
+    config()->offsetUnset('video-generation.storage.disk');
+});
