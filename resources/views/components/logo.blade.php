@@ -16,7 +16,7 @@
     $scanlinesClass = $showScanlines ? 'scanlines-title' : '';
 @endphp
 
-<h1 class="{{ $classes }} font-bold font-mono text-space-primary dark:text-space-primary text-glow-primary pulse-glow {{ $scanlinesClass }}" style="letter-spacing: 0.15em; line-height: 1;" @if($showScanlines) data-text="STELLAR" @endif>
+<h1 class="{{ $classes }} font-bold font-mono text-space-primary dark:text-space-primary text-glow-primary pulse-glow select-none {{ $scanlinesClass }}" style="letter-spacing: 0.15em; line-height: 1;" @if($showScanlines) data-text="STELLAR" @endif>
     STELLAR
 </h1>
 

@@ -30,9 +30,10 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
     Route::resource('users', UserController::class)->only(['index', 'show']);
 
     // Resources management
-    Route::resource('resources', ResourceController::class)->except(['edit', 'update', 'destroy']);
+    // Define specific routes BEFORE resource routes to avoid route conflicts
     Route::get('/resources/review', [ResourceController::class, 'review'])->name('resources.review');
     Route::post('/resources/{resource}/approve', [ResourceController::class, 'approve'])->name('resources.approve');
+    Route::resource('resources', ResourceController::class)->except(['edit', 'update', 'destroy']);
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map');
