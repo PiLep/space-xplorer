@@ -85,6 +85,14 @@
                             > MAP
                         </a>
                         <a
+                            href="{{ route('admin.systems.index') }}"
+                            wire:navigate
+                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.systems.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
+                            @if(request()->routeIs('admin.systems.*')) aria-current="page" @endif
+                        >
+                            > STAR SYSTEMS
+                        </a>
+                        <a
                             href="{{ route('admin.scheduled-tasks.index') }}"
                             wire:navigate
                             class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.scheduled-tasks.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"

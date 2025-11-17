@@ -38,6 +38,8 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map');
+    Route::get('/systems', [MapController::class, 'list'])->name('systems.index');
+    Route::get('/systems/{id}/map', [MapController::class, 'show'])->name('systems.map');
 
     // Scheduled Tasks management
     Route::get('/scheduled-tasks', [ScheduledTaskController::class, 'index'])->name('scheduled-tasks.index');

@@ -144,8 +144,13 @@ class GenerateUndiscoveredUniverse extends Command
 
         // Add buffer and expand if requested
         $baseRange = max($maxCoord * 1.5, 100.0);
+        $range = $expandRange ? $baseRange * 2 : $baseRange;
 
-        return $expandRange ? $baseRange * 2 : $baseRange;
+        // Limit maximum range to prevent systems from being generated too far away
+        // This keeps the universe at a reasonable scale (max ~500 AU from origin)
+        $maxRange = 500.0;
+
+        return min($range, $maxRange);
     }
 
     /**
@@ -225,15 +230,17 @@ class GenerateUndiscoveredUniverse extends Command
         // Generate coordinates in a cube, then filter by distance from origin
         // This ensures we don't generate systems too close to origin (where players start)
         $minDistanceFromOrigin = 50.0;
+        // Limit maximum distance to keep universe at reasonable scale
+        // This prevents systems from being generated too far away
+        $maxDistanceFromOrigin = 400.0;
 
         do {
             $x = (rand(-$range * 100, $range * 100)) / 100;
             $y = (rand(-$range * 100, $range * 100)) / 100;
             $z = (rand(-$range * 100, $range * 100)) / 100;
             $distance = sqrt($x * $x + $y * $y + $z * $z);
-        } while ($distance < $minDistanceFromOrigin);
+        } while ($distance < $minDistanceFromOrigin || $distance > $maxDistanceFromOrigin);
 
         return [$x, $y, $z];
     }
 }
-
