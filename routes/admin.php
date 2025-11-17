@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\ResourceController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,9 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
     Route::resource('resources', ResourceController::class)->except(['edit', 'update', 'destroy']);
     Route::get('/resources/review', [ResourceController::class, 'review'])->name('resources.review');
     Route::post('/resources/{resource}/approve', [ResourceController::class, 'approve'])->name('resources.approve');
+
+    // Map
+    Route::get('/map', [MapController::class, 'index'])->name('map');
 });
 
 // Fallback for admin routes - redirect to admin login if route not found
