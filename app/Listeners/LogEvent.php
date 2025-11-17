@@ -522,15 +522,18 @@ class LogEvent
 
             foreach ($properties as $property) {
                 $propertyName = $property->getName();
-                $value = $property->getValue($event);
 
                 // Ignorer les propriétés qui ne doivent pas être sérialisées
                 if (in_array($propertyName, ['shouldBroadcast', 'connection', 'queue', 'chainConnection', 'chainQueue', 'chainCatchCallbacks', 'chained'])) {
                     continue;
                 }
 
-                // Sérialiser les valeurs de manière sécurisée
-                $data[$propertyName] = $this->serializeValue($value);
+                // Vérifier si la propriété est initialisée (pour les propriétés typées PHP 7.4+)
+                if ($property->isInitialized($event)) {
+                    $value = $property->getValue($event);
+                    // Sérialiser les valeurs de manière sécurisée
+                    $data[$propertyName] = $this->serializeValue($value);
+                }
             }
         } catch (\Exception $e) {
             // En cas d'erreur, retourner au moins le type d'événement
