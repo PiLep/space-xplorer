@@ -313,9 +313,9 @@ it('uses default s3 disk for unknown resource types', function () {
     // Since all current types have specific disks, we test the default behavior
     // by ensuring the file exists in s3 and the observer correctly uses s3 disk
 
-    // Reset config to ensure clean state (previous test may have modified it)
-    config(['image-generation.storage.disk' => null]);
-    config(['video-generation.storage.disk' => null]);
+    // Remove config keys to ensure default 's3' is used (setting to null doesn't work with config default)
+    config()->offsetUnset('image-generation.storage.disk');
+    config()->offsetUnset('video-generation.storage.disk');
 
     $filePath = 'files/test.png';
 
@@ -380,8 +380,7 @@ it('clears cache when file_path is changed to empty string', function () {
 afterEach(function () {
     \Mockery::close();
 
-    // Reset config to ensure test isolation
-    config(['image-generation.storage.disk' => null]);
-    config(['video-generation.storage.disk' => null]);
+    // Remove config keys to ensure test isolation (setting to null doesn't work with config default)
+    config()->offsetUnset('image-generation.storage.disk');
+    config()->offsetUnset('video-generation.storage.disk');
 });
-
