@@ -3,41 +3,18 @@
  * Handles the 3D star system map visualization
  */
 
-// Constants
-const STAR_COLORS = {
-    'yellow_dwarf': '#FFD700',
-    'red_dwarf': '#FF6B6B',
-    'orange_dwarf': '#FF8C42',
-    'red_giant': '#FF4500',
-    'blue_giant': '#4169E1',
-    'white_dwarf': '#F0F0F0',
-};
-
-const DISTANCE_CONSTANTS = {
-    AU_PER_LIGHT_YEAR: 63241.0,
-    AU_PER_PARSEC: 206265.0,
-    UNITS_PER_AU: 1.0,
-};
-
-const VIEW_PLANES = {
-    XY: 'xy',
-    XZ: 'xz',
-    YZ: 'yz',
-};
+import { 
+    STAR_COLORS, 
+    DISTANCE_CONSTANTS, 
+    VIEW_PLANES, 
+    DEFAULT_MAP_CONFIG 
+} from './map-constants.js';
+import { formatDistance, findNearby, isDiscovered } from './map-utils.js';
+import { BaseViewTransformer, BaseGridRenderer, BaseScaleRenderer } from './map-base-classes.js';
 
 const DEFAULT_CONFIG = {
-    initialZoom: 1.0,
-    minZoom: 0.00001, // Fallback minimum zoom
-    maxZoom: 10.0,
-    zoomFactor: 1.5,
-    wheelZoomFactor: 0.05,
+    ...DEFAULT_MAP_CONFIG,
     maxConnectionDistance: 200,
-    gridTargetLines: 10,
-    scaleTargetPixels: 0.15,
-    clickRadius: 20,
-    padding: 0.1,
-    maxZoomOutFactor: 0.5, // Maximum zoom out: 50% of initial zoom (2x wider view)
-    zoomAnimationDuration: 600, // Duration of zoom animation in milliseconds
 };
 
 /**
@@ -77,60 +54,19 @@ class CoordinateProjector {
 /**
  * View transformation utilities
  */
-class ViewTransformer {
+class ViewTransformer extends BaseViewTransformer {
     constructor(canvas) {
-        this.canvas = canvas;
-        this.zoom = DEFAULT_CONFIG.initialZoom;
-        this.initialZoom = DEFAULT_CONFIG.initialZoom;
+        super(canvas, DEFAULT_CONFIG);
         this.dynamicMinZoom = DEFAULT_CONFIG.minZoom; // Will be calculated based on initial zoom
-        this.centerX = 0;
-        this.centerY = 0;
-        this.screenCache = new Map();
-    }
-
-    invalidateCache() {
-        this.screenCache.clear();
-    }
-
-    worldToScreen(worldX, worldY) {
-        const cacheKey = `${worldX.toFixed(2)},${worldY.toFixed(2)},${this.zoom.toFixed(5)},${this.centerX.toFixed(2)},${this.centerY.toFixed(2)}`;
-        if (this.screenCache.has(cacheKey)) {
-            return this.screenCache.get(cacheKey);
-        }
-        const screenX = (worldX - this.centerX) * this.zoom + this.canvas.width / 2;
-        const screenY = (worldY - this.centerY) * this.zoom + this.canvas.height / 2;
-        const result = { x: screenX, y: screenY };
-        this.screenCache.set(cacheKey, result);
-        return result;
-    }
-
-    screenToWorld(screenX, screenY) {
-        const worldX = (screenX - this.canvas.width / 2) / this.zoom + this.centerX;
-        const worldY = (screenY - this.canvas.height / 2) / this.zoom + this.centerY;
-        return { x: worldX, y: worldY };
-    }
-
-    formatZoom(zoomValue) {
-        if (this.initialZoom <= 0) {
-            return zoomValue.toFixed(2) + 'x';
-        }
-
-        const relativeZoom = (zoomValue / this.initialZoom) * 100;
-
-        if (relativeZoom >= 1000) {
-            return Math.round(relativeZoom) + '%';
-        } else if (relativeZoom >= 100) {
-            return relativeZoom.toFixed(1) + '%';
-        } else if (relativeZoom >= 10) {
-            return relativeZoom.toFixed(1) + '%';
-        } else if (relativeZoom >= 1) {
-            return relativeZoom.toFixed(2) + '%';
-        } else {
-            return relativeZoom.toFixed(2) + '%';
-        }
     }
 
     calculateInitialView(systems, projector) {
+        // Ensure canvas has valid dimensions before calculating view
+        if (!this.canvas || this.canvas.width === 0 || this.canvas.height === 0) {
+            console.warn('Canvas dimensions not ready for calculateInitialView');
+            return;
+        }
+
         if (systems.length === 0) {
             return;
         }
@@ -175,99 +111,23 @@ class ViewTransformer {
 }
 
 /**
- * Distance formatting utilities
+ * Distance formatting utilities (using shared functions)
  */
-class DistanceFormatter {
-    static formatDistance(distanceAU) {
-        const { AU_PER_LIGHT_YEAR, AU_PER_PARSEC } = DISTANCE_CONSTANTS;
-
-        if (distanceAU >= AU_PER_PARSEC) {
-            const parsecs = distanceAU / AU_PER_PARSEC;
-            return parsecs.toFixed(2) + ' pc';
-        } else if (distanceAU >= AU_PER_LIGHT_YEAR) {
-            const lightYears = distanceAU / AU_PER_LIGHT_YEAR;
-            return lightYears.toFixed(2) + ' ly';
-        } else if (distanceAU >= 1000) {
-            const kau = distanceAU / 1000;
-            return kau.toFixed(2) + ' kAU';
-        } else {
-            return distanceAU.toFixed(2) + ' AU';
-        }
+const DistanceFormatter = {
+    formatDistance,
+    findNearbySystems(systems, selectedSystem, maxCount = 5, projector) {
+        return findNearby(systems, selectedSystem, maxCount, (s1, s2) => 
+            projector.calculateDistance3D(s1, s2)
+        ).map(({ item, distance }) => ({ system: item, distance }));
     }
-
-    static findNearbySystems(systems, selectedSystem, maxCount = 5, projector) {
-        const distances = systems
-            .filter(s => s.id !== selectedSystem.id)
-            .map(otherSystem => ({
-                system: otherSystem,
-                distance: projector.calculateDistance3D(selectedSystem, otherSystem)
-            }))
-            .sort((a, b) => a.distance - b.distance)
-            .slice(0, maxCount);
-
-        return distances;
-    }
-}
+};
 
 /**
  * Grid renderer
  */
-class GridRenderer {
+class GridRenderer extends BaseGridRenderer {
     constructor(ctx, transformer) {
-        this.ctx = ctx;
-        this.transformer = transformer;
-    }
-
-    drawGrid() {
-        const { canvas, zoom, centerX, centerY } = this.transformer;
-        this.ctx.strokeStyle = 'rgba(100, 100, 150, 0.2)';
-        this.ctx.lineWidth = 1;
-
-        const worldWidth = canvas.width / zoom;
-        const worldHeight = canvas.height / zoom;
-        const targetGridLines = DEFAULT_CONFIG.gridTargetLines;
-
-        const idealGridSize = Math.max(worldWidth, worldHeight) / targetGridLines;
-        let finalGridSize = 1;
-
-        if (idealGridSize > 0 && isFinite(idealGridSize)) {
-            const magnitude = Math.pow(10, Math.floor(Math.log10(idealGridSize)));
-            const normalized = idealGridSize / magnitude;
-
-            let multiplier = 1;
-            if (normalized >= 5) {
-                multiplier = 5;
-            } else if (normalized >= 2) {
-                multiplier = 2;
-            } else {
-                multiplier = 1;
-            }
-
-            finalGridSize = multiplier * magnitude;
-        }
-
-        finalGridSize = Math.max(1, finalGridSize);
-
-        const startX = Math.floor((centerX - canvas.width / 2 / zoom) / finalGridSize) * finalGridSize;
-        const endX = Math.ceil((centerX + canvas.width / 2 / zoom) / finalGridSize) * finalGridSize;
-        const startY = Math.floor((centerY - canvas.height / 2 / zoom) / finalGridSize) * finalGridSize;
-        const endY = Math.ceil((centerY + canvas.height / 2 / zoom) / finalGridSize) * finalGridSize;
-
-        for (let x = startX; x <= endX; x += finalGridSize) {
-            const screen = this.transformer.worldToScreen(x, centerY);
-            this.ctx.beginPath();
-            this.ctx.moveTo(screen.x, 0);
-            this.ctx.lineTo(screen.x, canvas.height);
-            this.ctx.stroke();
-        }
-
-        for (let y = startY; y <= endY; y += finalGridSize) {
-            const screen = this.transformer.worldToScreen(centerX, y);
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, screen.y);
-            this.ctx.lineTo(canvas.width, screen.y);
-            this.ctx.stroke();
-        }
+        super(ctx, transformer, DEFAULT_CONFIG);
     }
 }
 
@@ -401,10 +261,10 @@ class ConnectionsRenderer {
             const selectedScreen = this.transformer.worldToScreen(selectedPos2d.x, selectedPos2d.y);
 
             // For undiscovered systems, only show connections to discovered systems (unless god mode)
-            const isSelectedDiscovered = selectedSystem.discovered === true || selectedSystem.discovered === 'true' || selectedSystem.discovered === 1;
+            const isSelectedDiscovered = isDiscovered(selectedSystem);
             const filteredNearbySystems = nearbySystems.filter(({ system: nearbySystem }) => {
                 // Ensure discovered is a boolean
-                const nearbyDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
+                const nearbyDiscovered = isDiscovered(nearbySystem);
                 
                 // In god mode, show all connections
                 if (godMode) {
@@ -437,7 +297,7 @@ class ConnectionsRenderer {
 
                 if (visibleSegment) {
                     // Check if destination system is discovered
-                    const nearbyDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
+                    const nearbyDiscovered = isDiscovered(nearbySystem);
                     const showAsDiscovered = godMode || nearbyDiscovered;
                     
                     // Apply gray discrete style for links to undiscovered systems (unless god mode)
@@ -486,7 +346,7 @@ class ConnectionsRenderer {
 
         systems.forEach((system1, index1) => {
             // Ensure discovered is a boolean
-            const system1Discovered = system1.discovered === true || system1.discovered === 'true' || system1.discovered === 1;
+            const system1Discovered = isDiscovered(system1);
             
             // Filter systems if showOnlyDiscovered is enabled (unless god mode)
             if (showOnlyDiscovered && !godMode && !system1Discovered) {
@@ -497,7 +357,7 @@ class ConnectionsRenderer {
                 if (index1 >= index2) return;
 
                 // Ensure discovered is a boolean
-                const system2Discovered = system2.discovered === true || system2.discovered === 'true' || system2.discovered === 1;
+                const system2Discovered = isDiscovered(system2);
                 
                 // Filter systems if showOnlyDiscovered is enabled (unless god mode)
                 if (showOnlyDiscovered && !godMode && !system2Discovered) {
@@ -679,8 +539,8 @@ class SystemsRenderer {
     drawSystems(systems, selectedSystemId, linkedSystemIds, showOnlyDiscovered = false, godMode = false) {
         systems.forEach(system => {
             // Ensure discovered is a boolean (handle string "true"/"false" from JSON)
-            const isDiscovered = system.discovered === true || system.discovered === 'true' || system.discovered === 1;
-            const showAsDiscovered = godMode || isDiscovered;
+            const discovered = isDiscovered(system);
+            const showAsDiscovered = godMode || discovered;
             
             // Filter out undiscovered systems if showOnlyDiscovered is enabled (unless god mode)
             if (showOnlyDiscovered && !showAsDiscovered) {
@@ -810,95 +670,9 @@ class SystemsRenderer {
 /**
  * Scale renderer
  */
-class ScaleRenderer {
+class ScaleRenderer extends BaseScaleRenderer {
     constructor(ctx, canvas, transformer) {
-        this.ctx = ctx;
-        this.canvas = canvas;
-        this.transformer = transformer;
-    }
-
-    drawScale() {
-        const { canvas, zoom } = this.transformer;
-        const { AU_PER_LIGHT_YEAR, AU_PER_PARSEC, UNITS_PER_AU } = DISTANCE_CONSTANTS;
-
-        const targetPixels = canvas.width * DEFAULT_CONFIG.scaleTargetPixels;
-        const worldDistance = targetPixels / zoom;
-        const auDistance = worldDistance / UNITS_PER_AU;
-
-        let roundedValue, unit, scalePixels;
-
-        if (auDistance <= 0 || !isFinite(auDistance)) {
-            roundedValue = 1;
-            unit = 'AU';
-            scalePixels = (roundedValue * UNITS_PER_AU) * zoom;
-        } else if (auDistance >= AU_PER_PARSEC) {
-            const parsecDistance = auDistance / AU_PER_PARSEC;
-            const magnitude = Math.pow(10, Math.floor(Math.log10(parsecDistance)));
-            roundedValue = Math.max(0.1, Math.round(parsecDistance / magnitude) * magnitude);
-            unit = 'pc';
-            scalePixels = (roundedValue * AU_PER_PARSEC * UNITS_PER_AU) * zoom;
-        } else if (auDistance >= AU_PER_LIGHT_YEAR) {
-            const lightYearDistance = auDistance / AU_PER_LIGHT_YEAR;
-            const magnitude = Math.pow(10, Math.floor(Math.log10(lightYearDistance)));
-            roundedValue = Math.max(0.1, Math.round(lightYearDistance / magnitude) * magnitude);
-            unit = 'ly';
-            scalePixels = (roundedValue * AU_PER_LIGHT_YEAR * UNITS_PER_AU) * zoom;
-        } else if (auDistance >= 1000) {
-            const kauDistance = auDistance / 1000;
-            const magnitude = Math.pow(10, Math.floor(Math.log10(kauDistance)));
-            roundedValue = Math.max(0.1, Math.round(kauDistance / magnitude) * magnitude);
-            unit = 'kAU';
-            scalePixels = (roundedValue * 1000 * UNITS_PER_AU) * zoom;
-        } else {
-            const magnitude = Math.pow(10, Math.floor(Math.log10(auDistance)));
-            roundedValue = Math.max(0.1, Math.round(auDistance / magnitude) * magnitude);
-            unit = 'AU';
-            scalePixels = (roundedValue * UNITS_PER_AU) * zoom;
-        }
-
-        const padding = 20;
-        const x = padding;
-        const y = canvas.height - padding;
-
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-        this.ctx.lineWidth = 2;
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y);
-        this.ctx.lineTo(x + scalePixels, y);
-        this.ctx.stroke();
-
-        this.ctx.beginPath();
-        this.ctx.moveTo(x, y - 5);
-        this.ctx.lineTo(x, y + 5);
-        this.ctx.moveTo(x + scalePixels, y - 5);
-        this.ctx.lineTo(x + scalePixels, y + 5);
-        this.ctx.stroke();
-
-        let label = '';
-        if (unit === 'pc') {
-            label = roundedValue.toFixed(roundedValue >= 10 ? 0 : 1) + ' pc';
-        } else if (unit === 'ly') {
-            label = roundedValue.toFixed(roundedValue >= 10 ? 0 : 1) + ' ly';
-        } else if (unit === 'kAU') {
-            label = roundedValue.toFixed(roundedValue >= 10 ? 0 : 1) + ' kAU';
-        } else {
-            label = roundedValue.toFixed(roundedValue >= 10 ? 0 : 1) + ' AU';
-        }
-
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        this.ctx.font = '12px monospace';
-        this.ctx.textAlign = 'center';
-        this.ctx.textBaseline = 'top';
-
-        const textMetrics = this.ctx.measureText(label);
-        const boxWidth = textMetrics.width + 10;
-        const boxHeight = 20;
-
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
-        this.ctx.fillRect(x + scalePixels / 2 - boxWidth / 2, y + 5, boxWidth, boxHeight);
-
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-        this.ctx.fillText(label, x + scalePixels / 2, y + 8);
+        super(ctx, canvas, transformer, DEFAULT_CONFIG);
     }
 }
 
@@ -935,8 +709,8 @@ class SystemInfoManager {
             this.nearbyList.innerHTML = '';
 
             nearbySystems.forEach(({ system: nearbySystem, distance }) => {
-                const isDiscovered = nearbySystem.discovered === true || nearbySystem.discovered === 'true' || nearbySystem.discovered === 1;
-                const showInfo = godMode || isDiscovered;
+                const discovered = isDiscovered(nearbySystem);
+                const showInfo = godMode || discovered;
                 
                 const item = document.createElement('div');
                 item.className =
@@ -980,7 +754,15 @@ class SystemInfoManager {
 class UniverseMap {
     constructor(canvasId, systems) {
         this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext('2d');
+        if (!this.canvas) {
+            throw new Error(`Canvas with id "${canvasId}" not found`);
+        }
+        
+        const ctx = this.canvas.getContext('2d');
+        if (!ctx) {
+            throw new Error(`Could not get 2d context from canvas "${canvasId}"`);
+        }
+        this.ctx = ctx;
         this.systems = systems;
 
         this.viewPlane = VIEW_PLANES.XY;
@@ -1016,14 +798,27 @@ class UniverseMap {
         this.cacheInvalidated = true;
         this.renderRequestId = null;
 
-        this._setupCanvas();
-        this._setupEventListeners();
-        this._setupGlobalFunctions();
+        // Use requestAnimationFrame to ensure DOM is ready
+        requestAnimationFrame(() => {
+            this._setupCanvas();
+            this._setupEventListeners();
+            this._setupGlobalFunctions();
+        });
     }
 
     _setupCanvas() {
+        // Ensure canvas and parent are available
+        if (!this.canvas || !this.canvas.parentElement) {
+            console.warn('Canvas or parent not ready, retrying...');
+            setTimeout(() => this._setupCanvas(), 50);
+            return;
+        }
+
         const resizeCanvas = () => {
             const container = this.canvas.parentElement;
+            if (!container) {
+                return;
+            }
             this.canvas.width = container.clientWidth - 32;
             this.canvas.height = Math.max(600, window.innerHeight * 0.6);
             this.transformer.invalidateCache();
@@ -1559,12 +1354,9 @@ class UniverseMap {
 
 // Export for use in other modules
 export { UniverseMap, STAR_COLORS, DISTANCE_CONSTANTS, VIEW_PLANES };
+// Re-export shared constants and utilities for backward compatibility
+export { formatDistance, isDiscovered } from './map-utils.js';
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    const systemsData = window.universeMapSystems;
-    if (systemsData && document.getElementById('universe-map-canvas')) {
-        window.universeMap = new UniverseMap('universe-map-canvas', systemsData);
-    }
-});
+// Make UniverseMap available globally for initialization from Blade template
+window.UniverseMap = UniverseMap;
 

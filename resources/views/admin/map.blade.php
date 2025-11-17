@@ -1,7 +1,16 @@
 @extends('admin.layout')
 
 @section('content')
-    <x-page-header title="Universe Map" />
+    <div class="mb-8 flex items-center justify-between">
+        <x-page-header title="Universe Map" />
+        <x-button
+            href="{{ route('admin.systems.index') }}"
+            variant="ghost"
+            size="sm"
+        >
+            View Star Systems List
+        </x-button>
+    </div>
 
     <x-admin.universe-map-controls :systemCount="count($systems)" />
 
@@ -36,30 +45,58 @@
             // Make systems data available to JavaScript module
             window.universeMapSystems = @json($systems);
 
-            // Initialize toggleShowOnlyDiscovered function early
-            window.toggleShowOnlyDiscovered = function() {
-                if (window.universeMap) {
-                    window.universeMap.toggleShowOnlyDiscovered();
-                }
-            };
+            // Initialize universe map after module is loaded
+            function initializeUniverseMap() {
+                const canvas = document.getElementById('universe-map-canvas');
+                if (window.UniverseMap && window.universeMapSystems && canvas) {
+                    try {
+                        window.universeMap = new window.UniverseMap(
+                            'universe-map-canvas',
+                            window.universeMapSystems
+                        );
 
-            // Initialize toggleGodMode function early
-            window.toggleGodMode = function() {
-                const godModeEnabled = document.getElementById('god-mode').checked;
-                if (window.universeMap) {
-                    window.universeMap.setGodMode(godModeEnabled);
+                        // Initialize control functions after map is created
+                        window.zoomIn = () => window.universeMap?.zoomIn();
+                        window.zoomOut = () => window.universeMap?.zoomOut();
+                        window.resetView = () => window.universeMap?.resetView();
+                        window.toggleConnections = () => window.universeMap?.toggleConnections();
+                        window.toggleDistances = () => window.universeMap?.toggleDistances();
+                        window.toggleShowOnlyDiscovered = () => window.universeMap?.toggleShowOnlyDiscovered();
+                        window.updateMaxDistance = (value) => window.universeMap?.updateMaxDistance(value);
+                        window.toggleGodMode = function() {
+                            const godModeEnabled = document.getElementById('god-mode')?.checked;
+                            if (window.universeMap) {
+                                window.universeMap.setGodMode(godModeEnabled);
+                            }
+                        };
+                    } catch (error) {
+                        console.error('Error initializing universe map:', error);
+                        // Retry after a short delay
+                        setTimeout(initializeUniverseMap, 100);
+                    }
+                } else {
+                    // Retry if not ready yet (max 20 attempts = 2 seconds)
+                    if (!window.universeMapInitAttempts) {
+                        window.universeMapInitAttempts = 0;
+                    }
+                    if (window.universeMapInitAttempts < 20) {
+                        window.universeMapInitAttempts++;
+                        setTimeout(initializeUniverseMap, 100);
+                    } else {
+                        console.error('Failed to initialize universe map: module or data not available');
+                    }
                 }
-            };
+            }
 
-            // Initialize 2D map control functions
-            if (window.universeMap) {
-                window.zoomIn = () => window.universeMap.zoomIn();
-                window.zoomOut = () => window.universeMap.zoomOut();
-                window.resetView = () => window.universeMap.resetView();
-                window.toggleConnections = () => window.universeMap.toggleConnections();
-                window.toggleDistances = () => window.universeMap.toggleDistances();
-                window.toggleShowOnlyDiscovered = () => window.universeMap.toggleShowOnlyDiscovered();
-                window.updateMaxDistance = (value) => window.universeMap.updateMaxDistance(value);
+            // Wait for DOM and module to be ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', () => {
+                    // Give Vite a moment to load the module
+                    setTimeout(initializeUniverseMap, 100);
+                });
+            } else {
+                // DOM is already ready, wait for module
+                setTimeout(initializeUniverseMap, 100);
             }
         </script>
         @vite(['resources/js/admin/universe-map.js'])

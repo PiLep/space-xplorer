@@ -23,6 +23,10 @@ class DatabaseSeeder extends Seeder
         $this->call(UniverseTimeConfigSeeder::class);
         $this->command->newLine();
 
+        // Seed scheduled tasks
+        $this->call(ScheduledTaskSeeder::class);
+        $this->command->newLine();
+
         // Ensure star systems exist (generate if needed)
         $this->ensureStarSystemsExist();
         $this->command->newLine();
