@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MapController;
 use App\Http\Controllers\Admin\ResourceController;
+use App\Http\Controllers\Admin\ScheduledTaskController;
 use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,12 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map');
+
+    // Scheduled Tasks management
+    Route::get('/scheduled-tasks', [ScheduledTaskController::class, 'index'])->name('scheduled-tasks.index');
+    Route::post('/scheduled-tasks/{scheduledTask}/toggle', [ScheduledTaskController::class, 'toggle'])->name('scheduled-tasks.toggle');
+    Route::post('/scheduled-tasks/{scheduledTask}/enable', [ScheduledTaskController::class, 'enable'])->name('scheduled-tasks.enable');
+    Route::post('/scheduled-tasks/{scheduledTask}/disable', [ScheduledTaskController::class, 'disable'])->name('scheduled-tasks.disable');
 });
 
 // Fallback for admin routes - redirect to admin login if route not found
