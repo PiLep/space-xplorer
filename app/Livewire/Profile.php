@@ -66,6 +66,7 @@ class Profile extends Component
                 'home_planet_name' => $authUser->homePlanet?->name ?? null,
                 'matricule' => $authUser->matricule,
                 'created_at' => $authUser->created_at?->format('Y-m-d'),
+                'seniority' => $authUser->seniorityUniverseFormattedEn(),
             ];
         } catch (\Exception $e) {
             $this->error = 'Failed to load user data: '.$e->getMessage();

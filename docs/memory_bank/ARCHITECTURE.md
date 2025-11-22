@@ -376,26 +376,7 @@ $absoluteZ = $systemZ + $z;
 
 **Migration des planètes existantes** :
 
-Commande Artisan : `php artisan planets:migrate-coordinates`
-
-**Options** :
-- `--force` : Force la migration même si les planètes ont déjà des coordonnées
-- `--planets-per-system=N` : Nombre de planètes par système lors du regroupement (défaut: 3)
-- `--assign-existing` : Assigner les planètes aux systèmes existants
-- `--isolate` : Créer un système par planète (mode isolé)
-
-**Modes de migration** :
-
-1. **Mode par défaut** (regroupement) :
-   - Regroupe les planètes en systèmes de N planètes
-   - Ne regroupe PAS dans les systèmes des planètes d'origine (évite le partage entre joueurs)
-
-2. **Mode assignation** (`--assign-existing`) :
-   - Assigner les planètes aux systèmes existants (max 7 planètes par système)
-   - Crée de nouveaux systèmes si nécessaire
-
-3. **Mode isolé** (`--isolate`) :
-   - Crée un système par planète (une planète = un système)
+> **Note** : La migration des planètes existantes vers le nouveau système de coordonnées a été effectuée. La commande `planets:migrate-coordinates` a été supprimée car il s'agissait d'une migration ponctuelle qui ne sera plus utilisée.
 
 ### Recherches spatiales
 

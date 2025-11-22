@@ -112,6 +112,7 @@
                                     SYSTEM@STELLAR:~$
                                 @endauth
                             </span>
+                            <x-universe-time-status />
                             <div class="flex items-center gap-4 text-sm">
                                 @auth
                                     <a

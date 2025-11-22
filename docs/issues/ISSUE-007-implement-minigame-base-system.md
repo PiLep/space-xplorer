@@ -288,19 +288,19 @@ Minigame (parent)
 
 - **Système de ressources** : Pour le MVP, on utilise simplement `scientific_data` dans la table `users`. Plus tard, on pourra créer un système de ressources plus complexe.
 
-- **Référence** : Le draft de conception des mini-jeux existe dans `docs/game-design/drafts/DRAFT-03-mini-games-system.md` mais n'est pas encore validé. Cette issue implémente le système de base qui permettra d'implémenter les mini-jeux décrits dans le draft.
+- **Référence** : Le système de mini-jeux est documenté dans `docs/game-design/mini-games-system.md`. Cette issue implémente le système de base qui permettra d'implémenter les mini-jeux décrits dans la documentation.
 
 ## Références
 
 - [ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md) - Architecture technique générale
 - [PROJECT_BRIEF.md](../memory_bank/PROJECT_BRIEF.md) - Vision métier
-- [DRAFT-03-mini-games-system.md](../game-design/drafts/DRAFT-03-mini-games-system.md) - Draft de conception des mini-jeux (non validé)
+- [mini-games-system.md](../game-design/mini-games-system.md) - Documentation du système de mini-jeux
 
 ## Suivi et Historique
 
 ### Statut
 
-À faire
+En cours
 
 ### Historique
 
@@ -308,4 +308,9 @@ Minigame (parent)
 **Statut** : À faire
 **Détails** : Issue créée pour implémenter le système de base des mini-jeux avec un seul mini-jeu (Scanning) pour valider l'architecture. Le système doit être extensible et permettre l'ajout de nouveaux types depuis l'admin.
 **GitHub** : [#15](https://github.com/PiLep/space-xplorer/issues/15)
+
+#### 2025-01-XX - Sam (Lead Dev) - Création du plan de développement
+**Statut** : En cours
+**Détails** : Plan de développement créé (TASK-007). Le plan décompose l'implémentation en 6 phases : Modèle de données, Services métier, Composants Livewire Frontend, Interface Admin, Sécurité, et Mise à jour du modèle User. Branche Git créée : `feature/ISSUE-007-implement-minigame-base-system`.
+**Fichiers modifiés** : `docs/tasks/TASK-007-implement-minigame-base-system.md`
 
