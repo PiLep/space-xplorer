@@ -1,10 +1,4 @@
-# DRAFT - Système de Mini-Jeux Quotidiens
-
-## Statut
-**Draft** - En attente de validation avec Alex (Product Manager)
-
-## Issue Associée
-À créer après validation du draft
+# Système de Mini-Jeux Quotidiens
 
 ## Vue d'Ensemble
 
@@ -100,7 +94,7 @@ Léger mais existant :
 
 ## Types de Mini-Jeux
 
-### 1. Scan Circulaire
+### 1. Scan Circulaire ✅ Implémenté
 
 **Principe** : Un radar affiche des signaux éphémères. Le joueur doit cliquer au bon moment pour les "verrouiller".
 
@@ -350,117 +344,14 @@ Les mini-jeux servent également :
 - Niveaux 6-15 : Mini-jeux modérés, récompenses améliorées
 - Niveaux 16+ : Mini-jeux complexes, récompenses exceptionnelles possibles
 
-## Exemples et Cas d'Usage
+## Features Proposées pour le Scanning
 
-### Exemple 1 : Scan Circulaire Réussi
-
-**Situation** : Joueur niveau 5, Scanner qualité 60
-
-**Déroulement** :
-- 8 signaux à verrouiller
-- 7 signaux verrouillés avec précision moyenne
-- 1 signal manqué
-- Temps : 42 secondes
-
-**Score** : 72/100
-
-**Récompenses** :
-- 150 données scientifiques
-- 2 fragments d'artefacts
-- Coordonnées partiellement révélées (nouveau système stellaire)
-
-### Exemple 2 : Harmonisation avec Anomalie Parallaxe
-
-**Situation** : Joueur niveau 10, score exceptionnel (98/100)
-
-**Déroulement** :
-- 5 ondes à aligner
-- Toutes alignées avec précision maximale
-- Une onde impossible à stabiliser apparaît brièvement (anomalie Parallaxe)
-- Temps : 38 secondes
-
-**Score** : 98/100
-
-**Récompenses** :
-- 200 données scientifiques
-- 3 fragments d'artefacts
-- Signal exceptionnel décodé
-- Indice cryptique du Parallaxe ajouté au journal secret
-
-## Cas Limites
-
-1. **Échec critique** : Score < 25, perte de ressources mineures
-2. **Temps écoulé** : Score basé sur la progression jusqu'au timeout
-3. **Anomalie Parallaxe** : Mini-jeu peut se terminer de manière inattendue
-4. **Modules spéciaux** : Certains modules peuvent modifier les règles
-
-## Métriques à Surveiller
-
-### Métriques d'Engagement
-- Temps moyen passé sur un mini-jeu
-- Taux de complétion des mini-jeux
-- Taux d'abandon avant la fin
-
-### Métriques de Performance
-- Distribution des scores par type de mini-jeu
-- Temps moyen de complétion
-- Taux de réussite par niveau de joueur
-
-### Métriques d'Équilibrage
-- Distribution des récompenses
-- Impact des modificateurs (vaisseau, modules)
-- Satisfaction des joueurs
-
-## Implémentation Technique
-
-### Spécifications
-
-**Système de sélection** :
-- Algorithme de sélection aléatoire pondéré
-- Éviter la répétition immédiate (pas le même mini-jeu 2 jours de suite)
-- Adaptation selon la progression
-
-**Système de scoring** :
-- Calcul en temps réel pendant le mini-jeu
-- Affichage du score progressif (optionnel)
-- Validation finale à la fin
-
-**Système de récompenses** :
-- Calcul des récompenses selon le score
-- Application des bonus de modules
-- Génération des récompenses rares (probabilités)
-
-### Points d'Attention
-
-1. **Performance** : Les mini-jeux doivent être fluides (60 FPS)
-2. **Accessibilité** : Contrôles simples et clairs
-3. **Variété** : Assez de types pour éviter la répétition
-4. **Équilibrage** : Les récompenses doivent être équilibrées
-
-### Tests à Prévoir
-
-1. **Tests unitaires** :
-   - Calcul des scores
-   - Génération des récompenses
-   - Application des modificateurs
-
-2. **Tests d'intégration** :
-   - Cycle quotidien complet avec mini-jeu
-   - Intégration des récompenses
-   - Intégration avec le système de gestion
-
-3. **Tests d'équilibrage** :
-   - Distribution des scores
-   - Temps de complétion
-   - Satisfaction des joueurs
-
-## Historique
-
-- Création du draft initial basé sur `mini-games.md`
+Voir [DRAFT-06-scanning-minigame-features.md](./drafts/DRAFT-06-scanning-minigame-features.md) pour des propositions d'enrichissement du mini-jeu de scanning avec des features originales (signaux multiples, signaux à trajectoire, mode rush, etc.).
 
 ## Références
 
-- **[mini-games.md](../local-brainstorming-data/mini-games.md)** : Document source du brainstorming
-- **[GAME-DESIGNER.md](../agents/GAME-DESIGNER.md)** : Documentation de l'agent Game Designer
-- **[design-game-mechanic.md](../prompts/design-game-mechanic.md)** : Guide pour concevoir des mécaniques
+- [Issue Produit](../issues/ISSUE-007-implement-minigame-base-system.md)
+- [Plan de Développement](../tasks/TASK-007-implement-minigame-base-system.md)
+- [Code Review](../reviews/CODE-REVIEW-007-scanning-minigame.md)
+- [Gameplay Review](../reviews/GAMEPLAY-REVIEW-scanning-minigame.md)
 

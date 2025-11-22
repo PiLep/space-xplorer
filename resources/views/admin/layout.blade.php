@@ -40,10 +40,12 @@
 <body class="dark:bg-space-black bg-gray-50 antialiased">
     <div class="flex min-h-screen">
         <!-- Sidebar Navigation -->
-        <aside class="w-64 flex-shrink-0 bg-surface-dark dark:bg-surface-dark border-r border-border-dark dark:border-border-dark">
+        <aside
+            class="bg-surface-dark dark:bg-surface-dark border-border-dark dark:border-border-dark w-64 flex-shrink-0 border-r"
+        >
             <div class="flex h-full flex-col">
                 <!-- Logo/Header -->
-                <div class="flex h-16 items-center border-b border-border-dark dark:border-border-dark px-6">
+                <div class="border-border-dark dark:border-border-dark flex h-16 items-center border-b px-6">
                     <span class="text-space-primary dark:text-space-primary font-mono text-lg font-bold">
                         ADMIN PANEL
                     </span>
@@ -55,48 +57,56 @@
                         <a
                             href="{{ route('admin.dashboard') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.dashboard') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.dashboard')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.dashboard') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.dashboard')) aria-current="page" @endif
                         >
                             > DASHBOARD
                         </a>
                         <a
                             href="{{ route('admin.users.index') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.users.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.users.*')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.users.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.users.*')) aria-current="page" @endif
                         >
                             > USERS
                         </a>
                         <a
                             href="{{ route('admin.resources.index') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.resources.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.resources.*')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.resources.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.resources.*')) aria-current="page" @endif
                         >
                             > RESOURCES
                         </a>
                         <a
                             href="{{ route('admin.map') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.map') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.map')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.map') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.map')) aria-current="page" @endif
                         >
                             > MAP
                         </a>
                         <a
                             href="{{ route('admin.systems.index') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.systems.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.systems.*')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.systems.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.systems.*')) aria-current="page" @endif
                         >
                             > STAR SYSTEMS
                         </a>
                         <a
+                            href="{{ route('admin.minigame.test') }}"
+                            wire:navigate
+                            class="{{ request()->routeIs('admin.minigame.test') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.minigame.test')) aria-current="page" @endif
+                        >
+                            > MINIGAME TEST
+                        </a>
+                        <a
                             href="{{ route('admin.scheduled-tasks.index') }}"
                             wire:navigate
-                            class="block px-4 py-2 rounded text-sm transition-colors {{ request()->routeIs('admin.scheduled-tasks.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }}"
-                            @if(request()->routeIs('admin.scheduled-tasks.*')) aria-current="page" @endif
+                            class="{{ request()->routeIs('admin.scheduled-tasks.*') ? 'bg-space-primary text-space-black font-bold' : 'text-gray-500 dark:text-gray-400 hover:text-space-primary dark:hover:text-space-primary hover:bg-gray-800 dark:hover:bg-gray-800' }} block rounded px-4 py-2 text-sm transition-colors"
+                            @if (request()->routeIs('admin.scheduled-tasks.*')) aria-current="page" @endif
                         >
                             > SCHEDULED TASKS
                         </a>
@@ -104,13 +114,16 @@
                 </nav>
 
                 <!-- User Info & Logout -->
-                <div class="border-t border-border-dark dark:border-border-dark px-4 py-4">
+                <div class="border-border-dark dark:border-border-dark border-t px-4 py-4">
                     <div class="mb-3">
-                        <span class="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                        <span class="font-mono text-xs text-gray-500 dark:text-gray-400">
                             {{ auth()->guard('admin')->user()->email }}
                         </span>
                     </div>
-                    <form method="POST" action="{{ route('admin.logout') }}">
+                    <form
+                        method="POST"
+                        action="{{ route('admin.logout') }}"
+                    >
                         @csrf
                         <x-button
                             type="submit"

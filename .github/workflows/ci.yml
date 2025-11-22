@@ -102,7 +102,14 @@ jobs:
           QUEUE_CONNECTION: sync
         run: ./vendor/bin/pest --coverage-clover=coverage.xml --coverage-html=coverage --log-junit=junit.xml
       
+      - name: Upload test results to Codecov
+        if: ${{ !cancelled() }}
+        uses: codecov/test-results-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      
       - name: Upload Coverage to Codecov
+        if: ${{ !cancelled() }}
         uses: codecov/codecov-action@v4
         with:
           file: ./coverage.xml

@@ -23,7 +23,7 @@ Route::middleware('auth:web')->prefix('admin')->group(function () {
 // Protected admin routes
 Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard
-    Route::get('/', fn () => redirect()->route('admin.dashboard'));
+    Route::get('/', fn() => redirect()->route('admin.dashboard'));
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
@@ -35,6 +35,9 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
     Route::get('/resources/review', [ResourceController::class, 'review'])->name('resources.review');
     Route::post('/resources/{resource}/approve', [ResourceController::class, 'approve'])->name('resources.approve');
     Route::resource('resources', ResourceController::class)->except(['edit', 'update', 'destroy']);
+
+    // Minigame test
+    Route::get('/minigame/test', fn() => view('admin.minigame-test'))->name('minigame.test');
 
     // Map
     Route::get('/map', [MapController::class, 'index'])->name('map');
@@ -50,5 +53,5 @@ Route::middleware(['auth:admin', 'admin.auth'])->prefix('admin')->name('admin.')
 
 // Fallback for admin routes - redirect to admin login if route not found
 Route::prefix('admin')->group(function () {
-    Route::fallback(fn () => redirect()->route('admin.login'));
+    Route::fallback(fn() => redirect()->route('admin.login'));
 });
