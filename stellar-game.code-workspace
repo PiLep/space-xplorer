@@ -3,5 +3,25 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings": {
+		// Disable VS Code's built-in PHP formatting to use Laravel Pint instead
+		"[php]": {
+			"editor.defaultFormatter": null,
+			"editor.formatOnSave": false
+		},
+		// Disable Intelephense formatting (we use Pint instead)
+		"intelephense.format.enable": false,
+		// Respect .editorconfig for basic formatting rules
+		"editorconfig.generateAuto": false,
+		// PHP configuration
+		"php.suggest.basic": false
+	},
+	"extensions": {
+		"recommendations": [
+			"bmewburn.vscode-intelephense-client",
+			"editorconfig.editorconfig",
+			"ms-azuretools.vscode-docker"
+		]
+	}
 }
