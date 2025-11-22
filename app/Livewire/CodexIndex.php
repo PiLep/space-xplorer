@@ -40,6 +40,7 @@ class CodexIndex extends Component
         }
 
         $this->searchResults = CodexEntry::public()
+            ->discovered()
             ->where(function ($query) {
                 $query->where('name', 'like', '%'.$this->search.'%')
                     ->orWhere('fallback_name', 'like', '%'.$this->search.'%');
@@ -83,7 +84,8 @@ class CodexIndex extends Component
     public function entries()
     {
         $query = CodexEntry::with(['planet.properties', 'discoveredBy'])
-            ->public();
+            ->public()
+            ->discovered();
 
         if (! empty($this->search)) {
             $query->where(function ($q) {
@@ -104,10 +106,12 @@ class CodexIndex extends Component
     {
         return cache()->remember('codex.stats', now()->addMinutes(5), function () {
             return [
-                'total_articles' => CodexEntry::public()->count(),
-                'planets' => Planet::count(),
-                'star_systems' => StarSystem::count(),
-                'named' => CodexEntry::public()->named()->count(),
+                'total_articles' => CodexEntry::public()->discovered()->count(),
+                'planets' => Planet::whereHas('starSystem', function ($q) {
+                    $q->where('discovered', true);
+                })->count(),
+                'star_systems' => StarSystem::where('discovered', true)->count(),
+                'named' => CodexEntry::public()->discovered()->named()->count(),
                 'contributors' => CodexContribution::distinct('contributor_user_id')->count('contributor_user_id'),
                 'contributions' => CodexContribution::count(),
             ];
@@ -123,6 +127,7 @@ class CodexIndex extends Component
         return cache()->remember('codex.recent_discoveries', now()->addMinutes(2), function () {
             return CodexEntry::with(['planet.properties', 'discoveredBy'])
                 ->public()
+                ->discovered()
                 ->orderBy('created_at', 'desc')
                 ->limit(6)
                 ->get();

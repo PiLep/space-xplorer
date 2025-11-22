@@ -30,6 +30,9 @@ class CodexController extends Controller
 
         $entries = $this->codexService->getEntries($filters, $perPage);
 
+        // display_name is available via $appends in CodexEntry model
+        // The paginator will automatically include it in JSON serialization
+
         return response()->json([
             'data' => $entries,
             'status' => 'success',
@@ -45,6 +48,7 @@ class CodexController extends Controller
     {
         $entry = CodexEntry::with(['planet.properties', 'discoveredBy'])
             ->public()
+            ->discovered()
             ->findOrFail($id);
 
         $planet = $entry->planet;

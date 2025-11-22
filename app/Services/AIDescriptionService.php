@@ -66,6 +66,15 @@ class AIDescriptionService
             }
 
             return $description;
+        } catch (ApiRequestException $e) {
+            // After retries fail, use fallback description instead of throwing
+            Log::warning('Text generation failed after retries, using fallback description', [
+                'provider' => $provider,
+                'planet_id' => $planet->id,
+                'error' => $e->getMessage(),
+            ]);
+
+            return $this->generateFallbackDescription($planet);
         } catch (RequestException $e) {
             Log::error('Text generation API request failed', [
                 'provider' => $provider,
@@ -83,8 +92,8 @@ class AIDescriptionService
             ]);
 
             throw new ApiRequestException("Failed to connect to text generation service: {$e->getMessage()}", 0, $e);
-        } catch (ProviderConfigurationException|UnsupportedProviderException|ApiRequestException $e) {
-            // Re-throw custom exceptions as-is
+        } catch (ProviderConfigurationException|UnsupportedProviderException $e) {
+            // Re-throw configuration/unsupported exceptions as-is (these should not use fallback)
             throw $e;
         } catch (\Exception $e) {
             Log::error('Text generation failed', [

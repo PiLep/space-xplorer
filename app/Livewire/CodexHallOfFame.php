@@ -52,6 +52,7 @@ class CodexHallOfFame extends Component
     {
         return CodexEntry::with(['planet.properties', 'discoveredBy'])
             ->public()
+            ->discovered()
             ->named()
             ->orderBy('updated_at', 'desc')
             ->limit(10)
@@ -66,10 +67,12 @@ class CodexHallOfFame extends Component
     {
         return cache()->remember('codex.stats', now()->addMinutes(5), function () {
             return [
-                'total_articles' => CodexEntry::public()->count(),
-                'planets' => \App\Models\Planet::count(),
+                'total_articles' => CodexEntry::public()->discovered()->count(),
+                'planets' => \App\Models\Planet::whereHas('starSystem', function ($q) {
+                    $q->where('discovered', true);
+                })->count(),
                 'star_systems' => \App\Models\StarSystem::where('discovered', true)->count(),
-                'named' => CodexEntry::public()->named()->count(),
+                'named' => CodexEntry::public()->discovered()->named()->count(),
                 'contributors' => CodexContribution::distinct('contributor_user_id')->count('contributor_user_id'),
                 'contributions' => CodexContribution::count(),
             ];

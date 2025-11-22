@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\CodexEntry;
 use App\Models\Planet;
+use App\Models\StarSystem;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -66,6 +67,23 @@ class CodexEntryFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'is_public' => false,
         ]);
+    }
+
+    /**
+     * Indicate that the entry's planet belongs to a discovered star system.
+     */
+    public function discovered(): static
+    {
+        return $this->afterCreating(function (CodexEntry $entry) {
+            $planet = $entry->planet;
+            if ($planet && $planet->starSystem) {
+                $planet->starSystem->update(['discovered' => true]);
+            } elseif ($planet && ! $planet->starSystem) {
+                // Create a discovered star system for the planet
+                $starSystem = StarSystem::factory()->create(['discovered' => true]);
+                $planet->update(['star_system_id' => $starSystem->id]);
+            }
+        });
     }
 }
 

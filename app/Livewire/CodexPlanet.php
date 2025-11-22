@@ -40,6 +40,7 @@ class CodexPlanet extends Component
 
             $this->entry = CodexEntry::with(['planet.properties', 'discoveredBy'])
                 ->public()
+                ->discovered()
                 ->findOrFail($this->entryId);
 
             $this->loading = false;

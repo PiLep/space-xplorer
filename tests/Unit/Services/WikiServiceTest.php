@@ -13,14 +13,19 @@ beforeEach(function () {
     $this->aiDescriptionService = \Mockery::mock(AIDescriptionService::class);
     $this->service = new WikiService($this->aiDescriptionService);
     $this->planet = Planet::factory()->create();
-    $this->planet->properties()->create([
-        'type' => 'tellurique',
-        'size' => 'moyenne',
-        'temperature' => 'temperee',
-        'atmosphere' => 'breathable',
-        'terrain' => 'rocky',
-        'resources' => 'moderate',
-    ]);
+    // Update existing properties created by factory instead of creating new ones
+    $this->planet->properties()->updateOrCreate(
+        ['planet_id' => $this->planet->id],
+        [
+            'type' => 'terrestrial',
+            'size' => 'medium',
+            'temperature' => 'temperate',
+            'atmosphere' => 'breathable',
+            'terrain' => 'rocky',
+            'resources' => 'moderate',
+        ]
+    );
+    $this->planet->refresh();
     $this->user = User::factory()->create();
 });
 
@@ -82,7 +87,7 @@ it('throws validation exception for name with invalid characters', function () {
 });
 
 it('throws validation exception for duplicate name', function () {
-    WikiEntry::factory()->create([
+    WikiEntry::factory()->discovered()->create([
         'name' => 'Alpha Centauri',
         'planet_id' => Planet::factory()->create()->id,
     ]);
@@ -116,12 +121,12 @@ it('checks if user can name planet', function () {
 });
 
 it('searches entries by query', function () {
-    $entry1 = WikiEntry::factory()->create([
+    $entry1 = WikiEntry::factory()->discovered()->create([
         'name' => 'Alpha Centauri',
         'fallback_name' => 'Planète Tellurique #1234',
         'planet_id' => $this->planet->id,
     ]);
-    $entry2 = WikiEntry::factory()->create([
+    $entry2 = WikiEntry::factory()->discovered()->create([
         'name' => null,
         'fallback_name' => 'Planète Gazeuse #5678',
         'planet_id' => Planet::factory()->create()->id,

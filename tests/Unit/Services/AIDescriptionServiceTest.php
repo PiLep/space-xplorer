@@ -8,14 +8,19 @@ use Illuminate\Support\Facades\Http;
 beforeEach(function () {
     $this->service = new AIDescriptionService;
     $this->planet = Planet::factory()->create();
-    $this->planet->properties()->create([
-        'type' => 'tellurique',
-        'size' => 'moyenne',
-        'temperature' => 'temperee',
-        'atmosphere' => 'breathable',
-        'terrain' => 'rocky',
-        'resources' => 'moderate',
-    ]);
+    // Update existing properties created by factory instead of creating new ones
+    $this->planet->properties()->updateOrCreate(
+        ['planet_id' => $this->planet->id],
+        [
+            'type' => 'terrestrial',
+            'size' => 'medium',
+            'temperature' => 'temperate',
+            'atmosphere' => 'breathable',
+            'terrain' => 'rocky',
+            'resources' => 'moderate',
+        ]
+    );
+    $this->planet->refresh();
 });
 
 it('throws exception when provider is not configured', function () {
@@ -36,22 +41,26 @@ it('builds a prompt from planet characteristics', function () {
     $prompt = $this->service->buildPrompt($this->planet);
 
     expect($prompt)->toBeString()
-        ->and($prompt)->toContain('tellurique')
-        ->and($prompt)->toContain('moyenne')
-        ->and($prompt)->toContain('temperee');
+        ->and($prompt)->toContain('terrestrial')
+        ->and($prompt)->toContain('medium')
+        ->and($prompt)->toContain('temperate');
 });
 
 it('generates fallback description when AI generation fails', function () {
-    config(['text-generation.providers.openai.api_key' => 'test-key']);
+    config([
+        'text-generation.providers.openai.api_key' => 'test-key',
+        'text-generation.retry_attempts' => 1, // Reduce retries for faster test
+    ]);
     Http::fake([
         '*' => Http::response(['error' => 'API Error'], 500),
     ]);
 
+    // After retries fail, the service should use fallback description
     $description = $this->service->generatePlanetDescription($this->planet);
 
     expect($description)->toBeString()
-        ->and($description)->toContain('tellurique')
-        ->and($description)->toContain('moyenne');
+        ->and($description)->toContain('terrestrial')
+        ->and($description)->toContain('medium');
 });
 
 it('caches generated descriptions', function () {

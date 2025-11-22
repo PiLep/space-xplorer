@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Event;
 beforeEach(function () {
     Event::fake([PlanetCreated::class]);
     $this->wikiService = \Mockery::mock(WikiService::class);
+    // Create listener manually with mock to ensure it's used
     $this->listener = new CreateWikiEntryOnPlanetCreated($this->wikiService);
 });
 
@@ -19,7 +20,9 @@ it('creates wiki entry when planet is created', function () {
     $user = User::factory()->create([
         'home_planet_id' => $planet->id,
     ]);
-    $planet->users()->attach($user->id);
+    // Note: users() is HasMany, not BelongsToMany, so we just set home_planet_id
+    // Refresh planet to ensure users relation is loaded
+    $planet->refresh();
 
     $entry = WikiEntry::factory()->make([
         'planet_id' => $planet->id,
@@ -28,7 +31,11 @@ it('creates wiki entry when planet is created', function () {
 
     $this->wikiService->shouldReceive('createEntryForPlanet')
         ->once()
-        ->with(\Mockery::on(fn ($p) => $p->id === $planet->id), $user)
+        ->with(\Mockery::on(function ($p) use ($planet) {
+            return $p->id === $planet->id;
+        }), \Mockery::on(function ($u) use ($user) {
+            return $u !== null && $u->id === $user->id;
+        }))
         ->andReturn($entry);
 
     $event = new PlanetCreated($planet);

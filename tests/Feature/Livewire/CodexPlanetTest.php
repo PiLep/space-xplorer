@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\Livewire;
 
 it('renders codex planet component', function () {
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->assertStatus(200)
@@ -15,7 +15,7 @@ it('renders codex planet component', function () {
 });
 
 it('displays planet name or fallback name', function () {
-    $entry = CodexEntry::factory()->public()->named()->create([
+    $entry = CodexEntry::factory()->public()->discovered()->named()->create([
         'name' => 'Alpha Centauri',
         'fallback_name' => 'Planète Tellurique #1234',
     ]);
@@ -25,7 +25,7 @@ it('displays planet name or fallback name', function () {
 });
 
 it('displays fallback name when planet is not named', function () {
-    $entry = CodexEntry::factory()->public()->create([
+    $entry = CodexEntry::factory()->public()->discovered()->create([
         'name' => null,
         'fallback_name' => 'Planète Tellurique #1234',
     ]);
@@ -36,7 +36,7 @@ it('displays fallback name when planet is not named', function () {
 
 it('displays discoverer information', function () {
     $user = User::factory()->create(['name' => 'John Explorer']);
-    $entry = CodexEntry::factory()->public()->create([
+    $entry = CodexEntry::factory()->public()->discovered()->create([
         'discovered_by_user_id' => $user->id,
         'created_at' => now()->subDays(5),
     ]);
@@ -60,7 +60,7 @@ it('displays planet characteristics', function () {
         ]
     );
 
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'planet_id' => $planet->id,
         'is_public' => true,
     ]);
@@ -76,7 +76,7 @@ it('displays planet characteristics', function () {
 });
 
 it('displays planet description', function () {
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'description' => 'This is a beautiful planet with amazing features.',
         'is_public' => true,
     ]);
@@ -90,7 +90,7 @@ it('displays planet image when available', function () {
     $planet = Planet::factory()->create([
         'image_url' => 'https://example.com/planet.jpg',
     ]);
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'planet_id' => $planet->id,
         'is_public' => true,
     ]);
@@ -103,7 +103,7 @@ it('displays planet video when available', function () {
     $planet = Planet::factory()->create([
         'video_url' => 'https://example.com/planet.mp4',
     ]);
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'planet_id' => $planet->id,
         'is_public' => true,
     ]);
@@ -116,7 +116,7 @@ it('shows name planet button for discoverer when planet is not named', function 
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'discovered_by_user_id' => $user->id,
         'is_named' => false,
         'is_public' => true,
@@ -130,7 +130,7 @@ it('does not show name planet button when planet is already named', function () 
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->named()->create([
+    $entry = CodexEntry::factory()->discovered()->named()->create([
         'discovered_by_user_id' => $user->id,
         'is_named' => true,
         'is_public' => true,
@@ -145,7 +145,7 @@ it('does not show name planet button for non-discoverer', function () {
     $otherUser = User::factory()->create();
     Auth::login($otherUser);
 
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'discovered_by_user_id' => $discoverer->id,
         'is_named' => false,
         'is_public' => true,
@@ -159,7 +159,7 @@ it('shows contribute button for authenticated users', function () {
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->assertSee('Contribuer');
@@ -168,7 +168,7 @@ it('shows contribute button for authenticated users', function () {
 it('does not show contribute button for guests', function () {
     Auth::logout();
 
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->assertDontSee('Contribuer');
@@ -178,7 +178,7 @@ it('opens name modal when name button is clicked', function () {
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'discovered_by_user_id' => $user->id,
         'is_named' => false,
         'is_public' => true,
@@ -193,7 +193,7 @@ it('opens contribute modal when contribute button is clicked', function () {
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->call('openContributeModal')
@@ -204,7 +204,7 @@ it('closes name modal', function () {
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create([
+    $entry = CodexEntry::factory()->discovered()->create([
         'discovered_by_user_id' => $user->id,
         'is_public' => true,
     ]);
@@ -219,7 +219,7 @@ it('closes contribute modal', function () {
     $user = User::factory()->create();
     Auth::login($user);
 
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->set('showContributeModal', true)
@@ -228,7 +228,7 @@ it('closes contribute modal', function () {
 });
 
 it('displays back button to codex index', function () {
-    $entry = CodexEntry::factory()->create(['is_public' => true]);
+    $entry = CodexEntry::factory()->discovered()->create(['is_public' => true]);
 
     Livewire::test(\App\Livewire\CodexPlanet::class, ['id' => $entry->id])
         ->assertSee('Retour à l')

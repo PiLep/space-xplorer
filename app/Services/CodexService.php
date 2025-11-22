@@ -243,6 +243,7 @@ class CodexService
     {
         $query = CodexEntry::with(['planet.properties', 'discoveredBy'])
             ->public()
+            ->discovered()
             ->orderBy('created_at', 'desc');
 
         // Apply search filter
@@ -268,6 +269,7 @@ class CodexService
     public function searchEntries(string $query, int $limit = 10)
     {
         return CodexEntry::public()
+            ->discovered()
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
                     ->orWhere('fallback_name', 'like', "%{$query}%");

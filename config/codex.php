@@ -69,6 +69,14 @@ return [
     'fallback_name' => [
         'prefix' => 'Planète',
         'type_mapping' => [
+            // English database values -> French display labels
+            'terrestrial' => 'Tellurique',
+            'gaseous' => 'Gazeuse',
+            'icy' => 'Glacée',
+            'oceanic' => 'Océanique',
+            'desert' => 'Désertique',
+            'volcanic' => 'Volcanique',
+            // Keep French keys for backward compatibility
             'tellurique' => 'Tellurique',
             'gazeuse' => 'Gazeuse',
             'glacee' => 'Glacée',

@@ -47,10 +47,12 @@ class CodexStarSystems extends Component
     {
         return cache()->remember('codex.stats', now()->addMinutes(5), function () {
             return [
-                'total_articles' => \App\Models\CodexEntry::public()->count(),
-                'planets' => \App\Models\Planet::count(),
+                'total_articles' => \App\Models\CodexEntry::public()->discovered()->count(),
+                'planets' => \App\Models\Planet::whereHas('starSystem', function ($q) {
+                    $q->where('discovered', true);
+                })->count(),
                 'star_systems' => StarSystem::where('discovered', true)->count(),
-                'named' => \App\Models\CodexEntry::public()->named()->count(),
+                'named' => \App\Models\CodexEntry::public()->discovered()->named()->count(),
                 'contributors' => \App\Models\CodexContribution::distinct('contributor_user_id')->count('contributor_user_id'),
                 'contributions' => \App\Models\CodexContribution::count(),
             ];

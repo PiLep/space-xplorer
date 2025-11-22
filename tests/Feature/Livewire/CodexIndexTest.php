@@ -20,8 +20,8 @@ it('renders codex index component', function () {
 });
 
 it('displays statistics cards', function () {
-    CodexEntry::factory()->public()->count(5)->create();
-    CodexEntry::factory()->public()->named()->count(2)->create();
+    CodexEntry::factory()->public()->discovered()->count(5)->create();
+    CodexEntry::factory()->public()->discovered()->named()->count(2)->create();
     CodexContribution::factory()->count(3)->create();
 
     Livewire::test(\App\Livewire\CodexIndex::class)
@@ -32,7 +32,7 @@ it('displays statistics cards', function () {
 });
 
 it('displays recent discoveries section when entries exist', function () {
-    CodexEntry::factory()->public()->count(5)->create();
+    CodexEntry::factory()->public()->discovered()->count(5)->create();
 
     Livewire::test(\App\Livewire\CodexIndex::class)
         ->assertSee('Découvertes récentes');
@@ -44,7 +44,7 @@ it('does not display recent discoveries section when no entries exist', function
 });
 
 it('displays paginated codex entries', function () {
-    CodexEntry::factory()->public()->count(25)->create();
+    CodexEntry::factory()->public()->discovered()->count(25)->create();
 
     Livewire::test(\App\Livewire\CodexIndex::class)
         ->assertSee('Toutes les planètes')
@@ -54,12 +54,12 @@ it('displays paginated codex entries', function () {
 });
 
 it('filters entries by search query', function () {
-    CodexEntry::factory()->public()->create([
+    CodexEntry::factory()->public()->discovered()->create([
         'name' => 'Alpha Centauri',
         'fallback_name' => 'Planète Tellurique #1234',
         'created_at' => now()->subDays(10),
     ]);
-    CodexEntry::factory()->public()->create([
+    CodexEntry::factory()->public()->discovered()->create([
         'name' => 'Beta Orionis',
         'fallback_name' => 'Planète Gazeuse #5678',
         'created_at' => now()->subDays(10),
@@ -73,7 +73,7 @@ it('filters entries by search query', function () {
 });
 
 it('displays search results count when searching', function () {
-    CodexEntry::factory()->public()->create([
+    CodexEntry::factory()->public()->discovered()->create([
         'name' => 'Alpha Centauri',
     ]);
 
@@ -83,7 +83,7 @@ it('displays search results count when searching', function () {
 });
 
 it('displays named badge for named planets', function () {
-    CodexEntry::factory()->public()->named()->create([
+    CodexEntry::factory()->public()->discovered()->named()->create([
         'name' => 'Alpha Centauri',
     ]);
 
@@ -106,7 +106,7 @@ it('displays planet type and size badges', function () {
         ]
     );
 
-    CodexEntry::factory()->public()->create([
+    CodexEntry::factory()->public()->discovered()->create([
         'planet_id' => $planet->id,
     ]);
 
@@ -117,7 +117,7 @@ it('displays planet type and size badges', function () {
 
 it('displays discoverer name and date', function () {
     $user = User::factory()->create(['name' => 'John Explorer']);
-    $entry = CodexEntry::factory()->public()->create([
+    $entry = CodexEntry::factory()->public()->discovered()->create([
         'discovered_by_user_id' => $user->id,
         'created_at' => now()->subDays(5),
     ]);
@@ -128,7 +128,7 @@ it('displays discoverer name and date', function () {
 });
 
 it('performs search with autocompletion', function () {
-    CodexEntry::factory()->public()->create([
+    CodexEntry::factory()->public()->discovered()->create([
         'name' => 'Alpha Centauri',
         'fallback_name' => 'Planète Tellurique #1234',
     ]);
@@ -154,7 +154,7 @@ it('clears search results when search is cleared', function () {
 });
 
 it('caches statistics', function () {
-    CodexEntry::factory()->public()->count(5)->create();
+    CodexEntry::factory()->public()->discovered()->count(5)->create();
 
     // Clear cache first
     Cache::forget('codex.stats');
@@ -167,7 +167,7 @@ it('caches statistics', function () {
 });
 
 it('caches recent discoveries', function () {
-    CodexEntry::factory()->public()->count(5)->create();
+    CodexEntry::factory()->public()->discovered()->count(5)->create();
 
     // Clear cache first
     Cache::forget('codex.recent_discoveries');
@@ -180,7 +180,7 @@ it('caches recent discoveries', function () {
 });
 
 it('redirects to planet page when selecting search result', function () {
-    $entry = CodexEntry::factory()->public()->create([
+    $entry = CodexEntry::factory()->public()->discovered()->create([
         'name' => 'Alpha Centauri',
     ]);
 

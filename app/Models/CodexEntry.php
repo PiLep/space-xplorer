@@ -45,6 +45,15 @@ class CodexEntry extends Model
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array<int, string>
+     */
+    protected $appends = [
+        'display_name',
+    ];
+
+    /**
      * Get the planet this codex entry belongs to.
      */
     public function planet(): BelongsTo
@@ -98,6 +107,16 @@ class CodexEntry extends Model
     public function scopeNamed($query)
     {
         return $query->where('is_named', true);
+    }
+
+    /**
+     * Scope to get only entries for planets in discovered star systems.
+     */
+    public function scopeDiscovered($query)
+    {
+        return $query->whereHas('planet.starSystem', function ($q) {
+            $q->where('discovered', true);
+        });
     }
 }
 
