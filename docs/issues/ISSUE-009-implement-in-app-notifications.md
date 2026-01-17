@@ -183,7 +183,7 @@ L'architecture doit permettre facilement :
 
 ### Statut
 
-🔄 En review (PR créée)
+✅ Terminé (Mergé dans develop)
 
 ### Historique
 
@@ -224,3 +224,9 @@ L'architecture doit permettre facilement :
 **Détails** : Pull Request créée vers `develop` avec tous les changements de l'implémentation TASK-009. Tous les tests passent (69 tests, 144 assertions). Code formaté avec Pint. Toutes les reviews sont approuvées (technique, fonctionnelle, architecturale). PR prête pour review et merge.
 **GitHub** : [#22](https://github.com/PiLep/space-xplorer/pull/22)
 **Notes** : La PR contient tous les fichiers nécessaires pour le système de notifications in-app. Prochaine étape : Review et merge de la PR.
+
+#### 2025-01-27 - Sam (Lead Developer) - Pull Request mergée
+**Statut** : ✅ Terminé
+**Détails** : Pull Request #22 mergée avec succès dans `develop`. Le système de notifications in-app est maintenant disponible en production. Tous les fichiers ont été déplacés dans les dossiers `closed/` pour organisation.
+**GitHub** : [#22](https://github.com/PiLep/space-xplorer/pull/22) (merged)
+**Notes** : La fonctionnalité est complète et déployée. Le système permet d'informer les joueurs des événements importants avec un badge dans la navigation et une page complète de notifications.
