@@ -86,7 +86,7 @@ jobs:
       - name: Build Assets
         run: npm run build
       
-      - name: Run Tests with Coverage
+      - name: Run Tests with Coverage (Parallel)
         timeout-minutes: 15
         env:
           APP_ENV: testing
@@ -100,7 +100,7 @@ jobs:
           REDIS_HOST: 127.0.0.1
           REDIS_PORT: 6379
           QUEUE_CONNECTION: sync
-        run: ./vendor/bin/pest --coverage-clover=coverage.xml --coverage-html=coverage --log-junit=junit.xml
+        run: php artisan test --parallel --processes=10 --coverage --log-junit=junit.xml
       
       - name: Upload test results to Codecov
         if: ${{ !cancelled() }}

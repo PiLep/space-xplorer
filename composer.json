@@ -60,6 +60,22 @@
             "@php artisan config:clear --ansi",
             "@php artisan test"
         ],
+        "test:fast": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --parallel --processes=10"
+        ],
+        "test:slow": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --log-junit=junit-slow.xml --stop-on-failure"
+        ],
+        "test:coverage": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --coverage"
+        ],
+        "test:coverage-parallel": [
+            "@php artisan config:clear --ansi",
+            "@php artisan test --parallel --processes=10 --coverage"
+        ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
             "@php artisan package:discover --ansi"

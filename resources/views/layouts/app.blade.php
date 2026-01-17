@@ -78,10 +78,11 @@
         <!-- Terminal Command Bar -->
         @unless (request()->routeIs('home'))
             <div
-                class="bg-surface-dark dark:bg-surface-dark border-border-dark dark:border-border-dark fixed bottom-0 left-0 right-0 z-50 border-t font-mono">
+                class="bg-surface-dark dark:bg-surface-dark border-border-dark dark:border-border-dark fixed bottom-0 left-0 right-0 z-50 border-t font-mono"
+            >
                 <div class="w-full px-4 py-3 sm:px-6 lg:px-8">
                     <div class="flex items-center justify-between gap-2">
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
                             <a
                                 href="{{ route('home') }}"
                                 class="flex-shrink-0"
@@ -91,7 +92,8 @@
                                     :showScanlines="false"
                                 />
                             </a>
-                            <span class="text-sm text-gray-500 dark:text-gray-500">
+                            <!-- Prompt terminal - Masqué sur mobile -->
+                            <span class="hidden md:inline text-sm text-gray-500 dark:text-gray-500 whitespace-nowrap">
                                 @auth
                                     @php
                                         $user = auth()->user();
@@ -112,74 +114,145 @@
                                     SYSTEM@STELLAR:~$
                                 @endauth
                             </span>
-                            <x-universe-time-status />
-                            <div class="flex items-center gap-4 text-sm">
+                            <!-- Universe time - Masqué sur très petits écrans -->
+                            <span class="hidden lg:inline">
+                                <x-universe-time-status />
+                            </span>
+                            <!-- Navigation principale -->
+                            <div class="flex items-center gap-2 sm:gap-4 text-sm ml-auto">
                                 @auth
                                     <a
                                         href="{{ route('dashboard') }}"
                                         wire:navigate
-                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors"
+                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors whitespace-nowrap"
                                     >
                                         > DASHBOARD
                                     </a>
                                     <a
                                         href="{{ route('inbox') }}"
                                         wire:navigate
-                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light {{ ($unreadMessagesCount ?? 0) > 0 ? 'text-pulse inline-block' : '' }} cursor-pointer transition-colors"
+                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light {{ ($unreadMessagesCount ?? 0) > 0 ? 'text-pulse inline-block' : '' }} cursor-pointer transition-colors whitespace-nowrap"
                                     >
                                         > INBOX
                                     </a>
-                                    <a
-                                        href="{{ route('profile') }}"
-                                        wire:navigate
-                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors"
-                                    >
-                                        > EMPLOYEE_STATUS
-                                    </a>
+                                    <livewire:notification-badge wire:key="notification-badge" />
                                 @else
                                     <a
                                         href="{{ route('login') }}"
                                         wire:navigate
-                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors"
+                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors whitespace-nowrap"
                                     >
                                         > LOGIN
                                     </a>
                                     <a
                                         href="{{ route('register') }}"
                                         wire:navigate
-                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors"
+                                        class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer transition-colors whitespace-nowrap"
                                     >
                                         > REGISTER
                                     </a>
                                 @endauth
                             </div>
                         </div>
-                        <div class="flex items-center gap-4 text-sm">
+                        <!-- Menu "More" pour les actions secondaires -->
+                        <div class="flex items-center gap-2 sm:gap-4 text-sm flex-shrink-0">
                             @isset($bottomBarActions)
                                 {{ $bottomBarActions }}
                             @else
                                 @auth
-                                    @if (auth()->user()->is_super_admin)
-                                        <a
-                                            href="{{ route('admin.access') }}"
-                                            class="text-space-secondary dark:text-space-secondary hover:text-space-secondary-light dark:hover:text-space-secondary-light cursor-pointer px-2 py-1 transition-colors"
-                                        >
-                                            > ADMIN
-                                        </a>
-                                    @endif
-                                    <form
-                                        method="POST"
-                                        action="{{ route('logout') }}"
-                                        class="relative z-50 inline"
-                                    >
-                                        @csrf
+                                    <div class="relative" id="more-menu-container">
                                         <button
-                                            type="submit"
-                                            class="text-error dark:text-error hover:text-error-light dark:hover:text-error-light relative z-50 cursor-pointer px-2 py-1 transition-colors"
+                                            type="button"
+                                            id="more-menu-button"
+                                            class="text-space-primary dark:text-space-primary hover:text-space-primary-light dark:hover:text-space-primary-light cursor-pointer px-2 py-1 transition-colors whitespace-nowrap"
+                                            aria-label="Plus d'options"
+                                            aria-expanded="false"
+                                            aria-haspopup="true"
                                         >
-                                            > LOGOUT
+                                            > MORE
                                         </button>
-                                    </form>
+                                        <!-- Dropdown menu -->
+                                        <div
+                                            id="more-menu-dropdown"
+                                            class="absolute bottom-full right-0 mb-2 w-48 bg-surface-dark dark:bg-surface-dark border border-border-dark dark:border-border-dark rounded-lg shadow-lg z-50 opacity-0 invisible scale-95 transition-all duration-100"
+                                        >
+                                            <div class="py-1">
+                                                <a
+                                                    href="{{ route('profile') }}"
+                                                    wire:navigate
+                                                    class="block px-4 py-2 text-sm text-space-primary dark:text-space-primary hover:bg-surface-medium dark:hover:bg-surface-medium transition-colors"
+                                                >
+                                                    > EMPLOYEE_STATUS
+                                                </a>
+                                                @if (auth()->user()->is_super_admin)
+                                                    <a
+                                                        href="{{ route('admin.access') }}"
+                                                        wire:navigate
+                                                        class="block px-4 py-2 text-sm text-space-secondary dark:text-space-secondary hover:bg-surface-medium dark:hover:bg-surface-medium transition-colors"
+                                                    >
+                                                        > ADMIN
+                                                    </a>
+                                                @endif
+                                                <form
+                                                    method="POST"
+                                                    action="{{ route('logout') }}"
+                                                    class="block"
+                                                >
+                                                    @csrf
+                                                    <button
+                                                        type="submit"
+                                                        class="w-full text-left px-4 py-2 text-sm text-error dark:text-error hover:bg-surface-medium dark:hover:bg-surface-medium transition-colors"
+                                                    >
+                                                        > LOGOUT
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        (function() {
+                                            const button = document.getElementById('more-menu-button');
+                                            const dropdown = document.getElementById('more-menu-dropdown');
+                                            const container = document.getElementById('more-menu-container');
+                                            
+                                            if (!button || !dropdown) return;
+                                            
+                                            function toggleMenu() {
+                                                const isOpen = dropdown.classList.contains('opacity-100');
+                                                if (isOpen) {
+                                                    dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
+                                                    dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
+                                                    button.setAttribute('aria-expanded', 'false');
+                                                } else {
+                                                    dropdown.classList.remove('opacity-0', 'invisible', 'scale-95');
+                                                    dropdown.classList.add('opacity-100', 'visible', 'scale-100');
+                                                    button.setAttribute('aria-expanded', 'true');
+                                                }
+                                            }
+                                            
+                                            button.addEventListener('click', function(e) {
+                                                e.stopPropagation();
+                                                toggleMenu();
+                                            });
+                                            
+                                            document.addEventListener('click', function(e) {
+                                                if (!container.contains(e.target)) {
+                                                    dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
+                                                    dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
+                                                    button.setAttribute('aria-expanded', 'false');
+                                                }
+                                            });
+                                            
+                                            // Fermer le menu lors de la navigation
+                                            dropdown.querySelectorAll('a').forEach(link => {
+                                                link.addEventListener('click', function() {
+                                                    dropdown.classList.remove('opacity-100', 'visible', 'scale-100');
+                                                    dropdown.classList.add('opacity-0', 'invisible', 'scale-95');
+                                                    button.setAttribute('aria-expanded', 'false');
+                                                });
+                                            });
+                                        })();
+                                    </script>
                                 @endauth
                             @endisset
                         </div>

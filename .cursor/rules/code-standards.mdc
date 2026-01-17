@@ -8,11 +8,13 @@ alwaysApply: true
 
 ## Quick Reference
 
-- **Laravel Sail**: Always use `./vendor/bin/sail` for all commands (artisan, composer, npm, etc.) to ensure consistency with the Docker development environment
+- **🚨 CRITICAL - Laravel Sail**: **NEVER execute `php artisan` directly**. ALWAYS use `./vendor/bin/sail artisan` or `sail artisan` for ALL Laravel commands. This project runs in Docker via Sail, and executing `php artisan` directly will fail with database connection errors. This is ABSOLUTELY FORBIDDEN.
+- **Laravel Sail**: Always use `./vendor/bin/sail` or `sail` for all commands (artisan, composer, npm, etc.) to ensure consistency with the Docker development environment
 - **Chrome DevTools MCP**: Use Chrome DevTools MCP to visually verify the application after launching or implementing new features (take snapshot, check console errors, verify network requests)
 - **Blade Layouts**: All Blade views rendered by controllers MUST use `@extends('layouts.app')` or appropriate layout. Livewire components use `#[Layout('layouts.app')]` attribute
 - **Laravel Pint**: Use `./vendor/bin/sail pint` for formatting
 - **Tests**: Write tests for new features
+- **Tests Execution**: **NEVER run all tests during development**. Only run tests for modified/added files to save time (~130-150s for all tests vs seconds for a single file). Use `sail artisan test --filter TestName` or `sail artisan test path/to/test.php`. Run full test suite only before commit/PR with `sail composer test:fast`
 - **Form Requests**: Use FormRequest for API validation
 - **Migrations**: Use Laravel migrations (not raw SQL)
 - **API-first**: All business logic via REST API endpoints

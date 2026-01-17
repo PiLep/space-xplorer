@@ -248,53 +248,228 @@ Pour chaque tâche du plan :
 
 ## Tests
 
-### Structure des Tests
+### Framework de Test
+
+Le projet utilise **Pest** (framework de test moderne pour PHP). Utiliser la syntaxe Pest avec `it()` et `expect()`.
+
+### Structure des Tests Feature
 
 ```php
 <?php
 
-namespace Tests\Feature;
-
-use Tests\TestCase;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class UserRegistrationTest extends TestCase
-{
-    use RefreshDatabase;
+it('allows user to register successfully', function () {
+    $userData = [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ];
 
-    public function test_user_can_register(): void
-    {
-        $response = $this->postJson('/api/auth/register', [
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+    $response = $this->postJson('/api/auth/register', $userData);
+
+    $response->assertStatus(201)
+        ->assertJsonStructure([
+            'data' => ['user', 'token'],
+            'message',
+            'status'
         ]);
 
-        $response->assertStatus(201)
-            ->assertJsonStructure([
-                'data' => ['user', 'token'],
-                'message',
-                'status'
-            ]);
+    $this->assertDatabaseHas('users', [
+        'email' => 'test@example.com'
+    ]);
+});
 
-        $this->assertDatabaseHas('users', [
-            'email' => 'test@example.com'
-        ]);
-    }
-}
+it('validates required fields during registration', function () {
+    $response = $this->postJson('/api/auth/register', []);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['name', 'email', 'password']);
+});
 ```
+
+### Structure des Tests Unitaires
+
+```php
+<?php
+
+use App\Models\Planet;
+use App\Services\PlanetGeneratorService;
+use Illuminate\Support\Facades\Event;
+
+beforeEach(function () {
+    Event::fake();
+    $this->service = new PlanetGeneratorService;
+});
+
+it('generates a valid planet with all required fields', function () {
+    $planet = $this->service->generate();
+
+    expect($planet)
+        ->toBeInstanceOf(Planet::class)
+        ->and($planet->id)->not->toBeNull()
+        ->and($planet->name)->not->toBeNull()
+        ->and($planet->type)->not->toBeNull();
+});
+
+it('generates a planet with valid type from configuration', function () {
+    $validTypes = ['terrestrial', 'gaseous', 'icy', 'desert', 'oceanic'];
+    $planet = $this->service->generate();
+
+    expect($planet->type)->toBeIn($validTypes);
+});
+```
+
+### Configuration des Tests
+
+Les tests sont configurés dans `tests/Pest.php` :
+- **Feature tests** : Utilisent `RefreshDatabase` (migrations complètes)
+- **Unit tests** : Utilisent `DatabaseTransactions` (plus rapide)
+- **Browser tests** : Utilisent `RefreshDatabase` (migrations complètes)
 
 ### Exécution des Tests
 
-```bash
-# Tous les tests
-./vendor/bin/sail artisan test
+**⚠️ IMPORTANT - Optimisation du temps de développement** :
 
-# Tests spécifiques
-./vendor/bin/sail artisan test --filter UserRegistrationTest
+**NE JAMAIS relancer tous les tests** pendant le développement. Exécuter uniquement les tests ajoutés ou modifiés pour gagner du temps (~130-150s pour tous les tests vs quelques secondes pour un fichier).
+
+```bash
+# ✅ CORRECT - Exécuter uniquement les tests modifiés/ajoutés (recommandé pendant le dev)
+sail artisan test --filter AuthControllerTest
+sail artisan test tests/Feature/Api/AuthControllerTest.php
+sail artisan test tests/Unit/Services/MyNewServiceTest.php
+
+# Tests en parallèle pour les tests modifiés uniquement
+sail artisan test --filter AuthControllerTest --parallel --processes=10
+
+# Tests d'une suite spécifique (si plusieurs fichiers modifiés)
+sail artisan test --testsuite=Unit
+sail artisan test --testsuite=Feature
+
+# ❌ ÉVITER - Ne pas relancer tous les tests pendant le développement
+sail artisan test  # Trop lent (~130-150s), à éviter pendant le dev
+
+# Tests complets uniquement avant commit/PR
+sail composer test:fast  # Exécuter tous les tests avant de créer une PR
 ```
+
+**Stratégie recommandée** :
+1. **Pendant le développement** : Exécuter uniquement les tests du fichier modifié/ajouté
+2. **Avant commit** : Exécuter la suite complète avec `sail composer test:fast`
+3. **Avant PR** : S'assurer que tous les tests passent
+
+**Note** : Toujours utiliser `sail` pour exécuter les tests dans Docker.
+
+### Helpers et Bonnes Pratiques Pest
+
+#### beforeEach() pour la Configuration
+
+```php
+beforeEach(function () {
+    // Configuration commune pour tous les tests du fichier
+    Event::fake();
+    $this->service = new PlanetGeneratorService();
+});
+```
+
+#### Mocking avec Mockery
+
+Pour mocker des services (comme `ImageGenerationService`), utiliser la méthode helper du `TestCase` :
+
+```php
+it('creates user with mocked image generation', function () {
+    $this->mockImageGenerationService(); // Helper défini dans TestCase
+    
+    $user = User::factory()->create();
+    
+    expect($user)->toBeInstanceOf(User::class);
+});
+```
+
+#### Assertions avec expect()
+
+```php
+// Assertions simples
+expect($value)->toBe(42);
+expect($value)->not->toBeNull();
+expect($array)->toHaveCount(3);
+expect($string)->toContain('hello');
+
+// Assertions multiples avec and()
+expect($planet)
+    ->toBeInstanceOf(Planet::class)
+    ->and($planet->name)->not->toBeNull()
+    ->and($planet->type)->toBeIn(['terrestrial', 'gaseous']);
+```
+
+#### Tests de Validation API
+
+```php
+it('validates required fields', function () {
+    $response = $this->postJson('/api/endpoint', []);
+    
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['field1', 'field2']);
+});
+
+it('validates email format', function () {
+    $response = $this->postJson('/api/endpoint', [
+        'email' => 'invalid-email',
+    ]);
+    
+    $response->assertStatus(422)
+        ->assertJsonValidationErrorFor('email');
+});
+```
+
+#### Grouper les Tests avec describe()
+
+```php
+describe('PlanetGeneratorService', function () {
+    beforeEach(function () {
+        $this->service = new PlanetGeneratorService();
+    });
+
+    it('generates valid planet', function () {
+        // Test ici
+    });
+
+    it('generates planet with valid type', function () {
+        // Test ici
+    });
+});
+```
+
+#### Tests Browser (E2E avec Playwright)
+
+Les tests Browser sont dans `tests/Browser/` et utilisent Playwright pour les tests end-to-end.
+
+```php
+<?php
+
+use Tests\Browser\PlaywrightHelper;
+
+it('completes registration flow end-to-end', function () {
+    $helper = new PlaywrightHelper('http://localhost');
+    
+    $result = $helper->run($helper->createTestScript('registration', function () {
+        return <<<'JS'
+            await page.goto('/register');
+            await page.fill('input[name="name"]', 'John Doe');
+            await page.fill('input[name="email"]', 'john@example.com');
+            await page.fill('input[name="password"]', 'password123');
+            await page.fill('input[name="password_confirmation"]', 'password123');
+            await page.click('button[type="submit"]');
+            await expect(page).toHaveURL(/\/dashboard/);
+        JS;
+    }));
+    
+    expect($result['success'])->toBeTrue();
+});
+```
+
+**Note** : Les tests Browser nécessitent que l'application soit démarrée. Voir `tests/Browser/README.md` pour plus de détails.
 
 ## Formatage du Code
 
@@ -422,16 +597,26 @@ class PlanetGeneratorService
 ### Étape 4 : Tests
 
 ```php
-// tests/Unit/Services/PlanetGeneratorServiceTest.php
-public function test_generates_planet_with_valid_characteristics(): void
-{
-    $service = new PlanetGeneratorService();
-    $planet = $service->generate();
+<?php
 
-    $this->assertInstanceOf(Planet::class, $planet);
-    $this->assertNotNull($planet->name);
-    $this->assertNotNull($planet->type);
-}
+// tests/Unit/Services/PlanetGeneratorServiceTest.php
+use App\Models\Planet;
+use App\Services\PlanetGeneratorService;
+use Illuminate\Support\Facades\Event;
+
+beforeEach(function () {
+    Event::fake();
+    $this->service = new PlanetGeneratorService();
+});
+
+it('generates planet with valid characteristics', function () {
+    $planet = $this->service->generate();
+
+    expect($planet)
+        ->toBeInstanceOf(Planet::class)
+        ->and($planet->name)->not->toBeNull()
+        ->and($planet->type)->not->toBeNull();
+});
 ```
 
 ## Références
