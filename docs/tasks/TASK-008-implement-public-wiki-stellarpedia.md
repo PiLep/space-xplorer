@@ -19,7 +19,7 @@ Implémenter un wiki public basique accessible à tous (joueurs et non-joueurs) 
 
 ### Statut
 
-✅ Terminé - Toutes les phases implémentées
+🔄 PR #23 créée - En attente de merge
 
 ### Historique
 
@@ -41,6 +41,13 @@ Implémenter un wiki public basique accessible à tous (joueurs et non-joueurs) 
 **Fichiers modifiés** : `docs/reviews/CODE-REVIEW-008-implement-public-wiki-stellarpedia.md` (nouveau)
 **Review** : [CODE-REVIEW-008-implement-public-wiki-stellarpedia.md](../reviews/CODE-REVIEW-008-implement-public-wiki-stellarpedia.md)
 **Notes** : Aucune correction majeure demandée. Le code peut être approuvé avec les améliorations suggérées. Prochaine étape : Review fonctionnelle par Alex (Product Manager).
+
+#### 2026-01-17 - Sam (Lead Developer) - Création de la Pull Request
+**Statut** : 🔄 PR créée
+**Détails** : Pull Request #23 créée vers develop. Tous les ajustements Medium Priority de la review fonctionnelle ont été appliqués : validation des mots interdits dans ContributeToCodexRequest, amélioration de la cohérence visuelle du Codex avec l'ambiance Stellar (style rétro-futuriste Alien), affichage des contributions approuvées sur les pages planètes, création de la commande GenerateTestCodexData. Code formaté avec Pint. Tous les tests passent.
+**Fichiers modifiés** : `app/Http/Requests/ContributeToCodexRequest.php`, `app/Livewire/CodexPlanet.php`, `app/Livewire/ContributeToCodex.php`, `config/codex.php`, `app/Console/Commands/GenerateTestCodexData.php`, toutes les vues Codex
+**Pull Request** : [#23](https://github.com/PiLep/space-xplorer/pull/23)
+**Notes** : PR prête pour review et merge. Prochaine étape : Merge dans develop après approbation.
 
 #### 2025-01-20 - Jordan (Fullstack Dev) - Implémentation complète
 **Statut** : ✅ Terminé

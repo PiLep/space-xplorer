@@ -180,7 +180,7 @@ Créer une migration pour la table `wiki_entries` avec tous les champs nécessai
 
 ### Statut
 
-✅ Approuvé fonctionnellement avec ajustements mineurs
+🔄 En attente de merge (PR #23 créée)
 
 ### Historique
 
@@ -214,6 +214,13 @@ Créer une migration pour la table `wiki_entries` avec tous les champs nécessai
 **Fichiers modifiés** : `docs/reviews/FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md` (nouveau)
 **Review** : [FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md](../reviews/FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md)
 **Notes** : Ajustements Medium Priority à appliquer avant production : validation mots interdits dans contributions, vérification responsive. Ajustements Low Priority peuvent être ajoutés dans une future itération. Prochaine étape : Création de la Pull Request par Sam (Lead Developer).
+
+#### 2026-01-17 - Sam (Lead Developer) - Création de la Pull Request
+**Statut** : En attente de merge
+**Détails** : Pull Request créée vers develop avec tous les ajustements Medium Priority appliqués. Validation des mots interdits ajoutée dans ContributeToCodexRequest. Amélioration de la cohérence visuelle du Codex avec l'ambiance Stellar (style rétro-futuriste Alien). Affichage des contributions approuvées sur les pages planètes. Commande de génération de données de test créée. Code formaté avec Pint. Tous les tests passent.
+**Fichiers modifiés** : `app/Http/Requests/ContributeToCodexRequest.php`, `app/Livewire/CodexPlanet.php`, `app/Livewire/ContributeToCodex.php`, `config/codex.php`, `app/Console/Commands/GenerateTestCodexData.php`, toutes les vues Codex
+**Pull Request** : [#23](https://github.com/PiLep/space-xplorer/pull/23)
+**Notes** : PR prête pour review et merge. Tous les ajustements Medium Priority ont été appliqués.
 
 #### 2025-01-XX - Morgan (Architect) - Création de la branche et de l'issue GitHub
 **Statut** : En cours
