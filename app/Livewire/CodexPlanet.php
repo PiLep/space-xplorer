@@ -38,7 +38,15 @@ class CodexPlanet extends Component
             $this->loading = true;
             $this->error = null;
 
-            $this->entry = CodexEntry::with(['planet.properties', 'discoveredBy'])
+            $this->entry = CodexEntry::with([
+                'planet.properties',
+                'discoveredBy',
+                'contributions' => function ($query) {
+                    $query->where('status', 'approved')
+                        ->with('contributor')
+                        ->orderBy('created_at', 'desc');
+                },
+            ])
                 ->public()
                 ->discovered()
                 ->findOrFail($this->entryId);

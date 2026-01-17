@@ -11,7 +11,7 @@
                 ['label' => 'SYSTEMES_STELLAIRES', 'url' => route('codex.star-systems')],
                 ['label' => $system->name]
             ]" />
-            
+
             <!-- Back Button -->
             <div class="mb-6">
                 <a
@@ -21,17 +21,17 @@
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Retour à la cartographie
+                    [BACK] Retour à la cartographie
                 </a>
             </div>
 
             <!-- Star System Header -->
             <div class="mb-8">
-                <h1 class="mb-2 text-4xl font-bold text-space-accent text-glow-primary dark:text-white">
+                <h1 class="mb-2 font-sans text-4xl font-bold text-space-accent text-glow-primary dark:text-white">
                     {{ $system->name }}
                 </h1>
-                <p class="text-gray-400 dark:text-gray-400">
-                    Système stellaire cartographié le {{ $system->created_at->format('d/m/Y') }}
+                <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                    [LOG] Système stellaire cartographié le {{ $system->created_at->format('d/m/Y') }}
                 </p>
             </div>
 
@@ -39,17 +39,17 @@
             <div class="mb-8 grid gap-6 md:grid-cols-2">
                 <!-- Star Type -->
                 <div class="rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-accent text-glow-subtle dark:text-white">Spécifications de l'étoile</h2>
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-accent text-glow-subtle dark:text-white">[SPECIFICATIONS] Étoile</h2>
                     <div class="space-y-3">
                         <div>
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Type d'étoile</div>
-                            <div class="text-lg font-semibold text-space-accent">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[TYPE]</div>
+                            <div class="font-mono text-lg font-semibold text-space-accent">
                                 {{ ucfirst(str_replace('_', ' ', $system->star_type ?? 'Inconnu')) }}
                             </div>
                         </div>
                         <div>
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Nombre de planètes</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[PLANETS]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 {{ $system->planet_count }}
                             </div>
                         </div>
@@ -58,23 +58,23 @@
 
                 <!-- Coordinates -->
                 <div class="rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">Coordonnées spatiales</h2>
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">[COORDINATES] Position spatiale</h2>
                     <div class="space-y-3">
                         <div>
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Position X</div>
-                            <div class="text-lg font-semibold text-white font-mono">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[X]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 {{ number_format($system->x, 2) }}
                             </div>
                         </div>
                         <div>
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Position Y</div>
-                            <div class="text-lg font-semibold text-white font-mono">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[Y]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 {{ number_format($system->y, 2) }}
                             </div>
                         </div>
                         <div>
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Position Z</div>
-                            <div class="text-lg font-semibold text-white font-mono">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[Z]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 {{ number_format($system->z, 2) }}
                             </div>
                         </div>
@@ -85,8 +85,8 @@
             <!-- Planets in System -->
             @if ($system->planets->isNotEmpty())
                 <div class="mb-8">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
-                        Planètes cataloguées dans le système ({{ $system->planets->count() }})
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
+                        [ARCHIVES] Planètes cataloguées ({{ $system->planets->count() }})
                     </h2>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($system->planets as $planet)

@@ -1,30 +1,26 @@
 <div>
-    <h3 class="mb-4 text-xl font-semibold text-[#1e3a5f] dark:text-white">Contribuer à cette page</h3>
+    <h3 class="mb-4 font-sans text-xl font-semibold text-space-primary text-glow-subtle dark:text-white">[ACTION] Soumettre un rapport</h3>
 
     @if ($success)
-        <div class="mb-4 rounded-lg bg-green-100 p-4 text-green-800 dark:bg-green-900 dark:text-green-200">
-            Contribution soumise avec succès ! Elle sera examinée avant publication.
-        </div>
+        <x-alert type="success" message="[SUCCESS] Contribution soumise avec succès ! Elle sera examinée avant publication." class="mb-4" />
     @elseif ($error)
-        <div class="mb-4 rounded-lg bg-red-100 p-4 text-red-800 dark:bg-red-900 dark:text-red-200">
-            {{ $error }}
-        </div>
+        <x-alert type="error" :message="$error" class="mb-4" />
     @endif
 
     <form wire:submit="contribute">
         <div class="mb-4">
-            <label for="content" class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Contenu de votre contribution
+            <label for="content" class="mb-2 block font-mono text-sm font-medium text-gray-300">
+                [CONTENT] Contenu du rapport
             </label>
             <textarea
                 id="content"
                 wire:model="content"
                 rows="6"
-                class="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 shadow-sm focus:border-[#1e3a5f] focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] dark:border-gray-600 dark:bg-gray-700 dark:text-white"
-                placeholder="Ajoutez des informations supplémentaires sur cette planète (10-5000 caractères)"
+                class="font-mono w-full rounded-lg border border-border-dark bg-surface-dark px-4 py-3 text-white placeholder-gray-500 shadow-sm transition-all focus:border-space-secondary focus:outline-none focus:ring-2 focus:ring-space-secondary focus:ring-opacity-50"
+                placeholder="[INPUT] Ajoutez des informations supplémentaires (10-5000 caractères)"
             ></textarea>
             @error('content')
-                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                <p class="mt-1 font-mono text-sm text-error">{{ $message }}</p>
             @enderror
         </div>
 
@@ -32,15 +28,15 @@
             <button
                 type="button"
                 wire:click="$dispatch('close-modal')"
-                class="rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
+                class="font-mono rounded-lg border border-border-dark bg-surface-dark px-4 py-2 text-gray-300 hover:bg-surface-medium hover:text-white transition-colors"
             >
-                Annuler
+                [CANCEL] Annuler
             </button>
             <button
                 type="submit"
-                class="rounded-lg bg-[#1e3a5f] px-4 py-2 text-white hover:bg-[#0a0e27] transition-colors"
+                class="font-mono rounded-lg bg-space-secondary px-4 py-2 font-semibold text-space-black hover:bg-space-secondary-dark transition-colors glow-secondary"
             >
-                Soumettre
+                [SUBMIT] Soumettre
             </button>
         </div>
     </form>

@@ -11,7 +11,11 @@ class ContributeToCodex extends Component
 {
     public CodexEntry $entry;
 
-    #[Validate('required|string|min:10|max:5000')]
+    #[Validate('required|string|min:10|max:5000', message: [
+        'required' => 'Le contenu est requis.',
+        'min' => 'Le contenu doit contenir au moins 10 caractères.',
+        'max' => 'Le contenu ne peut pas dépasser 5000 caractères.',
+    ])]
     public string $content = '';
 
     public ?string $error = null;
@@ -35,7 +39,7 @@ class ContributeToCodex extends Component
         try {
             $user = Auth::user();
             if (! $user) {
-                $this->error = 'You must be logged in to contribute.';
+                $this->error = 'Vous devez être connecté pour contribuer.';
 
                 return;
             }
@@ -57,7 +61,7 @@ class ContributeToCodex extends Component
             // Close modal after a short delay
             $this->dispatch('close-modal');
         } catch (\Exception $e) {
-            $this->error = 'Failed to submit contribution: '.$e->getMessage();
+            $this->error = 'Échec de la soumission de la contribution : '.$e->getMessage();
         }
     }
 

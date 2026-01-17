@@ -9,12 +9,12 @@
                     ['label' => 'CODEX', 'url' => route('codex.index')],
                     ['label' => 'SYSTEMES_STELLAIRES']
                 ]" />
-                
+
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="mb-2 text-4xl font-bold text-space-accent text-glow-primary dark:text-white">Cartographie Stellaire</h1>
-                    <p class="text-gray-400 dark:text-gray-400">
-                        Base de données des systèmes stellaires cartographiés par Stellar
+                    <h1 class="mb-2 font-sans text-4xl font-bold text-space-accent text-glow-primary dark:text-white">[MAPS] CARTOGRAPHIE STELLAIRE</h1>
+                    <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                        [STATUS: ONLINE] Base de données des systèmes stellaires cartographiés
                     </p>
                 </div>
 
@@ -51,20 +51,20 @@
 
                 <!-- Star Systems List -->
                 <div class="mb-6">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-accent text-glow-subtle dark:text-white">
-                        Systèmes cartographiés
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-accent text-glow-subtle dark:text-white">
+                        [ENTRIES] Systèmes cartographiés
                         @if ($search)
-                            <span class="text-lg font-normal text-gray-400">
+                            <span class="font-mono text-lg font-normal text-gray-400">
                                 ({{ $this->systems->total() }} entrée{{ $this->systems->total() > 1 ? 's' : '' }})
                             </span>
                         @endif
                     </h2>
                 </div>
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div class="space-y-6">
                     @foreach ($this->systems as $system)
                         <a
                             href="{{ route('codex.star-system', $system->id) }}"
-                            class="group planet-card-scanlines block overflow-hidden rounded-lg border border-border-dark bg-surface-dark transition-all hover:border-space-accent hover:glow-primary hover:scale-[1.02]"
+                            class="group planet-card-scanlines block overflow-hidden rounded-lg border border-border-dark bg-surface-dark transition-all hover:border-space-accent hover:glow-primary hover:scale-[1.01]"
                         >
                             <div class="p-6">
                                 <div class="mb-2 flex items-start justify-between">
@@ -90,8 +90,8 @@
                                         ({{ number_format($system->x, 2) }}, {{ number_format($system->y, 2) }}, {{ number_format($system->z, 2) }})
                                     </div>
                                 </div>
-                                <div class="text-xs text-gray-500">
-                                    Cartographié le {{ $system->created_at->format('d/m/Y') }}
+                                <div class="font-mono text-xs text-gray-500">
+                                    [LOG] Cartographié le {{ $system->created_at->format('d/m/Y') }}
                                 </div>
                             </div>
                         </a>

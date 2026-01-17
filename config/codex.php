@@ -54,6 +54,17 @@ return [
         'max_length' => 5000,
         'forbidden_words' => [
             // Same as name validation, plus any content-specific words
+            'admin',
+            'administrator',
+            'moderator',
+            'mod',
+            'test',
+            'null',
+            'undefined',
+            'delete',
+            'remove',
+            'destroy',
+            // Add more forbidden words as needed
         ],
     ],
 

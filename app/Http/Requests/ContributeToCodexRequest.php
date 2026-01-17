@@ -29,6 +29,17 @@ class ContributeToCodexRequest extends FormRequest
                 'string',
                 'min:'.$rules['min_length'],
                 'max:'.$rules['max_length'],
+                function ($attribute, $value, $fail) use ($rules) {
+                    // Forbidden words validation (case-insensitive)
+                    $forbiddenWords = $rules['forbidden_words'] ?? [];
+                    $contentLower = mb_strtolower($value);
+
+                    foreach ($forbiddenWords as $forbiddenWord) {
+                        if (mb_strpos($contentLower, mb_strtolower($forbiddenWord)) !== false) {
+                            $fail('Le contenu contient un mot interdit.');
+                        }
+                    }
+                },
             ],
         ];
     }

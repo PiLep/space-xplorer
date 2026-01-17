@@ -9,12 +9,12 @@
                     ['label' => 'CODEX', 'url' => route('codex.index')],
                     ['label' => 'CONTRIBUTEURS']
                 ]" />
-                
+
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="mb-2 text-4xl font-bold text-space-secondary text-glow-primary dark:text-white">Personnel</h1>
-                    <p class="text-gray-400 dark:text-gray-400">
-                        Base de données du personnel Stellar ayant contribué au Codex
+                    <h1 class="mb-2 font-sans text-4xl font-bold text-space-secondary text-glow-primary dark:text-white">[PERSONNEL] AGENTS STELLAR</h1>
+                    <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                        [STATUS: ONLINE] Base de données du personnel ayant contribué au Codex
                     </p>
                 </div>
 
@@ -51,10 +51,10 @@
 
                 <!-- Contributors List -->
                 <div class="mb-6">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">
-                        Agents enregistrés
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">
+                        [ENTRIES] Agents enregistrés
                         @if ($search)
-                            <span class="text-lg font-normal text-gray-400">
+                            <span class="font-mono text-lg font-normal text-gray-400">
                                 ({{ $this->contributors->total() }} entrée{{ $this->contributors->total() > 1 ? 's' : '' }})
                             </span>
                         @endif

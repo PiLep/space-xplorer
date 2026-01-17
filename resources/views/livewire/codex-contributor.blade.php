@@ -11,7 +11,7 @@
                 ['label' => 'CONTRIBUTEURS', 'url' => route('codex.contributors')],
                 ['label' => $contributor->name]
             ]" />
-            
+
             <!-- Back Button -->
             <div class="mb-6">
                 <a
@@ -21,7 +21,7 @@
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                     </svg>
-                    Retour au personnel
+                    [BACK] Retour au personnel
                 </a>
             </div>
 
@@ -42,15 +42,15 @@
                         </div>
                     @endif
                     <div>
-                        <h1 class="mb-2 text-4xl font-bold text-space-secondary text-glow-primary dark:text-white">
+                        <h1 class="mb-2 font-sans text-4xl font-bold text-space-secondary text-glow-primary dark:text-white">
                             {{ $contributor->name }}
                         </h1>
-                        <p class="text-gray-400">
-                            Matricule: {{ $contributor->matricule }}
+                        <p class="font-mono text-sm text-gray-400">
+                            [ID] {{ $contributor->matricule }}
                         </p>
                         @if ($contributor->created_at)
-                            <p class="text-sm text-gray-500">
-                                Agent Stellar depuis {{ $contributor->created_at->format('d/m/Y') }}
+                            <p class="font-mono text-sm text-gray-500">
+                                [JOINED] {{ $contributor->created_at->format('d/m/Y') }}
                             </p>
                         @endif
                     </div>
@@ -60,20 +60,20 @@
             <!-- Statistics -->
             <div class="mb-8 grid gap-4 md:grid-cols-3">
                 <div class="rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Rapports approuvés</div>
-                    <div class="mt-1 text-3xl font-bold text-space-secondary text-glow-secondary">
+                    <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[APPROVED] Rapports</div>
+                    <div class="mt-1 font-mono text-3xl font-bold text-space-secondary text-glow-secondary">
                         {{ $this->approvedContributions->count() }}
                     </div>
                 </div>
                 <div class="rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Planètes cataloguées</div>
-                    <div class="mt-1 text-3xl font-bold text-space-primary text-glow-primary">
+                    <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[DISCOVERED] Planètes</div>
+                    <div class="mt-1 font-mono text-3xl font-bold text-space-primary text-glow-primary">
                         {{ $this->discoveredPlanets->count() }}
                     </div>
                 </div>
                 <div class="rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Total rapports</div>
-                    <div class="mt-1 text-3xl font-bold text-white">
+                    <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[TOTAL] Rapports</div>
+                    <div class="mt-1 font-mono text-3xl font-bold text-white">
                         {{ $contributor->codexContributions->count() }}
                     </div>
                 </div>
@@ -82,8 +82,8 @@
             <!-- Discovered Planets -->
             @if ($this->discoveredPlanets->isNotEmpty())
                 <div class="mb-8">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
-                        Planètes cataloguées ({{ $this->discoveredPlanets->count() }})
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
+                        [ARCHIVES] Planètes cataloguées ({{ $this->discoveredPlanets->count() }})
                     </h2>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         @foreach ($this->discoveredPlanets as $entry)
@@ -108,8 +108,8 @@
                                     <h3 class="mb-2 text-lg font-semibold text-white group-hover:text-space-primary transition-colors">
                                         {{ $entry->display_name }}
                                     </h3>
-                                    <p class="text-xs text-gray-500">
-                                        Enregistrée le {{ $entry->created_at->format('d/m/Y') }}
+                                    <p class="font-mono text-xs text-gray-500">
+                                        [LOG] {{ $entry->created_at->format('d/m/Y') }}
                                     </p>
                                 </div>
                             </a>
@@ -121,8 +121,8 @@
             <!-- Approved Contributions -->
             @if ($this->approvedContributions->isNotEmpty())
                 <div class="mb-8">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">
-                        Rapports approuvés ({{ $this->approvedContributions->count() }})
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">
+                        [REPORTS] Rapports approuvés ({{ $this->approvedContributions->count() }})
                     </h2>
                     <div class="space-y-4">
                         @foreach ($this->approvedContributions as $contribution)

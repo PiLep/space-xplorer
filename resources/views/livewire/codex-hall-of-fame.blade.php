@@ -12,17 +12,17 @@
 
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="text-space-primary text-glow-primary mb-2 text-4xl font-bold dark:text-white">Distinctions
+                    <h1 class="font-sans text-space-primary text-glow-primary mb-2 text-4xl font-bold dark:text-white">[HONORS] DISTINCTIONS
                     </h1>
-                    <p class="text-gray-400 dark:text-gray-400">
-                        Tableau d'honneur des agents Stellar - Performances exceptionnelles
+                    <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                        [STATUS: ONLINE] Tableau d'honneur des agents Stellar - Performances exceptionnelles
                     </p>
                 </div>
 
                 <!-- Top Discoverers -->
                 <div class="mb-8">
-                    <h2 class="text-space-primary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
-                        Agents - Catalogage
+                    <h2 class="font-sans text-space-primary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
+                        [RANKING] Agents - Catalogage
                     </h2>
                     <div class="border-border-dark bg-surface-dark terminal-border-simple rounded-lg border">
                         <div class="divide-border-dark divide-y">
@@ -62,8 +62,8 @@
 
                 <!-- Top Contributors -->
                 <div class="mb-8">
-                    <h2 class="text-space-secondary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
-                        Agents - Documentation
+                    <h2 class="font-sans text-space-secondary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
+                        [RANKING] Agents - Documentation
                     </h2>
                     <div class="border-border-dark bg-surface-dark terminal-border-simple rounded-lg border">
                         <div class="divide-border-dark divide-y">
@@ -104,8 +104,8 @@
                 <!-- Recently Named Planets -->
                 @if ($this->recentlyNamedPlanets->isNotEmpty())
                     <div class="mb-8">
-                        <h2 class="text-space-primary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
-                            Planètes récemment classifiées
+                        <h2 class="font-sans text-space-primary text-glow-subtle mb-4 text-2xl font-semibold dark:text-white">
+                            [RECENT] Planètes récemment classifiées
                         </h2>
                         <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             @foreach ($this->recentlyNamedPlanets as $entry)

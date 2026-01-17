@@ -9,12 +9,12 @@
                     ['label' => 'CODEX', 'url' => route('codex.index')],
                     ['label' => 'PLANETES']
                 ]" />
-                
+
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="mb-2 text-4xl font-bold text-space-primary text-glow-primary dark:text-white">Catalogue Planètes</h1>
-                    <p class="text-gray-400 dark:text-gray-400">
-                        Base de données complète des planètes cataloguées par Stellar
+                    <h1 class="mb-2 font-sans text-4xl font-bold text-space-primary text-glow-primary dark:text-white">[ARCHIVES] CATALOGUE PLANETES</h1>
+                    <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                        [STATUS: ONLINE] Base de données complète des planètes cataloguées
                     </p>
                 </div>
 
@@ -51,10 +51,10 @@
 
                 <!-- Planets List -->
                 <div class="mb-6">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
-                        Planètes cataloguées
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">
+                        [ENTRIES] Planètes cataloguées
                         @if ($search)
-                            <span class="text-lg font-normal text-gray-400">
+                            <span class="font-mono text-lg font-normal text-gray-400">
                                 ({{ $this->entries->total() }} entrée{{ $this->entries->total() > 1 ? 's' : '' }})
                             </span>
                         @endif
@@ -85,8 +85,8 @@
                                         {{ $entry->display_name }}
                                     </h3>
                                     @if ($entry->is_named)
-                                        <span class="ml-2 rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
-                                            Classifiée
+                                        <span class="font-mono ml-2 rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
+                                            [CLASSIFIED]
                                         </span>
                                     @endif
                                 </div>
@@ -107,11 +107,11 @@
                                         {{ \Illuminate\Support\Str::limit($entry->description, 100) }}
                                     </p>
                                 @endif
-                                <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
+                                <div class="mt-2 flex items-center justify-between font-mono text-xs text-gray-500">
                                     @if ($entry->discoveredBy)
-                                        <span>Agent {{ $entry->discoveredBy->name }}</span>
+                                        <span>[AGENT] {{ $entry->discoveredBy->name }}</span>
                                     @endif
-                                    <span>Enregistrée {{ $entry->created_at->format('d/m/Y') }}</span>
+                                    <span>[LOG] {{ $entry->created_at->format('d/m/Y') }}</span>
                                 </div>
                             </div>
                         </a>

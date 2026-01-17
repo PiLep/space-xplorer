@@ -11,7 +11,7 @@
                 ['label' => 'PLANETES', 'url' => route('codex.planets')],
                 ['label' => $entry->display_name]
             ]" />
-            
+
             <!-- Back Button -->
             <div class="mb-6">
                 <a
@@ -27,12 +27,12 @@
 
             <!-- Planet Header -->
             <div class="mb-8">
-                <h1 class="mb-2 text-4xl font-bold text-space-primary text-glow-primary dark:text-white">
+                <h1 class="mb-2 font-sans text-4xl font-bold text-space-primary text-glow-primary dark:text-white">
                     {{ $entry->display_name }}
                 </h1>
                 @if ($entry->discoveredBy)
-                    <p class="text-gray-400 dark:text-gray-400">
-                        Enregistrée par l'agent <span class="font-semibold text-space-secondary">{{ $entry->discoveredBy->name }}</span>
+                    <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
+                        [LOG] Enregistrée par l'agent <span class="font-semibold text-space-secondary">{{ $entry->discoveredBy->name }}</span>
                         le {{ $entry->created_at->format('d/m/Y') }}
                     </p>
                 @endif
@@ -63,23 +63,23 @@
             <!-- Planet Characteristics -->
             @if ($entry->planet && $entry->planet->properties)
                 <div class="mb-8 rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Caractéristiques</h2>
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">[SPECIFICATIONS] Caractéristiques</h2>
                     <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Type</div>
-                            <div class="text-lg font-semibold text-space-primary">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[TYPE]</div>
+                            <div class="font-mono text-lg font-semibold text-space-primary">
                                 {{ ucfirst($entry->planet->properties->type ?? 'Inconnu') }}
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Taille</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[SIZE]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 {{ ucfirst($entry->planet->properties->size ?? 'Inconnue') }}
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Température</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[TEMP]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 @php
                                     $temp = $entry->planet->properties->temperature ?? 'Unknown';
                                     $tempMap = ['temperate' => 'Temperate', 'cold' => 'Cold', 'hot' => 'Hot'];
@@ -88,8 +88,8 @@
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Atmosphère</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[ATMOSPHERE]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 @php
                                     $atmo = $entry->planet->properties->atmosphere ?? 'Unknown';
                                     $atmoMap = ['breathable' => 'Breathable', 'toxic' => 'Toxic', 'nonexistent' => 'Nonexistent'];
@@ -98,8 +98,8 @@
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Terrain</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[TERRAIN]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 @php
                                     $terrain = $entry->planet->properties->terrain ?? 'Unknown';
                                     $terrainMap = ['rocky' => 'Rocky', 'oceanic' => 'Oceanic', 'desert' => 'Desert', 'forested' => 'Forested', 'urban' => 'Urban', 'mixed' => 'Mixed', 'icy' => 'Icy'];
@@ -108,8 +108,8 @@
                             </div>
                         </div>
                         <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
-                            <div class="mb-1 text-xs font-semibold uppercase tracking-wide text-gray-400">Ressources</div>
-                            <div class="text-lg font-semibold text-white">
+                            <div class="mb-1 font-mono text-xs font-semibold uppercase tracking-wide text-gray-400">[RESOURCES]</div>
+                            <div class="font-mono text-lg font-semibold text-white">
                                 @php
                                     $resources = $entry->planet->properties->resources ?? 'Unknown';
                                     $resourcesMap = ['abundant' => 'Abundant', 'moderate' => 'Moderate', 'rare' => 'Rare'];
@@ -124,8 +124,43 @@
             <!-- Description -->
             @if ($entry->description)
                 <div class="mb-8 rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
-                    <h2 class="mb-4 text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Description</h2>
-                    <p class="text-gray-300 leading-relaxed">{{ $entry->description }}</p>
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">[REPORT] Description</h2>
+                    <p class="font-mono text-sm text-gray-300 leading-relaxed">{{ $entry->description }}</p>
+                </div>
+            @endif
+
+            <!-- Approved Contributions -->
+            @if ($entry->contributions && $entry->contributions->isNotEmpty())
+                <div class="mb-8 rounded-lg border border-border-dark bg-surface-dark p-6 terminal-border-simple">
+                    <h2 class="mb-4 font-sans text-2xl font-semibold text-space-secondary text-glow-subtle dark:text-white">
+                        [REPORTS] Contributions approuvées ({{ $entry->contributions->count() }})
+                    </h2>
+                    <div class="space-y-4">
+                        @foreach ($entry->contributions as $contribution)
+                            <div class="rounded-lg border border-border-dark bg-surface-medium p-4">
+                                <div class="mb-2 flex items-center justify-between">
+                                    @if ($contribution->contributor)
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-mono text-sm font-semibold text-space-secondary">
+                                                [AGENT] {{ $contribution->contributor->name }}
+                                            </span>
+                                            @if ($contribution->contributor->matricule)
+                                                <span class="font-mono text-xs text-gray-500">
+                                                    ({{ $contribution->contributor->matricule }})
+                                                </span>
+                                            @endif
+                                        </div>
+                                    @endif
+                                    <span class="font-mono text-xs text-gray-500">
+                                        [LOG] {{ $contribution->created_at->format('d/m/Y H:i') }}
+                                    </span>
+                                </div>
+                                <p class="font-mono text-sm text-gray-300 leading-relaxed">
+                                    {{ $contribution->content }}
+                                </p>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
@@ -135,18 +170,18 @@
                     @if ($this->canUserName() && !$entry->is_named)
                         <button
                             wire:click="openNameModal"
-                            class="rounded-lg bg-space-primary px-6 py-3 font-semibold text-space-black hover:bg-space-primary-dark transition-colors glow-primary"
+                            class="font-mono rounded-lg bg-space-primary px-6 py-3 font-semibold text-space-black hover:bg-space-primary-dark transition-colors glow-primary"
                         >
-                            Nommer cette planète
+                            [ACTION] Classifier cette planète
                         </button>
                     @endif
 
                     @if ($this->canUserContribute())
                         <button
                             wire:click="openContributeModal"
-                            class="rounded-lg border border-space-secondary px-6 py-3 font-semibold text-space-secondary hover:bg-space-secondary hover:text-space-black transition-colors"
+                            class="font-mono rounded-lg border border-space-secondary px-6 py-3 font-semibold text-space-secondary hover:bg-space-secondary hover:text-space-black transition-colors"
                         >
-                            Contribuer
+                            [ACTION] Soumettre un rapport
                         </button>
                     @endif
                 </div>
