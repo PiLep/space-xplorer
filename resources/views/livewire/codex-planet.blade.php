@@ -172,7 +172,7 @@
                             wire:click="openNameModal"
                             class="font-mono rounded-lg bg-space-primary px-6 py-3 font-semibold text-space-black hover:bg-space-primary-dark transition-colors glow-primary"
                         >
-                            [ACTION] Classifier cette planète
+                            Nommer cette planète
                         </button>
                     @endif
 
@@ -181,7 +181,7 @@
                             wire:click="openContributeModal"
                             class="font-mono rounded-lg border border-space-secondary px-6 py-3 font-semibold text-space-secondary hover:bg-space-secondary hover:text-space-black transition-colors"
                         >
-                            [ACTION] Soumettre un rapport
+                            Contribuer
                         </button>
                     @endif
                 </div>

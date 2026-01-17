@@ -11,28 +11,28 @@
 
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="mb-2 font-sans text-4xl font-bold text-space-primary text-glow-primary dark:text-white">CODEX STELLARIS</h1>
+                    <h1 class="mb-2 font-sans text-4xl font-bold text-space-primary text-glow-primary dark:text-white">Codex Stellaris</h1>
                     <p class="font-mono text-sm text-gray-400 dark:text-gray-400">
-                        [STATUS: ONLINE] Base de données corporative - Archives d'exploration Stellar
+                        [STATUS: ONLINE] Base de données corporative - Archives d'exploration Stellar - encyclopédie collaborative
                     </p>
                 </div>
 
                 <!-- Statistics Cards -->
                 <div class="mb-8 grid grid-cols-2 gap-4 md:grid-cols-4">
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">[ENTRIES]</div>
+                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Articles</div>
                         <div class="mt-1 font-mono text-2xl font-bold text-space-primary text-glow-primary">{{ $stats['total_articles'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">[CLASSIFIED]</div>
+                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Planètes nommées</div>
                         <div class="mt-1 font-mono text-2xl font-bold text-space-primary text-glow-primary">{{ $stats['named'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">[PERSONNEL]</div>
+                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Contributeurs</div>
                         <div class="mt-1 font-mono text-2xl font-bold text-space-secondary text-glow-secondary">{{ $stats['contributors'] ?? 0 }}</div>
                     </div>
                     <div class="rounded-lg border border-border-dark bg-surface-dark p-4 terminal-border-simple transition-all hover:glow-primary">
-                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">[REPORTS]</div>
+                        <div class="font-mono text-xs uppercase tracking-wide text-gray-400 dark:text-gray-400">Contributions</div>
                         <div class="mt-1 font-mono text-2xl font-bold text-space-secondary text-glow-secondary">{{ $stats['contributions'] ?? 0 }}</div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
                 @if ($recentDiscoveries->isNotEmpty() && empty($search))
                     <div class="mb-8">
                         <div class="mb-4 flex items-center justify-between">
-                            <h2 class="font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">[RECENT DISCOVERIES]</h2>
+                            <h2 class="font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Découvertes récentes</h2>
                             <a href="{{ route('codex.planets') }}" class="font-mono text-sm text-space-secondary hover:text-space-secondary-light transition-colors">
                                 [ACCESS FULL CATALOG] →
                             </a>
@@ -62,7 +62,7 @@
                                             @if ($recent->is_named)
                                                 <div class="absolute top-2 right-2">
                                                     <span class="font-mono rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
-                                                        [CLASSIFIED]
+                                                        Nommée
                                                     </span>
                                                 </div>
                                             @endif
@@ -136,7 +136,7 @@
                     @endif
                     @if (!empty($search))
                         <p class="mt-2 font-mono text-sm text-gray-400">
-                            [RESULTS] {{ $entries->total() }} entrée{{ $entries->total() > 1 ? 's' : '' }}
+                            {{ $entries->total() }} résultat{{ $entries->total() > 1 ? 's' : '' }}
                         </p>
                     @endif
                 </div>
@@ -144,7 +144,7 @@
                 <!-- All Planets -->
                 @if ($entries->isNotEmpty())
                     <div class="mb-8">
-                        <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">[ARCHIVES] Catalogue complet</h2>
+                        <h2 class="mb-4 font-sans text-2xl font-semibold text-space-primary text-glow-subtle dark:text-white">Toutes les planètes</h2>
                         <div class="space-y-4">
                             @foreach ($entries as $entry)
                                 <a
@@ -159,7 +159,7 @@
                                                 </h3>
                                                 @if ($entry->is_named)
                                                     <span class="font-mono rounded-full border border-space-primary bg-space-primary px-2 py-1 text-xs font-semibold text-space-black">
-                                                        [CLASSIFIED]
+                                                        Nommée
                                                     </span>
                                                 @endif
                                             </div>

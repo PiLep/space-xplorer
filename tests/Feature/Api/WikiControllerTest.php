@@ -134,7 +134,7 @@ it('validates name when naming planet', function () {
 it('allows authenticated user to contribute', function () {
     $response = $this->actingAs($this->user, 'sanctum')
         ->postJson("/api/codex/planets/{$this->entry->id}/contribute", [
-            'content' => 'This is a test contribution with enough characters.',
+            'content' => 'This is a sample contribution with enough characters to pass validation.',
         ]);
 
     $response->assertStatus(201)
@@ -147,7 +147,7 @@ it('allows authenticated user to contribute', function () {
 
 it('requires authentication to contribute', function () {
     $response = $this->postJson("/api/codex/planets/{$this->entry->id}/contribute", [
-        'content' => 'Test contribution',
+        'content' => 'Sample contribution content',
     ]);
 
     $response->assertStatus(401);
