@@ -145,17 +145,65 @@ Consulte **[implement-task.md](../prompts/implement-task.md)** pour :
 
 ## Tests
 
+### Framework de Test
+
+Le projet utilise **Pest** (framework de test moderne pour PHP) au lieu de PHPUnit classique.
+
 ### Types de Tests
 
-- **Tests unitaires** : Tester les services, modèles, classes isolément
-- **Tests d'intégration** : Tester les endpoints API, les interactions
-- **Tests fonctionnels** : Tester les flux complets
+- **Tests unitaires** (`tests/Unit/`) : Tester les services, modèles, classes isolément
+  - Utilisent `DatabaseTransactions` pour être plus rapides
+- **Tests Feature** (`tests/Feature/`) : Tester les endpoints API, les interactions Livewire
+  - Utilisent `RefreshDatabase` pour migrations complètes
+- **Tests Browser** (`tests/Browser/`) : Tests end-to-end avec Playwright
+  - Utilisent `RefreshDatabase` pour migrations complètes
 
 ### Structure des Tests
 
 - **Nom** : `Feature/ClassNameTest.php` ou `Unit/ClassNameTest.php`
-- **Structure** : Utiliser les méthodes `test_*` ou `@test`
+- **Syntaxe Pest** : Utiliser `it()` et `expect()` au lieu de méthodes `test_*`
 - **Conventions** : Arrange-Act-Assert pattern
+- **Helpers** : Utiliser `beforeEach()` pour la configuration commune
+
+### Exécution des Tests
+
+**⚠️ IMPORTANT - Optimisation du temps de développement** :
+
+**NE JAMAIS relancer tous les tests** pendant le développement. Exécuter uniquement les tests ajoutés ou modifiés pour gagner du temps.
+
+```bash
+# ✅ CORRECT - Exécuter uniquement les tests modifiés/ajoutés
+sail artisan test --filter AuthControllerTest
+sail artisan test tests/Feature/Api/AuthControllerTest.php
+sail artisan test tests/Unit/Services/MyNewServiceTest.php
+
+# Tests en parallèle pour les tests modifiés uniquement
+sail artisan test --filter AuthControllerTest --parallel --processes=10
+
+# ❌ ÉVITER - Ne pas relancer tous les tests pendant le développement
+sail artisan test  # Trop lent (~130-150s), à éviter pendant le dev
+
+# Tests complets uniquement avant commit/PR
+sail composer test:fast  # Exécuter tous les tests avant de créer une PR
+```
+
+**Stratégie recommandée** :
+1. **Pendant le développement** : Exécuter uniquement les tests du fichier modifié/ajouté
+2. **Avant commit** : Exécuter la suite complète avec `sail composer test:fast`
+3. **Avant PR** : S'assurer que tous les tests passent
+
+**Commandes utiles** :
+```bash
+# Tous les tests (uniquement avant commit/PR)
+sail composer test:fast
+
+# Tests en parallèle avec coverage (CI uniquement)
+sail composer test:coverage-parallel
+
+# Tests spécifiques (recommandé pendant le dev)
+sail artisan test --filter ClassNameTest
+sail artisan test tests/Feature/Path/To/Test.php
+```
 
 ## Gestion des Erreurs
 

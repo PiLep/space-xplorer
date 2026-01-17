@@ -1,0 +1,73 @@
+<?php
+
+namespace Database\Factories;
+
+use App\Models\Notification;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Notification>
+ */
+class NotificationFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'user_id' => User::factory(),
+            'type' => fake()->randomElement(['message_important', 'ship_assigned', 'resource_added']),
+            'title' => fake()->sentence(),
+            'message' => fake()->sentence(),
+            'data' => [],
+            'is_read' => false,
+            'read_at' => null,
+        ];
+    }
+
+    /**
+     * Indicate that the notification is read.
+     */
+    public function read(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_read' => true,
+            'read_at' => now(),
+        ]);
+    }
+
+    /**
+     * Indicate that the notification is unread.
+     */
+    public function unread(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_read' => false,
+            'read_at' => null,
+        ]);
+    }
+
+    /**
+     * Set the notification type.
+     */
+    public function ofType(string $type): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'type' => $type,
+        ]);
+    }
+
+    /**
+     * Set the user for the notification.
+     */
+    public function forUser(User $user): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_id' => $user->id,
+        ]);
+    }
+}

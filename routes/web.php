@@ -3,6 +3,7 @@
 use App\Livewire\Dashboard;
 use App\Livewire\Inbox;
 use App\Livewire\LoginTerminal;
+use App\Livewire\Notifications;
 use App\Livewire\Profile;
 use App\Livewire\Register;
 use App\Livewire\VerifyEmail;
@@ -94,6 +95,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
     Route::get('/profile', Profile::class)->name('profile');
     Route::get('/inbox', Inbox::class)->name('inbox');
+    Route::get('/notifications', Notifications::class)->name('notifications');
 
     // Email Verification Route
     Route::get('/email/verify', VerifyEmail::class)->name('email.verify');

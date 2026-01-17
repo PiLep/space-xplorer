@@ -595,6 +595,121 @@ Toutes les réponses API suivent un format JSON standardisé :
 }
 ```
 
+## Systèmes de communication
+
+### Inbox (Boîte mail Stellar)
+
+**Rôle** : Boîte mail Stellar (employé) - Messages narratifs de la compagnie Stellar
+
+**Modèle** : `App\Models\Message`
+
+**Structure de la table `messages`** :
+- `id` (ULID) - Identifiant unique
+- `sender_id` (ULID, nullable) - Expéditeur (null pour messages système)
+- `recipient_id` (ULID) - Destinataire (FK → users.id)
+- `type` (string) - Type de message (welcome, discovery, mission, alert, system)
+- `subject` (string) - Sujet du message
+- `content` (text) - Contenu narratif complet
+- `is_read` (boolean) - Statut de lecture
+- `read_at` (timestamp, nullable) - Date de lecture
+- `is_important` (boolean) - Message important
+- `metadata` (JSON, nullable) - Métadonnées additionnelles
+
+**Service** : `App\Services\MessageService`
+
+**Composant Livewire** : `App\Livewire\Inbox`
+
+**Routes** :
+- `GET /inbox` - Page de la boîte mail (middleware `auth`)
+
+**Fonctionnalités** :
+- Affichage des messages avec filtres (all, unread, read)
+- Marquer comme lu/non lu
+- Supprimer des messages
+- Messages importants mis en évidence
+
+### Notifications (Système d'événements du jeu)
+
+**Rôle** : Système d'événements du jeu - Alertes courtes qui pointent vers les systèmes concernés (vaisseau, inventaire, missions, inbox)
+
+**Modèle** : `App\Models\Notification`
+
+**Structure de la table `notifications`** :
+- `id` (ULID) - Identifiant unique
+- `user_id` (ULID) - Destinataire (FK → users.id, onDelete cascade)
+- `type` (string) - Type de notification (`message_important`, `ship_assigned`, `resource_added`, etc.)
+- `title` (string) - Titre court de la notification
+- `message` (text) - Message court (max 200 caractères)
+- `data` (JSON, nullable) - Données additionnelles (ID vaisseau, quantité ressources, lien vers message, etc.)
+- `is_read` (boolean, default: false) - Statut de lecture
+- `read_at` (timestamp, nullable) - Date de lecture
+- `created_at`, `updated_at` - Timestamps
+
+**Index** :
+- `user_id` - Pour requêtes par utilisateur
+- `is_read` - Pour filtres unread/read
+- `type` - Pour filtres par type
+- `created_at` - Pour tri chronologique
+- `(user_id, is_read)` - Index composite pour requêtes combinées
+- `(user_id, created_at)` - Index composite pour notifications triées par date
+
+**Service** : `App\Services\NotificationService`
+
+**Méthodes du service** :
+- `create(User $user, string $type, string $title, string $message, array $data = []): Notification` - Créer une notification
+- `markAsRead(Notification $notification): bool` - Marquer comme lue
+- `markAllAsRead(User $user): int` - Marquer toutes comme lues
+- `getUnreadCount(User $user): int` - Compter les notifications non lues
+- `getNotificationsForUser(User $user, int $limit = 20): Collection` - Récupérer les notifications récentes
+- `getUnreadNotificationsForUser(User $user, int $limit = 10): Collection` - Récupérer les non lues
+
+**Scopes du modèle** :
+- `scopeUnread(Builder $query)` - Notifications non lues
+- `scopeRead(Builder $query)` - Notifications lues
+- `scopeForUser(Builder $query, User $user)` - Notifications d'un utilisateur (sécurité)
+- `scopeByType(Builder $query, string $type)` - Filtrer par type
+
+**Méthodes du modèle** :
+- `markAsRead(): bool` - Marquer comme lue
+- `markAsUnread(): bool` - Marquer comme non lue
+
+**Configuration** : `config/notifications.php`
+- Types de notifications autorisés avec métadonnées
+- Longueur maximale des messages (200 caractères par défaut)
+- Limites par défaut (20 pour page, 10 pour dropdown)
+
+**Composants Livewire** :
+- `App\Livewire\NotificationBadge` - Badge dans la navigation avec compteur
+- `App\Livewire\Notifications` - Page complète de notifications avec filtres et pagination
+
+**Routes** :
+- `GET /notifications` - Page de notifications (middleware `auth`)
+
+**Génération automatique** :
+- **Listener** : `App\Listeners\CreateNotificationOnImportantMessage`
+- **Événement déclencheur** : `MessageReceived` (si `is_important = true`)
+- **Comportement** : Crée une notification courte qui pointe vers l'inbox (`/inbox?message={id}`) sans dupliquer le contenu du message
+
+**Types de notifications MVP** :
+- `message_important` : Message important reçu dans l'inbox
+  - Redirige vers `/inbox?message={message_id}`
+  - Données : `message_id`, `inbox_url`
+- `ship_assigned` : Vaisseau attribué (futur)
+  - Redirige vers `/ships/{ship_id}`
+- `resource_added` : Nouvelles ressources ajoutées (futur)
+  - Redirige vers `/inventory`
+
+**Distinction Notifications vs Inbox** :
+- **Inbox** : Messages narratifs détaillés, consultables à tout moment, statut de lecture indépendant
+- **Notifications** : Alertes courtes (max 200 caractères) qui pointent vers les systèmes du jeu, statut de lecture indépendant
+- Les notifications ne dupliquent pas le contenu des messages, elles sont des alertes qui redirigent vers le système concerné
+
+**Performance** :
+- Utilisation de `#[Computed]` dans Livewire pour cache automatique
+- Polling optionnel toutes les 30 secondes pour le badge
+- Index optimisés pour requêtes fréquentes
+- Limites par défaut pour éviter la surcharge
+
 ## Flux métier
 
 ### Flux d'inscription et génération de planète
@@ -676,6 +791,26 @@ L'application utilise une architecture événementielle complète pour découple
 
 **Listeners** :
 - Aucun pour le moment (prévu pour : notifications, analytics, invalidation sessions, etc.)
+
+#### Communication et messages
+
+##### `MessageReceived`
+
+**Déclencheur** : Lorsqu'un message est créé et envoyé à un utilisateur (via `MessageService`)
+
+**Données** : Message, User (recipient)
+
+**Listeners** :
+- `CreateNotificationOnImportantMessage` : Crée une notification si le message est important (`is_important = true`)
+  - Crée une notification de type `message_important` qui pointe vers l'inbox
+  - La notification est une alerte courte (max 200 caractères) qui ne duplique pas le contenu du message
+  - Redirige vers `/inbox?message={message_id}` pour ouvrir le message dans l'inbox
+  - Gère les erreurs gracieusement sans bloquer la création du message
+
+**Flux** :
+1. `MessageService` crée un message et dispatch `MessageReceived`
+2. Si le message est important (`is_important = true`), le listener `CreateNotificationOnImportantMessage` crée une notification
+3. La notification apparaît dans le badge de notifications et redirige vers l'inbox
 
 #### Cycle de vie planète
 
