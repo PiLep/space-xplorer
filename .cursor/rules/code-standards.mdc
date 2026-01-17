@@ -13,6 +13,7 @@ alwaysApply: true
 - **Chrome DevTools MCP**: Use Chrome DevTools MCP to visually verify the application after launching or implementing new features (take snapshot, check console errors, verify network requests)
 - **Blade Layouts**: All Blade views rendered by controllers MUST use `@extends('layouts.app')` or appropriate layout. Livewire components use `#[Layout('layouts.app')]` attribute
 - **Laravel Pint**: Use `./vendor/bin/sail pint` for formatting
+- **🚨 CRITICAL - Pint Before Commit**: **ALWAYS** run `./vendor/bin/sail pint` (format all files) then `./vendor/bin/sail pint --test` (verify no issues) BEFORE committing. **NEVER** commit if `pint --test` fails, even if the issues are not in files you modified. This prevents CI failures.
 - **Tests**: Write tests for new features
 - **Tests Execution**: **NEVER run all tests during development**. Only run tests for modified/added files to save time (~130-150s for all tests vs seconds for a single file). Use `sail artisan test --filter TestName` or `sail artisan test path/to/test.php`. Run full test suite only before commit/PR with `sail composer test:fast`
 - **Form Requests**: Use FormRequest for API validation

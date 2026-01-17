@@ -259,7 +259,11 @@ En tant qu'agent Lead Developer, tu es responsable de créer une Pull Request ve
 1. **Vérifier les prérequis** : S'assurer que le code est approuvé par Sam (technique) et Alex (fonctionnel)
 2. **Mettre à jour la branche** : Rebaser sur `develop` si nécessaire
 3. **Vérifier les tests** : S'assurer que tous les tests passent
-4. **Formater le code** : Utiliser Pint pour formater
+4. **🚨 CRITIQUE - Formater TOUT le code** : 
+   - **TOUJOURS** lancer `./vendor/bin/sail pint` (sans arguments) pour formater TOUS les fichiers du projet
+   - **PUIS** lancer `./vendor/bin/sail pint --test` pour vérifier qu'il n'y a AUCUN problème de formatage
+   - **NE JAMAIS** commiter si `pint --test` échoue, même si ce n'est pas dans les fichiers modifiés
+   - Si `pint --test` trouve des problèmes, lancer `pint` à nouveau pour les corriger, puis recommiter
 5. **Créer la PR** : Créer la Pull Request avec le format standardisé
 6. **Lier les documents** : Référencer l'issue, le plan, et les reviews
 7. **Organiser les documents** : Après le merge, déplacer les documents terminés dans les dossiers `closed/`

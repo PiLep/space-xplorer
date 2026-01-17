@@ -192,7 +192,11 @@ Quand tu crées une PR :
 1. **Vérifier les prérequis** : S'assurer que tout est prêt
 2. **Mettre à jour la branche** : `git pull origin develop` sur la branche feature
 3. **Vérifier les tests** : S'assurer que tous les tests passent
-4. **Formater le code** : `./vendor/bin/sail pint`
+4. **🚨 CRITIQUE - Formater TOUT le code** : 
+   - **TOUJOURS** lancer `./vendor/bin/sail pint` (sans arguments) pour formater TOUS les fichiers du projet
+   - **PUIS** lancer `./vendor/bin/sail pint --test` pour vérifier qu'il n'y a AUCUN problème de formatage
+   - **NE JAMAIS** commiter si `pint --test` échoue, même si ce n'est pas dans les fichiers que tu as modifiés
+   - Si `pint --test` trouve des problèmes, lancer `pint` à nouveau pour les corriger, puis recommiter
 5. **Créer la PR** : Utiliser le format standardisé
 6. **Lier les documents** : Référencer l'issue, le plan, et les reviews
 7. **Remplir la checklist** : Vérifier tous les points
@@ -221,8 +225,12 @@ git rebase origin/develop
 
 # Vérifier que tout fonctionne
 ./vendor/bin/sail artisan test
-./vendor/bin/sail pint
 
+# 🚨 CRITIQUE - Formater TOUT le code et vérifier
+./vendor/bin/sail pint                    # Formater tous les fichiers
+./vendor/bin/sail pint --test             # Vérifier qu'il n'y a AUCUN problème
+
+# Si pint --test échoue, corriger et recommiter
 # Commiter si nécessaire
 git add .
 git commit -m "chore: format code with Pint"
@@ -243,7 +251,8 @@ Sur GitHub/GitLab, créer une PR avec :
 
 - [ ] Branche à jour avec develop
 - [ ] Tous les tests passent
-- [ ] Code formaté avec Pint
+- [ ] **🚨 CRITIQUE** : `./vendor/bin/sail pint --test` passe sans erreur (TOUS les fichiers du projet)
+- [ ] Code formaté avec Pint (tous les fichiers, pas seulement les fichiers modifiés)
 - [ ] Commits clairs et bien nommés
 - [ ] Description complète de la PR
 - [ ] Liens vers l'issue et le plan
