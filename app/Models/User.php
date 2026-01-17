@@ -267,6 +267,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the notifications for the user.
+     */
+    public function notifications(): HasMany
+    {
+        return $this->hasMany(Notification::class);
+    }
+
+    /**
      * Get the count of unread messages for the user.
      */
     public function unreadMessagesCount(): int

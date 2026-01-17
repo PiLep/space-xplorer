@@ -35,3 +35,9 @@ playwright-report/
 
 # local database data
 /local-brainstorming-data
+.claude/settings.local.json
+
+# Test timing files
+junit-timing.xml
+test-output.log
+junit-slow.xml

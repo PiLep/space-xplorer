@@ -6,6 +6,33 @@
 
 - **[PROMPTS_GUIDE.md](./PROMPTS_GUIDE.md)** - Guide complet avec tous les prompts pour chaque étape du workflow
 
+## Environnement de Développement
+
+Ce projet utilise **Laravel Sail** comme environnement de développement Docker. 
+
+### 🚨 RÈGLE CRITIQUE - EXÉCUTION DES COMMANDES
+
+**NE JAMAIS exécuter `php artisan` directement.** Ce projet fonctionne dans Docker via Sail, et exécuter `php artisan` directement échouera avec des erreurs de connexion à la base de données.
+
+**TOUTES les commandes Laravel DOIVENT être préfixées par `sail` :**
+
+```bash
+# ✅ CORRECT - Utiliser sail
+sail artisan test              # Exécuter les tests
+sail artisan migrate           # Lancer les migrations
+sail artisan db:seed           # Exécuter les seeders
+sail artisan tinker            # Console interactive
+sail composer install          # Installer les dépendances
+sail npm run dev               # Compiler les assets
+
+# ❌ INTERDIT - Ne JAMAIS faire ça
+php artisan test               # ÉCHOUERA - Ne pas utiliser !
+php artisan migrate            # ÉCHOUERA - Ne pas utiliser !
+php artisan db:seed            # ÉCHOUERA - Ne pas utiliser !
+```
+
+**Cette règle est ABSOLUMENT OBLIGATOIRE et ne doit JAMAIS être violée.**
+
 ## Workflow
 
 Pour comprendre l'ordre d'intervention des agents et le processus complet :

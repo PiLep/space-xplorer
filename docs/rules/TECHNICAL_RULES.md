@@ -14,22 +14,30 @@ Les règles techniques sont proposées par Morgan (Architect) ou Sam (Lead Devel
 
 **Date d'ajout** : 2025-11-09  
 **Proposée par** : Jordan (Fullstack Developer)  
-**Validée par** : À valider
+**Validée par** : À valider  
+**🚨 CRITIQUE** : Cette règle est ABSOLUMENT OBLIGATOIRE et ne doit JAMAIS être violée.
 
-**Description** : Toutes les commandes de développement (artisan, composer, npm, migrations, tests, etc.) doivent être exécutées via Laravel Sail (`./vendor/bin/sail`) pour garantir la cohérence avec l'environnement Docker de développement.
+**Description** : Toutes les commandes de développement (artisan, composer, npm, migrations, tests, etc.) doivent être exécutées via Laravel Sail (`./vendor/bin/sail` ou `sail`) pour garantir la cohérence avec l'environnement Docker de développement.
+
+**🚨 INTERDICTION ABSOLUE** : Ne JAMAIS exécuter `php artisan` directement. Ce projet fonctionne dans Docker via Sail, et exécuter `php artisan` directement échouera avec des erreurs de connexion à la base de données (ex: `SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql failed`).
 
 **Exemples** :
 
-**Bon exemple** :
+**✅ Bon exemple** :
 ```bash
 # Exécuter les migrations
 ./vendor/bin/sail artisan migrate
+# ou simplement
+sail artisan migrate
 
 # Installer une dépendance Composer
 ./vendor/bin/sail composer require laravel/sanctum
 
 # Exécuter les tests
 ./vendor/bin/sail artisan test
+
+# Exécuter les seeders
+sail artisan db:seed
 
 # Formater le code
 ./vendor/bin/sail pint
@@ -38,10 +46,15 @@ Les règles techniques sont proposées par Morgan (Architect) ou Sam (Lead Devel
 ./vendor/bin/sail npm install
 ```
 
-**Mauvais exemple** :
+**❌ Mauvais exemple - INTERDIT** :
 ```bash
-# ❌ Ne pas utiliser directement artisan/composer/npm
-php artisan migrate
+# ❌ Ne JAMAIS utiliser directement php artisan
+php artisan migrate          # ÉCHOUERA - Ne pas utiliser !
+php artisan db:seed          # ÉCHOUERA - Ne pas utiliser !
+php artisan test             # ÉCHOUERA - Ne pas utiliser !
+php artisan tinker            # ÉCHOUERA - Ne pas utiliser !
+
+# ❌ Ne pas utiliser directement composer/npm
 composer require laravel/sanctum
 npm install
 ```

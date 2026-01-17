@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Events\AvatarGenerated;
 use App\Events\DiscoveryMade;
+use App\Events\MessageReceived;
 use App\Events\PlanetCreated;
 use App\Events\PlanetExplored;
 use App\Events\PlanetImageGenerated;
@@ -13,6 +14,7 @@ use App\Events\UserLoggedIn;
 use App\Events\UserProfileUpdated;
 use App\Events\UserRegistered;
 use App\Listeners\CleanupUserData;
+use App\Listeners\CreateNotificationOnImportantMessage;
 use App\Listeners\GenerateAvatar;
 use App\Listeners\GenerateHomePlanet;
 use App\Listeners\GeneratePlanetImage;
@@ -47,6 +49,11 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserDeleted::class => [
             CleanupUserData::class,
+        ],
+
+        // Message events
+        MessageReceived::class => [
+            CreateNotificationOnImportantMessage::class,
         ],
 
         // Planet lifecycle events
