@@ -13,7 +13,7 @@ class CreateTestNotifications extends Command
      *
      * @var string
      */
-    protected $signature = 'notifications:create-test 
+    protected $signature = 'notifications:create-test
                             {--user= : User ID or email to create notifications for}
                             {--count=10 : Number of notifications to create}
                             {--read : Mark some notifications as read}';
