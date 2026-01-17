@@ -174,12 +174,13 @@ Créer une migration pour la table `wiki_entries` avec tous les champs nécessai
 - **[DRAFT-04-stellarpedia-system.md](../game-design/drafts/DRAFT-04-stellarpedia-system.md)** : Version complète du système (futur)
 - **[ARCHITECTURE.md](../memory_bank/ARCHITECTURE.md)** : Architecture technique
 - **[EVENTS.md](../EVENTS.md)** : Documentation des événements (PlanetCreated, PlanetExplored)
+- **Issue GitHub** : [#16](https://github.com/PiLep/space-xplorer/issues/16)
 
 ## Suivi et Historique
 
 ### Statut
 
-En cours
+🔄 En attente de merge (PR #23 créée)
 
 ### Historique
 
@@ -199,4 +200,32 @@ En cours
 **Détails** : Review architecturale complète effectuée sur le plan de développement TASK-008.
 **Fichiers modifiés** : docs/reviews/ARCHITECT-REVIEW-008-implement-public-wiki-stellarpedia.md, docs/tasks/TASK-008-implement-public-wiki-stellarpedia.md
 **Notes** : ⚠️ Approuvé avec recommandations. Le plan respecte l'architecture définie. Principales recommandations : clarification de l'utilisation des services par Livewire (High), utilisation explicite des ULIDs dans les migrations (High), génération IA asynchrone (High pour évolution future), rate limiting (Medium), index de performance (Medium). Le plan peut être implémenté en tenant compte des recommandations.
+
+#### 2026-01-17 - Sam (Lead Developer) - Review de code
+**Statut** : En review (Code approuvé)
+**Détails** : Review de code complète effectuée sur l'implémentation TASK-008. Code approuvé. L'implémentation est excellente et respecte parfaitement le plan ainsi que toutes les recommandations architecturales. Toutes les tâches sont complétées. Tous les tests passent avec succès (34 tests, 60 assertions). Le système a été implémenté sous le nom "Codex" (nom dans le jeu) plutôt que "Wiki" (référence technique). Quelques améliorations mineures sont suggérées mais ne sont pas bloquantes. Code prêt pour la review fonctionnelle.
+**Fichiers modifiés** : `docs/reviews/CODE-REVIEW-008-implement-public-wiki-stellarpedia.md` (nouveau)
+**Review** : [CODE-REVIEW-008-implement-public-wiki-stellarpedia.md](../reviews/CODE-REVIEW-008-implement-public-wiki-stellarpedia.md)
+**Notes** : Aucune correction majeure demandée. Le code peut être approuvé tel quel. Prochaine étape : Review fonctionnelle par Alex (Product Manager).
+
+#### 2026-01-17 - Alex (Product Manager) - Review fonctionnelle
+**Statut** : ✅ Approuvé fonctionnellement avec ajustements mineurs
+**Détails** : Review fonctionnelle complète effectuée sur l'implémentation TASK-008. L'implémentation est excellente et répond parfaitement aux besoins métier. Tous les critères d'acceptation principaux sont respectés. Le système Codex Stellaris offre une expérience utilisateur immersive et cohérente avec l'ambiance spatiale du jeu. Quelques ajustements mineurs sont suggérés (validation mots interdits dans contributions, vérification responsive, filtres par caractéristiques, planètes les plus consultées) mais ne sont pas bloquants. La fonctionnalité peut être approuvée pour la production après application des ajustements Medium Priority.
+**Fichiers modifiés** : `docs/reviews/FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md` (nouveau)
+**Review** : [FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md](../reviews/FUNCTIONAL-REVIEW-008-implement-public-wiki-stellarpedia.md)
+**Notes** : Ajustements Medium Priority à appliquer avant production : validation mots interdits dans contributions, vérification responsive. Ajustements Low Priority peuvent être ajoutés dans une future itération. Prochaine étape : Création de la Pull Request par Sam (Lead Developer).
+
+#### 2026-01-17 - Sam (Lead Developer) - Création de la Pull Request
+**Statut** : En attente de merge
+**Détails** : Pull Request créée vers develop avec tous les ajustements Medium Priority appliqués. Validation des mots interdits ajoutée dans ContributeToCodexRequest. Amélioration de la cohérence visuelle du Codex avec l'ambiance Stellar (style rétro-futuriste Alien). Affichage des contributions approuvées sur les pages planètes. Commande de génération de données de test créée. Code formaté avec Pint. Tous les tests passent.
+**Fichiers modifiés** : `app/Http/Requests/ContributeToCodexRequest.php`, `app/Livewire/CodexPlanet.php`, `app/Livewire/ContributeToCodex.php`, `config/codex.php`, `app/Console/Commands/GenerateTestCodexData.php`, toutes les vues Codex
+**Pull Request** : [#23](https://github.com/PiLep/space-xplorer/pull/23)
+**Notes** : PR prête pour review et merge. Tous les ajustements Medium Priority ont été appliqués.
+
+#### 2025-01-XX - Morgan (Architect) - Création de la branche et de l'issue GitHub
+**Statut** : En cours
+**Détails** : Branche Git créée (`issue/008-implement-public-wiki-stellarpedia`) et issue GitHub créée (#16).
+**Fichiers modifiés** : docs/issues/ISSUE-008-implement-public-wiki-stellarpedia.md
+**Notes** : Issue GitHub synchronisée avec la documentation locale. Commentaire de review architecturale ajouté sur l'issue GitHub.
+**GitHub** : [#16](https://github.com/PiLep/space-xplorer/issues/16)
 

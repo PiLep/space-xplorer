@@ -93,6 +93,11 @@ class PlanetFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Planet $planet) {
+            // Skip if properties already exist (to avoid unique constraint violations in tests)
+            if ($planet->properties()->exists()) {
+                return;
+            }
+
             $types = config('planets.types');
             $type = array_rand($types);
             $typeConfig = $types[$type]['characteristics'];
@@ -113,6 +118,16 @@ class PlanetFactory extends Factory
                 'resources' => self::RESOURCES_TRANSLATIONS[$resourcesFr] ?? $resourcesFr,
                 'description' => fake()->sentence(20),
             ]);
+        });
+    }
+
+    /**
+     * Indicate that the planet should be created without properties.
+     */
+    public function withoutProperties(): static
+    {
+        return $this->afterCreating(function (Planet $planet) {
+            // This state prevents property creation by doing nothing
         });
     }
 }

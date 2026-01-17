@@ -143,6 +143,10 @@ class DatabaseSeeder extends Seeder
         $this->markPlayerSystemsAsDiscovered();
 
         $this->command->info('✨ Database seeded successfully!');
+        $this->command->newLine();
+
+        // Seed codex data
+        $this->call(CodexSeeder::class);
     }
 
     /**

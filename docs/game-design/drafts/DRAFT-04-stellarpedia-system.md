@@ -1,10 +1,13 @@
 # DRAFT - Système Stellarpedia (Codex Communautaire)
 
 ## Statut
-**Draft** - En attente de validation avec Alex (Product Manager)
+**Draft** - Version complète du système Stellarpedia (futur)
+
+**Note** : Une version MVP simplifiée a été validée : **[DRAFT-04-stellarpedia-system-MVP.md](./DRAFT-04-stellarpedia-system-MVP.md)**
 
 ## Issue Associée
-À créer après validation du draft
+- **MVP** : [ISSUE-008-implement-public-wiki-stellarpedia.md](../../issues/ISSUE-008-implement-public-wiki-stellarpedia.md)
+- **Version complète** : À créer après implémentation du MVP
 
 ## Vue d'Ensemble
 

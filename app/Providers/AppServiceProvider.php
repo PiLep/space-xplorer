@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\CodexEntry;
 use App\Models\Resource;
 use App\Models\User;
+use App\Observers\CodexEntryObserver;
 use App\Observers\ResourceObserver;
 use App\Observers\UserObserver;
 use Illuminate\Support\Facades\View;
@@ -24,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        CodexEntry::observe(CodexEntryObserver::class);
         Resource::observe(ResourceObserver::class);
         User::observe(UserObserver::class);
 

@@ -267,6 +267,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the codex contributions made by the user.
+     */
+    public function codexContributions(): HasMany
+    {
+        return $this->hasMany(CodexContribution::class, 'contributor_user_id');
+    }
+
+    /**
+     * Get the planets discovered by the user.
+     */
+    public function discoveredPlanets(): HasMany
+    {
+        return $this->hasMany(CodexEntry::class, 'discovered_by_user_id');
+    }
+
+    /**
      * Get the notifications for the user.
      */
     public function notifications(): HasMany
